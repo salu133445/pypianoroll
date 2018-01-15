@@ -1,6 +1,7 @@
 """
 Class for multi-track piano-rolls with metadata.
 """
+from __future__ import true_division
 import warnings
 from copy import deepcopy
 import numpy as np
@@ -45,6 +46,10 @@ class MultiTrack(object):
         ----------
         filepath : str
             File path to a MIDI file (.mid, .midi, .MID, .MIDI) or a .npz file.
+        beat_resolution : int
+            Resolution of a beat (in time step). Will be assigned to
+            ``beat_resolution`` when ``filepath`` is not provided. Default to
+            24.
         tracks : list
             List of :class:`pianoroll.Track` objects to be added to the track
             list when ``filepath`` is not provided.
@@ -59,10 +64,6 @@ class MultiTrack(object):
             downbeat, i.e. the first time step of a bar. Length is the number of
             time steps. Will be assigned to ``downbeat`` when ``filepath`` is
             not provided.
-        beat_resolution : int
-            Resolution of a beat (in time step). Will be assigned to
-            ``beat_resolution`` when ``filepath`` is not provided. Default to
-            24.
         name : str
             Name to be assigned to the multi-track piano-roll. Default to
             'unknown'.
@@ -77,6 +78,7 @@ class MultiTrack(object):
             if not isinstance(filepath, str):
                 raise TypeError("`filepath` must be of str type")
             if filepath.endswith(('.mid', '.midi', '.MID', '.MIDI')):
+                self.beat_resolution = beat_resolution
                 self.parse_midi(filepath)
                 self.check_validity()
                 self.name = name
@@ -94,10 +96,7 @@ class MultiTrack(object):
                 self.tracks = tracks
             else:
                 self.tracks = [Track()]
-            if isinstance(tempo, float):
-                self.tempo = np.array(tempo, float)
-            else:
-                self.tempo = tempo
+            self.tempo = tempo
             self.downbeat = downbeat
             self.beat_resolution = beat_resolution
             self.name = name
@@ -152,25 +151,33 @@ class MultiTrack(object):
             track.binarize(threshold)
 
     def check_validity(self):
-        """"Raise error if any invalid attribute found"""
+        """"
+        Raise error if any invalid attribute found
+
+        Raises
+        ------
+        TypeError
+            If contain any attribute with invalid type.
+        ValueError
+            If contain any attribute with invalid value (of the correct type).
+        """
         # tracks
         for idx, track in enumerate(self.tracks):
             if not isinstance(track, Track):
-                raise TypeError("`tracks` must be multitrack.Track instances")
-            try:
-                track.check_validity()
-            except:
-                print("`tracks[{}]` is not a valid multitrack.Track instance"
-                      .format(idx))
-                raise
+                raise TypeError("`tracks` must be `multitrack.Track` instances")
+            track.check_validity()
         # tempo
-        if not isinstance(self.tempo, np.ndarray):
-            raise TypeError("`tempo` must be of np.ndarray type")
-        if not (np.issubdtype(self.tempo.dtype, np.int),
-                np.issubdtype(self.tempo.dtype, np.float)):
+        if isinstance(self.tempo, (int, float)):
+            self.tempo = np.array([self.tempo])
+        elif not isinstance(self.tempo, np.ndarray):
+            raise TypeError("`tempo` must be of int or np.ndarray type")
+        elif not (np.issubdtype(self.tempo.dtype, np.int),
+                  np.issubdtype(self.tempo.dtype, np.float)):
             raise TypeError("Data type of `tempo` must be int or float.")
-        if self.tempo.ndim > 2:
+        elif self.tempo.ndim > 1:
             raise ValueError("`tempo` must be a 1D numpy array")
+        elif self.tempo.ndim < 1:
+            self.tempo = self.tempo.reshape(-1,)
         if np.any(self.tempo <= 0.0):
             raise ValueError("`tempo` must contains only positive numbers")
         # downbeat
@@ -181,6 +188,8 @@ class MultiTrack(object):
                 raise TypeError("Data type of `downbeat` must be bool.")
             if self.downbeat.ndim > 1:
                 raise ValueError("`downbeat` must be a 1D numpy array")
+            elif self.downbeat.ndim < 1:
+                self.downbeat = self.downbeat.reshape(-1,)
         # beat_resolution
         if not isinstance(self.beat_resolution, int):
             raise TypeError("`beat_resolution` must be of int type")
@@ -494,7 +503,7 @@ class MultiTrack(object):
         if remove_merged:
             self.remove_tracks(track_indices)
 
-    def parse_midi(self, filepath):
+    def parse_midi(self, filepath, mode='normal', beat_start_time=None):
         """
         Parse a MIDI file
 
@@ -502,12 +511,220 @@ class MultiTrack(object):
         ----------
         filepath : str
             The path to the MIDI file.
+        mode : {'normal', 'strict', 'custom'}
+            Indicate the method used to get the location of the first beat.
+            Notes before it will be dropped unless an incomplete beat before it
+            is found (see Notes for details).
+            In 'normal' mode, the location of the first beat is estimated by
+            :method:`pretty_midi.PrettyMIDI.estimate_beat_start`.
+            In 'strict' mode, the first beat is set to the event time of the
+            first time signature change.
+            In 'custom' mode, use argument `beat_start_time` as the location of
+            the first beat.
+        beat_start_time : float
+            The location (in sec) of the first beat. Only effective in 'custom'
+            mode.
+
+        Notes
+        -----
+        If an incomplete beat before the first beat is found, an additional beat
+        will be added before the (estimated) beat start time. However, notes
+        before the (estimated) beat start time for more than one beat are
+        dropped.
         """
-        pass
-        # """Parse the MIDI file given by ``filepath``"""
-        # pm = pretty_midi.PrettyMIDI(filepath)
-        # self.pianorolls = get_pianorolls(pm, None, \
-        #     self.beat_resolution, self.binarized, True)
+        pm = pretty_midi.PrettyMIDI(filepath)
+        self.parse_pretty_midi(pm, mode)
+
+    def parse_pretty_midi(self, pm, mode='normal', beat_start_time=None):
+        """
+        Parse a :class:`pretty_midi.PrettyMIDI` object
+
+        Parameters
+        ----------
+        pm : `pretty_midi.PrettyMIDI` object
+            The :class:`pretty_midi.PrettyMIDI` object to be parsed.
+        mode : {'normal', 'strict', 'custom'}
+            Indicate the method used to get the location of the first beat.
+            Notes before it will be dropped unless an incomplete beat before it
+            is found (see Notes for details).
+            In 'normal' mode, the location of the first beat is estimated by
+            :method:`pretty_midi.PrettyMIDI.estimate_beat_start`.
+            In 'strict' mode, the first beat is set to the event time of the
+            first time signature change.
+            In 'custom' mode, use argument `beat_start_time` as the location of
+            the first beat.
+        beat_start_time : float
+            The location (in sec) of the first beat. Only effective in 'custom'
+            mode.
+
+        Notes
+        -----
+        If an incomplete beat before the first beat is found, an additional beat
+        will be added before the (estimated) beat start time. However, notes
+        before the (estimated) beat start time for more than one beat are
+        dropped.
+        """
+        if not isinstance(mode, str):
+            raise TypeError("`mode` must be a string in {'normal', 'strict', "
+                            "'custom'}")
+        if mode not in ['strict', 'normal', 'custom']:
+            raise ValueError("`mode` must be one of 'normal', 'strict' and "
+                             "'custom'")
+        if mode == 'custom':
+            if not isinstance(beat_start_time, (int, float)):
+                raise TypeError("`beat_start_time` must be a number in "
+                                "'custom' mode")
+            if beat_start_time < 0.0:
+                raise ValueError("`beat_start_time` must be a positive number "
+                                 "in 'custom' mode")
+
+        tc_times, tempi = pm.get_tempo_changes()
+
+        # Set beat_start_time for 'normal' and 'strict' modes
+        if mode == 'normal':
+            beat_start_time = pm.estimate_beat_start()
+        elif mode == 'strict':
+            if not pm.time_signature_changes:
+                raise ValueError("No time signature change event found. Unable "
+                                 "to set beat start time in 'strict' mode")
+            pm.time_signature_changes.sort(key=lambda x: x.time)
+            beat_start_time = pm.time_signature_changes[0].time
+
+
+        # The following section find the time (`one_beat_ahead`) that is exactly
+        # one beat before `beat_start_time`
+        # ========= start =========
+        remained_beat = 1.0
+        one_beat_ahead = beat_start_time
+        end = one_beat_ahead
+
+        # Initialize `tc_idx` to the index of the last tempo change event before
+        # `beat_start_time`
+        tc_idx = 0
+        while tc_times[tc_idx] > beat_start_time:
+            tc_idx += 1
+        tc_idx = max(0, tc_idx-1)
+
+        while remained_beat > 0.0:
+            # Check if it is the first tempo change event. If so, reduce
+            # `one_beat_ahead` by the corresponding duration of `remained_beat`
+            # in current tempo and break iteration
+            if tc_idx < 1:
+                one_beat_ahead -= remained_beat * 60 / tempi[tc_idx]
+                break
+
+            # Check if current tempo can fill up `remained_beat`. If so, reduce
+            # `one_beat_ahead` by the corresponding duration of `remained_beat`
+            # in current tempo and break iteration
+            tc_duration_in_beat = (end - tc_times[tc_idx]) * tempi[tc_idx] / 60.0
+            if remained_beat < tc_duration_in_beat:
+                one_beat_ahead -= remained_beat * 60 / tempi[tc_idx]
+                break
+
+            # Reduce `one_beat_ahead` by the duration of current tempo
+            one_beat_ahead -= (end - tc_times[tc_idx])
+
+            # Reduce `remained_beat` by the duration (in beat) of current tempo
+            remained_beat -= tc_duration_in_beat
+            end = tc_times[tc_idx]
+
+            tc_idx -= 1
+        # ========== end ==========
+
+        # Add an additional beat if any note found between `one_beat_ahead` and
+        # `beat_start_time`
+        incomplete_beat_found = False
+        for instrument in pm.instruments:
+            for note in instrument.notes:
+                if note.start < beat_start_time:
+                    if note.start > one_beat_ahead:
+                        incomplete_beat_found = True
+        beat_times = pm.get_beats(beat_start_time)
+        num_beat = len(beat_times) + incomplete_beat_found
+
+
+
+        # Compute downbeat array
+        if not pm.time_signature_changes:
+            self.downbeat = None
+        else:
+            self.downbeat = np.zeros((self.beat_resolution*num_beat, ), bool)
+            for start_tsc, end_tsc in zip(pm.time_signature_changes[:-1],
+                                          pm.time_signature_changes[1:]):
+                start_idx = (np.searchsorted(beat_times, start_tsc)
+                             + incomplete_beat_found) * self.beat_resolution
+                end_idx = (np.searchsorted(beat_times, end_tsc)
+                           + incomplete_beat_found) * self.beat_resolution
+                stride = start_tsc.numerator * self.beat_resolution
+                self.downbeat[start_idx, end_idx, stride] = True
+
+
+        # create an empty tempo_array
+        num_beat = len(beat_times)
+        tempo_array = np.zeros((beat_resolution*num_beat, 1), np.float32)
+
+        if not tc_times.size:
+            # set to default tempo value when no tempo change events
+            tempo_array[:] = 120.0
+        else:
+            # find the corresponding index of the first tempo change event
+            end = np.searchsorted(beat_times, tc_times[0], 'right')
+            # assign tempo value of the first tempo change event to beats before it
+            tempo_array[0:end*beat_resolution] = tempi[0]
+            start = end
+            # iterate over all tempo change events except the last one
+            for idx, tempo in enumerate(tempi[:-1]):
+                # find the corresponding index of the next tempo change event
+                end += np.searchsorted(beat_times[end:], tc_times[idx+1], 'right')
+                # assign tempo value of the current tempo change event to beats
+                # after the current tempo change event and before the next tempo
+                # change event
+                tempo_array[start*beat_resolution:end*beat_resolution] = tempo
+                start = end
+            # assign tempo value of the last tempo change event to the rest beats
+            tempo_array[start*beat_resolution:] = tempi[-1]
+
+
+
+
+
+        beat_times = pm.get_beats(beat_start_time)
+        # create the piano-roll and the onset-roll arrays
+        num_beat = len(beat_times)
+        onset_roll = np.zeros((beat_resolution*num_beat, 1), bool)
+        if binarized:
+            piano_roll = np.zeros((beat_resolution*num_beat, 128), bool)
+        else:
+            piano_roll = np.zeros((beat_resolution*num_beat, 128), np.uint8)
+        # iterate through notes
+        for note in instrument.notes:
+            # ignore notes before the first beat
+            if note.end < beat_times[0]:
+                continue
+            # find the corresponding index of the note on event
+            if note.start >= beat_times[0]:
+                start = search_nearest_index(beat_times, note.start, tempo_array,
+                                            beat_resolution)
+            else:
+                start = 0
+            # find the corresponding index of the note off event
+            if instrument.is_drum:
+                # set minimal note length (32th notes) for drums
+                end = start + 2
+            else:
+                end = search_nearest_index(beat_times, note.end, tempo_array,
+                                        beat_resolution)
+                # make sure the note length is larger than minimum note length
+                if end - start < 2:
+                    end = start + 2
+            # assign values to the piano-roll and the onset-roll
+            onset_roll[start] = True
+            if binarized:
+                piano_roll[start:(end-1), note.pitch] = True
+            else:
+                piano_roll[start:(end-1), note.pitch] = note.velocity
+        return piano_roll, onset_roll
+
         # self.name = os.path.basename(filepath)
 
     def remove_tracks(self, track_indices):
