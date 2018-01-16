@@ -116,24 +116,28 @@ class MultiTrack(object):
         pianoroll : np.ndarray, shape=(num_time_step, num_pitch)
             Piano-roll matrix. First dimension represents time. Second dimension
             represents pitch. The lowest pitch is given by ``lowest_pitch``.
+            Available datatypes are bool, int, float.
         program: int
-            Program number according to General MIDI specification. Available
-            values are 0 to 127. Default to 0 (Acoustic Grand Piano).
+            Program number according to General MIDI specification [1].
+            Available values are 0 to 127. Default to 0 (Acoustic Grand Piano).
         is_drum : bool
             Drum indicator. True for drums. False for other instruments. Default
             to False.
         name : str
             Name of the track. Default to 'unknown'.
         lowest_pitch : int
-            Indicate the lowest pitch in the piano-roll. Available values are 0
-            to 127.
+            Indicate the lowest pitch of the piano-roll. Default to zero.
+
+        References
+        ----------
+        [1] https://www.midi.org/specifications/item/gm-level-1-sound-set
         """
         if track is not None:
             if not isinstance(track, Track):
                 raise TypeError("`track` must be a multitrack.Track instance")
             track.check_validity()
         else:
-            track = Track(pianoroll, lowest_pitch, program, is_drum, name)
+            track = Track(pianoroll, program, is_drum, name, lowest_pitch)
         self.tracks.append(track)
 
     def binarize(self, threshold=0.0):
@@ -524,14 +528,14 @@ class MultiTrack(object):
         merged, lowest = self.get_merged_pianoroll(track_indices, mode,
                                                    clipped, upper)
 
-        merged_track = Track(merged, lowest, program, is_drum,  name)
+        merged_track = Track(merged, program, is_drum,  name, lowest)
         self.append_track(merged_track)
 
         if remove_merged:
             self.remove_tracks(track_indices)
 
     def parse_midi(self, filepath, mode='sum', clipped=True, algorithm='normal',
-                   binarized=False, threshold=0.0, beat_start_time=None,
+                   binarized=False, threshold=0.0, first_beat_time=None,
                    collect_onsets_only=False, ):
         """
         Parse a MIDI file
@@ -557,7 +561,7 @@ class MultiTrack(object):
             - The 'strict' algorithm set the first beat at the event time of the
             first time signature change. If no time signature change event
             found, raise a ValueError.
-            - The 'custom' algorithm take argument `beat_start_time` as the
+            - The 'custom' algorithm take argument `first_beat_time` as the
             location of the first beat.
         binarized : bool
             True to binarize the parsed piano-rolls. False to use the original
@@ -565,7 +569,7 @@ class MultiTrack(object):
         threshold : int
             Threshold to binarize the parsed piano-rolls. Only effective when
             ``binarized`` is True. Default to zero.
-        beat_start_time : float
+        first_beat_time : float
             The location (in sec) of the first beat. Required and only effective
             when using 'custom' algorithm.
         collect_onsets_only : bool
@@ -582,11 +586,11 @@ class MultiTrack(object):
         """
         pm = pretty_midi.PrettyMIDI(filepath)
         self.parse_pretty_midi(pm, mode, clipped, algorithm, binarized,
-                               threshold, collect_onsets_only, beat_start_time)
+                               threshold, collect_onsets_only, first_beat_time)
 
     def parse_pretty_midi(self, pm, mode='sum', clipped=True,
                           algorithm='normal', binarized=False, threshold=0.0,
-                          collect_onsets_only=False, beat_start_time=None):
+                          collect_onsets_only=False, first_beat_time=None):
         """
         Parse a :class:`pretty_midi.PrettyMIDI` object
 
@@ -611,21 +615,30 @@ class MultiTrack(object):
             - The 'strict' algorithm set the first beat at the event time of the
             first time signature change. If no time signature change event
             found, raise a ValueError.
-            - The 'custom' algorithm take argument `beat_start_time` as the
+            - The 'custom' algorithm take argument `first_beat_time` as the
             location of the first beat.
         binarized : bool
-            True to binarize the parsed piano-rolls. False to use the original
-            parsed piano-rolls. Default to False.
+            True to binarize the parsed piano-rolls before merging duplicate
+            notes. False to use the original parsed piano-rolls. Default to False.
         threshold : int
             Threshold to binarize the parsed piano-rolls. Only effective when
             ``binarized`` is True. Default to zero.
-        beat_start_time : float
+        first_beat_time : float
             The location (in sec) of the first beat. Required and only effective
             when using 'custom' algorithm.
         collect_onsets_only : bool
             True to collect only the onset of the notes (i.e. note on events) in
             all tracks, where the note off and duration information are dropped.
             False to parse regular piano-rolls.
+
+        Returns
+        -------
+        midi_info : dict
+            Contains additional information of the parsed MIDI file as fallows.
+            - first_beat_time (float) : the location (in sec) of the first beat
+            - incomplete_beat_at_start (bool) : indicate whether there is an
+              incomplete beat before `first_beat_time`
+            -
 
         Notes
         -----
@@ -646,23 +659,23 @@ class MultiTrack(object):
             raise ValueError("`algorithm` must be one of 'normal', 'strict' "
                              "and 'custom'")
         if algorithm == 'custom':
-            if not isinstance(beat_start_time, (int, float)):
-                raise TypeError("`beat_start_time` must be a number when "
+            if not isinstance(first_beat_time, (int, float)):
+                raise TypeError("`first_beat_time` must be a number when "
                                 "using 'custom' algorithm")
-            if beat_start_time < 0.0:
-                raise ValueError("`beat_start_time` must be a positive number "
+            if first_beat_time < 0.0:
+                raise ValueError("`first_beat_time` must be a positive number "
                                  "when using 'custom' algorithm")
 
-        # Set beat_start_time for 'normal' and 'strict' modes
+        # Set first_beat_time for 'normal' and 'strict' modes
         if mode == 'normal':
-            beat_start_time = pm.estimate_beat_start()
+            first_beat_time = pm.estimate_beat_start()
         elif mode == 'strict':
             if not pm.time_signature_changes:
                 raise ValueError("No time signature change event found. Unable "
                                  "to set beat start time using 'strict' "
                                  "algorithm")
             pm.time_signature_changes.sort(key=lambda x: x.time)
-            beat_start_time = pm.time_signature_changes[0].time
+            first_beat_time = pm.time_signature_changes[0].time
 
         # get tempo change event times and contents
         tc_times, tempi = pm.get_tempo_changes()
@@ -671,16 +684,16 @@ class MultiTrack(object):
         tempi = tempi[arg_sorted]
 
         # The following section find the time (`one_beat_ahead`) that is exactly
-        # one beat before `beat_start_time`
+        # one beat before `first_beat_time`
         # ========= start =========
         remained_beat = 1.0
-        one_beat_ahead = beat_start_time
+        one_beat_ahead = first_beat_time
         end = one_beat_ahead
 
         # Initialize `tc_idx` to the index of the nearest tempo change event
-        # before `beat_start_time`
+        # before `first_beat_time`
         tc_idx = 0
-        while tc_times[tc_idx] > beat_start_time:
+        while tc_times[tc_idx] > first_beat_time:
             tc_idx += 1
         tc_idx = max(0, tc_idx-1)
 
@@ -711,16 +724,15 @@ class MultiTrack(object):
         # ========== end ==========
 
         # Add an additional beat if any note found between `one_beat_ahead` and
-        # `beat_start_time`
+        # `first_beat_time`
         incomplete_beat_found = False
         for instrument in pm.instruments:
             for note in instrument.notes:
-                if ((one_beat_ahead < note.start < beat_start_time)
-                    or (one_beat_ahead < note.end < beat_start_time)):
+                if ((one_beat_ahead < note.start < first_beat_time)
+                    or (one_beat_ahead < note.end < first_beat_time)):
                     incomplete_beat_found = True
                     break
-
-        beat_times = pm.get_beats(beat_start_time)
+        beat_times = pm.get_beats(first_beat_time)
         beat_times.sort()
         num_beat = len(beat_times) + incomplete_beat_found
         num_time_step = self.beat_resolution * num_beat
@@ -730,6 +742,7 @@ class MultiTrack(object):
             self.downbeat = None
         else:
             self.downbeat = np.zeros((num_time_step, ), bool)
+            self.downbeat[0] = True
             start = int(incomplete_beat_found)
             end = start
             for idx, tsc in enumerate(pm.time_signature_changes[:-1]):
@@ -743,9 +756,12 @@ class MultiTrack(object):
 
         # Parse tempo array
         self.tempo = np.empty((num_time_step,))
-        if not tc_times.size:
-            self.tempo.fill(120.0)
+        if not tc_times:
+            estimated_tempo = pm.estimate_tempo()
+            self.tempo.fill(estimated_tempo)
         else:
+            # here we assume all the tempo events are close to the beats and
+            # align time change event to the nearest beat times befrore it
             start = np.searchsorted(beat_times, tc_times[0])
             self.tempo[:start*self.beat_resolution] = tempi[0]
             end = start
@@ -757,105 +773,83 @@ class MultiTrack(object):
                 start = end
             self.tempo[end_idx:] = tempi[-1]
 
+        # Find the corresponding time in the original MIDI file of each time
+        # step in the piano-roll, tempo array and beat array
+        if incomplete_beat_found:
+            one_beat_ahead = beat_times - (60. / self.tempo[0])
+            beat_times = np.insert(beat_times, 0, one_beat_ahead)
+        beat_times_tiled = np.tile(beat_times.reshape(-1, 1), (1, 24))
+        time_step_durations = (np.reshape(self.tempo, (-1, 24))
+                               / (60. * self.beat_resolution))
+        time_step_durations[:, 1:] = time_step_durations[:, :-1]
+        time_step_durations[:, 0] = 0.
+        time_step_times = beat_times_tiled + time_step_durations
+
+        even_step_times = time_step_times[::2]
+        odd_step_times = time_step_times[1::2]
+
         # Parse piano-roll
         piano_roll = None
         for instrument in pm.instruments:
             if piano_roll is None:
-                if binarized:
+                if binarized or mode == 'any':
                     piano_roll = np.zeros((num_time_step, 128), bool)
                 else:
                     piano_roll = np.zeros((num_time_step, 128), int)
             else:
                 piano_roll.fill(0)
 
-            note_on_array = np.array([note.start for note in instrument.notes
+            note_on_times = np.array([note.start for note in instrument.notes
                                       if note.end < one_beat_ahead])
-            note_off_array = np.array([note.end for note in instrument.notes
-                                       if note.end < one_beat_ahead])
+            note_on = 2 * np.searchsorted(even_step_times, note_on_times)
 
-            arg_sorted_note_on = note_on_array.argsort()
-            arg_sorted_note_off = note_off_array.argsort()
-
-            note_on = int(incomplete_beat_found)
-            note_off = int(incomplete_beat_found)
-
-            for note in instrument.notes:
-                # ignore notes before the first beat
-                if note.end < one_beat_ahead:
-                    continue
-
-                # find the corresponding timestep index of the note on event
-                if note.start >= one_beat_ahead:
-                    # search for the nearest beat before the note on event
-                    start += np.searchsorted(beat_times[start:], note.start)
-                    nearest_beat_idx = start * self.beat_resolution
-                    # compute the relative location (in timestep) of the note on
-                    # event to the nearest beat before it
-                    remained = note.start - beat_times[start]
-                    tempo_idx = nearest_beat_idx
-                    extra_step = 0
-                    while remained > 0:
-                        bps = self.tempo[tempo_idx] / 60.
-                        remained -= bps / self.beat_resolution / 2.
-                        if remained < 0:
-                            break
-                        remained -= bps / self.beat_resolution / 2.
-                        extra_step += 1
-                        if remained < 0:
-                            break
-                        tempo_idx += 1
-
-                    start_idx = nearest_beat_idx + extra_step
-                else:
-                    start_idx = 0
-
-                if collect_onsets_only:
-                    piano_roll[start_idx] = True
-
-            # find the corresponding timestep index of the note off event
-            if instrument.is_drum:
-                # set minimal note length (32th notes) for drums
-                end = start + 2
+            if collect_onsets_only:
+                piano_roll[note_on] = True
+            elif instrument.is_drum:
+                piano_roll[note_on:] = True
             else:
-                beat_idx = np.searchsorted(beat_times, note.end, 'right') # - 1
-                bps = tempi[np.searchsorted(tc_times, note.end)] / 60.0
-                remainder = (note.end - beat_times[beat_idx]) * bps
-                end = int((beat_idx + remainder) * beat_resolution)
-                # make sure the note length is larger than minimum note length
-                if end - start < 2:
-                    end = start + 2
+                note_off_times = np.array([note.end for note in instrument.notes
+                                           if note.end < one_beat_ahead])
+                note_off = (2 * np.searchsorted(odd_step_times, note_off_times)
+                            + 1)
 
+            for idx, start in enumerate(note_on):
+                end = note_off[idx]
+                velocity = instrument.notes[idx].velocity
+                if binarized:
+                    if velocity > threshold:
+                        if mode == 'sum':
+                            piano_roll[start:end] += 1
+                        elif mode == 'max' or mode == 'any':
+                            piano_roll[start:end] = True
+                elif mode == 'sum':
+                    piano_roll[start:end] += velocity
+                elif mode == 'max':
+                    piano_roll[start:end] = np.maximum(piano_roll[start:end],
+                                                       velocity)
+                elif mode == 'any':
+                    if velocity:
+                        piano_roll[start:end] = True
 
-                # search for the nearest beat before the note on event
-                end += np.searchsorted(beat_times[start:], note.start)
-                nearest_beat_idx = start * self.beat_resolution
-                # compute the relative location (in timestep) of the note on
-                # event to the nearest beat before it
-                remained = note.start - beat_times[end]
-                tempo_idx = nearest_beat_idx
-                extra_step = 0
-                while remained > 0:
-                    bps = self.tempo[tempo_idx] / 60.
-                    remained -= bps / self.beat_resolution / 2.
-                    if remained < 0:
-                        break
-                    remained -= bps / self.beat_resolution / 2.
-                    extra_step += 1
-                    if remained < 0:
-                        break
-                    tempo_idx += 1
+            track = Track(piano_roll, instrument.program, instrument.is_drum,
+                          instrument.name)
+            self.tracks.append(track)
 
-                start_idx = nearest_beat_idx + extra_step
+        # Collect midi info into a dictionary and return it
+        num_ts_change = len(pm.time_signature_changes)
+        if num_ts_change == 1:
+            tsign = '{}/{}'.format(pm.time_signature_changes[0].numerator,
+                                   pm.time_signature_changes[0].denominator)
+        else:
+            tsign = None
 
+        midi_info = {'first_beat_time': first_beat_time,
+                     'incomplete_beat_at_start': incomplete_beat_found,
+                     'num_time_signature_change': num_ts_change,
+                     'time_signature': tsign,
+                     'tempo': tempi[0] if len(tc_times) == 1 else None}
 
-
-                    if binarized:
-                        piano_roll[start:(end-1), note.pitch] = True
-                    else:
-                        piano_roll[start:(end-1), note.pitch] = note.velocity
-
-        # # self.name = os.path.basename(filepath)
-
+        return midi_info
 
     def remove_tracks(self, track_indices):
         """
