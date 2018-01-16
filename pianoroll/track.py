@@ -81,9 +81,9 @@ class Track(object):
         # pianoroll
         if not isinstance(self.pianoroll, np.ndarray):
             raise TypeError("`pianoroll` must be of np.ndarray type")
-        if not (np.issubdtype(self.pianoroll.dtype, np.bool) or
-                np.issubdtype(self.pianoroll.dtype, np.float) or
-                np.issubdtype(self.pianoroll.dtype, np.int)):
+        if not (np.issubdtype(self.pianoroll.dtype, np.bool)
+                or np.issubdtype(self.pianoroll.dtype, np.int)
+                or np.issubdtype(self.pianoroll.dtype, np.float)):
             raise TypeError("Data type of `pianoroll` must be one of bool, int "
                             "and float.")
         if isinstance(self.pianoroll, np.matrix):
@@ -106,6 +106,18 @@ class Track(object):
         # name
         if not isinstance(self.name, str):
             raise TypeError("`name` must be of str type")
+
+    def clip(self, upper=128):
+        """
+        Clip the piano-roll with an upper bound specified by `upper`
+
+        Parameters
+        ----------
+        upper : int
+            The upper bound to clip the input piano-roll. Default to 128.
+        """
+        to_clip = (self.pianoroll - upper) * (self.pianoroll > upper)
+        self.pianoroll = self.pianoroll - to_clip
 
     def compress_pitch_range(self):
         """Compress the piano-roll to active pitch range"""
