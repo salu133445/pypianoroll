@@ -18,14 +18,14 @@ class Track(object):
         values are 0 to 127. Default to 0 (Acoustic Grand Piano).
     is_drum : bool
         Drum indicator. True for drums. False for other instruments.
-    lowest_pitch : int
-        Indicate the lowest pitch in the piano-roll.
     name : str
         Name of the track.
+    lowest_pitch : int
+        Indicate the lowest pitch in the piano-roll.
     """
 
-    def __init__(self, pianoroll=None, lowest_pitch=0, program=0, is_drum=False,
-                 name='unknown'):
+    def __init__(self, pianoroll=None, program=0, is_drum=False, name='unknown',
+                 lowest_pitch=0):
         """
         Initialize by assigning attributes
 
@@ -35,8 +35,6 @@ class Track(object):
             Piano-roll matrix. First dimension represents time. Second dimension
             represents pitch. The lowest pitch is given by ``lowest_pitch``.
             Available datatypes are bool, int, float.
-        lowest_pitch : int
-            Indicate the lowest pitch of the piano-roll. Default to zero.
         program: int
             Program number according to General MIDI specification [1].
             Available values are 0 to 127. Default to 0 (Acoustic Grand Piano).
@@ -45,6 +43,8 @@ class Track(object):
             to False.
         name : str
             Name of the track. Default to 'unknown'.
+        lowest_pitch : int
+            Indicate the lowest pitch of the piano-roll. Default to zero.
 
         References
         ----------
