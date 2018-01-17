@@ -42,6 +42,11 @@ class MultiTrack(object):
         Initialize by parsing MIDI file or loading .npz file or creating minimal
         empty instance.
 
+        Notes
+        -----
+        When ``filepath`` is given, ignore arguments ``tracks``, ``tempo``,
+        ``downbeat`` and ``name``.
+
         Parameters
         ----------
         filepath : str
@@ -67,11 +72,6 @@ class MultiTrack(object):
         name : str
             Name to be assigned to the multi-track piano-roll. Default to
             'unknown'.
-
-        Notes
-        -----
-        When ``filepath`` is given, ignore arguments ``tracks``, ``tempo``,
-        ``downbeat`` and ``name``.
         """
         # parse input file
         if filepath is not None:
@@ -202,18 +202,20 @@ class MultiTrack(object):
         if not isinstance(self.name, str):
             raise TypeError("`name` must be of str type")
 
-    def clip(self, upper=128):
+    def clip(self, lower=0, upper=128):
         """
-        Clip the piano-rolls of all tracks by an upper bound specified by
-        `upper`
+        Clip the piano-rolls of all tracks by an lower bound and an upper bound
+        specified by `lower` and `upper`, respectively
 
         Parameters
         ----------
-        upper : int
-            The upper bound to clip the input piano-roll. Default to 128.
+        lower : int or float
+            The lower bound to clip the piano-roll. Default to 0.
+        upper : int or float
+            The upper bound to clip the piano-roll. Default to 128.
         """
         for track in self.tracks:
-            track.clip(upper)
+            track.clip(lower, upper)
 
     def compress_pitch_range(self):
         """Compress the piano-rolls of all tracks to active pitch range"""
@@ -415,12 +417,10 @@ class MultiTrack(object):
             to_pad = ((0, to_pad_t), (to_pad_l, to_pad_h))
             if binarized:
                 binarized = (self.tracks[idx].pianoroll > threshold)
-                padded = np.lib.pad(binarized, to_pad, 'constant',
-                                    constant_values=((0, 0), (0, 0)))
+                padded = np.lib.pad(binarized, to_pad, 'constant')
             else:
                 padded = np.lib.pad(self.tracks[idx].pianoroll, to_pad,
-                                    'constant',
-                                    constant_values=((0, 0), (0, 0)))
+                                    'constant')
             to_stack.append(padded)
 
         stacked = np.stack(to_stack, -1)
@@ -534,7 +534,7 @@ class MultiTrack(object):
         if remove_merged:
             self.remove_tracks(track_indices)
 
-    def parse_midi(self, filepath, mode='sum', clipped=True, algorithm='normal',
+    def parse_midi(self, filepath, mode='sum', algorithm='normal',
                    binarized=False, threshold=0.0, first_beat_time=None,
                    collect_onsets_only=False, ):
         """
@@ -547,65 +547,6 @@ class MultiTrack(object):
         mode : {'sum', 'max', 'any'}
             Indicate the merging function to apply to duplicate notes. Default
             to 'sum'.
-        clipped : bool
-            True to clip the velocities of the parsed piano-rolls by an upper
-            bound of 128. False to use the raw sum of the velocities. Only
-            effective in 'sum' mode and when ``binarized`` is False. Default to
-            True.
-        algorithm : {'normal', 'strict', 'custom'}
-            Indicate the method used to get the location of the first beat.
-            Notes before it will be dropped unless an incomplete beat before it
-            is found (see Notes for details). Default to 'normal'.
-            - The 'normal' algorithm estimate the location of the first beat by
-            :method:`pretty_midi.PrettyMIDI.estimate_beat_start`.
-            - The 'strict' algorithm set the first beat at the event time of the
-            first time signature change. If no time signature change event
-            found, raise a ValueError.
-            - The 'custom' algorithm take argument `first_beat_time` as the
-            location of the first beat.
-        binarized : bool
-            True to binarize the parsed piano-rolls. False to use the original
-            parsed piano-rolls. Default to False.
-        threshold : int
-            Threshold to binarize the parsed piano-rolls. Only effective when
-            ``binarized`` is True. Default to zero.
-        first_beat_time : float
-            The location (in sec) of the first beat. Required and only effective
-            when using 'custom' algorithm.
-        collect_onsets_only : bool
-            True to collect only the onset of the notes (i.e. note on events) in
-            all tracks, where the note off and duration information are dropped.
-            False to parse regular piano-rolls.
-
-        Notes
-        -----
-        If an incomplete beat before the first beat is found, an additional beat
-        will be added before the (estimated) beat start time. However, notes
-        before the (estimated) beat start time for more than one beat are
-        dropped.
-        """
-        pm = pretty_midi.PrettyMIDI(filepath)
-        self.parse_pretty_midi(pm, mode, clipped, algorithm, binarized,
-                               threshold, collect_onsets_only, first_beat_time)
-
-    def parse_pretty_midi(self, pm, mode='sum', clipped=True,
-                          algorithm='normal', binarized=False, threshold=0.0,
-                          collect_onsets_only=False, first_beat_time=None):
-        """
-        Parse a :class:`pretty_midi.PrettyMIDI` object
-
-        Parameters
-        ----------
-        pm : `pretty_midi.PrettyMIDI` object
-            The :class:`pretty_midi.PrettyMIDI` object to be parsed.
-        mode : {'sum', 'max', 'any'}
-            Indicate the merging function to apply to duplicate notes. Default
-            to 'sum'.
-        clipped : bool
-            True to clip the velocities of the parsed piano-rolls by an upper
-            bound of 128. False to use the raw sum of the velocities. Only
-            effective in 'sum' mode and when ``binarized`` is False. Default to
-            True.
         algorithm : {'normal', 'strict', 'custom'}
             Indicate the method used to get the location of the first beat.
             Notes before it will be dropped unless an incomplete beat before it
@@ -638,7 +579,86 @@ class MultiTrack(object):
             - first_beat_time (float) : the location (in sec) of the first beat
             - incomplete_beat_at_start (bool) : indicate whether there is an
               incomplete beat before `first_beat_time`
-            -
+            - num_time_signature_change (int) : the number of time signature
+              change events
+            - time_signature (str) : the time signature (in 'X/X' format) if
+              there is only one time signature events. None if no time signature
+              event found
+            - tempo (float) : the tempo value (in bpm) if there is only one
+              tempo change events. None if no tempo change event found
+
+        Notes
+        -----
+        If an incomplete beat before the first beat is found, an additional beat
+        will be added before the (estimated) beat start time. However, notes
+        before the (estimated) beat start time for more than one beat are
+        dropped.
+
+        Notes
+        -----
+        If an incomplete beat before the first beat is found, an additional beat
+        will be added before the (estimated) beat start time. However, notes
+        before the (estimated) beat start time for more than one beat are
+        dropped.
+        """
+        pm = pretty_midi.PrettyMIDI(filepath)
+        midi_info = self.parse_pretty_midi(pm, mode, algorithm, binarized,
+                                           threshold, collect_onsets_only,
+                                           first_beat_time)
+        return midi_info
+
+    def parse_pretty_midi(self, pm, mode='sum',  algorithm='normal',
+                          binarized=False, threshold=0.0,
+                          collect_onsets_only=False, first_beat_time=None):
+        """
+        Parse a :class:`pretty_midi.PrettyMIDI` object
+
+        Parameters
+        ----------
+        pm : `pretty_midi.PrettyMIDI` object
+            The :class:`pretty_midi.PrettyMIDI` object to be parsed.
+        mode : {'sum', 'max', 'any'}
+            Indicate the merging function to apply to duplicate notes. Default
+            to 'sum'.
+        algorithm : {'normal', 'strict', 'custom'}
+            Indicate the method used to get the location of the first beat.
+            Notes before it will be dropped unless an incomplete beat before it
+            is found (see Notes for details). Default to 'normal'.
+            - The 'normal' algorithm estimate the location of the first beat by
+            :method:`pretty_midi.PrettyMIDI.estimate_beat_start`.
+            - The 'strict' algorithm set the first beat at the event time of the
+            first time signature change. If no time signature change event
+            found, raise a ValueError.
+            - The 'custom' algorithm take argument `first_beat_time` as the
+            location of the first beat.
+        binarized : bool
+            True to binarize the parsed piano-rolls before merging duplicate
+            notes. False to use the original parsed piano-rolls. Default to False.
+        threshold : int
+            Threshold to binarize the parsed piano-rolls. Only effective when
+            ``binarized`` is True. Default to zero.
+        first_beat_time : float
+            The location (in sec) of the first beat. Required and only effective
+            when using 'custom' algorithm.
+        collect_onsets_only : bool
+            True to collect only the onset of the notes (i.e. note on events) in
+            all tracks, where the note off and duration information are dropped.
+            False to parse regular piano-rolls.
+
+        Returns
+        -------
+        midi_info : dict
+            Contains additional information of the parsed MIDI file as fallows.
+            - first_beat_time (float) : the location (in sec) of the first beat
+            - incomplete_beat_at_start (bool) : indicate whether there is an
+              incomplete beat before `first_beat_time`
+            - num_time_signature_change (int) : the number of time signature
+              change events
+            - time_signature (str) : the time signature (in 'X/X' format) if
+              there is only one time signature events. None if no time signature
+              event found
+            - tempo (float) : the tempo value (in bpm) if there is only one
+              tempo change events. None if no tempo change event found
 
         Notes
         -----
@@ -729,7 +749,7 @@ class MultiTrack(object):
         for instrument in pm.instruments:
             for note in instrument.notes:
                 if ((one_beat_ahead < note.start < first_beat_time)
-                    or (one_beat_ahead < note.end < first_beat_time)):
+                        or (one_beat_ahead < note.end < first_beat_time)):
                     incomplete_beat_found = True
                     break
         beat_times = pm.get_beats(first_beat_time)
@@ -838,15 +858,15 @@ class MultiTrack(object):
         # Collect midi info into a dictionary and return it
         num_ts_change = len(pm.time_signature_changes)
         if num_ts_change == 1:
-            tsign = '{}/{}'.format(pm.time_signature_changes[0].numerator,
-                                   pm.time_signature_changes[0].denominator)
+            time_sign = '{}/{}'.format(pm.time_signature_changes[0].numerator,
+                                       pm.time_signature_changes[0].denominator)
         else:
-            tsign = None
+            time_sign = None
 
         midi_info = {'first_beat_time': first_beat_time,
                      'incomplete_beat_at_start': incomplete_beat_found,
                      'num_time_signature_change': num_ts_change,
-                     'time_signature': tsign,
+                     'time_signature': time_sign,
                      'tempo': tempi[0] if len(tc_times) == 1 else None}
 
         return midi_info
@@ -897,29 +917,67 @@ class MultiTrack(object):
         # else:
         #     np.savez(filepath, **result_dict)
 
-    def to_pretty_midi(self):
+    def to_pretty_midi(self, track_indices=None, tempo=False, downbeat=False):
         """
         Convert to a :class:`pretty_midi.PrettyMIDI` instance
+
+        Notes
+        -----
+        The velocities of the converted piano-rolls are cliiped into [0, 127],
+        i.e. values below 0 and values beyond 127 are replaced by 127 and 0,
+        respectively.
+
+        Parameters
+        ----------
+        track_indices : list
+            List of indices that indicates which tracks to convert. If None
+            (by default), all tracks will be converted.
 
         Returns
         -------
         pm : `pretty_midi.PrettyMIDI` object
             The converted :class:`pretty_midi.PrettyMIDI` instance.
         """
-        pass
 
-        # # create a PrettyMIDI class instance
-        # if self.tempo:
-        #     pm = pretty_midi.PrettyMIDI(initial_tempo=self.tempo[0])
-        # else:
-        #     pm = pretty_midi.PrettyMIDI()
-        # # iterate through all the input instruments
-        # for idx, pianoroll in enumerate(self.pianorolls):
-        #     instrument = get_instrument(pianoroll, self.program[idx],
-        #                                 self.is_drum[idx], tempo,
-        #                                 self.beat_resolution)
-        #     pm.instruments.append(instrument)
-        # return pm
+        pm = pretty_midi.PrettyMIDI(initial_tempo=self.tempo[0])
+
+        if track_indices is None:
+            track_indices = range(len(self.tracks))
+
+        # TODO: Add downbeat support -> time signature change events
+        # TODO: Add tempo support -> tempo change events
+        tempo = self.tempo[0]
+        time_step_size = 60. / tempo / self.beat_resolution
+
+        for track_idx in track_indices:
+            track = deepcopy(self.tracks[track_idx])
+            instrument = pretty_midi.Instrument(program=track.program,
+                                                is_drum=track.is_drum,
+                                                name=track.name)
+
+            track.clip()
+            clipped = track.pianoroll.astype(int)
+            binarized = clipped.astype(bool)
+            padded = np.pad(binarized, ((1, 1), (0, 0)), 'constant')
+            diff = np.diff(padded, axis=0)
+
+            for pitch in range(128):
+                note_ons = np.nonzero(diff[:, pitch] > 0)
+                note_on_times = time_step_size * note_ons[0]
+                note_offs = np.nonzero(diff[:, pitch] < 0)
+                note_off_times = time_step_size * note_offs[0]
+
+                for idx, note_on_time in enumerate(note_on_times):
+                    velocity = np.mean(clipped[note_ons[idx]:note_offs[idx]])
+                    note = pretty_midi.Note(velocity=velocity, pitch=pitch,
+                                            start=note_on_time,
+                                            end=note_off_times[idx])
+                    instrument.notes.append(note)
+
+            instrument.notes.sort(key=lambda x: x.start)
+            pm.instruments.append(instrument)
+
+        return pm
 
     def transpose(self, semitone):
         """
@@ -938,14 +996,20 @@ class MultiTrack(object):
         for track in self.tracks():
             track.trim_trailing_silence()
 
-    def write_midi(self, filepath):
+    def write_midi(self, filepath, track_indices=None):
         """
         Write to a MIDI file
+
+        Parameters
+        ----------
+        track_indices : list
+            List of indices that indicates which tracks to convert. If None
+            (by default), all tracks will be collected.
 
         Parameters
         ----------
         filepath : str
             The path to write the MIDI file.
         """
-        pm = self.to_pretty_midi()
+        pm = self.to_pretty_midi(track_indices)
         pm.write(filepath)
