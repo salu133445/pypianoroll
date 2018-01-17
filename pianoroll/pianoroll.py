@@ -34,18 +34,20 @@ def is_standard_pianoroll(arr):
         return False
     return True
 
-def clip(obj, upper=128):
+def clip(obj, lower=0, upper=128):
     """
-    Return a copy of the object with piano-roll(s) clipped by an upper bound
-    specified by `upper`
+    Return a copy of the object with piano-roll(s) clipped by a lower bound
+    and an upper bound specified by `lower` and `upper`, respectively
 
     Parameters
     ----------
-    upper : int
-        The upper bound to clip the input piano-roll. Default to 128.
+    lower : int or float
+        The lower bound to clip the piano-roll. Default to 0.
+    upper : int or float
+        The upper bound to clip the piano-roll. Default to 128.
     """
     copied = deepcopy(obj)
-    copied.clip(upper)
+    copied.clip(lower, upper)
     return copied
 
 def binarize(obj, threshold=0.0):

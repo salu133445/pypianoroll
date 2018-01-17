@@ -107,17 +107,19 @@ class Track(object):
         if not isinstance(self.name, str):
             raise TypeError("`name` must be of str type")
 
-    def clip(self, upper=128):
+    def clip(self, lower=0, upper=128):
         """
-        Clip the piano-roll with an upper bound specified by `upper`
+        Clip the piano-roll by an lower bound and an upper bound specified by
+        `lower` and `upper`, respectively
 
         Parameters
         ----------
-        upper : int
-            The upper bound to clip the input piano-roll. Default to 128.
+        lower : int or float
+            The lower bound to clip the piano-roll. Default to 0.
+        upper : int or float
+            The upper bound to clip the piano-roll. Default to 128.
         """
-        to_clip = (self.pianoroll - upper) * (self.pianoroll > upper)
-        self.pianoroll = self.pianoroll - to_clip
+        np.clip(self.pianoroll, lower, upper, self.pianoroll)
 
     def compress_pitch_range(self):
         """Compress the piano-roll to active pitch range"""
