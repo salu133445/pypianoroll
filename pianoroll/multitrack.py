@@ -37,11 +37,14 @@ class MultiTrack(object):
     appropriate length with the last tempo value. The downbeat array has no
     effect on playback.
     """
-    def __init__(self, filepath=None, tracks=None, tempo=120.0, downbeat=None,
-                 beat_resolution=24, name='unknown'):
+    def __init__(self, filepath=None, filepath_json=None, tracks=None,
+                 tempo=120.0, downbeat=None, beat_resolution=24,
+                 name='unknown'):
         """
-        Initialize by parsing MIDI file or loading .npz file or creating minimal
-        empty instance.
+        Initialize by one of the following ways
+        - parsing a MIDI file
+        - loading a .npz file and a JSON file
+        - assigning values for attributes
 
         Notes
         -----
@@ -51,7 +54,11 @@ class MultiTrack(object):
         Parameters
         ----------
         filepath : str
-            File path to a MIDI file (.mid, .midi, .MID, .MIDI) or a .npz file.
+            File path to a MIDI file (.mid, .midi, .MID, .MIDI) to be parsed or
+            a .npz file to be loaded.
+        filepath_json : str
+            File path to a JSON file to be loaded. Required and only effective
+            when `filepath` is a .npz file.
         beat_resolution : int
             Resolution of a beat (in time step). Will be assigned to
             `beat_resolution` when `filepath` is not provided. Default to 24.
@@ -79,13 +86,14 @@ class MultiTrack(object):
             if filepath.endswith(('.mid', '.midi', '.MID', '.MIDI')):
                 self.beat_resolution = beat_resolution
                 self.parse_midi(filepath)
-                self.check_validity()
                 self.name = name
                 warnings.warn("ignore arguments `tracks`, `tempo` and "
                               "`downbeat`", RuntimeWarning)
             elif filepath.endswith('.npz'):
-                self.load(filepath)
-                self.check_validity()
+                if filepath_json is None:
+                    raise TypeError("`filepath_json` must be given when "
+                                    "`filepath` is a .npz file")
+                self.load(filepath, filepath_json)
                 warnings.warn("ignore arguments `tracks`, `tempo`, `downbeat` "
                               "and `name`", RuntimeWarning)
             else:
@@ -460,7 +468,7 @@ class MultiTrack(object):
 
     def load(self, filepath_npz, filepath_json):
         """
-        Load a previously saved .npz file and json file
+        Load a previously saved .npz file and JSON file
 
         Notes
         -----
@@ -500,7 +508,6 @@ class MultiTrack(object):
                                                'pianoroll_{}'.format(idx))
                 track = Track(pianoroll, info_dict[str(idx)]['program'],
                               info_dict[str(idx)]['is_drum'],
-                              info_dict[str(idx)]['name'],
                               info_dict[str(idx)]['name'],
                               info_dict[str(idx)]['lowest'])
                 self.tracks.append(track)
@@ -898,6 +905,8 @@ class MultiTrack(object):
                 track.compress()
             self.tracks.append(track)
 
+        self.check_validity()
+
         # Collect midi info into a dictionary and return it
         num_ts_change = len(pm.time_signature_changes)
         if num_ts_change == 1:
@@ -930,7 +939,7 @@ class MultiTrack(object):
              compressed=True):
         """
         Save numpy arrays to a (compressed) .npz file and other information to a
-        json file
+        JSON file
 
         Notes
         -----
