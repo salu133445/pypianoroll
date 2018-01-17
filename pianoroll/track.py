@@ -139,10 +139,13 @@ class Track(object):
         copied = deepcopy(self)
         return copied
 
-    def get_binarized_pianoroll(self, threshold=0):
+    def get_pianoroll(self, binarized=False, threshold=0):
         """
-        Return a binarized copy of the piano-roll. Ignore ``threshold`` if the
-        piano-roll is already binarized
+        Return a (binarized) copy of the piano-roll.
+
+        Notes
+        -----
+        Ignore ``threshold`` if the piano-roll is already binarized
 
         Parameters
         ----------
@@ -151,22 +154,22 @@ class Track(object):
 
         Returns
         -------
-        binarized :
-            A binarized copy of the piano-roll
+        copied :
+            A (binarized) copy of the piano-roll
         lowest : int
             Indicate the lowest pitch in the merged piano-roll.
         """
-        if self.is_binarized():
-            binarized = np.copy(self.pianoroll)
+        if binarized and not self.is_binarized():
+            copied = (self.pianoroll > threshold)
         else:
-            binarized = (self.pianoroll > threshold)
+            copied = np.copy(self.pianoroll)
         lowest = self.lowest_pitch
-        return binarized, lowest
+        return copied, lowest
 
     def get_length(self):
         """
         Return the length of the piano-roll without trailing silence (in time
-        step).
+        step)
 
         Returns
         -------
@@ -178,20 +181,44 @@ class Track(object):
         length = self.pianoroll.shape[0] - inv_last_non_zero_step - 1
         return length
 
-    def get_pianoroll_copy(self):
+    def get_expanded_pianoroll(self, lowest=0, highest=127):
         """
-        Return a copy of the piano-roll.
+        Return an copy of the piano-roll which is expanded to a pitch range
+        specified by `lowest` and `highest`
+
+        Parameters
+        ----------
+        lowest : int or float
+            The lowest pitch of the expanded piano-roll.
+        highest : int or float
+            The highest pitch of the expanded piano-roll.
 
         Returns
         -------
-        copied :
-            A copy of the piano-roll
-        lowest : int
-            Indicate the lowest pitch in the merged piano-roll.
+        expanded : np.ndarray, shape=(num_time_step, highest - lowest + 1)
+            An expanded copy of the piano-roll
         """
-        copied = np.copy(self.pianoroll)
-        lowest = self.lowest_pitch
-        return copied, lowest
+        pianoroll = np.copy(self.pianoroll)
+
+        pitch_range = highest - lowest + 1
+
+        if (self.lowest_pitch == lowest
+                and self.pianoroll.shape[1] == pitch_range):
+            return pianoroll
+
+        if self.lowest_pitch > lowest:
+            to_pad = self.lowest_pitch - lowest
+            expanded = np.pad(pianoroll, ((0, 0), (to_pad, 0)), 'constant')
+        elif self.lowest_pitch < lowest:
+            expanded = pianoroll[:, (lowest - self.lowest_pitch):]
+
+        if expanded.shape[1] < pitch_range:
+            to_pad = pitch_range - expanded.shape[1]
+            expanded = np.pad(pianoroll, ((0, 0), (0, to_pad)), 'constant')
+        elif expanded.shape[1] > pitch_range:
+            expanded = expanded[:, :pitch_range]
+
+        return expanded
 
     def get_pitch_range(self, relative=False):
         """
@@ -235,7 +262,7 @@ class Track(object):
         is_binarized : bool
             True if the piano-roll is already binarized; otherwise, False.
         """
-        is_binarized = self.pianoroll.dtype == bool
+        is_binarized = (self.pianoroll.dtype == bool)
         return is_binarized
 
     def transpose(self, semitone):
