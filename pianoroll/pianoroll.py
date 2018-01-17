@@ -50,13 +50,13 @@ def clip(obj, lower=0, upper=128):
     copied.clip(lower, upper)
     return copied
 
-def binarize(obj, threshold=0.0):
+def binarize(obj, threshold=0):
     """
     Return a copy of the object with binarized piano-roll(s)
 
     Parameters
     ----------
-    threshold : int
+    threshold : int or float
         Threshold to binarize the piano-roll(s). Default to zero.
     """
     copied = deepcopy(obj)

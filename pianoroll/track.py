@@ -63,14 +63,14 @@ class Track(object):
         # check validity
         self.check_validity()
 
-    def binarize(self, threshold=0.0):
+    def binarize(self, threshold=0):
         """
         Binarize the piano-roll. Do nothing if the piano-roll is already
         binarized
 
         Parameters
         ----------
-        threshold : float
+        threshold : int or float
             Threshold to binarize the piano-rolls. Default to zero.
         """
         if not self.is_binarized():
@@ -139,14 +139,14 @@ class Track(object):
         copied = deepcopy(self)
         return copied
 
-    def get_binarized_pianoroll(self, threshold=0.0):
+    def get_binarized_pianoroll(self, threshold=0):
         """
         Return a binarized copy of the piano-roll. Ignore ``threshold`` if the
         piano-roll is already binarized
 
         Parameters
         ----------
-        threshold : float
+        threshold : int or float
             Threshold to binarize the piano-rolls. Default to zero.
 
         Returns
