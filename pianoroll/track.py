@@ -160,13 +160,13 @@ class Track(object):
 
         self.lowest_pitch = lowest
 
-        pitch_range = highest - lowest + 1
-        if self.pianoroll.shape[1] < pitch_range:
-            to_pad = pitch_range - self.pianoroll.shape[1]
+        pitch_axis_length = highest - lowest + 1
+        if self.pianoroll.shape[1] < pitch_axis_length:
+            to_pad = pitch_axis_length - self.pianoroll.shape[1]
             self.pianoroll = np.pad(self.pianoroll, ((0, 0), (0, to_pad)),
                                     'constant')
-        elif self.pianoroll.shape[1] > pitch_range:
-            self.pianoroll = self.pianoroll[:, :pitch_range]
+        elif self.pianoroll.shape[1] > pitch_axis_length:
+            self.pianoroll = self.pianoroll[:, :pitch_axis_length]
 
     def get_pianoroll(self):
         """
