@@ -127,7 +127,34 @@ class Track(object):
         self.pianoroll = self.pianoroll[:, lowest:highest]
         self.lowest_pitch += lowest
 
-    def expand()
+    def expand(self, lowest=0, highest=127):
+        """
+        Expand the piano-roll to to a pitch range specified by `lowest` and
+        `highest`
+
+        Parameters
+        ----------
+        lowest : int or float
+            The lowest pitch of the expanded piano-roll.
+        highest : int or float
+            The highest pitch of the expanded piano-roll.
+        """
+        if self.lowest_pitch > lowest:
+            to_pad = self.lowest_pitch - lowest
+            self.pianoroll = np.pad(self.pianoroll, ((0, 0), (to_pad, 0)),
+                                    'constant')
+        elif self.lowest_pitch < lowest:
+            self.pianoroll = self.pianoroll[:, (lowest - self.lowest_pitch):]
+
+        self.lowest_pitch = lowest
+
+        pitch_range = highest - lowest + 1
+        if self.pianoroll.shape[1] < pitch_range:
+            to_pad = pitch_range - self.pianoroll.shape[1]
+            self.pianoroll = np.pad(self.pianoroll, ((0, 0), (0, to_pad)),
+                                    'constant')
+        elif self.pianoroll.shape[1] > pitch_range:
+            self.pianoroll = self.pianoroll[:, :pitch_range]
 
     def copy(self):
         """
@@ -141,30 +168,18 @@ class Track(object):
         copied = deepcopy(self)
         return copied
 
-    def get_pianoroll(self, binarized=False, threshold=0):
+    def get_pianoroll(self):
         """
-        Return a (binarized) copy of the piano-roll.
-
-        Notes
-        -----
-        Ignore ``threshold`` if the piano-roll is already binarized
-
-        Parameters
-        ----------
-        threshold : int or float
-            Threshold to binarize the piano-rolls. Default to zero.
+        Return a copy of the piano-roll
 
         Returns
         -------
         copied :
-            A (binarized) copy of the piano-roll
+            A copy of the piano-roll.
         lowest : int
-            Indicate the lowest pitch in the merged piano-roll.
+            Indicate the lowest pitch in the piano-roll.
         """
-        if binarized and not self.is_binarized():
-            copied = (self.pianoroll > threshold)
-        else:
-            copied = np.copy(self.pianoroll)
+        copied = np.copy(self.pianoroll)
         lowest = self.lowest_pitch
         return copied, lowest
 
@@ -182,45 +197,6 @@ class Track(object):
         inv_last_non_zero_step = np.argmax(np.flip(non_zero_steps, axis=0))
         length = self.pianoroll.shape[0] - inv_last_non_zero_step - 1
         return length
-
-    def get_expanded_pianoroll(self, lowest=0, highest=127):
-        """
-        Return an copy of the piano-roll which is expanded to a pitch range
-        specified by `lowest` and `highest`
-
-        Parameters
-        ----------
-        lowest : int or float
-            The lowest pitch of the expanded piano-roll.
-        highest : int or float
-            The highest pitch of the expanded piano-roll.
-
-        Returns
-        -------
-        expanded : np.ndarray, shape=(num_time_step, highest - lowest + 1)
-            An expanded copy of the piano-roll
-        """
-        pianoroll = np.copy(self.pianoroll)
-
-        pitch_range = highest - lowest + 1
-
-        if (self.lowest_pitch == lowest
-                and self.pianoroll.shape[1] == pitch_range):
-            return pianoroll
-
-        if self.lowest_pitch > lowest:
-            to_pad = self.lowest_pitch - lowest
-            expanded = np.pad(pianoroll, ((0, 0), (to_pad, 0)), 'constant')
-        elif self.lowest_pitch < lowest:
-            expanded = pianoroll[:, (lowest - self.lowest_pitch):]
-
-        if expanded.shape[1] < pitch_range:
-            to_pad = pitch_range - expanded.shape[1]
-            expanded = np.pad(pianoroll, ((0, 0), (0, to_pad)), 'constant')
-        elif expanded.shape[1] > pitch_range:
-            expanded = expanded[:, :pitch_range]
-
-        return expanded
 
     def get_pitch_range(self, relative=False):
         """
