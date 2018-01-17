@@ -141,7 +141,7 @@ class Track(object):
 
     def expand(self, lowest=0, highest=127):
         """
-        Expand the piano-roll to to a pitch range specified by `lowest` and
+        Expand the piano-roll to a pitch range specified by `lowest` and
         `highest`
 
         Parameters
