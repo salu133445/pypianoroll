@@ -127,6 +127,18 @@ class Track(object):
         self.pianoroll = self.pianoroll[:, lowest:highest]
         self.lowest_pitch += lowest
 
+    def copy(self):
+        """
+        Return a copy of the object
+
+        Returns
+        -------
+        copied : `pianoroll.Track` object
+            A copy of the object.
+        """
+        copied = deepcopy(self)
+        return copied
+
     def expand(self, lowest=0, highest=127):
         """
         Expand the piano-roll to to a pitch range specified by `lowest` and
@@ -155,18 +167,6 @@ class Track(object):
                                     'constant')
         elif self.pianoroll.shape[1] > pitch_range:
             self.pianoroll = self.pianoroll[:, :pitch_range]
-
-    def copy(self):
-        """
-        Return a copy of the object
-
-        Returns
-        -------
-        copied : `pianoroll.Track` object
-            A copy of the object.
-        """
-        copied = deepcopy(self)
-        return copied
 
     def get_pianoroll(self):
         """
