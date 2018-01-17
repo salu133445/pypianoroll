@@ -12,7 +12,7 @@ class Track(object):
     ----------
     pianoroll : np.ndarray, shape=(num_time_step, num_pitch)
         Piano-roll matrix. First dimension represents time. Second dimension
-        represents pitch. The lowest pitch is given by ``lowest_pitch``.
+        represents pitch. The lowest pitch is given by `lowest`.
     program: int
         Program number according to General MIDI specification. Available
         values are 0 to 127. Default to 0 (Acoustic Grand Piano).
@@ -20,12 +20,12 @@ class Track(object):
         Drum indicator. True for drums. False for other instruments.
     name : str
         Name of the track.
-    lowest_pitch : int
+    lowest : int
         Indicate the lowest pitch in the piano-roll.
     """
 
     def __init__(self, pianoroll=None, program=0, is_drum=False, name='unknown',
-                 lowest_pitch=0):
+                 lowest=0):
         """
         Initialize by assigning attributes
 
@@ -33,8 +33,8 @@ class Track(object):
         ----------
         pianoroll : np.ndarray, shape=(num_time_step, num_pitch)
             Piano-roll matrix. First dimension represents time. Second dimension
-            represents pitch. The lowest pitch is given by ``lowest_pitch``.
-            Available datatypes are bool, int, float.
+            represents pitch. The lowest pitch is given by `lowest`. Available
+            datatypes are bool, int, float.
         program: int
             Program number according to General MIDI specification [1].
             Available values are 0 to 127. Default to 0 (Acoustic Grand Piano).
@@ -43,7 +43,7 @@ class Track(object):
             to False.
         name : str
             Name of the track. Default to 'unknown'.
-        lowest_pitch : int
+        lowest : int
             Indicate the lowest pitch of the piano-roll. Default to zero.
 
         References
@@ -57,7 +57,7 @@ class Track(object):
             self.pianoroll = pianoroll
         self.program = program
         self.is_drum = is_drum
-        self.lowest_pitch = lowest_pitch
+        self.lowest = lowest
         self.name = name
 
         # check validity
@@ -98,11 +98,11 @@ class Track(object):
         # is_drum
         if not isinstance(self.is_drum, bool):
             raise TypeError("`is_drum` must be of boolean type")
-        # lowest_pitch
-        if not isinstance(self.lowest_pitch, int):
-            raise TypeError("`lowest_pitch` must be of int type")
-        if self.lowest_pitch < 0:
-            raise ValueError("`lowest_pitch` must be a non-negative integer")
+        # lowest
+        if not isinstance(self.lowest, int):
+            raise TypeError("`lowest` must be of int type")
+        if self.lowest < 0:
+            raise ValueError("`lowest` must be a non-negative integer")
         # name
         if not isinstance(self.name, str):
             raise TypeError("`name` must be of str type")
@@ -125,7 +125,7 @@ class Track(object):
         """Compress the piano-roll to active pitch range"""
         lowest, highest = self.get_pitch_range(True)
         self.pianoroll = self.pianoroll[:, lowest:highest]
-        self.lowest_pitch += lowest
+        self.lowest += lowest
 
     def copy(self):
         """
@@ -151,14 +151,14 @@ class Track(object):
         highest : int or float
             The highest pitch of the expanded piano-roll.
         """
-        if self.lowest_pitch > lowest:
-            to_pad = self.lowest_pitch - lowest
+        if self.lowest > lowest:
+            to_pad = self.lowest - lowest
             self.pianoroll = np.pad(self.pianoroll, ((0, 0), (to_pad, 0)),
                                     'constant')
-        elif self.lowest_pitch < lowest:
-            self.pianoroll = self.pianoroll[:, (lowest - self.lowest_pitch):]
+        elif self.lowest < lowest:
+            self.pianoroll = self.pianoroll[:, (lowest - self.lowest):]
 
-        self.lowest_pitch = lowest
+        self.lowest = lowest
 
         pitch_axis_length = highest - lowest + 1
         if self.pianoroll.shape[1] < pitch_axis_length:
@@ -180,8 +180,7 @@ class Track(object):
             Indicate the lowest pitch in the piano-roll.
         """
         copied = np.copy(self.pianoroll)
-        lowest = self.lowest_pitch
-        return copied, lowest
+        return copied, self.lowest
 
     def get_length(self):
         """
@@ -225,8 +224,8 @@ class Track(object):
             highest -= 1
 
         if not relative:
-            lowest = self.lowest_pitch + lowest
-            highest = self.lowest_pitch + highest
+            lowest = self.lowest + lowest
+            highest = self.lowest + highest
 
         return lowest, highest
 
@@ -245,14 +244,14 @@ class Track(object):
 
     def transpose(self, semitone):
         """
-        Transpose the piano-roll by ``semitones`` semitones
+        Transpose the piano-roll by `semitones` semitones
 
         Parameters
         ----------
         semitone : int
             Number of semitones transpose the piano-roll.
         """
-        self.lowest_pitch += semitone
+        self.lowest += semitone
 
     def trim_trailing_silence(self):
         """Trim the trailing silence of the piano-roll"""
