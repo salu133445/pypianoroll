@@ -121,11 +121,13 @@ class Track(object):
         """
         np.clip(self.pianoroll, lower, upper, self.pianoroll)
 
-    def compress_pitch_range(self):
+    def compress(self):
         """Compress the piano-roll to active pitch range"""
         lowest, highest = self.get_pitch_range(True)
         self.pianoroll = self.pianoroll[:, lowest:highest]
         self.lowest_pitch += lowest
+
+    def expand()
 
     def copy(self):
         """
