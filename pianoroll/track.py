@@ -153,12 +153,15 @@ class Track(object):
         -------
         binarized :
             A binarized copy of the piano-roll
+        lowest : int
+            Indicate the lowest pitch in the merged piano-roll.
         """
         if self.is_binarized():
             binarized = np.copy(self.pianoroll)
         else:
             binarized = (self.pianoroll > threshold)
-        return binarized
+        lowest = self.lowest_pitch
+        return binarized, lowest
 
     def get_length(self):
         """
@@ -183,9 +186,12 @@ class Track(object):
         -------
         copied :
             A copy of the piano-roll
+        lowest : int
+            Indicate the lowest pitch in the merged piano-roll.
         """
         copied = np.copy(self.pianoroll)
-        return copied
+        lowest = self.lowest_pitch
+        return copied, lowest
 
     def get_pitch_range(self, relative=False):
         """
