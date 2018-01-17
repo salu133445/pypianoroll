@@ -3,6 +3,7 @@ Class for multi-track piano-rolls with metadata.
 """
 from __future__ import division
 import warnings
+import json
 from copy import deepcopy
 import numpy as np
 import pretty_midi
@@ -31,10 +32,10 @@ class MultiTrack(object):
 
     Notes
     -----
-    The length of ``tempo`` and ``downbeat`` can be different. During
-    conversion and rendering, the tempo array will be automatically padded
-    to appropriate length with the last tempo value. The downbeat array has
-    no effect on playback.
+    The length of `tempo` and `downbeat` can be different. During conversion
+    and rendering, the tempo array will be automatically padded to
+    appropriate length with the last tempo value. The downbeat array has no
+    effect on playback.
     """
     def __init__(self, filepath=None, tracks=None, tempo=120.0, downbeat=None,
                  beat_resolution=24, name='unknown'):
@@ -44,8 +45,8 @@ class MultiTrack(object):
 
         Notes
         -----
-        When ``filepath`` is given, ignore arguments ``tracks``, ``tempo``,
-        ``downbeat`` and ``name``.
+        When `filepath` is given, ignore arguments `tracks`, `tempo`, `downbeat`
+        and `name`.
 
         Parameters
         ----------
@@ -53,22 +54,20 @@ class MultiTrack(object):
             File path to a MIDI file (.mid, .midi, .MID, .MIDI) or a .npz file.
         beat_resolution : int
             Resolution of a beat (in time step). Will be assigned to
-            ``beat_resolution`` when ``filepath`` is not provided. Default to
-            24.
+            `beat_resolution` when `filepath` is not provided. Default to 24.
         tracks : list
             List of :class:`pianoroll.Track` objects to be added to the track
-            list when ``filepath`` is not provided.
+            list when `filepath` is not provided.
         tempo : int or np.ndarray, shape=(num_time_step,), dtype=float
             Tempo array that indicates the tempo value (in bpm) at each time
             step. Length is the number of time steps. Will be assigned to
-            ``tempo`` when ``filepath`` is not provided. If an integer is
-            provided, it will be first converted to a numpy array. Default to
-            120.0.
+            `tempo` when `filepath` is not provided. If an integer is provided,
+            it will be first converted to a numpy array. Default to 120.0.
         downbeat : np.ndarray, shape=(num_time_step,), dtype=bool
             Downbeat array that indicates whether the time step contains a
             downbeat, i.e. the first time step of a bar. Length is the number of
-            time steps. Will be assigned to ``downbeat`` when ``filepath`` is
-            not provided.
+            time steps. Will be assigned to `downbeat` when `filepath` is not
+            provided.
         name : str
             Name to be assigned to the multi-track piano-roll. Default to
             'unknown'.
@@ -103,7 +102,7 @@ class MultiTrack(object):
             self.check_validity()
 
     def append_track(self, track=None, pianoroll=None, program=0, is_drum=False,
-                     lowest_pitch=0, name='unknown'):
+                     lowest=0, name='unknown'):
         """
         Append a multitrack.Track instance to the track list or create a new
         multitrack.Track object and append it to the track list.
@@ -115,7 +114,7 @@ class MultiTrack(object):
             list.
         pianoroll : np.ndarray, shape=(num_time_step, num_pitch)
             Piano-roll matrix. First dimension represents time. Second dimension
-            represents pitch. The lowest pitch is given by ``lowest_pitch``.
+            represents pitch. The lowest pitch is given by `lowest`.
             Available datatypes are bool, int, float.
         program: int
             Program number according to General MIDI specification [1].
@@ -125,7 +124,7 @@ class MultiTrack(object):
             to False.
         name : str
             Name of the track. Default to 'unknown'.
-        lowest_pitch : int
+        lowest : int
             Indicate the lowest pitch of the piano-roll. Default to zero.
 
         References
@@ -137,17 +136,17 @@ class MultiTrack(object):
                 raise TypeError("`track` must be a multitrack.Track instance")
             track.check_validity()
         else:
-            track = Track(pianoroll, program, is_drum, name, lowest_pitch)
+            track = Track(pianoroll, program, is_drum, name, lowest)
         self.tracks.append(track)
 
-    def binarize(self, threshold=0.0):
+    def binarize(self, threshold=0):
         """
         Binarize the piano-rolls of all tracks. Pass the track if its piano-roll
         is already binarized
 
         Parameters
         ----------
-        threshold : float
+        threshold : int or float
             Threshold to binarize the piano-rolls. Default to zero.
         """
         for track in self.tracks:
@@ -217,10 +216,10 @@ class MultiTrack(object):
         for track in self.tracks:
             track.clip(lower, upper)
 
-    def compress_pitch_range(self):
+    def compress(self):
         """Compress the piano-rolls of all tracks to active pitch range"""
         for track in self.tracks:
-            track.compress_pitch_range()
+            track.compress()
 
     def copy(self):
         """
@@ -234,21 +233,29 @@ class MultiTrack(object):
         copied = deepcopy(self)
         return copied
 
+    def expand(self, lowest=0, highest=127):
+        """
+        Expand the piano-rolls of all tracks to a pitch range specified by
+        `lowest` and `highest`
+        """
+        for track in self.tracks:
+            track.expand(lowest, highest)
+
     def get_downbeat_steps(self):
         """
         Return the indices of time steps that contain downbeats
 
         Returns
         -------
-        downbeat_steps : list
-            List of indices of time steps that contain downbeats.
+        downbeat_steps : np.ndarray
+            Indices of time steps that contain downbeats.
         """
-        downbeat_steps = np.nonzero(self.downbeat)[0].astype(int).tolist()
+        downbeat_steps = np.nonzero(self.downbeat)[0]
         return downbeat_steps
 
     def get_length(self, track_indices=None):
         """
-        Return length (in time step) of tracks specified by ``track_indices``.
+        Return length (in time step) of tracks specified by `track_indices`.
 
         Parameters
         ----------
@@ -264,7 +271,7 @@ class MultiTrack(object):
     def get_merged_pianoroll(self, track_indices=None, mode='sum',
                              clipped=True, upper=128):
         """
-        Return a merged piano-roll of tracks specified by ``track_indices``.
+        Return a merged piano-roll of tracks specified by `track_indices`.
 
         Parameters
         ----------
@@ -293,10 +300,8 @@ class MultiTrack(object):
 
         Retruns
         -------
-        merged : np.ndarray
-            The merged piano-rolls. Ordering follows what appear in
-            ``track_indices``. Size of the numpy arrays are (num_time_step,
-            num_pitch).
+        merged : np.ndarray, shape=(num_time_step, num_pitch)
+            The merged piano-rolls.
         lowest : int
             Indicate the lowest pitch in the merged piano-roll.
         """
@@ -346,7 +351,7 @@ class MultiTrack(object):
     def get_pitch_range(self, track_indices=None):
         """
         Return the pitch range in tuple (lowest, highest) of the piano-rolls
-        specified by ``track_indices``.
+        specified by `track_indices`.
 
         Parameters
         ----------
@@ -375,11 +380,16 @@ class MultiTrack(object):
         return lowest, highest
 
     def get_stacked_pianorolls(self, track_indices=None, binarized=False,
-                               threshold=0.0):
+                               threshold=0):
         """
         Return a stacked multi-track piano-roll composed of tracks specified
-        by ``track_indices``. The shape of the return np.ndarray is
+        by `track_indices`. The shape of the return np.ndarray is
         (num_time_step, num_pitch, num_track).
+
+        Notes
+        -----
+        The ordering of tracks follows what appear in `track_indices`. If
+        `track_indices` is None, the original order will be preserved.
 
         Parameters
         ----------
@@ -389,16 +399,14 @@ class MultiTrack(object):
         binarized : bool
             If True, return a binarized stacked piano-rolls. Otherwise, return
             the raw stacked piano-rolls. Default to False.
-        threshold : int
+        threshold : int or float
             Threshold to binarize the collected piano-rolls. Only effective when
-            ``binarized`` is True. Default to zero.
+            `binarized` is True. Default to zero.
 
         Returns
         -------
         stacked : np.ndarray, shape=(num_time_step, num_pitch, num_track)
-            The stacked piano-roll. Shape is (num_time_step, num_pitch,
-            num_track). The ordering of tracks follows what appear in
-            ``track_indices``.
+            The stacked piano-roll.
         lowest : int
             Indicate the lowest pitch in the stacked piano-roll.
         """
@@ -410,8 +418,8 @@ class MultiTrack(object):
 
         to_stack = []
         for idx in track_indices:
-            to_pad_l = self.tracks[idx].lowest_pitch - lowest
-            to_pad_h = (highest - self.tracks[idx].lowest_pitch
+            to_pad_l = self.tracks[idx].lowest - lowest
+            to_pad_h = (highest - self.tracks[idx].lowest
                         - self.tracks[idx].pianoroll.shape[1])
             to_pad_t = length - self.tracks[idx].pianoroll.shape[0]
             to_pad = ((0, to_pad_t), (to_pad_l, to_pad_h))
@@ -428,7 +436,7 @@ class MultiTrack(object):
 
     def is_binarized(self, track_indices=None):
         """
-        Return True if pianorolls specified by ``track_indices`` are already
+        Return True if pianorolls specified by `track_indices` are already
         binarized. Otherwise, return False
 
         Parameters
@@ -450,40 +458,64 @@ class MultiTrack(object):
                 return False
         return True
 
-    def load(self, filepath):
-        pass
-        # """Save a .npz file to a multi-track piano-roll"""
-        # def reconstruct_sparse_matrix(target_dict, name):
-        #     """
-        #     Return the reconstructed scipy.sparse.csc_matrix, whose components
-        #     are stored in ``target_dict`` with prefix given as ``name``
-        #     """
-        #     return csc_matrix((target_dict[name+'_csc_data'],
-        #                        target_dict[name+'_csc_indices'],
-        #                        target_dict[name+'_csc_indptr']),
-        #                       shape=target_dict[name+'_csc_shape'])
-        # # load the .npz file
-        # with np.load(filepath) as loaded:
-        #     pianoroll_component_count = 0
-        #     for filename in loaded.files:
-        #         if filename.startswith('pianorolls_'):
-        #             pianoroll_component_count += 1
-        #     # sort the file names in o
-        #     for idx in range(len(pianoroll_files)/4):
-        #         # reconstruct csc_matrix and add it to csc_matrix dictionary
-        #         self.pianorolls[idx] = reconstruct_sparse_matrix(loaded, \
-        #             'pianorolls_{:03d}'.format(idx))
-        #     self.downbeat = loaded['downbeat']
-        # self.check_validity()
+    def load(self, filepath_npz, filepath_json):
+        """
+        Load a previously saved .npz file and json file
+
+        Notes
+        -----
+        Previous values of attributes will all be cleared.
+
+        Parameters
+        ----------
+        filepath_npz : str
+            The path to the .npz file.
+        filepath_json : str
+            The path to the JSON file.
+        """
+        def reconstruct_sparse(target_dict, name):
+            """
+            Return the reconstructed scipy.sparse.csc_matrix, whose components
+            are stored in `target_dict` with prefix given as `name`
+            """
+            return csc_matrix((target_dict[name+'_csc_data'],
+                               target_dict[name+'_csc_indices'],
+                               target_dict[name+'_csc_indptr']),
+                              shape=target_dict[name+'_csc_shape'])
+
+        with open(filepath_json) as infile:
+            info_dict = json.load(infile)
+
+        self.name = info_dict['name']
+        self.beat_resolution = info_dict['beat_resolution']
+
+        with np.load(filepath_npz) as loaded:
+            self.tempo = loaded['tempo']
+            if 'downbeat' in loaded.files:
+                self.tempo = loaded['downbeat']
+
+            idx = 0
+            while str(idx) in info_dict:
+                pianoroll = reconstruct_sparse(loaded,
+                                               'pianoroll_{}'.format(idx))
+                track = Track(pianoroll, info_dict[str(idx)]['program'],
+                              info_dict[str(idx)]['is_drum'],
+                              info_dict[str(idx)]['name'],
+                              info_dict[str(idx)]['name'],
+                              info_dict[str(idx)]['lowest'])
+                self.tracks.append(track)
+                idx += 1
+
+        self.check_validity()
 
     def merge_tracks(self, track_indices=None, mode='sum', program=0,
                      is_drum=False, name='merged', remove_merged=False,
                      clipped=True, upper=128):
         """
-        Merge piano-rolls of tracks specified by ``track_indices``. The merged
-        track will have program number as given by ``program`` and drum
-        indicator as given by ``is_drum``. The merged track will be appended at
-        the end of the track list.
+        Merge piano-rolls of tracks specified by `track_indices`. The merged
+        track will have program number as given by `program` and drum indicator
+        as given by `is_drum`. The merged track will be appended at the end of
+        the track list.
 
         Parameters
         ----------
@@ -528,15 +560,15 @@ class MultiTrack(object):
         merged, lowest = self.get_merged_pianoroll(track_indices, mode,
                                                    clipped, upper)
 
-        merged_track = Track(merged, program, is_drum,  name, lowest)
+        merged_track = Track(merged, program, is_drum, name, lowest)
         self.append_track(merged_track)
 
         if remove_merged:
             self.remove_tracks(track_indices)
 
     def parse_midi(self, filepath, mode='sum', algorithm='normal',
-                   binarized=False, threshold=0.0, first_beat_time=None,
-                   collect_onsets_only=False, ):
+                   binarized=False, compressed=True, collect_onsets_only=False,
+                   threshold=0, first_beat_time=None):
         """
         Parse a MIDI file
 
@@ -560,17 +592,21 @@ class MultiTrack(object):
             location of the first beat.
         binarized : bool
             True to binarize the parsed piano-rolls before merging duplicate
-            notes. False to use the original parsed piano-rolls. Default to False.
-        threshold : int
-            Threshold to binarize the parsed piano-rolls. Only effective when
-            ``binarized`` is True. Default to zero.
-        first_beat_time : float
-            The location (in sec) of the first beat. Required and only effective
-            when using 'custom' algorithm.
+            notes. False to use the original parsed piano-rolls. Default to
+            False.
+        compressed : bool
+            True to compress the pitch range of the parsed piano-rolls. False to
+            use the original parsed piano-rolls. Deafault to True.
         collect_onsets_only : bool
             True to collect only the onset of the notes (i.e. note on events) in
             all tracks, where the note off and duration information are dropped.
             False to parse regular piano-rolls.
+        threshold : int or float
+            Threshold to binarize the parsed piano-rolls. Only effective when
+            `binarized` is True. Default to zero.
+        first_beat_time : float
+            The location (in sec) of the first beat. Required and only effective
+            when using 'custom' algorithm.
 
         Returns
         -------
@@ -603,13 +639,14 @@ class MultiTrack(object):
         """
         pm = pretty_midi.PrettyMIDI(filepath)
         midi_info = self.parse_pretty_midi(pm, mode, algorithm, binarized,
-                                           threshold, collect_onsets_only,
-                                           first_beat_time)
+                                           compressed, collect_onsets_only,
+                                           threshold, first_beat_time)
         return midi_info
 
-    def parse_pretty_midi(self, pm, mode='sum',  algorithm='normal',
-                          binarized=False, threshold=0.0,
-                          collect_onsets_only=False, first_beat_time=None):
+    def parse_pretty_midi(self, pm, mode='sum', algorithm='normal',
+                          binarized=False, compressed=True,
+                          collect_onsets_only=False, threshold=0,
+                          first_beat_time=None):
         """
         Parse a :class:`pretty_midi.PrettyMIDI` object
 
@@ -633,17 +670,21 @@ class MultiTrack(object):
             location of the first beat.
         binarized : bool
             True to binarize the parsed piano-rolls before merging duplicate
-            notes. False to use the original parsed piano-rolls. Default to False.
-        threshold : int
-            Threshold to binarize the parsed piano-rolls. Only effective when
-            ``binarized`` is True. Default to zero.
-        first_beat_time : float
-            The location (in sec) of the first beat. Required and only effective
-            when using 'custom' algorithm.
+            notes. False to use the original parsed piano-rolls. Default to
+            False.
+        compressed : bool
+            True to compress the pitch range of the parsed piano-rolls. False to
+            use the original parsed piano-rolls. Deafault to True.
         collect_onsets_only : bool
             True to collect only the onset of the notes (i.e. note on events) in
             all tracks, where the note off and duration information are dropped.
             False to parse regular piano-rolls.
+        threshold : int or float
+            Threshold to binarize the parsed piano-rolls. Only effective when
+            `binarized` is True. Default to zero.
+        first_beat_time : float
+            The location (in sec) of the first beat. Required and only effective
+            when using 'custom' algorithm.
 
         Returns
         -------
@@ -853,6 +894,8 @@ class MultiTrack(object):
 
             track = Track(piano_roll, instrument.program, instrument.is_drum,
                           instrument.name)
+            if compressed:
+                track.compress()
             self.tracks.append(track)
 
         # Collect midi info into a dictionary and return it
@@ -873,7 +916,7 @@ class MultiTrack(object):
 
     def remove_tracks(self, track_indices):
         """
-        Remove tracks specified by ``track_indices``.
+        Remove tracks specified by `track_indices`.
 
         Parameters
         ----------
@@ -883,39 +926,74 @@ class MultiTrack(object):
         self.tracks = [track for idx, track in enumerate(self.tracks)
                        if idx not in track_indices]
 
-    def save(self, filepath, compressed=True):
+    def save(self, filepath_npz, filepath_json, track_indices=None,
+             compressed=True):
         """
-        Save to a .npz file
+        Save numpy arrays to a (compressed) .npz file and other information to a
+        json file
+
+        Notes
+        -----
+        - To reduce the file size, the collected piano-rolls are first converted
+          to instances of scipy.sparse.csc_matrix, whose component arrays are
+          then collected and saved to the .npz file.
+        - The ordering of tracks in the saved .npz file follows what appear in
+          `track_indices`. If `track_indices` is None, the original order will
+          be preserved.
 
         Parameters
         ----------
-        filepath : str
+        filepath_npz : str
             The path to write the .npz file.
+        filepath_json : str
+            The path to write the JSON file.
+        track_indices : list
+            List of indices that indicates which tracks to save. If None (by
+            default), all tracks will be converted.
+        compressed : bool
+            True to save to a compressed .npz file. False to save to a
+            uncompressed .npz file. Default to True.
         """
-        pass
-        # """Save the multi-track piano-roll to a .npz file"""
-        # def update_sparse_matrix(target_dict, sparse_matrix, name):
-        #     """
-        #     Turn ``sparse_matrix`` into a scipy.sparse.csc_matrix and update its
-        #     component arrays to the ``target_dict`` with key given as ``name``
-        #     """
-        #     csc = csc_matrix(sparse_matrix)
-        #     target_dict[name+'_csc_data'] = csc.data
-        #     target_dict[name+'_csc_indices'] = csc.indices
-        #     target_dict[name+'_csc_indptr'] = csc.indptr
-        #     target_dict[name+'_csc_shape'] = csc.shape
-        # result_dict = {'downbeat': self.downbeat}
-        # for idx, pianoroll in enumerate(self.pianorolls):
-        #     update_sparse_matrix(result_dict, pianoroll,
-        #                          'pianorolls_{:03d}'.format(idx))
 
-        # if not filepath.endswith('.npz'):
-        #     filepath += '.npz'
+        def update_sparse(target_dict, sparse_matrix, name):
+            """
+            Turn `sparse_matrix` into a scipy.sparse.csc_matrix and update its
+            component arrays to the `target_dict` with key as `name` postfixed
+            with its component type string
+            """
+            csc = csc_matrix(sparse_matrix)
+            target_dict[name+'_csc_data'] = csc.data
+            target_dict[name+'_csc_indices'] = csc.indices
+            target_dict[name+'_csc_indptr'] = csc.indptr
+            target_dict[name+'_csc_shape'] = csc.shape
 
-        # if compressed:
-        #     np.savez_compressed(filepath, **result_dict)
-        # else:
-        #     np.savez(filepath, **result_dict)
+        if track_indices is None:
+            track_indices = range(len(self.tracks))
+
+        array_dict = {'tempo': self.tempo}
+        info_dict = {'beat_resolution': self.beat_resolution,
+                     'name': self.name}
+
+        if self.downbeat:
+            array_dict['downbeat'] = self.downbeat
+
+        for idx, track_idx in enumerate(track_indices):
+            update_sparse(array_dict, self.tracks[track_idx].pianoroll,
+                          'pianoroll_{}'.format(idx))
+            info_dict[str(idx)] = {'program': self.tracks[track_idx].program,
+                                   'is_drum': self.tracks[track_idx].is_drum,
+                                   'name': self.tracks[track_idx].name,
+                                   'lowest': self.tracks[track_idx].lowest}
+
+        if not filepath_npz.endswith('.npz'):
+            filepath_npz += '.npz'
+        if compressed:
+            np.savez_compressed(filepath_npz, **array_dict)
+        else:
+            np.savez(filepath_npz, **array_dict)
+
+        with open(filepath_json, 'w') as outfile:
+            json.dump(info_dict, outfile)
 
     def to_pretty_midi(self, track_indices=None, tempo=False, downbeat=False):
         """
@@ -930,8 +1008,8 @@ class MultiTrack(object):
         Parameters
         ----------
         track_indices : list
-            List of indices that indicates which tracks to convert. If None
-            (by default), all tracks will be converted.
+            List of indices that indicates which tracks to convert. If None (by
+            default), all tracks will be converted.
 
         Returns
         -------
@@ -961,6 +1039,7 @@ class MultiTrack(object):
             padded = np.pad(binarized, ((1, 1), (0, 0)), 'constant')
             diff = np.diff(padded, axis=0)
 
+            track.get_pitch_range()
             for pitch in range(128):
                 note_ons = np.nonzero(diff[:, pitch] > 0)
                 note_on_times = time_step_size * note_ons[0]
@@ -981,7 +1060,7 @@ class MultiTrack(object):
 
     def transpose(self, semitone):
         """
-        Transpose the piano-rolls by ``semitones`` semitones
+        Transpose the piano-rolls by `semitones` semitones
 
         Parameters
         ----------
