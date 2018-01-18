@@ -127,7 +127,7 @@ class Track(object):
         """
         np.clip(self.pianoroll, lower, upper, self.pianoroll)
 
-    def compress(self):
+    def compress_to_active(self):
         """Compress the piano-roll to active pitch range"""
         lowest, highest = self.get_pitch_range(True)
         self.pianoroll = self.pianoroll[:, lowest:highest]
@@ -147,8 +147,8 @@ class Track(object):
 
     def expand(self, lowest=0, highest=127):
         """
-        Expand the piano-roll to a pitch range specified by `lowest` and
-        `highest`
+        Expand or compress the piano-roll to a pitch range specified by
+        `lowest` and `highest`
 
         Parameters
         ----------

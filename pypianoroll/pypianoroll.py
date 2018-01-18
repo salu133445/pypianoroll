@@ -63,13 +63,13 @@ def clip(obj, lower=0, upper=128):
     copied.clip(lower, upper)
     return copied
 
-def compress_pitch_range(obj):
+def compress_to_active(obj):
     """
     Return a copy of the object with piano-roll(s) compressed to active
     pitch range(s)
     """
     copied = deepcopy(obj)
-    copied.compress_pitch_range()
+    copied.compress_to_active()
     return copied
 
 def copy(obj):

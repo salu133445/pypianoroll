@@ -235,10 +235,10 @@ class Multitrack(object):
         for track in self.tracks:
             track.clip(lower, upper)
 
-    def compress(self):
+    def compress_to_active(self):
         """Compress the piano-rolls of all tracks to active pitch range"""
         for track in self.tracks:
-            track.compress()
+            track.compress_to_active()
 
     def copy(self):
         """
@@ -254,8 +254,8 @@ class Multitrack(object):
 
     def expand(self, lowest=0, highest=127):
         """
-        Expand the piano-rolls of all tracks to a pitch range specified by
-        `lowest` and `highest`
+        Expand or compress the piano-rolls of all tracks to a pitch range
+        specified by `lowest` and `highest`
         """
         for track in self.tracks:
             track.expand(lowest, highest)
@@ -894,7 +894,7 @@ class Multitrack(object):
             track = Track(piano_roll, instrument.program, instrument.is_drum,
                           instrument.name)
             if compressed:
-                track.compress()
+                track.compress_to_active()
             self.tracks.append(track)
 
         self.check_validity()
