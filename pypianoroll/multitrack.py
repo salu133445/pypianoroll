@@ -112,6 +112,20 @@ class Multitrack(object):
             self.name = name
             self.check_validity()
 
+    def __repr__(self):
+        track_names = ', '.join([track.name.__str__ for track in self.tracks])
+        return ("Multitrack(tracks=[{}], tempo={}, downbeat={}, beat_resolution"
+                "={}, name={})".format(track_names, self.tempo.__str__,
+                                       self.downbeat.__str__,
+                                       self.beat_resolution, self.name))
+
+    def __str__(self):
+        track_names = ', '.join([track.name.__str__ for track in self.tracks])
+        return ("tracks : [{}],\ntempo : {},\ndownbeat : {},\nbeat_resolution "
+                ": {},\nname : {}".format(track_names, self.tempo.__str__,
+                                          self.downbeat.__str__,
+                                          self.beat_resolution, self.name))
+
     def append_track(self, track=None, pianoroll=None, program=0, is_drum=False,
                      lowest=0, name='unknown'):
         """
