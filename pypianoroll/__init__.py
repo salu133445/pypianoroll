@@ -12,5 +12,5 @@ Features:
 from .track import Track
 from .multitrack import Multitrack
 from .pypianoroll import (is_pianoroll, is_standard_pianoroll, binarize, clip,
-                          compress_pitch_range, copy, transpose,
+                          compress_to_active, copy, transpose,
                           trim_trailing_silence)
