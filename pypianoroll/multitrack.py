@@ -17,7 +17,7 @@ class Multitrack(object):
     Attributes
     ----------
     tracks : list
-        List of :class:`pianoroll.Track` objects.
+        List of :class:`pypianoroll.Track` objects.
     tempo : np.ndarray, shape=(num_time_step,), dtype=float
         Tempo array that indicates the tempo value (in bpm) at each time
         step. Length is the number of time steps.
@@ -63,7 +63,7 @@ class Multitrack(object):
             Resolution of a beat (in time step). Will be assigned to
             `beat_resolution` when `filepath` is not provided. Default to 24.
         tracks : list
-            List of :class:`pianoroll.Track` objects to be added to the track
+            List of :class:`pypianoroll.Track` objects to be added to the track
             list when `filepath` is not provided.
         tempo : int or np.ndarray, shape=(num_time_step,), dtype=float
             Tempo array that indicates the tempo value (in bpm) at each time
@@ -103,8 +103,8 @@ class Multitrack(object):
                 self.tracks = tracks
             else:
                 self.tracks = [Track()]
-            if isinstance(self.tempo, (int, float)):
-                self.tempo = np.array([self.tempo])
+            if isinstance(tempo, (int, float)):
+                self.tempo = np.array([tempo])
             else:
                 self.tempo = tempo
             self.downbeat = downbeat
@@ -135,7 +135,7 @@ class Multitrack(object):
         Parameters
         ---------
         track : pianoroll.Track
-            A :class:`pianoroll.Track` instance to be appended to the track
+            A :class:`pypianoroll.Track` instance to be appended to the track
             list.
         pianoroll : np.ndarray, shape=(num_time_step, num_pitch)
             Piano-roll matrix. First dimension represents time. Second dimension
@@ -173,6 +173,10 @@ class Multitrack(object):
         ----------
         threshold : int or float
             Threshold to binarize the piano-rolls. Default to zero.
+
+        See Also
+        --------
+        :method:`pypianoroll.Track.binarize()`
         """
         for track in self.tracks:
             track.binarize(threshold)
@@ -231,6 +235,10 @@ class Multitrack(object):
             The lower bound to clip the piano-roll. Default to 0.
         upper : int or float
             The upper bound to clip the piano-roll. Default to 128.
+
+        See Also
+        --------
+        :method:`pypianoroll.Track.clip()`
         """
         for track in self.tracks:
             track.clip(lower, upper)
@@ -246,7 +254,7 @@ class Multitrack(object):
 
         Returns
         -------
-        copied : `pianoroll.Multitrack` object
+        copied : `pypianoroll.Multitrack` object
             A copy of the object.
         """
         copied = deepcopy(self)
@@ -256,6 +264,14 @@ class Multitrack(object):
         """
         Expand or compress the piano-rolls of all tracks to a pitch range
         specified by `lowest` and `highest`
+
+        Notes
+        -----
+        Notes with out-of-range pitches will all be dropped.
+
+        See Also
+        --------
+        :method:`pypianoroll.Track.expand()`
         """
         for track in self.tracks:
             track.expand(lowest, highest)
@@ -1067,6 +1083,10 @@ class Multitrack(object):
         ----------
         semitone : int
             Number of semitones transpose the piano-rolls.
+
+        See Also
+        --------
+        :method:`pypianoroll.Track.transpose()`
         """
         for track in self.tracks():
             track.transpose(semitone)

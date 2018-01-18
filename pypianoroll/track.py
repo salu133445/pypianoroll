@@ -80,6 +80,14 @@ class Track(object):
         ----------
         threshold : int or float
             Threshold to binarize the piano-rolls. Default to zero.
+
+        Examples
+        --------
+        >>> pianoroll = np.random.randint(0, 127, (96, 128))
+        >>> track = pypianoroll.Track(pianoroll)
+        >>> track.binarize(0)
+        >>> track.pianoroll.dtype
+        bool
         """
         if not self.is_binarized():
             self.pianoroll = (self.pianoroll > threshold)
@@ -124,6 +132,16 @@ class Track(object):
             The lower bound to clip the piano-roll. Default to 0.
         upper : int or float
             The upper bound to clip the piano-roll. Default to 128.
+
+        Examples
+        --------
+        >>> pianoroll = np.random.randint(0, 127, (96, 128))
+        >>> track = pypianoroll.Track(pianoroll)
+        >>> track.clip(20, 80)
+        >>> track.pianoroll.min()
+        20
+        >>> track.pianoroll.max()
+        80
         """
         np.clip(self.pianoroll, lower, upper, self.pianoroll)
 
@@ -139,7 +157,7 @@ class Track(object):
 
         Returns
         -------
-        copied : `pianoroll.Track` object
+        copied : `pypianoroll.Track` object
             A copy of the object.
         """
         copied = deepcopy(self)
@@ -156,6 +174,21 @@ class Track(object):
             The lowest pitch of the expanded piano-roll.
         highest : int or float
             The highest pitch of the expanded piano-roll.
+
+        Examples
+        --------
+        >>> pianoroll = np.ones((96, 40))
+        >>> track = pypianoroll.Track(pianoroll, lowest=10)
+        >>> track.expand(0, 127)
+        >>> track.lowest
+        0
+        >>> track.pianoroll.shape
+        (96, 128)
+        >>> track.expand(31, 60)
+        >>> track.lowest
+        31
+        >>> track.pianoroll.shape
+        (96, 30)
         """
         if self.lowest > lowest:
             to_pad = self.lowest - lowest
@@ -256,6 +289,18 @@ class Track(object):
         ----------
         semitone : int
             Number of semitones transpose the piano-roll.
+
+        Examples
+        --------
+        >>> pianoroll = np.random.randint(0, 127, (96, 128))
+        >>> track = pypianoroll.Track(pianoroll0)
+        >>> track.lowest
+        0
+        >>> track.transpose(10)
+        >>> track.lowest
+        10
+        >>> track.pianoroll.shape
+        (96, 128)
         """
         self.lowest += semitone
 
