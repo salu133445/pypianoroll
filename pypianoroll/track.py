@@ -247,7 +247,7 @@ class Track(object):
         """
         non_zero_steps = np.any((self.pianoroll > 0), axis=1)
         inv_last_non_zero_step = np.argmax(np.flip(non_zero_steps, axis=0))
-        length = self.pianoroll.shape[0] - inv_last_non_zero_step - 1
+        length = self.pianoroll.shape[0] - inv_last_non_zero_step
         return length
 
     def get_pitch_range(self, relative=False):
