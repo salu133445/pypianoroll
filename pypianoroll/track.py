@@ -83,11 +83,19 @@ class Track(object):
 
         Examples
         --------
-        >>> pianoroll = np.random.randint(0, 127, (96, 128))
+        >>> pianoroll = np.arange(24).reshape((4,6))
+        >>> pianoroll
+        array([[ 0,  1,  2,  3,  4,  5],
+               [ 6,  7,  8,  9, 10, 11],
+               [12, 13, 14, 15, 16, 17],
+               [18, 19, 20, 21, 22, 23]])
         >>> track = pypianoroll.Track(pianoroll)
-        >>> track.binarize(0)
-        >>> track.pianoroll.dtype
-        bool
+        >>> track.binarize(10)
+        >>> track.pianoroll
+        array([[False, False, False, False, False, False],
+               [False, False, False, False, False,  True],
+               [ True,  True,  True,  True,  True,  True],
+               [ True,  True,  True,  True,  True,  True]], dtype=bool)
         """
         if not self.is_binarized():
             self.pianoroll = (self.pianoroll > threshold)
@@ -135,15 +143,21 @@ class Track(object):
 
         Examples
         --------
-        >>> pianoroll = np.random.randint(0, 127, (96, 128))
+        >>> pianoroll = np.arange(24).reshape((4,6))
+        >>> pianoroll
+        array([[ 0,  1,  2,  3,  4,  5],
+               [ 6,  7,  8,  9, 10, 11],
+               [12, 13, 14, 15, 16, 17],
+               [18, 19, 20, 21, 22, 23]])
         >>> track = pypianoroll.Track(pianoroll)
-        >>> track.clip(20, 80)
-        >>> track.pianoroll.min()
-        20
-        >>> track.pianoroll.max()
-        80
+        >>> track.clip(5, 15)
+        >>> track.pianoroll
+        array([[ 5,  5,  5,  5,  5,  5],
+               [ 6,  7,  8,  9, 10, 11],
+               [12, 13, 14, 15, 15, 15],
+               [15, 15, 15, 15, 15, 15]])
         """
-        np.clip(self.pianoroll, lower, upper, self.pianoroll)
+        self.pianoroll = self.pianoroll.clip(self.pianoroll, lower, upper)
 
     def compress_to_active(self):
         """Compress the piano-roll to active pitch range"""
@@ -293,14 +307,12 @@ class Track(object):
         Examples
         --------
         >>> pianoroll = np.random.randint(0, 127, (96, 128))
-        >>> track = pypianoroll.Track(pianoroll0)
+        >>> track = pypianoroll.Track(pianoroll)
         >>> track.lowest
         0
         >>> track.transpose(10)
         >>> track.lowest
         10
-        >>> track.pianoroll.shape
-        (96, 128)
         """
         self.lowest += semitone
 
