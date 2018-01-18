@@ -62,9 +62,9 @@ class Track(object):
         self.check_validity()
 
     def __repr__(self):
-        return ("Track(program={}, is_drum={}, name={}, lowest={}, "
-                "pianoroll=\n{}".format(self.program, self.is_drum, self.name,
-                                        self.lowest, self.pianoroll.__str__))
+        return ("Track(pianoroll={}, program={}, is_drum={}, name={}, "
+                "lowest={}".format(self.program, self.is_drum, self.name,
+                                   self.lowest, self.pianoroll.__str__))
 
     def __str__(self):
         return ("program : {},\nis_drum : {},\nname : {},\nlowest : {},\n"
