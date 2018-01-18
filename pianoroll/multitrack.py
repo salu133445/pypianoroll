@@ -103,7 +103,10 @@ class MultiTrack(object):
                 self.tracks = tracks
             else:
                 self.tracks = [Track()]
-            self.tempo = tempo
+            if isinstance(self.tempo, (int, float)):
+                self.tempo = np.array([self.tempo])
+            else:
+                self.tempo = tempo
             self.downbeat = downbeat
             self.beat_resolution = beat_resolution
             self.name = name
@@ -177,17 +180,13 @@ class MultiTrack(object):
                 raise TypeError("`tracks` must be `multitrack.Track` instances")
             track.check_validity()
         # tempo
-        if isinstance(self.tempo, (int, float)):
-            self.tempo = np.array([self.tempo])
-        elif not isinstance(self.tempo, np.ndarray):
+        if not isinstance(self.tempo, np.ndarray):
             raise TypeError("`tempo` must be of int or np.ndarray type")
         elif not (np.issubdtype(self.tempo.dtype, np.int),
                   np.issubdtype(self.tempo.dtype, np.float)):
             raise TypeError("Data type of `tempo` must be int or float.")
-        elif self.tempo.ndim > 1:
+        elif self.tempo.ndim != 1:
             raise ValueError("`tempo` must be a 1D numpy array")
-        elif self.tempo.ndim < 1:
-            self.tempo = self.tempo.reshape(-1,)
         if np.any(self.tempo <= 0.0):
             raise ValueError("`tempo` must contains only positive numbers")
         # downbeat
@@ -196,10 +195,8 @@ class MultiTrack(object):
                 raise TypeError("`downbeat` must be of np.ndarray type")
             if not np.issubdtype(self.downbeat.dtype, np.bool):
                 raise TypeError("Data type of `downbeat` must be bool.")
-            if self.downbeat.ndim > 1:
+            if self.downbeat.ndim != 1:
                 raise ValueError("`downbeat` must be a 1D numpy array")
-            elif self.downbeat.ndim < 1:
-                self.downbeat = self.downbeat.reshape(-1,)
         # beat_resolution
         if not isinstance(self.beat_resolution, int):
             raise TypeError("`beat_resolution` must be of int type")
