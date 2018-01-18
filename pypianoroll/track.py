@@ -268,11 +268,11 @@ class Track(object):
         highest : int
             Indicate the highest pitch in the piano-roll.
         """
-        lowest = self.lowest
+        lowest = 0
         while not np.any(self.pianoroll[:, lowest]):
             lowest += 1
 
-        highest = self.pianoroll.shape[1] - self.lowest - 1
+        highest = self.pianoroll.shape[1] - 1
         while not np.any(self.pianoroll[:, highest]):
             highest -= 1
 
