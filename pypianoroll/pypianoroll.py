@@ -2,7 +2,7 @@
 Functions to manipulate multi-track and single-track piano-rolls with
 metadata.
 
-Only work for :class:`pianoroll.MultiTrack` and :class:`pianoroll.Track`
+Only work for :class:`pianoroll.Multitrack` and :class:`pianoroll.Track`
 objects.
 """
 from copy import deepcopy
@@ -34,6 +34,19 @@ def is_standard_pianoroll(arr):
         return False
     return True
 
+def binarize(obj, threshold=0):
+    """
+    Return a copy of the object with binarized piano-roll(s)
+
+    Parameters
+    ----------
+    threshold : int or float
+        Threshold to binarize the piano-roll(s). Default to zero.
+    """
+    copied = deepcopy(obj)
+    copied.binarize(threshold)
+    return copied
+
 def clip(obj, lower=0, upper=128):
     """
     Return a copy of the object with piano-roll(s) clipped by a lower bound
@@ -48,19 +61,6 @@ def clip(obj, lower=0, upper=128):
     """
     copied = deepcopy(obj)
     copied.clip(lower, upper)
-    return copied
-
-def binarize(obj, threshold=0):
-    """
-    Return a copy of the object with binarized piano-roll(s)
-
-    Parameters
-    ----------
-    threshold : int or float
-        Threshold to binarize the piano-roll(s). Default to zero.
-    """
-    copied = deepcopy(obj)
-    copied.binarize(threshold)
     return copied
 
 def compress_pitch_range(obj):
