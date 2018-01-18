@@ -50,18 +50,26 @@ class Track(object):
         ----------
         [1] https://www.midi.org/specifications/item/gm-level-1-sound-set
         """
-        # initialize attributes
         if pianoroll is None:
             self.pianoroll = np.zeros((0, 0), bool)
         else:
             self.pianoroll = pianoroll
         self.program = program
         self.is_drum = is_drum
-        self.lowest = lowest
         self.name = name
+        self.lowest = lowest
 
-        # check validity
         self.check_validity()
+
+    def __repr__(self):
+        return ("Track(program={}, is_drum={}, name={}, lowest={}, "
+                "pianoroll=\n{}".format(self.program, self.is_drum, self.name,
+                                        self.lowest, self.pianoroll.__str__))
+
+    def __str__(self):
+        return ("program : {},\nis_drum : {},\nname : {},\nlowest : {},\n"
+                "pianoroll :\n{}".format(self.program, self.is_drum, self.name,
+                                         self.lowest, self.pianoroll.__str__))
 
     def binarize(self, threshold=0):
         """
