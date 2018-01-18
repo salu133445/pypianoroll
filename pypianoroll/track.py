@@ -157,7 +157,7 @@ class Track(object):
                [12, 13, 14, 15, 15, 15],
                [15, 15, 15, 15, 15, 15]])
         """
-        self.pianoroll = self.pianoroll.clip(self.pianoroll, lower, upper)
+        self.pianoroll = self.pianoroll.clip(lower, upper)
 
     def compress_to_active(self):
         """Compress the piano-roll to active pitch range"""
