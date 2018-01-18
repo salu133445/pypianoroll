@@ -148,7 +148,7 @@ class Track(object):
     def compress_to_active(self):
         """Compress the piano-roll to active pitch range"""
         lowest, highest = self.get_pitch_range(True)
-        self.pianoroll = self.pianoroll[:, lowest:highest]
+        self.pianoroll = self.pianoroll[:, lowest:highest + 1]
         self.lowest += lowest
 
     def copy(self):
@@ -254,11 +254,11 @@ class Track(object):
         highest : int
             Indicate the highest pitch in the piano-roll.
         """
-        lowest = 0
+        lowest = self.lowest
         while not np.any(self.pianoroll[:, lowest]):
             lowest += 1
 
-        highest = self.pianoroll.shape[1] - 1
+        highest = self.pianoroll.shape[1] - self.lowest - 1
         while not np.any(self.pianoroll[:, highest]):
             highest -= 1
 
