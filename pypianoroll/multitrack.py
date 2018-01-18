@@ -10,7 +10,7 @@ import pretty_midi
 from scipy.sparse import csc_matrix
 from .track import Track
 
-class MultiTrack(object):
+class Multitrack(object):
     """
     A multi-track piano-roll container
 
@@ -232,7 +232,7 @@ class MultiTrack(object):
 
         Returns
         -------
-        copied : `pianoroll.MultiTrack` object
+        copied : `pianoroll.Multitrack` object
             A copy of the object.
         """
         copied = deepcopy(self)
