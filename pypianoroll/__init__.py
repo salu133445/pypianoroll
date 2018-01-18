@@ -1,5 +1,5 @@
 """
-Pianoroll
+PyPianoroll
 =========
 
 Features:
@@ -10,6 +10,7 @@ Features:
 
 """
 from .track import Track
-from .multitrack import MultiTrack
-from .pianoroll import (binarize, compress_pitch_range, copy, transpose,
-                        trim_trailing_silence)
+from .multitrack import Multitrack
+from .pypianoroll import (is_pianoroll, is_standard_pianoroll, binarize, clip,
+                          compress_pitch_range, copy, transpose,
+                          trim_trailing_silence)
