@@ -273,8 +273,7 @@ class MultiTrack(object):
         return max([self.tracks[idx].get_length() for idx in track_indices] +
                    [int(self.downbeat.shape[0]), int(self.tempo.shape[0])])
 
-    def get_merged_pianoroll(self, track_indices=None, mode='sum',
-                             clipped=True, upper=128):
+    def get_merged_pianoroll(self, track_indices=None, mode='sum'):
         """
         Return a merged piano-roll of tracks specified by `track_indices`.
 
@@ -295,13 +294,6 @@ class MultiTrack(object):
               True if any of the collected piano-rolls has nonzero value at that
               pixel; False if all piano-rolls are inactive (zero-valued) at that
               pixel.
-        clipped : bool
-            True to clip the velocities of the parsed piano-rolls by `upper`.
-            False to use the raw sum of the velocities. Only effective in 'sum'
-            mode. Default to True.
-        upper : int
-            The upper bound to clip the input piano-roll. Only effective when
-            'clipped' is True. Default to 128.
 
         Retruns
         -------
@@ -321,8 +313,6 @@ class MultiTrack(object):
             merged = np.any(stacked, axis=3)
         elif mode == 'sum':
             merged = np.sum(stacked, axis=3)
-            if clipped:
-                merged = merged - (merged - upper) * (merged > upper)
         elif mode == 'max':
             merged = np.max(stacked, axis=3)
 
@@ -513,8 +503,7 @@ class MultiTrack(object):
         self.check_validity()
 
     def merge_tracks(self, track_indices=None, mode='sum', program=0,
-                     is_drum=False, name='merged', remove_merged=False,
-                     clipped=True, upper=128):
+                     is_drum=False, name='merged', remove_merged=False):
         """
         Merge piano-rolls of tracks specified by `track_indices`. The merged
         track will have program number as given by `program` and drum indicator
@@ -548,21 +537,13 @@ class MultiTrack(object):
         remove_merged : bool
             True to remove the merged tracks from the track list. False to keep
             them. Default to False.
-        clipped : bool
-            True to clip the velocities of the parsed piano-rolls by `upper`.
-            False to use the raw sum of the velocities. Only effective in 'sum'
-            mode. Default to True.
-        upper : int
-            The upper bound to clip the input piano-roll. Only effective when
-            'clipped' is True. Default to 128.
         """
         if not isinstance(mode, str):
             raise TypeError("`mode` must be a string in {'max', 'sum', 'any'}")
         if mode not in ['max', 'sum', 'any']:
             raise TypeError("`mode` must be one of {'max', 'sum', 'any'}")
 
-        merged, lowest = self.get_merged_pianoroll(track_indices, mode,
-                                                   clipped, upper)
+        merged, lowest = self.get_merged_pianoroll(track_indices, mode)
 
         merged_track = Track(merged, program, is_drum, name, lowest)
         self.append_track(merged_track)
