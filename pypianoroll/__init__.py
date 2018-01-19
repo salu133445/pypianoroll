@@ -9,6 +9,7 @@ Features:
 - write to MIDI file
 
 """
+from __future__ import division
 from .track import Track
 from .multitrack import Multitrack
 from .pypianoroll import (is_pianoroll, is_standard_pianoroll, binarize, clip,
