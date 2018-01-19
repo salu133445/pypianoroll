@@ -14,3 +14,4 @@ from .multitrack import Multitrack
 from .pypianoroll import (is_pianoroll, is_standard_pianoroll, binarize, clip,
                           compress_to_active, copy, transpose,
                           trim_trailing_silence)
+from .utils import (plot, plot_pianoroll)
