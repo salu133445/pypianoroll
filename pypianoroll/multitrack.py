@@ -195,7 +195,8 @@ class Multitrack(object):
         # tracks
         for track in self.tracks:
             if not isinstance(track, Track):
-                raise TypeError("`tracks` must be `multitrack.Track` instances")
+                raise TypeError("`tracks` must be a list of "
+                                "`pypianoroll.Track` instances")
             track.check_validity()
         # tempo
         if not isinstance(self.tempo, np.ndarray):
