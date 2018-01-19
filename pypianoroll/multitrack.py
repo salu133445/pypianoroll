@@ -1,14 +1,16 @@
 """
 Class for multi-track piano-rolls with metadata.
 """
-from __future__ import division
 import warnings
 import json
 from copy import deepcopy
 import numpy as np
 import pretty_midi
+import matplotlib
+from matplotlib import pyplot as plt
 from scipy.sparse import csc_matrix
 from .track import Track
+from .pypianoroll import plot_pianoroll
 
 class Multitrack(object):
     """
@@ -931,6 +933,65 @@ class Multitrack(object):
                      'tempo': tempi[0] if len(tc_times) == 1 else None}
 
         return midi_info
+
+    def plot(self, filepath=None, mode='separate', **kwargs):
+        """
+        Plot the piano-roll or save a plot of the piano-roll. See
+        :func:`pypianoroll.plot` for full documentation.
+
+        TODO
+
+        Parameters
+        ----------
+        filepath :
+            The
+        mode : {'separate', 'stack', 'hybrid'}
+            Default to 'separate'.
+        **kwargs
+            Arbitrary keyword arguments to be passed to
+            :func:`pypianoroll.plot_pianoroll`.
+        """
+        if not self.tracks:
+            raise ValueError("There is no track to plot")
+        if mode == 'stack' and len(self.tracks) > 6:
+            raise ValueError("Only multitracks with no more than 6 tracks "
+                             "are supported in 'stack' mode")
+
+        num_track = len(self.tracks)
+
+        if mode == 'separate':
+            _, axs = plt.subplots(num_track, sharex=True, sharey=True)
+            downbeats = self.get_downbeat_steps()
+            for idx in range(num_track):
+                plot_pianoroll(axs[idx], self.tracks[idx].pianoroll,
+                               self.tracks[idx].lowest, self.beat_resolution,
+                               downbeats, **kwargs)
+        elif mode == 'stack':
+            _, ax = plt.subplots()
+            stacked, lowest = self.get_stacked_pianorolls()
+            if num_track > 4:
+                cmap = matplotlib.cm.get_cmap('rainbow')
+                cmatrix = cmap(np.arange(0, 1, 1 / num_track))[:, :3]
+                reshaped = np.matmul(stacked.reshape(-1, num_track), cmatrix)
+                stacked = reshaped.reshape((stacked.shape[0], stacked.shape[1],
+                                            num_track))
+            plot_pianoroll(ax, stacked, lowest, self.beat_resolution, downbeats,
+                           **kwargs)
+        elif mode == 'hybrid':
+            drums = [i for i in range(num_track) if self.tracks[i].is_drum]
+            others = [i for i in range(num_track) if not self.tracks[i].is_drum]
+            merged_drums, lowest_drums = self.get_merged_pianoroll(drums)
+            merged_others, lowest_others = self.get_merged_pianoroll(others)
+            _, (ax1, ax2) = plt.subplots(2, sharex=True, sharey=True)
+            plot_pianoroll(ax1, merged_drums, lowest_drums,
+                           self.beat_resolution, downbeats, **kwargs)
+            plot_pianoroll(ax2, merged_others, lowest_others,
+                           self.beat_resolution, downbeats, **kwargs)
+
+        if filepath is None:
+            plt.show()
+        else:
+            plt.savefig(filepath)
 
     def remove_tracks(self, track_indices):
         """
