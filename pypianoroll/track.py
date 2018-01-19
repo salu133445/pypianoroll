@@ -3,7 +3,8 @@ Class for single-track piano-rolls with metadata.
 """
 from copy import deepcopy
 import numpy as np
-from .utils import plot_pianoroll
+from matplotlib import pyplot as plt
+from .pypianoroll import plot_pianoroll
 
 class Track(object):
     """
@@ -296,12 +297,28 @@ class Track(object):
         is_binarized = (self.pianoroll.dtype == bool)
         return is_binarized
 
-    def plot(self, **kwargs):
+    def plot(self, filepath=None, **kwargs):
         """
-        Plot the piano-roll. See :func:`pypianoroll.plot` for full
-        documentation.
+        Plot the piano-roll or save a plot of the piano-roll. See
+        :func:`pypianoroll.plot` for full documentation.
+
+        TODO
+
+        Parameters
+        ----------
+        filepath :
+            The
+        **kwargs
+            Arbitrary keyword arguments to be passed to
+            :func:`pypianoroll.plot_pianoroll`.
         """
-        plot_pianoroll(self.pianoroll, self.lowest, **kwargs)
+        _, ax = plt.subplots()
+        plot_pianoroll(ax, self.pianoroll, self.lowest, **kwargs)
+
+        if filepath is None:
+            plt.show()
+        else:
+            plt.savefig(filepath)
 
     def transpose(self, semitone):
         """
