@@ -311,7 +311,7 @@ def plot_pianoroll(pianoroll, lowest=0, beat_resolution=None, downbeats=None,
         yticks = np.arange(ytick_first, ytick_last)
         ax.set_yticks(yticks)
         if yticklabel == 'note':
-            ytick_labels = [pretty_midi.note_number_to_name(i) for idx in yticks]
+            ytick_labels = [pretty_midi.note_number_to_name(i) for i in yticks]
             ax.set_yticklabels(ytick_labels)
 
     if label == 'y' or label == 'both':
