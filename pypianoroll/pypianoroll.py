@@ -106,12 +106,16 @@ def trim_trailing_silence(obj):
     return copied
 
 def plot(obj, lowest=None, beat_resolution=None, downbeats=None,
-         preset='default', xticklabel='auto', yticklabel='octave',
-         xtick='bottom', ytick='left', grid='both', grid_linewidth=1.0,
-         label='both', **kwargs):
+         preset='default', xtick='bottom', ytick='left', xticklabel='auto',
+         yticklabel='octave', grid='both', grid_linewidth=1.0, label='both',
+         **kwargs):
     """
     Plot the piano-roll(s) defined by a numpy array or given in a
     :class:`pypianoroll.Track` or :class:`pypianoroll.Multitrack` object
+
+    Notes
+    -----
+    If `obj` is a piano-roll, its velocities should be in [0, 1].
 
     Parmeters
     ---------
@@ -157,36 +161,44 @@ def plot(obj, lowest=None, beat_resolution=None, downbeats=None,
     **kwargs
         Arbitrary keyword arguments. Will be passed to
         :func:`matplotlib.pyplot.imshow`.
-
-    See Also
-    --------
-    :func:`plot_track`, :func:`plot_multitrack`
     """
 
     if isinstance(obj, np.ndarray):
-        return plot_pianoroll(obj, preset=preset, xticklabel=xticklabel,
-                              yticklabel=yticklabel, xtick=xtick, ytick=ytick,
-                              grid=grid, grid_linewidth=grid_linewidth,
-                              label=label, lowest=lowest,
-                              beat_resolution=beat_resolution, **kwargs)
+        pianoroll = obj / 127.
+        fig, ax = plt.subplots()
+        plot_pianoroll(ax, pianoroll, lowest=lowest,
+                       beat_resolution=beat_resolution, downbeats=downbeats,
+                       preset=preset, xtick=xtick, ytick=ytick,
+                       xticklabel=xticklabel, yticklabel=yticklabel,
+                       grid=grid, grid_linewidth=grid_linewidth, label=label,
+                       **kwargs)
     elif isinstance(obj, Track):
-        obj.plot(preset='default', xticklabel='auto', yticklabel='octave',
-                 xtick='bottom', ytick='left', grid='both', grid_linewidth=1.0,
-                 label='both', lowest=0, beat_resolution=None, **kwargs)
+        obj.plot(beat_resolution=beat_resolution, downbeats=downbeats,
+                 preset=preset, xtick=xtick, ytick=ytick, xticklabel=xticklabel,
+                 yticklabel=yticklabel, grid=grid,
+                 grid_linewidth=grid_linewidth, label=label,
+                 **kwargs)
     elif isinstance(obj, Multitrack):
-        pass
+        obj.plot(beat_resolution=beat_resolution, downbeats=downbeats,
+                 preset=preset, xtick=xtick, ytick=ytick, xticklabel=xticklabel,
+                 yticklabel=yticklabel, grid=grid,
+                 grid_linewidth=grid_linewidth, label=label,
+                 **kwargs)
     else:
         raise TypeError("")
 
-def plot_pianoroll(pianoroll, lowest=0, beat_resolution=None, downbeats=None,
-                   preset='default', xticklabel='auto', yticklabel='octave',
-                   xtick='bottom', ytick='left', grid='both',
-                   grid_linewidth=1.0, label='both', **kwargs):
+def plot_pianoroll(ax, pianoroll, lowest=0, beat_resolution=None,
+                   downbeats=None, preset='default', xtick='bottom',
+                   ytick='left', xticklabel='auto', yticklabel='octave',
+                   grid='both', grid_linewidth=1.0, label='both', **kwargs):
     """
     Plot a piano-roll given as a numpy array
 
     Parmeters
     ---------
+    ax : matplotlib.axes.Axes object
+         The :class:`matplotlib.axes.Axes` object where the piano-roll to be
+         plotted on.
     pianoroll : np.ndarray, shape=(num_time_step, num_pitch)
         The piano-roll to be plotted.
     lowest : int
@@ -252,12 +264,11 @@ def plot_pianoroll(pianoroll, lowest=0, beat_resolution=None, downbeats=None,
     if 'vmax' not in kwargs:
         kwargs['vmax'] = 1
 
-    fig, ax = plt.subplots()
-    normalized = pianoroll.T / 127.0
+    normalized = pianoroll.T
     ax.imshow(normalized, **kwargs)
 
     if preset == 'plain':
-        plt.axis('off')
+        ax.axis('off')
 
     if preset == 'frame':
         xtick = 'off'
@@ -275,7 +286,7 @@ def plot_pianoroll(pianoroll, lowest=0, beat_resolution=None, downbeats=None,
     labelbottom = 'off' if xticklabel == 'off' else 'on'
     labelleft = 'off' if yticklabel == 'off' else 'on'
 
-    plt.tick_params(direction='in', bottom=bottom, top=top, left=left,
+    ax.tick_params(direction='in', bottom=bottom, top=top, left=left,
                     right=right, labelbottom=labelbottom, labeltop='off',
                     labelleft=labelleft, labelright='off')
 
@@ -327,6 +338,4 @@ def plot_pianoroll(pianoroll, lowest=0, beat_resolution=None, downbeats=None,
 
     if downbeats is not None and preset != 'plain':
         for step in downbeats:
-            ax.axvline(x=step, color='r')
-
-    return fig, ax
+            ax.axvline(x=step, color='k', linewidth=1)
