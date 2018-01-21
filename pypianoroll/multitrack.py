@@ -1,6 +1,7 @@
 """
 Class for multi-track piano-rolls with metadata.
 """
+from __future__ import division
 import warnings
 import json
 from copy import deepcopy
@@ -8,9 +9,10 @@ import numpy as np
 import pretty_midi
 import matplotlib
 from matplotlib import pyplot as plt
+from matplotlib.patches import Patch
 from scipy.sparse import csc_matrix
 from .track import Track
-from .pypianoroll import plot_pianoroll
+from .plot import plot_pianoroll
 
 class Multitrack(object):
     """
@@ -281,14 +283,16 @@ class Multitrack(object):
 
     def get_downbeat_steps(self):
         """
-        Return the indices of time steps that contain downbeats
+        Return a list of indices of time steps that contain downbeats
 
         Returns
         -------
-        downbeat_steps : np.ndarray
+        downbeat_steps : list
             Indices of time steps that contain downbeats.
         """
-        downbeat_steps = np.nonzero(self.downbeat)[0]
+        if self.downbeat is None:
+            return []
+        downbeat_steps = np.nonzero(self.downbeat)[0].tolist()
         return downbeat_steps
 
     def get_length(self, track_indices=None):
@@ -298,13 +302,13 @@ class Multitrack(object):
         Parameters
         ----------
         track_indices : list
-            List of indices that indicates which tracks to be collected. If None
-            (by default), all tracks will be collected.
+            List of indices that indicates which tracks to be collected. If
+            None, default to collect all tracks.
         """
         if track_indices is None:
             track_indices = range(len(self.tracks))
-        return max([self.tracks[idx].get_length() for idx in track_indices] +
-                   [int(self.downbeat.shape[0]), int(self.tempo.shape[0])])
+        length = max([self.tracks[idx].get_length() for idx in track_indices])
+        return length
 
     def get_merged_pianoroll(self, track_indices=None, mode='sum'):
         """
@@ -313,8 +317,8 @@ class Multitrack(object):
         Parameters
         ----------
         track_indices : list
-            List of indices that indicates which tracks to be collected. If None
-            (by default), all tracks will be collected.
+            List of indices that indicates which tracks to be collected. If
+            None, default to collect all tracks.
         mode : {'sum', 'max', 'any'}
             Indicate the merging function to apply along the track axis. Default
             to 'sum'.
@@ -343,11 +347,11 @@ class Multitrack(object):
         stacked, lowest = self.get_stacked_pianorolls(track_indices)
 
         if mode == 'any':
-            merged = np.any(stacked, axis=3)
+            merged = np.any(stacked, axis=2)
         elif mode == 'sum':
-            merged = np.sum(stacked, axis=3)
+            merged = np.sum(stacked, axis=2)
         elif mode == 'max':
-            merged = np.max(stacked, axis=3)
+            merged = np.max(stacked, axis=2)
 
         return merged, lowest
 
@@ -384,8 +388,8 @@ class Multitrack(object):
         Parameters
         ----------
         track_indices : list
-            List of indices that indicates which tracks to be collected. If None
-            (by default), all tracks will be collected.
+            List of indices that indicates which tracks to be collected. If
+            None, default to collect all tracks.
 
         Returns
         -------
@@ -422,8 +426,8 @@ class Multitrack(object):
         Parameters
         ----------
         track_indices : list
-            List of indices that indicate which tracks to be collected. If None
-            (by default), all tracks will be collected.
+            List of indices that indicates which tracks to be collected. If
+            None, default to collect all tracks.
         binarized : bool
             If True, return a binarized stacked piano-rolls. Otherwise, return
             the raw stacked piano-rolls. Default to False.
@@ -441,15 +445,17 @@ class Multitrack(object):
         if track_indices is None:
             track_indices = range(len(self.tracks))
 
-        lowest, highest = self.get_pitch_range(track_indices)
-        length = self.get_length()
+        lowest_lowest = min([track.lowest for track in self.tracks])
+        highest_highest = max([track.lowest + track.pianoroll.shape[1] - 1
+                               for track in self.tracks])
+        max_length = max([track.pianoroll.shape[0] for track in self.tracks])
 
         to_stack = []
         for idx in track_indices:
-            to_pad_l = self.tracks[idx].lowest - lowest
-            to_pad_h = (highest - self.tracks[idx].lowest
-                        - self.tracks[idx].pianoroll.shape[1])
-            to_pad_t = length - self.tracks[idx].pianoroll.shape[0]
+            to_pad_l = self.tracks[idx].lowest - lowest_lowest
+            to_pad_h = (highest_highest - self.tracks[idx].lowest
+                        - self.tracks[idx].pianoroll.shape[1] + 1)
+            to_pad_t = max_length - self.tracks[idx].pianoroll.shape[0]
             to_pad = ((0, to_pad_t), (to_pad_l, to_pad_h))
             if binarized:
                 binarized = (self.tracks[idx].pianoroll > threshold)
@@ -460,7 +466,7 @@ class Multitrack(object):
             to_stack.append(padded)
 
         stacked = np.stack(to_stack, -1)
-        return stacked, lowest
+        return stacked, lowest_lowest
 
     def is_binarized(self, track_indices=None):
         """
@@ -470,8 +476,8 @@ class Multitrack(object):
         Parameters
         ----------
         track_indices : list
-            List of indices that indicates which tracks to be collected. If None
-            (by default), all tracks will be collected.
+            List of indices that indicates which tracks to be collected. If
+            None, default to collect all tracks.
 
         Returns
         -------
@@ -546,8 +552,8 @@ class Multitrack(object):
         Parameters
         ----------
         track_indices : list
-            List of indices that indicates which tracks to collect. If None (by
-            default), all tracks will be collectted.
+            List of indices that indicates which tracks to merge. If None,
+            default to merge all tracks.
         mode : {'sum', 'max', 'any'}
             Indicate the merging function to apply along the track axis. Default
             to 'sum'.
@@ -934,64 +940,216 @@ class Multitrack(object):
 
         return midi_info
 
-    def plot(self, filepath=None, mode='separate', **kwargs):
+    def plot(self, filepath=None, track_indices=None, mode='separate',
+             track_label='name', preset='default', cmap=None, xtick='bottom',
+             ytick='left', xticklabel='auto', yticklabel='auto', direction='in',
+             label='both', grid='both', grid_linestyle=':', grid_linewidth=.5):
         """
-        Plot the piano-roll or save a plot of the piano-roll. See
-        :func:`pypianoroll.plot` for full documentation.
-
-        TODO
+        Plot the collected piano-rolls or save a plot of them.
 
         Parameters
         ----------
-        filepath :
-            The
-        mode : {'separate', 'stack', 'hybrid'}
-            Default to 'separate'.
-        **kwargs
-            Arbitrary keyword arguments to be passed to
-            :func:`pypianoroll.plot_pianoroll`.
+        filepath : str
+            The filepath to save the plot. If None, default to save nothing.
+        track_indices : list
+            List of indices that indicates which tracks to plot. If None,
+            default to plot all tracks.
+        mode : {'separate', 'stacked', 'hybrid'}
+            Plotting modes. Default to 'separate'.
+            - In 'separate' mode, all the tracks are plotted separately.
+            - In 'stacked' mode, a color is assigned based on `cmap` to the
+              piano-roll of each track and the piano-rolls are stacked and
+              plotted as a colored image with RGB channels.
+            - In 'hybrid' mode, the drum tracks are merged into a 'Drums' track,
+              while the other tracks are merged into an 'Others' track, and the
+              two merged tracks are then plotted separately.
+        track_label : {'name', 'program', 'family', 'none'}
+            Add track name, program name, instrument family name or none as
+            labels to the track. When `mode` is 'stacked', all options other
+            than 'none' label the two track with 'Drums' and 'Others'.
+        preset : {'default', 'plain', 'frame'}
+            Preset themes for the plot.
+            - In 'default' preset, the ticks, grid and labels are on.
+            - In 'frame' preset, the ticks and grid are both off.
+            - In 'plain' preset, the x- and y-axis are both off.
+        cmaps :  tuple or list
+            List of `matplotlib.colors.Colormap` instances or colormap codes.
+            - When `mode` is 'separate', each element will be passed to each
+              call of :func:`matplotlib.pyplot.imshow`. Default to ('Blues',
+              'Oranges', 'Greens', 'Reds', 'Purples', 'Greys').
+            - when `mode` is stacked, a color is assigned based on `cmap` to the
+              piano-roll of each track. Default to 'hsv'.
+            - When `mode` is 'hybrid', the first (second) element is used in the
+              'Drums' ('Others') track. Default to ('Blues','Greens').
+        xtick : {'bottom', 'top', 'both', 'off'}
+            Put ticks along x-axis at top, bottom, both or neither. Default to
+            'bottom'.
+        ytick : {'left', 'right', 'both', 'off'}
+            Put ticks along y-axis at left, right, both or neither. Default to
+            'left'.
+        xticklabel : {'auto', 'beat', 'step', 'none'}
+            Use beat number, step number or neither as tick labels along the
+            x-axis, or automatically set to 'beat' when `beat_resolution` is
+            given and set to 'step', otherwise. Default to 'auto'. Only
+            effective when `xtick` is not 'off'.
+        yticklabel : {'auto', 'octave', 'name', 'number', 'none'}
+            Use octave name, pitch name or pitch number or none as tick labels
+            along the y-axis, or automatically set to 'octave' when `is_drum` is
+            False and set to 'name', otherwise. Default to 'auto'. Only
+            effective when `ytick` is not 'off'.
+        direction : {'in', 'out', 'inout'}
+            Put ticks inside the axes, outside the axes, or both. Default to
+            'in'. Only effective when `xtick` and `ytick` are not both 'off'.
+        label : {'x', 'y', 'both', 'off'}
+            Add label to the x-axis, y-axis, both or neither. Default to 'both'.
+        grid : {'x', 'y', 'both', 'off'}
+            Add grid to the x-axis, y-axis, both or neither. Default to 'both'.
+        grid_linestyle : str
+            Will be passed to :method:`matplotlib.axes.Axes.grid` as 'linestyle'
+            argument.
+        grid_linewidth : float
+            Will be passed to :method:`matplotlib.axes.Axes.grid` as 'linewidth'
+            argument.
+
+        Returns
+        -------
+        fig : `matplotlib.figure.Figure` object
+            A :class:`matplotlib.figure.Figure` object.
+        axs : list
+            List of :class:`matplotlib.axes.Axes` object.
         """
+        def get_track_label(track_label, track=None):
+            """Convenient function to get track labels"""
+            if track_label == 'name':
+                return track.name
+            elif track_label == 'program':
+                return pretty_midi.program_to_instrument_name(track.program)
+            elif track_label == 'family':
+                return pretty_midi.program_to_instrument_class(track.program)
+            elif track is None:
+                return track_label
+
+        def add_tracklabel(ax, track_label, track=None):
+            """Convenient function for adding track labels"""
+            if not ax.get_ylabel():
+                return
+            ax.set_ylabel(get_track_label(track_label, track) + '\n\n'
+                          + ax.get_ylabel())
+
         if not self.tracks:
             raise ValueError("There is no track to plot")
-        if mode == 'stack' and len(self.tracks) > 6:
-            raise ValueError("Only multitracks with no more than 6 tracks "
-                             "are supported in 'stack' mode")
+        if mode not in ('separate', 'stacked', 'hybrid'):
+            raise ValueError("`mode` must be one of {'separate', 'stacked', "
+                             "'hybrid'}")
+        if track_label not in ('name', 'program', 'family', 'none'):
+            raise ValueError("`track_label` must be one of {'name', 'program', "
+                             "'family'}")
 
-        num_track = len(self.tracks)
+        if cmap is None:
+            if mode == 'separate':
+                cmap = ('Blues', 'Oranges', 'Greens', 'Reds', 'Purples',
+                        'Greys')
+            elif mode == 'stacked':
+                cmap = 'hsv'
+            else:
+                cmap = ('Blues', 'Greens')
+
+        if track_indices is None:
+            track_indices = range(len(self.tracks))
+        num_track = len(track_indices)
+        downbeats = self.get_downbeat_steps()
 
         if mode == 'separate':
-            _, axs = plt.subplots(num_track, sharex=True, sharey=True)
-            downbeats = self.get_downbeat_steps()
-            for idx in range(num_track):
-                plot_pianoroll(axs[idx], self.tracks[idx].pianoroll,
-                               self.tracks[idx].lowest, self.beat_resolution,
-                               downbeats, **kwargs)
-        elif mode == 'stack':
-            _, ax = plt.subplots()
-            stacked, lowest = self.get_stacked_pianorolls()
-            if num_track > 4:
-                cmap = matplotlib.cm.get_cmap('rainbow')
-                cmatrix = cmap(np.arange(0, 1, 1 / num_track))[:, :3]
-                reshaped = np.matmul(stacked.reshape(-1, num_track), cmatrix)
-                stacked = reshaped.reshape((stacked.shape[0], stacked.shape[1],
-                                            num_track))
-            plot_pianoroll(ax, stacked, lowest, self.beat_resolution, downbeats,
-                           **kwargs)
+            if num_track > 1:
+                fig, axs = plt.subplots(num_track, sharex=True)
+            else:
+                fig, ax = plt.subplots()
+                axs = [ax]
+
+            for idx, track_idx in enumerate(track_indices):
+                xticklabel_ = xticklabel if idx < num_track else 'none'
+                plot_pianoroll(axs[idx], self.tracks[track_idx].pianoroll,
+                               self.tracks[track_idx].lowest,
+                               self.tracks[track_idx].is_drum,
+                               self.beat_resolution, downbeats,
+                               cmap=cmap[idx%len(cmap)], preset=preset,
+                               xtick=xtick, ytick=ytick, xticklabel=xticklabel_,
+                               yticklabel=yticklabel, direction=direction,
+                               label=label, grid=grid,
+                               grid_linestyle=grid_linestyle,
+                               grid_linewidth=grid_linewidth)
+                if track_label != 'none':
+                    add_tracklabel(axs[idx], track_label,
+                                   self.tracks[track_idx])
+
+            if num_track > 1:
+                fig.subplots_adjust(hspace=0)
+
+            returns = (fig, axs)
+
+        elif mode == 'stacked':
+            is_drum = True
+            for track_idx in track_indices:
+                if not self.tracks[track_idx].is_drum:
+                    is_drum = False
+
+            fig, ax = plt.subplots()
+            stacked, lowest = self.get_stacked_pianorolls(track_indices)
+
+            colormap = matplotlib.cm.get_cmap(cmap)
+            cmatrix = colormap(np.arange(0, 1, 1 / num_track))[:, :3]
+            recolored = np.matmul(stacked.reshape(-1, num_track), cmatrix)
+            stacked = recolored.reshape(stacked.shape[:2] + (3, ))
+
+            plot_pianoroll(ax, stacked, lowest, is_drum, self.beat_resolution,
+                           downbeats, preset=preset, xtick=xtick, ytick=ytick,
+                           xticklabel=xticklabel, yticklabel=yticklabel,
+                           direction=direction, label=label, grid=grid,
+                           grid_linestyle=grid_linestyle,
+                           grid_linewidth=grid_linewidth)
+
+            if track_label != 'none':
+                patches = [Patch(color=cmatrix[idx],
+                                 label=get_track_label(track_label,
+                                                       self.tracks[track_idx]))
+                           for idx, track_idx in enumerate(track_indices)]
+                plt.legend(handles=patches)
+
+            returns = (fig, [ax])
+
         elif mode == 'hybrid':
-            drums = [i for i in range(num_track) if self.tracks[i].is_drum]
-            others = [i for i in range(num_track) if not self.tracks[i].is_drum]
+            drums = [i for i in track_indices if self.tracks[i].is_drum]
+            others = [i for i in track_indices if not self.tracks[i].is_drum]
             merged_drums, lowest_drums = self.get_merged_pianoroll(drums)
             merged_others, lowest_others = self.get_merged_pianoroll(others)
-            _, (ax1, ax2) = plt.subplots(2, sharex=True, sharey=True)
-            plot_pianoroll(ax1, merged_drums, lowest_drums,
-                           self.beat_resolution, downbeats, **kwargs)
-            plot_pianoroll(ax2, merged_others, lowest_others,
-                           self.beat_resolution, downbeats, **kwargs)
 
-        if filepath is None:
-            plt.show()
-        else:
+            fig, (ax1, ax2) = plt.subplots(2, sharex=True, sharey=True)
+            plot_pianoroll(ax1, merged_drums, lowest_drums, True,
+                           self.beat_resolution, downbeats, preset=preset,
+                           xtick=xtick, ytick=ytick, xticklabel='none',
+                           yticklabel=yticklabel, direction=direction,
+                           label=label, grid=grid,
+                           grid_linestyle=grid_linestyle,
+                           grid_linewidth=grid_linewidth)
+            plot_pianoroll(ax2, merged_others, lowest_others, False,
+                           self.beat_resolution, downbeats, preset=preset,
+                           xtick=xtick, ytick=ytick, xticklabel=xticklabel,
+                           yticklabel=yticklabel, direction=direction,
+                           label=label, grid=grid,
+                           grid_linestyle=grid_linestyle,
+                           grid_linewidth=grid_linewidth)
+            fig.subplots_adjust(hspace=0)
+
+            if track_label != 'none':
+                add_tracklabel(ax1, 'Drums')
+                add_tracklabel(ax2, 'Others')
+
+            returns = (fig, [ax1, ax2])
+
+        if filepath is not None:
             plt.savefig(filepath)
+
+        return returns
 
     def remove_tracks(self, track_indices):
         """
@@ -1027,8 +1185,8 @@ class Multitrack(object):
         filepath_json : str
             The path to write the JSON file.
         track_indices : list
-            List of indices that indicates which tracks to save. If None (by
-            default), all tracks will be converted.
+            List of indices that indicates which tracks to save. If None,
+            default to save all tracks.
         compressed : bool
             True to save to a compressed .npz file. False to save to a
             uncompressed .npz file. Default to True.
@@ -1087,8 +1245,8 @@ class Multitrack(object):
         Parameters
         ----------
         track_indices : list
-            List of indices that indicates which tracks to convert. If None (by
-            default), all tracks will be converted.
+            List of indices that indicates which tracks to convert. If None,
+            default to convert all tracks.
 
         Returns
         -------
@@ -1165,8 +1323,8 @@ class Multitrack(object):
         Parameters
         ----------
         track_indices : list
-            List of indices that indicates which tracks to convert. If None
-            (by default), all tracks will be collected.
+            List of indices that indicates which tracks to write. If None,
+            default to write all tracks.
 
         Parameters
         ----------
