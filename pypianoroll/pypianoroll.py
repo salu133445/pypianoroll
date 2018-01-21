@@ -9,8 +9,6 @@ from copy import deepcopy
 import numpy as np
 import pretty_midi
 from matplotlib import pyplot as plt
-from .track import Track
-from .multitrack import Multitrack
 
 def is_pianoroll(arr):
     """
