@@ -10,7 +10,7 @@ import numpy as np
 from .track import Track
 from .multitrack import Multitrack
 
-def check_supported(obj):
+def _check_supported(obj):
     """
     Raise TypeError if the object is not a :class:`pypianoroll.Multitrack`
     or :class:`pypianoroll.Track` object. Otherwise, pass.
@@ -54,7 +54,7 @@ def binarize(obj, threshold=0):
     threshold : int or float
         Threshold to binarize the piano-roll(s). Default to zero.
     """
-    check_supported(obj)
+    _check_supported(obj)
     copied = deepcopy(obj)
     copied.binarize(threshold)
     return copied
@@ -71,7 +71,7 @@ def clip(obj, lower=0, upper=128):
     upper : int or float
         The upper bound to clip the piano-roll. Default to 128.
     """
-    check_supported(obj)
+    _check_supported(obj)
     copied = deepcopy(obj)
     copied.clip(lower, upper)
     return copied
@@ -81,14 +81,14 @@ def compress_to_active(obj):
     Return a copy of the object with piano-roll(s) compressed to active
     pitch range(s)
     """
-    check_supported(obj)
+    _check_supported(obj)
     copied = deepcopy(obj)
     copied.compress_to_active()
     return copied
 
 def copy(obj):
     """Return a copy of the object"""
-    check_supported(obj)
+    _check_supported(obj)
     copied = deepcopy(obj)
     return copied
 
@@ -97,7 +97,7 @@ def plot(obj, **kwargs):
     Plot the object. See :func:`pypianoroll.Multitrack.plot` and
     :func:`pypianoroll.Track.plot` for full documentation.
     """
-    check_supported(obj)
+    _check_supported(obj)
     return obj.plot(**kwargs)
 
 def transpose(obj, semitone):
@@ -110,7 +110,7 @@ def transpose(obj, semitone):
     semitone : int
         Number of semitones to transpose the piano-roll(s).
     """
-    check_supported(obj)
+    _check_supported(obj)
     copied = deepcopy(obj)
     copied.lowest_pitch += semitone
     return copied
@@ -120,7 +120,7 @@ def trim_trailing_silence(obj):
     Return a copy of the object with trimmed trailing silence of the
     piano-roll(s)
     """
-    check_supported(obj)
+    _check_supported(obj)
     copied = deepcopy(obj)
     length = copied.get_length()
     copied.pianoroll = copied.pianoroll[:length]
