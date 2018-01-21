@@ -131,7 +131,7 @@ def plot_pianoroll(ax, pianoroll, lowest=0, is_drum=False, beat_resolution=None,
                        labeltop='off', labelleft=labelleft, labelright='off')
 
     # x-axis
-    if xticklabel == 'beat':
+    if xtick == 'beat':
         num_beat = pianoroll.shape[0]//beat_resolution
         xticks_major = beat_resolution * np.arange(0, num_beat)
         xticks_minor = beat_resolution * (0.5 + np.arange(0, num_beat))
@@ -168,7 +168,7 @@ def plot_pianoroll(ax, pianoroll, lowest=0, is_drum=False, beat_resolution=None,
             ax.set_xlabel('time (beat)')
 
     if label == 'y' or label == 'both':
-        if (yticklabel == 'name' or is_drum) and yticklabel != 'off':
+        if yticklabel == 'name' or (is_drum and yticklabel != 'off'):
             ax.set_ylabel('key name')
         else:
             ax.set_ylabel('pitch')
