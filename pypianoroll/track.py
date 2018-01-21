@@ -4,7 +4,7 @@ Class for single-track piano-rolls with metadata.
 from copy import deepcopy
 import numpy as np
 from matplotlib import pyplot as plt
-from .pypianoroll import plot_pianoroll
+from .plot import plot_pianoroll
 
 class Track(object):
     """
@@ -297,23 +297,76 @@ class Track(object):
         is_binarized = (self.pianoroll.dtype == bool)
         return is_binarized
 
-    def plot(self, filepath=None, **kwargs):
+    def plot(self, filepath=None, beat_resolution=None, downbeats=None,
+             preset='default', cmap='Blues', xtick='bottom', ytick='left',
+             xticklabel='auto', yticklabel='auto', direction='in', label='both',
+             grid='both', grid_linestyle=':', grid_linewidth=.5):
         """
-        Plot the piano-roll or save a plot of the piano-roll. See
-        :func:`pypianoroll.plot` for full documentation.
-
-        TODO
+        Plot the piano-roll or save a plot of the piano-roll.
 
         Parameters
         ----------
         filepath :
-            The
-        **kwargs
-            Arbitrary keyword arguments to be passed to
-            :func:`pypianoroll.plot_pianoroll`.
+            The filepath to save the plot. If None, default to save nothing.
+        beat_resolution : int
+            Resolution of a beat (in time step). Required and only effective
+            when `xticklabel` is 'beat'.
+        downbeats : list
+            Indices of time steps that contain downbeats., i.e. the first time
+            step of a bar.
+        preset : {'default', 'plain', 'frame'}
+            Preset themes for the plot.
+            - In 'default' preset, the ticks, grid and labels are on.
+            - In 'frame' preset, the ticks and grid are both off.
+            - In 'plain' preset, the x- and y-axis are both off.
+        cmap :  `matplotlib.colors.Colormap`
+            Colormap to use in :func:`matplotlib.pyplot.imshow`. Default to
+            'Blues'. Only effective when `pianoroll` is 2D.
+        xtick : {'bottom', 'top', 'both', 'off'}
+            Put ticks along x-axis at top, bottom, both or neither. Default to
+            'bottom'.
+        ytick : {'left', 'right', 'both', 'off'}
+            Put ticks along y-axis at left, right, both or neither. Default to
+            'left'.
+        xticklabel : {'auto', 'beat', 'step', 'none'}
+            Use beat number, step number or neither as tick labels along the
+            x-axis, or automatically set to 'beat' when `beat_resolution` is
+            given and set to 'step', otherwise. Default to 'auto'. Only
+            effective when `xtick` is not 'off'.
+        yticklabel : {'auto', 'octave', 'name', 'number', 'none'}
+            Use octave name, pitch name or pitch number or none as tick labels
+            along the y-axis, or automatically set to 'octave' when `is_drum` is
+            False and set to 'name', otherwise. Default to 'auto'. Only
+            effective when `ytick` is not 'off'.
+        direction : {'in', 'out', 'inout'}
+            Put ticks inside the axes, outside the axes, or both. Default to
+            'in'. Only effective when `xtick` and `ytick` are not both 'off'.
+        label : {'x', 'y', 'both', 'off'}
+            Add label to the x-axis, y-axis, both or neither. Default to 'both'.
+        grid : {'x', 'y', 'both', 'off'}
+            Add grid to the x-axis, y-axis, both or neither. Default to 'both'.
+        grid_linestyle : str
+            Will be passed to :method:`matplotlib.axes.Axes.grid` as 'linestyle'
+            argument.
+        grid_linewidth : float
+            Will be passed to :method:`matplotlib.axes.Axes.grid` as 'linewidth'
+            argument.
+
+        Returns
+        -------
+        fig : `matplotlib.figure.Figure` object
+            A :class:`matplotlib.figure.Figure` object.
+        ax : `matplotlib.axes.Axes` object
+            A :class:`matplotlib.axes.Axes` object.
         """
         _, ax = plt.subplots()
-        plot_pianoroll(ax, self.pianoroll, self.lowest, **kwargs)
+        plot_pianoroll(ax, self.pianoroll, self.lowest, self.is_drum,
+                       beat_resolution=beat_resolution, downbeats=downbeats,
+                       preset=preset, cmap=cmap, xtick=xtick, ytick=ytick,
+                       xticklabel=xticklabel, yticklabel=yticklabel,
+                       direction=direction, label=label, grid=grid,
+                       grid_linestyle=grid_linestyle,
+                       grid_linewidth=grid_linewidth)
 
         if filepath is None:
             plt.show()
