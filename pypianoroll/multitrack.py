@@ -265,7 +265,7 @@ class Multitrack(object):
         copied = deepcopy(self)
         return copied
 
-    def expand(self, lowest=0, highest=127):
+    def expand(self, lowest=0, highest=127, track_indices=None):
         """
         Expand or compress the piano-rolls of all tracks to a pitch range
         specified by `lowest` and `highest`
@@ -278,8 +278,10 @@ class Multitrack(object):
         --------
         :method:`pypianoroll.Track.expand()`
         """
-        for track in self.tracks:
-            track.expand(lowest, highest)
+        if track_indices is None:
+            track_indices = range(len(self.tracks))
+        for idx in track_indices:
+            self.tracks[idx].expand(lowest, highest)
 
     def get_downbeat_steps(self):
         """
@@ -941,9 +943,10 @@ class Multitrack(object):
         return midi_info
 
     def plot(self, filepath=None, track_indices=None, mode='separate',
-             track_label='name', preset='default', cmap=None, xtick='bottom',
-             ytick='left', xticklabel='auto', yticklabel='auto', direction='in',
-             label='both', grid='both', grid_linestyle=':', grid_linewidth=.5):
+             track_label='name', preset='default', cmap=None, tick_loc=None,
+             xtick='auto', ytick='octave', xticklabel='on', yticklabel='auto',
+             direction='in', label='both', grid='both', grid_linestyle=':',
+             grid_linewidth=.5):
         """
         Plot the collected piano-rolls or save a plot of them.
 
@@ -963,10 +966,10 @@ class Multitrack(object):
             - In 'hybrid' mode, the drum tracks are merged into a 'Drums' track,
               while the other tracks are merged into an 'Others' track, and the
               two merged tracks are then plotted separately.
-        track_label : {'name', 'program', 'family', 'none'}
+        track_label : {'name', 'program', 'family', 'off'}
             Add track name, program name, instrument family name or none as
-            labels to the track. When `mode` is 'stacked', all options other
-            than 'none' label the two track with 'Drums' and 'Others'.
+            labels to the track. When `mode` is 'hybrid', all options other
+            than 'off' will label the two track with 'Drums' and 'Others'.
         preset : {'default', 'plain', 'frame'}
             Preset themes for the plot.
             - In 'default' preset, the ticks, grid and labels are on.
@@ -981,22 +984,24 @@ class Multitrack(object):
               piano-roll of each track. Default to 'hsv'.
             - When `mode` is 'hybrid', the first (second) element is used in the
               'Drums' ('Others') track. Default to ('Blues','Greens').
-        xtick : {'bottom', 'top', 'both', 'off'}
-            Put ticks along x-axis at top, bottom, both or neither. Default to
-            'bottom'.
-        ytick : {'left', 'right', 'both', 'off'}
-            Put ticks along y-axis at left, right, both or neither. Default to
-            'left'.
-        xticklabel : {'auto', 'beat', 'step', 'none'}
-            Use beat number, step number or neither as tick labels along the
-            x-axis, or automatically set to 'beat' when `beat_resolution` is
-            given and set to 'step', otherwise. Default to 'auto'. Only
-            effective when `xtick` is not 'off'.
-        yticklabel : {'auto', 'octave', 'name', 'number', 'none'}
-            Use octave name, pitch name or pitch number or none as tick labels
-            along the y-axis, or automatically set to 'octave' when `is_drum` is
-            False and set to 'name', otherwise. Default to 'auto'. Only
-            effective when `ytick` is not 'off'.
+        tick_loc : tuple or list
+            List of locations to put ticks. Availables elements are 'bottom',
+            'top', 'left' and 'right'. If None, default to ('bottom', 'left').
+        xtick : {'auto', 'beat', 'step', 'off'}
+            Use beat number or step number as ticks along the x-axis, or
+            automatically set to 'beat' when `beat_resolution` is given and set
+            to 'step', otherwise. Default to 'auto'.
+        ytick : {'octave', 'pitch', 'off'}
+            Use octave or pitch as ticks along the y-axis. Default to 'octave'.
+        xticklabel : {'on', 'off'}
+            Indicate whether to add tick labels along the x-axis. Only effective
+            when `xtick` is not 'off'.
+        yticklabel : {'auto', 'name', 'number', 'off'}
+            If 'name', use octave name and pitch name (key name when `is_drum`
+            is   True) as tick labels along the y-axis. If 'number', use pitch
+            number. If 'auto', set to 'name' when `ytick` is 'octave' and
+            'number' when `ytick` is 'pitch'. Default to 'auto'. Only effective
+            when `ytick` is not 'off'.
         direction : {'in', 'out', 'inout'}
             Put ticks inside the axes, outside the axes, or both. Default to
             'in'. Only effective when `xtick` and `ytick` are not both 'off'.
@@ -1041,7 +1046,7 @@ class Multitrack(object):
         if mode not in ('separate', 'stacked', 'hybrid'):
             raise ValueError("`mode` must be one of {'separate', 'stacked', "
                              "'hybrid'}")
-        if track_label not in ('name', 'program', 'family', 'none'):
+        if track_label not in ('name', 'program', 'family', 'off'):
             raise ValueError("`track_label` must be one of {'name', 'program', "
                              "'family'}")
 
@@ -1067,10 +1072,9 @@ class Multitrack(object):
                 axs = [ax]
 
             for idx, track_idx in enumerate(track_indices):
-                xticklabel_ = xticklabel if idx < num_track else 'none'
+                xticklabel_ = xticklabel if idx < num_track else 'off'
                 plot_pianoroll(axs[idx], self.tracks[track_idx].pianoroll,
-                               self.tracks[track_idx].lowest,
-                               self.tracks[track_idx].is_drum,
+                               self.tracks[track_idx].lowest, False,
                                self.beat_resolution, downbeats,
                                cmap=cmap[idx%len(cmap)], preset=preset,
                                xtick=xtick, ytick=ytick, xticklabel=xticklabel_,
@@ -1125,17 +1129,17 @@ class Multitrack(object):
 
             fig, (ax1, ax2) = plt.subplots(2, sharex=True, sharey=True)
             plot_pianoroll(ax1, merged_drums, lowest_drums, True,
-                           self.beat_resolution, downbeats, preset=preset,
-                           xtick=xtick, ytick=ytick, xticklabel='none',
-                           yticklabel=yticklabel, direction=direction,
-                           label=label, grid=grid,
+                           self.beat_resolution, downbeats, cmap=cmap[0],
+                           preset=preset, xtick=xtick, ytick=ytick,
+                           xticklabel=xticklabel, yticklabel=yticklabel,
+                           direction=direction, label=label, grid=grid,
                            grid_linestyle=grid_linestyle,
                            grid_linewidth=grid_linewidth)
             plot_pianoroll(ax2, merged_others, lowest_others, False,
-                           self.beat_resolution, downbeats, preset=preset,
-                           xtick=xtick, ytick=ytick, xticklabel=xticklabel,
-                           yticklabel=yticklabel, direction=direction,
-                           label=label, grid=grid,
+                           self.beat_resolution, downbeats, cmap=cmap[1],
+                           preset=preset, xtick=xtick, ytick=ytick,
+                           xticklabel=xticklabel, yticklabel=yticklabel,
+                           direction=direction, label=label, grid=grid,
                            grid_linestyle=grid_linestyle,
                            grid_linewidth=grid_linewidth)
             fig.subplots_adjust(hspace=0)

@@ -298,9 +298,9 @@ class Track(object):
         return is_binarized
 
     def plot(self, filepath=None, beat_resolution=None, downbeats=None,
-             preset='default', cmap='Blues', xtick='bottom', ytick='left',
-             xticklabel='auto', yticklabel='auto', direction='in', label='both',
-             grid='both', grid_linestyle=':', grid_linewidth=.5):
+             preset='default', cmap='Blues', tick_loc=None, xtick='auto',
+             ytick='octave', xticklabel='on', yticklabel='auto', direction='in',
+             label='both', grid='both', grid_linestyle=':', grid_linewidth=.5):
         """
         Plot the piano-roll or save a plot of the piano-roll.
 
@@ -322,22 +322,24 @@ class Track(object):
         cmap :  `matplotlib.colors.Colormap`
             Colormap to use in :func:`matplotlib.pyplot.imshow`. Default to
             'Blues'. Only effective when `pianoroll` is 2D.
-        xtick : {'bottom', 'top', 'both', 'off'}
-            Put ticks along x-axis at top, bottom, both or neither. Default to
-            'bottom'.
-        ytick : {'left', 'right', 'both', 'off'}
-            Put ticks along y-axis at left, right, both or neither. Default to
-            'left'.
-        xticklabel : {'auto', 'beat', 'step', 'none'}
-            Use beat number, step number or neither as tick labels along the
-            x-axis, or automatically set to 'beat' when `beat_resolution` is
-            given and set to 'step', otherwise. Default to 'auto'. Only
-            effective when `xtick` is not 'off'.
-        yticklabel : {'auto', 'octave', 'name', 'number', 'none'}
-            Use octave name, pitch name or pitch number or none as tick labels
-            along the y-axis, or automatically set to 'octave' when `is_drum` is
-            False and set to 'name', otherwise. Default to 'auto'. Only
-            effective when `ytick` is not 'off'.
+        tick_loc : tuple or list
+            List of locations to put ticks. Availables elements are 'bottom',
+            'top', 'left' and 'right'. If None, default to ('bottom', 'left').
+        xtick : {'auto', 'beat', 'step', 'off'}
+            Use beat number or step number as ticks along the x-axis, or
+            automatically set to 'beat' when `beat_resolution` is given and set
+            to 'step', otherwise. Default to 'auto'.
+        ytick : {'octave', 'pitch', 'off'}
+            Use octave or pitch as ticks along the y-axis. Default to 'octave'.
+        xticklabel : {'on', 'off'}
+            Indicate whether to add tick labels along the x-axis. Only effective
+            when `xtick` is not 'off'.
+        yticklabel : {'auto', 'name', 'number', 'off'}
+            If 'name', use octave name and pitch name (key name when `is_drum`
+            is   True) as tick labels along the y-axis. If 'number', use pitch
+            number. If 'auto', set to 'name' when `ytick` is 'octave' and
+            'number' when `ytick` is 'pitch'. Default to 'auto'. Only effective
+            when `ytick` is not 'off'.
         direction : {'in', 'out', 'inout'}
             Put ticks inside the axes, outside the axes, or both. Default to
             'in'. Only effective when `xtick` and `ytick` are not both 'off'.
@@ -362,10 +364,10 @@ class Track(object):
         _, ax = plt.subplots()
         plot_pianoroll(ax, self.pianoroll, self.lowest, self.is_drum,
                        beat_resolution=beat_resolution, downbeats=downbeats,
-                       preset=preset, cmap=cmap, xtick=xtick, ytick=ytick,
-                       xticklabel=xticklabel, yticklabel=yticklabel,
-                       direction=direction, label=label, grid=grid,
-                       grid_linestyle=grid_linestyle,
+                       preset=preset, cmap=cmap, tick_loc=tick_loc, xtick=xtick,
+                       ytick=ytick, xticklabel=xticklabel,
+                       yticklabel=yticklabel, direction=direction, label=label,
+                       grid=grid, grid_linestyle=grid_linestyle,
                        grid_linewidth=grid_linewidth)
 
         if filepath is None:
