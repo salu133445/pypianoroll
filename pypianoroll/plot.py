@@ -162,7 +162,7 @@ def plot_pianoroll(ax, pianoroll, lowest=0, is_drum=False, beat_resolution=None,
 
     # axis labels
     if label == 'x' or label == 'both':
-        if xticklabel == 'step' or xticklabel == 'off':
+        if xtick == 'step' or xticklabel == 'off':
             ax.set_xlabel('time (step)')
         else:
             ax.set_xlabel('time (beat)')
