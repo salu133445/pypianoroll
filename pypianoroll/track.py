@@ -53,7 +53,7 @@ class Track(object):
         [1] https://www.midi.org/specifications/item/gm-level-1-sound-set
         """
         if pianoroll is None:
-            self.pianoroll = np.zeros((0, 0), bool)
+            self.pianoroll = np.zeros((1, 1), bool)
         else:
             self.pianoroll = pianoroll
         self.program = program
@@ -63,15 +63,19 @@ class Track(object):
 
         self.check_validity()
 
+    def __getitem__(self, val):
+        return Track(self.pianoroll.__getitem__(val), self.program,
+                     self.is_drum, self.name, self.lowest)
+
     def __repr__(self):
         return ("Track(pianoroll={}, program={}, is_drum={}, name={}, "
-                "lowest={}".format(self.program, self.is_drum, self.name,
-                                   self.lowest, self.pianoroll.__str__))
+                "lowest={}".format(self.pianoroll.__str__(), self.program,
+                                   self.is_drum, self.name, self.lowest))
 
     def __str__(self):
-        return ("program : {},\nis_drum : {},\nname : {},\nlowest : {},\n"
-                "pianoroll :\n{}".format(self.program, self.is_drum, self.name,
-                                         self.lowest, self.pianoroll.__str__))
+        return ("pianoroll :\n{},\nprogram : {},\nis_drum : {},\nname : {},\n"
+                "lowest : {}".format(self.pianoroll.__str__(), self.program,
+                                     self.is_drum, self.name, self.lowest))
 
     def binarize(self, threshold=0):
         """
@@ -179,17 +183,27 @@ class Track(object):
         copied = deepcopy(self)
         return copied
 
-    def expand(self, lowest=0, highest=127):
+    def expand(self, lowest=None, highest=None, length=None):
         """
         Expand or compress the piano-roll to a pitch range specified by
         `lowest` and `highest`
 
+        Notes
+        -----
+        Return empty piano-roll with shape=(0, `length`) when `lowest`
+        is equal to or higher than `highest`.
+
         Parameters
         ----------
-        lowest : int or float
-            The lowest pitch of the expanded piano-roll.
-        highest : int or float
-            The highest pitch of the expanded piano-roll.
+        lowest : int
+            The lowest pitch of the expanded piano-roll. If None, default
+            to the original highest pitch.
+        highest : int
+            The highest pitch of the expanded piano-roll. If None, default
+            to the original highest pitch.
+        length : int
+            The length of the expanded piano-roll. If None, default to the
+            original length.
 
         Examples
         --------
@@ -206,22 +220,43 @@ class Track(object):
         >>> track.pianoroll.shape
         (96, 30)
         """
-        if self.lowest > lowest:
-            to_pad = self.lowest - lowest
-            self.pianoroll = np.pad(self.pianoroll, ((0, 0), (to_pad, 0)),
-                                    'constant')
-        elif self.lowest < lowest:
-            self.pianoroll = self.pianoroll[:, (lowest - self.lowest):]
+        if lowest is None:
+            lowest = self.lowest
+        if highest is None:
+            highest = self.lowest + self.pianoroll.shape[1] - 1
+        if length is None:
+            length = self.pianoroll.shape[0]
 
+        if lowest < highest:
+            if length < 1:
+                self.lowest = lowest
+                return np.zeros((0, highest - lowest + 1), self.pianoroll.dtype)
+        else:
+            self.lowest = lowest
+            if length > 0:
+                return np.zeros((length, 0), self.pianoroll.dtype)
+            else:
+                return np.zeros((0, 0), self.pianoroll.dtype)
+
+        expanded = np.zeros((length, highest - lowest + 1),
+                            self.pianoroll.dtype)
+
+        if lowest >= self.lowest + self.pianoroll.shape[1] - 1:
+            return expanded
+        if highest <= self.lowest:
+            return expanded
+
+        higher_lowest = max(lowest, self.lowest)
+        lower_highest = min(highest, self.lowest + self.pianoroll.shape[1] - 1)
+        common_range = lower_highest - higher_lowest
+        exp_l = higher_lowest - lowest
+        exp_h = exp_l + common_range
+        org_l = higher_lowest - self.lowest
+        org_h = org_l + common_range
+        t_idx = min(length, self.pianoroll.shape[0])
+        expanded[:t_idx, exp_l:exp_h] = self.pianoroll[:t_idx, org_l:org_h]
+        self.pianoroll = expanded
         self.lowest = lowest
-
-        pitch_axis_length = highest - lowest + 1
-        if self.pianoroll.shape[1] < pitch_axis_length:
-            to_pad = pitch_axis_length - self.pianoroll.shape[1]
-            self.pianoroll = np.pad(self.pianoroll, ((0, 0), (0, to_pad)),
-                                    'constant')
-        elif self.pianoroll.shape[1] > pitch_axis_length:
-            self.pianoroll = self.pianoroll[:, :pitch_axis_length]
 
     def get_pianoroll(self):
         """
@@ -254,7 +289,7 @@ class Track(object):
 
     def get_pitch_range(self, relative=False):
         """
-        Return the pitch range in tuple (lowest, highest)
+        Return the (relative) pitch range in tuple (lowest, highest)
 
         Parameters
         ----------
@@ -266,21 +301,28 @@ class Track(object):
         Returns
         -------
         lowest : int
-            Indicate the lowest pitch in the piano-roll.
+            The lowest pitch in the piano-roll.
         highest : int
-            Indicate the highest pitch in the piano-roll.
+            The highest pitch in the piano-roll.
         """
+        if self.pianoroll.shape[1] < 1:
+            raise ValueError("Cannot compute the pitch range for an empty "
+                             "piano-roll")
         lowest = 0
-        while not np.any(self.pianoroll[:, lowest]):
-            lowest += 1
-
         highest = self.pianoroll.shape[1] - 1
+        while lowest < highest:
+            if np.any(self.pianoroll[:, lowest]):
+                break
+            lowest += 1
+        if lowest == highest:
+            raise ValueError("Cannot compute the pitch range for an empty "
+                             "piano-roll")
         while not np.any(self.pianoroll[:, highest]):
             highest -= 1
 
         if not relative:
-            lowest = self.lowest + lowest
-            highest = self.lowest + highest
+            lowest += self.lowest
+            highest += self.lowest
 
         return lowest, highest
 
@@ -361,7 +403,7 @@ class Track(object):
         ax : `matplotlib.axes.Axes` object
             A :class:`matplotlib.axes.Axes` object.
         """
-        _, ax = plt.subplots()
+        fig, ax = plt.subplots()
         plot_pianoroll(ax, self.pianoroll, self.lowest, self.is_drum,
                        beat_resolution=beat_resolution, downbeats=downbeats,
                        preset=preset, cmap=cmap, tick_loc=tick_loc, xtick=xtick,
@@ -370,10 +412,10 @@ class Track(object):
                        grid=grid, grid_linestyle=grid_linestyle,
                        grid_linewidth=grid_linewidth)
 
-        if filepath is None:
-            plt.show()
-        else:
+        if filepath is not None:
             plt.savefig(filepath)
+
+        return fig, ax
 
     def transpose(self, semitone):
         """
