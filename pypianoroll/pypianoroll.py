@@ -92,6 +92,23 @@ def copy(obj):
     copied = deepcopy(obj)
     return copied
 
+def expand(obj, lowest=0, highest=127):
+    """
+    Return a copy of the object with piano-roll(s) expanded or compressed to
+    a pitch range specified by `lowest` and `highest`
+
+    Parameters
+    ----------
+    lowest : int or float
+        The lowest pitch of the expanded piano-roll(s).
+    highest : int or float
+        The highest pitch of the expanded piano-roll(s).
+    """
+    _check_supported(obj)
+    copied = deepcopy(obj)
+    copied.expand(lowest, highest)
+    return copied
+
 def plot(obj, **kwargs):
     """
     Plot the object. See :func:`pypianoroll.Multitrack.plot` and
