@@ -12,7 +12,7 @@ class Track(object):
 
     Attributes
     ----------
-    pianoroll : np.ndarray, shape=(num_time_step, num_pitch)
+    pianoroll : np.ndarray, shape=(num_time_step, 128)
         Piano-roll matrix. First dimension represents time. Second dimension
         represents pitch.
     program: int
@@ -24,13 +24,14 @@ class Track(object):
         Name of the track.
     """
 
-    def __init__(self, pianoroll=None, program=0, is_drum=False, name='unknown'):
+    def __init__(self, pianoroll=None, program=0, is_drum=False,
+                 name='unknown'):
         """
         Initialize by assigning attributes
 
         Parameters
         ----------
-        pianoroll : np.ndarray, shape=(num_time_step, num_pitch)
+        pianoroll : np.ndarray, shape=(num_time_step, 128)
             Piano-roll matrix. First dimension represents time. Second dimension
             represents pitch. Available datatypes are bool, int, float.
         program: int
@@ -47,7 +48,7 @@ class Track(object):
         [1] https://www.midi.org/specifications/item/gm-level-1-sound-set
         """
         if pianoroll is None:
-            self.pianoroll = np.zeros((1, 1), bool)
+            self.pianoroll = np.zeros((1, 128), bool)
         else:
             self.pianoroll = pianoroll
         self.program = program
@@ -94,6 +95,9 @@ class Track(object):
                             "and float.")
         if self.pianoroll.ndim != 2:
             raise ValueError("`pianoroll` must be a 2D numpy array")
+        if self.pianoroll.shape[1] != 128:
+            raise ValueError("The shape of `pianoroll` must be (num_time_step, "
+                             "128)")
         # program
         if not isinstance(self.program, int):
             raise TypeError("`program` must be of int type")
@@ -132,9 +136,14 @@ class Track(object):
         copied = deepcopy(self)
         return copied
 
-    def pad(self, pad_length=None):
+    def pad(self, pad_length):
         """
         Pad the piano-roll with zeros at the end along the time axis
+
+        Parameters
+        ----------
+        pad_length : int
+            The length to pad along the time axis with zeros.
         """
         self.pianoroll = np.pad(self.pianoroll, ((0, 0), (0, pad_length)),
                                 'constant')
@@ -154,17 +163,17 @@ class Track(object):
     def get_active_length(self):
         """
         Return the active length (i.e. without trailing silence) of the
-        piano-roll  (in time step)
+        piano-roll (in time step)
 
         Returns
         -------
-        length : int
+        active_length : int
             Length of the piano-roll without trailing silence (in time step).
         """
         non_zero_steps = np.any((self.pianoroll > 0), axis=1)
         inv_last_non_zero_step = np.argmax(np.flip(non_zero_steps, axis=0))
-        length = self.pianoroll.shape[0] - inv_last_non_zero_step
-        return length
+        active_length = self.pianoroll.shape[0] - inv_last_non_zero_step
+        return active_length
 
     def get_active_pitch_range(self):
         """
@@ -215,9 +224,10 @@ class Track(object):
         return is_binarized
 
     def plot(self, filepath=None, beat_resolution=None, downbeats=None,
-             preset='default', cmap='Blues', tick_loc=None, xtick='auto',
-             ytick='octave', xticklabel='on', yticklabel='auto', direction='in',
-             label='both', grid='both', grid_linestyle=':', grid_linewidth=.5):
+             use_current_fig=False, preset='default', cmap='Blues',
+             tick_loc=None, xtick='auto', ytick='octave', xticklabel='on',
+             yticklabel='auto', direction='in', label='both', grid='both',
+             grid_linestyle=':', grid_linewidth=.5):
         """
         Plot the piano-roll or save a plot of the piano-roll.
 
@@ -294,16 +304,20 @@ class Track(object):
 
     def transpose(self, semitone):
         """
-        Transpose the piano-roll by `semitones` semitones
+        Transpose the piano-roll by a certain semitones, where positive
+        values are for higher key, while negative values are for lower key
 
         Parameters
         ----------
         semitone : int
-            Number of semitones transpose the piano-roll.
+            Number of semitones to transpose the piano-roll.
         """
         if semitone > 0 and semitone < 128:
             self.pianoroll[semitone:] = self.pianoroll[:(127 - semitone)]
-            self.pianoroll = 0
+            self.pianoroll[:semitone] = 0
+        elif semitone < 0 and semitone > -128:
+            self.pianoroll[:(127 - semitone)] = self.pianoroll[semitone:]
+            self.pianoroll[(127 - semitone):] = 0
 
     def trim_trailing_silence(self):
         """Trim the trailing silence of the piano-roll"""

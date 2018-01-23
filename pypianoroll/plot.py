@@ -5,7 +5,7 @@ import numpy as np
 import pretty_midi
 from matplotlib import pyplot as plt
 
-def plot_pianoroll(ax, pianoroll, lowest=0, is_drum=False, beat_resolution=None,
+def plot_pianoroll(ax, pianoroll, is_drum=False, beat_resolution=None,
                    downbeats=None, preset='default', cmap='Blues',
                    tick_loc=None, xtick='auto', ytick='octave', xticklabel='on',
                    yticklabel='auto', direction='in', label='both', grid='both',
@@ -23,9 +23,6 @@ def plot_pianoroll(ax, pianoroll, lowest=0, is_drum=False, beat_resolution=None,
         - For 2D array, shape=(num_time_step, num_pitch).
         - For 3D array, shape=(num_time_step, num_pitch, num_channel), where
           channels can be either RGB or RGBA.
-    lowest : int
-        Indicate the lowest pitch in the piano-roll. Required when `obj`
-        is a numpy array.
     is_drum : bool
         Drum indicator. True for drums. False for other instruments. Default
         to False.
@@ -77,6 +74,9 @@ def plot_pianoroll(ax, pianoroll, lowest=0, is_drum=False, beat_resolution=None,
     """
     if pianoroll.ndim not in (2, 3):
         raise ValueError("`pianoroll` must be a 2D or 3D numpy array")
+    if pianoroll.shape[1] != 128:
+        raise ValueError("The shape of `pianoroll` must be (num_time_step, "
+                         "128)")
     if xtick not in ('auto', 'beat', 'step', 'off'):
         raise ValueError("`xtick` must be one of {'auto', 'beat', 'step', "
                          "'none'}")
@@ -102,8 +102,8 @@ def plot_pianoroll(ax, pianoroll, lowest=0, is_drum=False, beat_resolution=None,
         to_plot = pianoroll.transpose(1, 0, 2)
     else:
         to_plot = pianoroll.T
-    highest = lowest + pianoroll.shape[1] - 1
-    extent = (0, pianoroll.shape[0], lowest, highest)
+    highest = pianoroll.shape[1] - 1
+    extent = (0, pianoroll.shape[0], 0, highest)
     ax.imshow(to_plot, cmap=cmap, aspect='auto', vmin=0, vmax=1,
               interpolation='none', extent=extent, origin='lower')
 
@@ -143,22 +143,19 @@ def plot_pianoroll(ax, pianoroll, lowest=0, is_drum=False, beat_resolution=None,
         ax.tick_params(axis='x', which='minor', width=0)
 
     # y-axis
-    highest = lowest + pianoroll.shape[1] - 1
     if ytick == 'octave':
-        ytick_first = lowest + 12 - lowest%12
-        ax.set_yticks(np.arange(ytick_first, highest, 12))
+        ax.set_yticks(np.arange(0, 128, 12))
         if yticklabel == 'name':
-            ax.set_yticklabels(['C{}'.format(octave-2) for octave
-                                in range(ytick_first//12, highest//12)])
+            ax.set_yticklabels(['C{}'.format(i - 2) for i in range(10)])
     elif ytick == 'step':
-        ax.set_yticks(np.arange(lowest, highest))
+        ax.set_yticks(np.arange(0, 128))
         if yticklabel == 'name':
             if is_drum:
                 ax.set_yticklabels([pretty_midi.note_number_to_drum_name(i)
-                                    for i in range(lowest, highest)])
+                                    for i in range(128)])
             else:
                 ax.set_yticklabels([pretty_midi.note_number_to_name(i)
-                                    for i in range(lowest, highest)])
+                                    for i in range(128)])
 
     # axis labels
     if label == 'x' or label == 'both':
