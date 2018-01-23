@@ -16,13 +16,13 @@ def _check_supported(obj):
     or :class:`pypianoroll.Track` object. Otherwise, pass.
     """
     if not (isinstance(obj, Multitrack) or isinstance(obj, Track)):
-        raise TypeError("Only `pypianoroll.Multitrack` and `pypianoroll.Track` "
-                        "are supported")
+        raise TypeError("Support only `pypianoroll.Multitrack` and "
+                        "`pypianoroll.Track` class objects")
 
 def is_pianoroll(arr):
     """
-    Return True if the array is a valid piano-roll matrix. Otherwise, return
-    False.
+    Return True if the array is a standard piano-roll matrix. Otherwise,
+    return False. Raise TypeError if the input object is not a numpy array.
     """
     if not isinstance(arr, np.ndarray):
         raise TypeError("`arr` must be of np.ndarray type")
@@ -32,22 +32,13 @@ def is_pianoroll(arr):
         return False
     if arr.ndim != 2:
         return False
-    return True
-
-def is_standard_pianoroll(arr):
-    """
-    Return True if the array is a standard piano-roll matrix that has a
-    pitch range under 128. Otherwise, return False.
-    """
-    if not is_pianoroll(arr):
-        return False
-    if arr.shape[2] > 128:
+    if arr.shape[1] != 128:
         return False
     return True
 
 def binarize(obj, threshold=0):
     """
-    Return a copy of the object with binarized piano-roll(s)
+    Return a copy of the object with binarized piano-roll(s).
 
     Parameters
     ----------
@@ -62,7 +53,7 @@ def binarize(obj, threshold=0):
 def clip(obj, lower=0, upper=128):
     """
     Return a copy of the object with piano-roll(s) clipped by a lower bound
-    and an upper bound specified by `lower` and `upper`, respectively
+    and an upper bound specified by `lower` and `upper`, respectively.
 
     Parameters
     ----------
@@ -76,37 +67,38 @@ def clip(obj, lower=0, upper=128):
     copied.clip(lower, upper)
     return copied
 
-def compress_to_active(obj):
-    """
-    Return a copy of the object with piano-roll(s) compressed to active
-    pitch range(s)
-    """
-    _check_supported(obj)
-    copied = deepcopy(obj)
-    copied.compress_to_active()
-    return copied
-
 def copy(obj):
-    """Return a copy of the object"""
+    """Return a copy of the object."""
     _check_supported(obj)
     copied = deepcopy(obj)
     return copied
 
-def expand(obj, lowest=0, highest=127):
+def pad(obj, pad_length):
     """
-    Return a copy of the object with piano-roll(s) expanded or compressed to
-    a pitch range specified by `lowest` and `highest`
+    Return a copy of the object with piano-roll padded with zeros at the end
+    along the time axis.
 
     Parameters
     ----------
-    lowest : int or float
-        The lowest pitch of the expanded piano-roll(s).
-    highest : int or float
-        The highest pitch of the expanded piano-roll(s).
+    pad_length : int
+        The length to pad along the time axis with zeros.
     """
-    _check_supported(obj)
+    if not isinstance(obj, Track):
+        raise TypeError("Support only `pypianoroll.Track` class objects")
     copied = deepcopy(obj)
-    copied.expand(lowest, highest)
+    copied.pad(pad_length)
+    return copied
+
+def pad_to_same(obj):
+    """
+    Return a copy of the object with shorter piano-rolls padded with zeros
+    at the end along the time axis to the length of the piano-roll with the
+    maximal length.
+    """
+    if not isinstance(obj, Multitrack):
+        raise TypeError("Support only `pypianoroll.Multitrack` class objects")
+    copied = deepcopy(obj)
+    copied.pad_to_same()
     return copied
 
 def plot(obj, **kwargs):
@@ -120,7 +112,7 @@ def plot(obj, **kwargs):
 def transpose(obj, semitone):
     """
     Return a copy of the object with piano-roll(s) transposed by
-    ``semitones`` semitones
+    ``semitones`` semitones.
 
     Parameters
     ----------
@@ -135,7 +127,7 @@ def transpose(obj, semitone):
 def trim_trailing_silence(obj):
     """
     Return a copy of the object with trimmed trailing silence of the
-    piano-roll(s)
+    piano-roll(s).
     """
     _check_supported(obj)
     copied = deepcopy(obj)
