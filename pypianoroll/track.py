@@ -8,7 +8,7 @@ from .plot import plot_pianoroll
 
 class Track(object):
     """
-    A single-track piano-roll container
+    A single-track piano-roll container.
 
     Attributes
     ----------
@@ -27,7 +27,7 @@ class Track(object):
     def __init__(self, pianoroll=None, program=0, is_drum=False,
                  name='unknown'):
         """
-        Initialize by assigning attributes
+        Initialize the object by assigning attributes.
 
         Parameters
         ----------
@@ -73,7 +73,7 @@ class Track(object):
     def binarize(self, threshold=0):
         """
         Binarize the piano-roll. Do nothing if the piano-roll is already
-        binarized
+        binarized.
 
         Parameters
         ----------
@@ -84,7 +84,7 @@ class Track(object):
             self.pianoroll = (self.pianoroll > threshold)
 
     def check_validity(self):
-        """"Raise error if any invalid attribute found"""
+        """"Raise error if any invalid attribute found."""
         # pianoroll
         if not isinstance(self.pianoroll, np.ndarray):
             raise TypeError("`pianoroll` must be of np.ndarray type")
@@ -113,7 +113,7 @@ class Track(object):
     def clip(self, lower=0, upper=128):
         """
         Clip the piano-roll by an lower bound and an upper bound specified by
-        `lower` and `upper`, respectively
+        `lower` and `upper`, respectively.
 
         Parameters
         ----------
@@ -126,7 +126,7 @@ class Track(object):
 
     def copy(self):
         """
-        Return a copy of the object
+        Return a copy of the object.
 
         Returns
         -------
@@ -138,19 +138,35 @@ class Track(object):
 
     def pad(self, pad_length):
         """
-        Pad the piano-roll with zeros at the end along the time axis
+        Pad the piano-roll with zeros at the end along the time axis.
 
         Parameters
         ----------
         pad_length : int
             The length to pad along the time axis with zeros.
         """
-        self.pianoroll = np.pad(self.pianoroll, ((0, 0), (0, pad_length)),
+        self.pianoroll = np.pad(self.pianoroll, ((0, pad_length), (0, 0)),
+                                'constant')
+
+    def pad_to_multiple(self, factor):
+        """
+        Pad the piano-roll with zeros at the end along the time axis of
+        minimal length to make the length of the resulting piano-roll a
+        multiple of `factor`.
+
+        Parameters
+        ----------
+        factor : int
+            The value of which the length of the resulting piano-roll will be
+            a multiple.
+        """
+        to_pad = factor - self.pianoroll.shape[0]%factor
+        self.pianoroll = np.pad(self.pianoroll, ((0, to_pad), (0, 0)),
                                 'constant')
 
     def get_pianoroll_copy(self):
         """
-        Return a copy of the piano-roll
+        Return a copy of the piano-roll.
 
         Returns
         -------
@@ -163,7 +179,7 @@ class Track(object):
     def get_active_length(self):
         """
         Return the active length (i.e. without trailing silence) of the
-        piano-roll (in time step)
+        piano-roll (in time step).
 
         Returns
         -------
@@ -177,7 +193,7 @@ class Track(object):
 
     def get_active_pitch_range(self):
         """
-        Return the active pitch range in tuple (lowest, highest)
+        Return the active pitch range in tuple (lowest, highest).
 
         Parameters
         ----------
@@ -213,7 +229,7 @@ class Track(object):
     def is_binarized(self):
         """
         Return True if the piano-roll is already binarized. Otherwise, return
-        False
+        False.
 
         Returns
         -------
@@ -224,7 +240,7 @@ class Track(object):
         return is_binarized
 
     def plot(self, filepath=None, beat_resolution=None, downbeats=None,
-             use_current_fig=False, preset='default', cmap='Blues',
+             normalization='standard', preset='default', cmap='Blues',
              tick_loc=None, xtick='auto', ytick='octave', xticklabel='on',
              yticklabel='auto', direction='in', label='both', grid='both',
              grid_linestyle=':', grid_linewidth=.5):
@@ -241,6 +257,19 @@ class Track(object):
         downbeats : list
             Indices of time steps that contain downbeats., i.e. the first time
             step of a bar.
+        normalization : {'standard', 'auto', 'none'}
+            The normalization method to apply to the piano-roll. Default to
+            'standard'. If `pianoroll` is binarized, use 'none' anyway.
+            - For 'standard' normalization, the normalized values are given by
+              N = P / 128, where P, N is the original and normalized piano-roll,
+              respectively
+            - For 'auto' normalization, the normalized values are given by
+              N = (P - m) / (M - m), where P, N is the original and normalized
+              piano-roll, respectively, and M, m is the maximum and minimum of
+              the original piano-roll, respectively.
+            - If 'none', no normalization will be applied to the piano-roll. In
+              this case, the values of `pianoroll` should be in [0, 1] in order
+              to plot it correctly.
         preset : {'default', 'plain', 'frame'}
             Preset themes for the plot.
             - In 'default' preset, the ticks, grid and labels are on.
@@ -289,12 +318,15 @@ class Track(object):
             A :class:`matplotlib.axes.Axes` object.
         """
         fig, ax = plt.subplots()
+        if self.is_binarized():
+            normalization = 'none'
         plot_pianoroll(ax, self.pianoroll, self.is_drum,
                        beat_resolution=beat_resolution, downbeats=downbeats,
-                       preset=preset, cmap=cmap, tick_loc=tick_loc, xtick=xtick,
-                       ytick=ytick, xticklabel=xticklabel,
-                       yticklabel=yticklabel, direction=direction, label=label,
-                       grid=grid, grid_linestyle=grid_linestyle,
+                       normalization=normalization, preset=preset, cmap=cmap,
+                       tick_loc=tick_loc, xtick=xtick, ytick=ytick,
+                       xticklabel=xticklabel, yticklabel=yticklabel,
+                       direction=direction, label=label, grid=grid,
+                       grid_linestyle=grid_linestyle,
                        grid_linewidth=grid_linewidth)
 
         if filepath is not None:
@@ -305,7 +337,7 @@ class Track(object):
     def transpose(self, semitone):
         """
         Transpose the piano-roll by a certain semitones, where positive
-        values are for higher key, while negative values are for lower key
+        values are for higher key, while negative values are for lower key.
 
         Parameters
         ----------
@@ -313,13 +345,13 @@ class Track(object):
             Number of semitones to transpose the piano-roll.
         """
         if semitone > 0 and semitone < 128:
-            self.pianoroll[semitone:] = self.pianoroll[:(127 - semitone)]
-            self.pianoroll[:semitone] = 0
+            self.pianoroll[:, semitone:] = self.pianoroll[:, :(128 - semitone)]
+            self.pianoroll[:, :semitone] = 0
         elif semitone < 0 and semitone > -128:
-            self.pianoroll[:(127 - semitone)] = self.pianoroll[semitone:]
-            self.pianoroll[(127 - semitone):] = 0
+            self.pianoroll[:, :(128 + semitone)] = self.pianoroll[:, -semitone:]
+            self.pianoroll[:, (128 + semitone):] = 0
 
     def trim_trailing_silence(self):
-        """Trim the trailing silence of the piano-roll"""
+        """Trim the trailing silence of the piano-roll."""
         length = self.get_active_length()
         self.pianoroll = self.pianoroll[:length]
