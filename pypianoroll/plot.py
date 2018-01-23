@@ -4,12 +4,17 @@ Module for plotting multi-track and single-track piano-rolls
 import numpy as np
 import pretty_midi
 from matplotlib import pyplot as plt
+from moviepy.editor import VideoClip
+from moviepy.video.io.bindings import mplfig_to_npimage
+# from .track import Track
+# from .multitrack import Multitrack
 
 def plot_pianoroll(ax, pianoroll, is_drum=False, beat_resolution=None,
-                   downbeats=None, preset='default', cmap='Blues',
-                   tick_loc=None, xtick='auto', ytick='octave', xticklabel='on',
-                   yticklabel='auto', direction='in', label='both', grid='both',
-                   grid_linestyle=':', grid_linewidth=.5):
+                   downbeats=None, normalization='standard', preset='default',
+                   cmap='Blues', tick_loc=None, xtick='auto', ytick='octave',
+                   xticklabel='on', yticklabel='auto', direction='in',
+                   label='both', grid='both', grid_linestyle=':',
+                   grid_linewidth=.5):
     """
     Plot a piano-roll given as a numpy array
 
@@ -19,7 +24,8 @@ def plot_pianoroll(ax, pianoroll, is_drum=False, beat_resolution=None,
          The :class:`matplotlib.axes.Axes` object where the piano-roll will
          be plotted on.
     pianoroll : np.ndarray
-        The piano-roll to be plotted.
+        The piano-roll to be plotted. The values should be in [0, 1] when
+        `normalized` is False.
         - For 2D array, shape=(num_time_step, num_pitch).
         - For 3D array, shape=(num_time_step, num_pitch, num_channel), where
           channels can be either RGB or RGBA.
@@ -32,6 +38,19 @@ def plot_pianoroll(ax, pianoroll, is_drum=False, beat_resolution=None,
     downbeats : list
         Indices of time steps that contain downbeats., i.e. the first time
         step of a bar.
+    normalization : {'standard', 'auto', 'none'}
+        The normalization method to apply to the piano-roll. Default to
+        'standard'. If `pianoroll` is binarized, use 'none' anyway.
+        - For 'standard' normalization, the normalized values are given by
+          N = P / 128, where P, N is the original and normalized piano-roll,
+          respectively
+        - For 'auto' normalization, the normalized values are given by
+          N = (P - m) / (M - m), where P, N is the original and normalized
+          piano-roll, respectively, and M, m is the maximum and minimum of
+          the original piano-roll, respectively.
+        - If 'none', no normalization will be applied to the piano-roll. In
+          this case, the values of `pianoroll` should be in [0, 1] in order
+          to plot it correctly.
     preset : {'default', 'plain', 'frame'}
         Preset themes for the plot.
         - In 'default' preset, the ticks, grid and labels are on.
@@ -102,6 +121,12 @@ def plot_pianoroll(ax, pianoroll, is_drum=False, beat_resolution=None,
         to_plot = pianoroll.transpose(1, 0, 2)
     else:
         to_plot = pianoroll.T
+    if normalization == 'standard':
+        to_plot = to_plot / 128.
+    elif normalization == 'auto':
+        max_value = np.max(to_plot)
+        min_value = np.min(to_plot)
+        to_plot = to_plot - min_value / (max_value - min_value)
     highest = pianoroll.shape[1] - 1
     extent = (0, pianoroll.shape[0], 0, highest)
     ax.imshow(to_plot, cmap=cmap, aspect='auto', vmin=0, vmax=1,
@@ -179,3 +204,31 @@ def plot_pianoroll(ax, pianoroll, is_drum=False, beat_resolution=None,
     if downbeats is not None and preset != 'plain':
         for step in downbeats:
             ax.axvline(x=step, color='k', linewidth=1)
+
+def save_video(filepath, obj, window, hop=1, fps=None):
+    fig, ax = plt.subplots()
+
+    highest = obj.pianoroll.shape[1] - 1
+    extent = (0, window, 0, highest)
+    first = True
+    def make_frame(t):
+        if first:
+            plot_pianoroll(ax, obj.pianoroll[:, :window], is_drum=False, beat_resolution=None,
+                            downbeats=None, normalization='standard', preset='default',
+                            cmap='Blues', tick_loc=None, xtick='auto', ytick='octave',
+                            xticklabel='on', yticklabel='auto', direction='in',
+                            label='both', grid='both', grid_linestyle=':',
+                            grid_linewidth=.5)
+            first = False
+        else:
+            f_idx = int(t * fps)
+            start_idx = hop * f_idx
+            ax.imshow(obj.pianoroll[:, start_idx:(start_idx + window)],
+                        cmap='Blues', aspect='auto', vmin=0, vmax=1,
+                        interpolation='none', extent=extent, origin='lower')
+        return mplfig_to_npimage(fig)
+
+    num_frame = int((obj.pianoroll.shape[1] - window) / hop)
+    duration = int(num_frame / fps)
+    animation = VideoClip(make_frame, duration=duration)
+    animation.write_videofile(filepath, fps, progress_bar=False)
