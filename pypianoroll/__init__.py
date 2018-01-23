@@ -11,7 +11,6 @@ Features:
 """
 from .track import Track
 from .multitrack import Multitrack
-from .pypianoroll import (is_pianoroll, is_standard_pianoroll, binarize, clip,
-                          compress_to_active, copy, expand, plot, transpose,
-                          trim_trailing_silence)
-from .plot import (plot_pianoroll)
+from .pypianoroll import (is_pianoroll, binarize, clip, copy, pad, pad_to_same,
+                          plot, transpose, trim_trailing_silence)
+from .plot import (plot_pianoroll, save_video)
