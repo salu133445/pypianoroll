@@ -32,19 +32,12 @@ class Multitrack(object):
         Resolution of a beat (in time step).
     name : str
         Name of the multi-track piano-roll.
-
-    Notes
-    -----
-    The length of `tempo` and `downbeat` can be different. During conversion
-    and rendering, the tempo array will be automatically padded to
-    appropriate length with the last tempo value. The downbeat array has no
-    effect on playback.
     """
     def __init__(self, filepath=None, filepath_json=None, tracks=None,
                  tempo=120.0, downbeat=None, beat_resolution=24,
                  name='unknown'):
         """
-        Initialize the object by one of the following ways
+        Initialize the object by one of the following ways:
         - parsing a MIDI file
         - loading a .npz file and a JSON file
         - assigning values for attributes
@@ -79,8 +72,7 @@ class Multitrack(object):
             time steps. Will be assigned to `downbeat` when `filepath` is not
             provided.
         name : str
-            Name to be assigned to the multi-track piano-roll. Default to
-            'unknown'.
+            Name of the multi-track piano-roll. Default to 'unknown'.
         """
         # parse input file
         if filepath is not None:
@@ -183,7 +175,7 @@ class Multitrack(object):
     def binarize(self, threshold=0):
         """
         Binarize the piano-rolls of all tracks. Pass the track if its piano-roll
-        is already binarized
+        is already binarized.
 
         Parameters
         ----------
@@ -199,7 +191,7 @@ class Multitrack(object):
 
     def check_validity(self):
         """
-        Raise an error if any invalid attribute found
+        Raise an error if any invalid attribute found.
 
         Raises
         ------
@@ -246,7 +238,7 @@ class Multitrack(object):
     def clip(self, lower=0, upper=128):
         """
         Clip the piano-rolls by an lower bound and an upper bound specified by
-        `lower` and `upper`, respectively
+        `lower` and `upper`, respectively.
 
         Parameters
         ----------
@@ -264,7 +256,7 @@ class Multitrack(object):
 
     def copy(self):
         """
-        Return a copy of the object
+        Return a copy of the object.
 
         Returns
         -------
@@ -277,7 +269,7 @@ class Multitrack(object):
     def pad_to_same(self):
         """
         Pad shorter piano-rolls with zeros at the end along the time axis to the
-        length of the piano-roll with the maximal length
+        length of the piano-roll with the maximal length.
         """
         maximal_length = self.get_maximal_length()
         for track in self.tracks:
@@ -287,7 +279,7 @@ class Multitrack(object):
     def get_active_length(self):
         """
         Return the maximal active length (i.e. without trailing silence) of the
-        piano-rolls (in time step)
+        piano-rolls (in time step).
 
         Returns
         -------
@@ -304,7 +296,7 @@ class Multitrack(object):
 
     def get_downbeat_steps(self):
         """
-        Return a list of indices of time steps that contain downbeats
+        Return a list of indices of time steps that contain downbeats.
 
         Returns
         -------
@@ -318,7 +310,7 @@ class Multitrack(object):
 
     def get_empty_tracks(self):
         """
-        Return the indices of tracks with empty piano-rolls
+        Return the indices of tracks with empty piano-rolls.
 
         Returns
         -------
@@ -332,7 +324,7 @@ class Multitrack(object):
     def get_maximal_length(self):
         """
         Return the maximal length of the piano-rolls along the time axis (in
-        time step)
+        time step).
 
         Returns
         -------
@@ -349,7 +341,7 @@ class Multitrack(object):
 
     def get_merged_pianoroll(self, mode='sum'):
         """
-        Return a merged piano-roll
+        Return a merged piano-roll.
 
         Parameters
         ----------
@@ -390,7 +382,7 @@ class Multitrack(object):
     def get_num_downbeat(self):
         """
         Return the number of down beats. The return value is calculated based
-        solely on `downbeat`
+        solely on `downbeat`.
 
         Returns
         -------
@@ -402,7 +394,7 @@ class Multitrack(object):
 
     def get_num_track(self):
         """
-        Return the number of tracks
+        Return the number of tracks.
 
         Returns
         -------
@@ -414,7 +406,7 @@ class Multitrack(object):
 
     def get_active_pitch_range(self):
         """
-        Return the overall active pitch range of the piano-rolls
+        Return the overall active pitch range of the piano-rolls.
 
         Returns
         -------
@@ -436,7 +428,7 @@ class Multitrack(object):
     def get_stacked_pianorolls(self):
         """
         Return a stacked multi-track piano-roll. The shape of the return
-        np.ndarray is (num_time_step, 128, num_track)
+        np.ndarray is (num_time_step, 128, num_track).
 
         Returns
         -------
@@ -451,7 +443,7 @@ class Multitrack(object):
     def is_binarized(self):
         """
         Return True if the pianorolls of all tracks are already binarized.
-        Otherwise, return False
+        Otherwise, return False.
 
         Returns
         -------
@@ -466,7 +458,7 @@ class Multitrack(object):
 
     def load(self, filepath_npz, filepath_json):
         """
-        Load a previously saved .npz file and JSON file
+        Load a previously saved .npz file and JSON file.
 
         Notes
         -----
@@ -482,7 +474,7 @@ class Multitrack(object):
         def reconstruct_sparse(target_dict, name):
             """
             Return the reconstructed scipy.sparse.csc_matrix, whose components
-            are stored in `target_dict` with prefix given as `name`
+            are stored in `target_dict` with prefix given as `name`.
             """
             return csc_matrix((target_dict[name+'_csc_data'],
                                target_dict[name+'_csc_indices'],
@@ -565,7 +557,7 @@ class Multitrack(object):
                    binarized=False, compressed=True, collect_onsets_only=False,
                    threshold=0, first_beat_time=None):
         """
-        Parse a MIDI file
+        Parse a MIDI file.
 
         Parameters
         ----------
@@ -636,7 +628,7 @@ class Multitrack(object):
                           collect_onsets_only=False, threshold=0,
                           first_beat_time=None):
         """
-        Parse a :class:`pretty_midi.PrettyMIDI` object
+        Parse a :class:`pretty_midi.PrettyMIDI` object.
 
         Parameters
         ----------
@@ -718,7 +710,10 @@ class Multitrack(object):
 
         # Set first_beat_time for 'normal' and 'strict' modes
         if algorithm == 'normal':
-            first_beat_time = pm.estimate_beat_start()
+            if pm.time_signature_changes:
+                first_beat_time = pm.time_signature_changes[0].time
+            else:
+                first_beat_time = pm.estimate_beat_start()
         elif algorithm == 'strict':
             if not pm.time_signature_changes:
                 raise ValueError("No time signature change event found. Unable "
@@ -740,54 +735,58 @@ class Multitrack(object):
         one_beat_ahead = first_beat_time
         end = one_beat_ahead
 
-        # Initialize `tc_idx` to the index of the nearest tempo change event
-        # before `first_beat_time`
-        if not tc_times:
-            estimated_tempo = pm.estimate_tempo()
-            tc_idx = 0
-            tempi[0] = estimated_tempo
-        else:
-            for idx, tc_time in enumerate(tc_times):
-                if tc_time > first_beat_time:
-                    tc_idx = idx
-                    break
-            tc_idx = max(0, tc_idx-1)
+        # # Initialize `tc_idx` to the index of the nearest tempo change event
+        # # before `first_beat_time`
+        # tc_idx = 0
+        # if not tc_times.size:
+        #     estimated_tempo = pm.estimate_tempo()
+        #     tc_times = np.array([0.0])
+        #     tempi = np.array([estimated_tempo])
+        # else:
+        #     for idx, tc_time in enumerate(tc_times):
+        #         if tc_time > first_beat_time:
+        #             tc_idx = idx
+        #             break
+        #     tc_idx = max(0, tc_idx-1)
 
-        while remained_beat > 0.0:
-            # Check if it is the first tempo change event. If so, reduce
-            # `one_beat_ahead` by the corresponding duration of `remained_beat`
-            # in current tempo and break iteration
-            if tc_idx < 1:
-                one_beat_ahead -= remained_beat * 60. / tempi[tc_idx]
-                break
+        # while remained_beat > 0.0:
+        #     # Check if it is the first tempo change event. If so, reduce
+        #     # `one_beat_ahead` by the corresponding duration of `remained_beat`
+        #     # in current tempo and break iteration
+        #     if tc_idx < 1:
+        #         one_beat_ahead -= remained_beat * 60. / tempi[tc_idx]
+        #         break
 
-            # Check if current tempo can fill up `remained_beat`. If so, reduce
-            # `one_beat_ahead` by the corresponding duration of `remained_beat`
-            # in current tempo and break iteration
-            tc_duration_in_beat = (end - tc_times[tc_idx]) * tempi[tc_idx] / 60.
-            if remained_beat < tc_duration_in_beat:
-                one_beat_ahead -= remained_beat * 60. / tempi[tc_idx]
-                break
+        #     # Check if current tempo can fill up `remained_beat`. If so, reduce
+        #     # `one_beat_ahead` by the corresponding duration of `remained_beat`
+        #     # in current tempo and break iteration
+        #     tc_duration_in_beat = (end - tc_times[tc_idx]) * tempi[tc_idx] / 60.
+        #     if remained_beat < tc_duration_in_beat:
+        #         one_beat_ahead -= remained_beat * 60. / tempi[tc_idx]
+        #         break
 
-            # Reduce `one_beat_ahead` by the duration of current tempo
-            one_beat_ahead -= (end - tc_times[tc_idx])
+        #     # Reduce `one_beat_ahead` by the duration of current tempo
+        #     one_beat_ahead -= (end - tc_times[tc_idx])
 
-            # Reduce `remained_beat` by the duration (in beat) of current tempo
-            remained_beat -= tc_duration_in_beat
-            end = tc_times[tc_idx]
+        #     # Reduce `remained_beat` by the duration (in beat) of current tempo
+        #     remained_beat -= tc_duration_in_beat
+        #     end = tc_times[tc_idx]
 
-            tc_idx -= 1
-        # ========== end ==========
+        #     tc_idx -= 1
+        # # ========== end ==========
 
-        # Add an additional beat if any note found between `one_beat_ahead` and
-        # `first_beat_time`
+        # # Add an additional beat if any note found between `one_beat_ahead` and
+        # # `first_beat_time`
+        # incomplete_beat_found = False
+        # for instrument in pm.instruments:
+        #     for note in instrument.notes:
+        #         if ((one_beat_ahead < note.start < first_beat_time)
+        #                 or (one_beat_ahead < note.end < first_beat_time)):
+        #             incomplete_beat_found = True
+        #             break
+
         incomplete_beat_found = False
-        for instrument in pm.instruments:
-            for note in instrument.notes:
-                if ((one_beat_ahead < note.start < first_beat_time)
-                        or (one_beat_ahead < note.end < first_beat_time)):
-                    incomplete_beat_found = True
-                    break
+
         beat_times = pm.get_beats(first_beat_time)
         beat_times.sort()
         num_beat = len(beat_times) + incomplete_beat_found
@@ -812,7 +811,7 @@ class Multitrack(object):
 
         # Parse tempo array
         self.tempo = np.empty((num_time_step,))
-        if not tc_times:
+        if not tc_times.size:
             self.tempo.fill(estimated_tempo)
         else:
             # here we assume all the tempo events are close to the beats and
@@ -820,6 +819,7 @@ class Multitrack(object):
             start = np.searchsorted(beat_times, tc_times[0])
             self.tempo[:start*self.beat_resolution] = tempi[0]
             end = start
+            end_idx = end * self.beat_resolution
             for idx, tempo in enumerate(tempi[:-1]):
                 end += np.searchsorted(beat_times[end:], tc_times[idx+1])
                 start_idx = start * self.beat_resolution
@@ -828,37 +828,48 @@ class Multitrack(object):
                 start = end
             self.tempo[end_idx:] = tempi[-1]
 
-        # Find the corresponding time in the original MIDI file of each time
-        # step in the piano-roll, tempo array and beat array
-        if incomplete_beat_found:
-            one_beat_ahead = beat_times[0] - (60. / self.tempo[0])
-            beat_times = np.insert(beat_times, 0, one_beat_ahead)
-        beat_times_tiled = np.tile(beat_times.reshape(-1, 1),
-                                   (1, self.beat_resolution))
-        tstep_durations = (self.tempo.reshape(-1, self.beat_resolution)
-                           / (60. * self.beat_resolution))
-        tstep_durations[:, 1:] = (0.5 * tstep_durations[:, :-1]
-                                  + 0.5 * tstep_durations[:, 1:])
-        tstep_durations[:, 0] = 0.5 * tstep_durations[:, 0]
-        tstep_times = (beat_times_tiled + tstep_durations).reshape(-1,)
+        # # Find the corresponding time in the original MIDI file of each time
+        # # step in the piano-roll, tempo array and beat array
+        # if incomplete_beat_found:
+        #     one_beat_ahead = beat_times[0] - (60. / self.tempo[0])
+        #     beat_times = np.insert(beat_times, 0, one_beat_ahead)
+        # beat_times_tiled = np.tile(beat_times.reshape(-1, 1),
+        #                            (1, self.beat_resolution))
+        # tstep_durations = (self.tempo.reshape(-1, self.beat_resolution)
+        #                    / (60. * self.beat_resolution))
+        # tstep_durations[:, 1:] = (0.5 * tstep_durations[:, :-1]
+        #                           + 0.5 * tstep_durations[:, 1:])
+        # tstep_durations[:, 0] = 0.5 * tstep_durations[:, 0]
+        # tstep_durations[:, 1:] = np.cumsum(tstep_durations[:, :-1], axis=1)
+        # tstep_times = (beat_times_tiled + tstep_durations).reshape(-1,)
+        # print tstep_times[0:5]
+        # print tstep_times[5:10]
+        # print tstep_times[10:15]
+        # print tstep_times[15:20]
+        # print tstep_times[20:25]
+        # print tstep_times[25:30]
 
         # Parse piano-roll
         self.tracks = []
-        pianoroll = None
         for instrument in pm.instruments:
-            if pianoroll is None:
-                if binarized or mode == 'any':
-                    pianoroll = np.zeros((num_time_step, 128), bool)
-                else:
-                    pianoroll = np.zeros((num_time_step, 128), int)
+            if binarized or mode == 'any':
+                pianoroll = np.zeros((num_time_step, 128), bool)
             else:
-                pianoroll.fill(0)
+                pianoroll = np.zeros((num_time_step, 128), int)
 
             pitches = np.array([note.pitch for note in instrument.notes
-                                if note.end > one_beat_ahead])
+                                if note.end > first_beat_time])
             note_on_times = np.array([note.start for note in instrument.notes
-                                      if note.end > one_beat_ahead])
-            note_ons = np.searchsorted(tstep_times, note_on_times)
+                                      if note.end > first_beat_time])
+            # note_ons = np.searchsorted(tstep_times, note_on_times)
+            one_more_beat = 2 * beat_times[-1] - beat_times[-2]
+            beat_times_one_more = np.append(beat_times, one_more_beat)
+            beat_indices = np.searchsorted(beat_times, note_on_times) - 1
+            remained = note_on_times - beat_times[beat_indices]
+            ratios = remained / (beat_times_one_more[beat_indices + 1]
+                                 - beat_times[beat_indices])
+            note_ons = ((beat_indices + ratios)
+                        * self.beat_resolution).astype(int)
 
             if collect_onsets_only:
                 pianoroll[note_ons, pitches] = True
@@ -866,22 +877,28 @@ class Multitrack(object):
                 pianoroll[note_ons, pitches] = True
             else:
                 note_off_times = np.array([note.end for note in instrument.notes
-                                           if note.end > one_beat_ahead])
-                note_offs = np.searchsorted(tstep_times, note_off_times) - 1
+                                           if note.end > first_beat_time])
+                # note_offs = np.searchsorted(tstep_times, note_off_times) + 1
+                beat_indices = np.searchsorted(beat_times, note_off_times) - 1
+                remained = note_off_times - beat_times[beat_indices]
+                ratios = remained / (beat_times_one_more[beat_indices + 1]
+                                     - beat_times[beat_indices])
+                note_offs = ((beat_indices + ratios)
+                             * self.beat_resolution).astype(int)
 
                 for idx, start in enumerate(note_ons):
-                    end = note_offs[idx]
+                    end = note_offs[idx] + 1
                     velocity = instrument.notes[idx].velocity
 
                     if velocity < 1 or (binarized and velocity <= threshold):
                         continue
 
-                    if start > 0:
-                        if pianoroll[start - 1, pitches[idx]]:
-                            pianoroll[start - 1, pitches[idx]] = 0
-                    if end < num_time_step - 1:
-                        if pianoroll[end + 1, pitches[idx]]:
-                            end -= 1
+                    # if start > 0:
+                    #     if pianoroll[start - 1, pitches[idx]]:
+                    #         pianoroll[start - 1, pitches[idx]] = 0
+                    # if end < num_time_step - 1:
+                    #     if pianoroll[end + 1, pitches[idx]]:
+                    #         end -= 1
 
                     if binarized:
                         if mode == 'sum':
@@ -923,11 +940,12 @@ class Multitrack(object):
         return midi_info
 
     def plot(self, filepath=None, mode='separate', track_label='name',
-             preset='default', cmap=None, tick_loc=None, xtick='auto',
-             ytick='octave', xticklabel='on', yticklabel='auto', direction='in',
-             label='both', grid='both', grid_linestyle=':', grid_linewidth=.5):
+             normalization='standard', preset='default', cmaps=None,
+             tick_loc=None, xtick='auto', ytick='octave', xticklabel='on',
+             yticklabel='auto', direction='in', label='both', grid='both',
+             grid_linestyle=':', grid_linewidth=.5):
         """
-        Plot the piano-rolls or save a plot of them
+        Plot the piano-rolls or save a plot of them.
 
         Parameters
         ----------
@@ -936,7 +954,7 @@ class Multitrack(object):
         mode : {'separate', 'stacked', 'hybrid'}
             Plotting modes. Default to 'separate'.
             - In 'separate' mode, all the tracks are plotted separately.
-            - In 'stacked' mode, a color is assigned based on `cmap` to the
+            - In 'stacked' mode, a color is assigned based on `cmaps` to the
               piano-roll of each track and the piano-rolls are stacked and
               plotted as a colored image with RGB channels.
             - In 'hybrid' mode, the drum tracks are merged into a 'Drums' track,
@@ -946,6 +964,19 @@ class Multitrack(object):
             Add track name, program name, instrument family name or none as
             labels to the track. When `mode` is 'hybrid', all options other
             than 'off' will label the two track with 'Drums' and 'Others'.
+        normalization : {'standard', 'auto', 'none'}
+            The normalization method to apply to the piano-roll. Default to
+            'standard'. If `pianoroll` is binarized, use 'none' anyway.
+            - For 'standard' normalization, the normalized values are given by
+              N = P / 128, where P, N is the original and normalized piano-roll,
+              respectively
+            - For 'auto' normalization, the normalized values are given by
+              N = (P - m) / (M - m), where P, N is the original and normalized
+              piano-roll, respectively, and M, m is the maximum and minimum of
+              the original piano-roll, respectively.
+            - If 'none', no normalization will be applied to the piano-roll. In
+              this case, the values of `pianoroll` should be in [0, 1] in order
+              to plot it correctly.
         preset : {'default', 'plain', 'frame'}
             Preset themes for the plot.
             - In 'default' preset, the ticks, grid and labels are on.
@@ -956,10 +987,10 @@ class Multitrack(object):
             - When `mode` is 'separate', each element will be passed to each
               call of :func:`matplotlib.pyplot.imshow`. Default to ('Blues',
               'Oranges', 'Greens', 'Reds', 'Purples', 'Greys').
-            - when `mode` is stacked, a color is assigned based on `cmap` to the
-              piano-roll of each track. Default to 'hsv'.
+            - when `mode` is stacked, a color is assigned based on `cmaps` to
+              the piano-roll of each track. Default to ('hsv').
             - When `mode` is 'hybrid', the first (second) element is used in the
-              'Drums' ('Others') track. Default to ('Blues','Greens').
+              'Drums' ('Others') track. Default to ('Blues', 'Greens').
         tick_loc : tuple or list
             List of locations to put ticks. Availables elements are 'bottom',
             'top', 'left' and 'right'. If None, default to ('bottom', 'left').
@@ -1026,14 +1057,17 @@ class Multitrack(object):
             raise ValueError("`track_label` must be one of {'name', 'program', "
                              "'family'}")
 
-        if cmap is None:
+        if self.is_binarized():
+            normalization = 'none'
+
+        if cmaps is None:
             if mode == 'separate':
-                cmap = ('Blues', 'Oranges', 'Greens', 'Reds', 'Purples',
+                cmaps = ('Blues', 'Oranges', 'Greens', 'Reds', 'Purples',
                         'Greys')
             elif mode == 'stacked':
-                cmap = 'hsv'
+                cmaps = ('hsv')
             else:
-                cmap = ('Blues', 'Greens')
+                cmaps = ('Blues', 'Greens')
 
         num_track = len(self.tracks)
         downbeats = self.get_downbeat_steps()
@@ -1049,7 +1083,8 @@ class Multitrack(object):
                 now_xticklabel = xticklabel if idx < num_track else 'off'
                 plot_pianoroll(axs[idx], track.pianoroll, False,
                                self.beat_resolution, downbeats,
-                               cmap=cmap[idx%len(cmap)], preset=preset,
+                               cmap=cmaps[idx%len(cmaps)],
+                               normalization=normalization, preset=preset,
                                tick_loc=tick_loc, xtick=xtick, ytick=ytick,
                                xticklabel=now_xticklabel, yticklabel=yticklabel,
                                direction=direction, label=label, grid=grid,
@@ -1072,13 +1107,14 @@ class Multitrack(object):
             fig, ax = plt.subplots()
             stacked = self.get_stacked_pianorolls()
 
-            colormap = matplotlib.cm.get_cmap(cmap)
+            colormap = matplotlib.cm.get_cmap(cmaps[0])
             cmatrix = colormap(np.arange(0, 1, 1 / num_track))[:, :3]
             recolored = np.matmul(stacked.reshape(-1, num_track), cmatrix)
             stacked = recolored.reshape(stacked.shape[:2] + (3, ))
 
             plot_pianoroll(ax, stacked, is_all_drum, self.beat_resolution,
-                           downbeats, preset=preset, xtick=xtick, ytick=ytick,
+                           downbeats, normalization=normalization,
+                           preset=preset, xtick=xtick, ytick=ytick,
                            xticklabel=xticklabel, yticklabel=yticklabel,
                            direction=direction, label=label, grid=grid,
                            grid_linestyle=grid_linestyle,
@@ -1100,15 +1136,17 @@ class Multitrack(object):
 
             fig, (ax1, ax2) = plt.subplots(2, sharex=True, sharey=True)
             plot_pianoroll(ax1, merged_drums, True, self.beat_resolution,
-                           downbeats, cmap=cmap[0], preset=preset, xtick=xtick,
-                           ytick=ytick, xticklabel=xticklabel,
+                           downbeats, cmap=cmaps[0],
+                           normalization=normalization, preset=preset,
+                           xtick=xtick, ytick=ytick, xticklabel=xticklabel,
                            yticklabel=yticklabel, direction=direction,
                            label=label, grid=grid,
                            grid_linestyle=grid_linestyle,
                            grid_linewidth=grid_linewidth)
             plot_pianoroll(ax2, merged_others, False, self.beat_resolution,
-                           downbeats, cmap=cmap[1], preset=preset, xtick=xtick,
-                           ytick=ytick, xticklabel=xticklabel,
+                           downbeats, cmap=cmaps[1],
+                           normalization=normalization, preset=preset,
+                           xtick=xtick, ytick=ytick, xticklabel=xticklabel,
                            yticklabel=yticklabel, direction=direction,
                            label=label, grid=grid,
                            grid_linestyle=grid_linestyle,
@@ -1127,13 +1165,13 @@ class Multitrack(object):
         return returns
 
     def remove_empty_tracks(self):
-        """Remove tracks with empty piano-rolls"""
+        """Remove tracks with empty piano-rolls."""
         empty_tracks = self.get_empty_tracks()
         self.remove_tracks(empty_tracks)
 
     def remove_tracks(self, track_indices):
         """
-        Remove tracks specified by `track_indices`
+        Remove tracks specified by `track_indices`.
 
         Parameters
         ----------
@@ -1146,7 +1184,7 @@ class Multitrack(object):
     def save(self, filepath_npz, filepath_json, compressed=True):
         """
         Save numpy arrays to a (compressed) .npz file and other information to a
-        JSON file
+        JSON file.
 
         Notes
         -----
@@ -1169,7 +1207,7 @@ class Multitrack(object):
             """
             Turn `sparse_matrix` into a scipy.sparse.csc_matrix and update its
             component arrays to the `target_dict` with key as `name` postfixed
-            with its component type string
+            with its component type string.
             """
             csc = csc_matrix(sparse_matrix)
             target_dict[name+'_csc_data'] = csc.data
@@ -1203,7 +1241,7 @@ class Multitrack(object):
 
     def to_pretty_midi(self, constant_tempo=None):
         """
-        Convert to a :class:`pretty_midi.PrettyMIDI` instance
+        Convert to a :class:`pretty_midi.PrettyMIDI` instance.
 
         Notes
         -----
@@ -1261,7 +1299,7 @@ class Multitrack(object):
 
     def transpose(self, semitone):
         """
-        Transpose the piano-rolls by `semitones` semitones
+        Transpose the piano-rolls by `semitones` semitones.
 
         Parameters
         ----------
@@ -1276,7 +1314,7 @@ class Multitrack(object):
             track.transpose(semitone)
 
     def trim_trailing_silence(self):
-        """Trim the trailing silence of the piano-roll"""
+        """Trim the trailing silence of the piano-roll."""
         for track in self.tracks():
             track.trim_trailing_silence()
 
