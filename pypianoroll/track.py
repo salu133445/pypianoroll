@@ -1,5 +1,5 @@
-"""
-Class for single-track piano-rolls with metadata.
+"""Class for single-track piano-rolls with metadata.
+
 """
 from copy import deepcopy
 import numpy as np
@@ -22,6 +22,7 @@ class Track(object):
         Drum indicator. True for drums. False for other instruments.
     name : str
         Name of the track.
+
     """
 
     def __init__(self, pianoroll=None, program=0, is_drum=False,
@@ -46,6 +47,7 @@ class Track(object):
         References
         ----------
         [1] https://www.midi.org/specifications/item/gm-level-1-sound-set
+
         """
         if pianoroll is None:
             self.pianoroll = np.zeros((0, 128), bool)
@@ -79,6 +81,7 @@ class Track(object):
         ----------
         threshold : int or float
             Threshold to binarize the piano-rolls. Default to zero.
+
         """
         if not self.is_binarized():
             self.pianoroll = (self.pianoroll > threshold)
@@ -121,6 +124,7 @@ class Track(object):
             The lower bound to clip the piano-roll. Default to 0.
         upper : int or float
             The upper bound to clip the piano-roll. Default to 128.
+
         """
         self.pianoroll = self.pianoroll.clip(lower, upper)
 
@@ -132,6 +136,7 @@ class Track(object):
         -------
         copied : `pypianoroll.Track` object
             A copy of the object.
+
         """
         copied = deepcopy(self)
         return copied
@@ -144,6 +149,7 @@ class Track(object):
         ----------
         pad_length : int
             The length to pad along the time axis with zeros.
+
         """
         self.pianoroll = np.pad(self.pianoroll, ((0, pad_length), (0, 0)),
                                 'constant')
@@ -159,6 +165,7 @@ class Track(object):
         factor : int
             The value of which the length of the resulting piano-roll will be
             a multiple.
+
         """
         to_pad = factor - self.pianoroll.shape[0]%factor
         self.pianoroll = np.pad(self.pianoroll, ((0, to_pad), (0, 0)),
@@ -172,6 +179,7 @@ class Track(object):
         -------
         copied :
             A copy of the piano-roll.
+
         """
         copied = np.copy(self.pianoroll)
         return copied
@@ -185,6 +193,7 @@ class Track(object):
         -------
         active_length : int
             Length of the piano-roll without trailing silence (in time step).
+
         """
         non_zero_steps = np.any((self.pianoroll > 0), axis=1)
         inv_last_non_zero_step = np.argmax(np.flip(non_zero_steps, axis=0))
@@ -208,6 +217,7 @@ class Track(object):
             The lowest active pitch in the piano-roll.
         highest : int
             The highest active pitch in the piano-roll.
+
         """
         if self.pianoroll.shape[1] < 1:
             raise ValueError("Cannot compute the active pitch range for an "
@@ -235,6 +245,7 @@ class Track(object):
         -------
         is_binarized : bool
             True if the piano-roll is already binarized; otherwise, False.
+
         """
         is_binarized = (self.pianoroll.dtype == bool)
         return is_binarized
@@ -261,15 +272,15 @@ class Track(object):
             The normalization method to apply to the piano-roll. Default to
             'standard'. If `pianoroll` is binarized, use 'none' anyway.
             - For 'standard' normalization, the normalized values are given by
-              N = P / 128, where P, N is the original and normalized piano-roll,
-              respectively
+            N = P / 128, where P, N is the original and normalized piano-roll,
+            respectively
             - For 'auto' normalization, the normalized values are given by
-              N = (P - m) / (M - m), where P, N is the original and normalized
-              piano-roll, respectively, and M, m is the maximum and minimum of
-              the original piano-roll, respectively.
+            N = (P - m) / (M - m), where P, N is the original and normalized
+            piano-roll, respectively, and M, m is the maximum and minimum of the
+            original piano-roll, respectively.
             - If 'none', no normalization will be applied to the piano-roll. In
-              this case, the values of `pianoroll` should be in [0, 1] in order
-              to plot it correctly.
+            this case, the values of `pianoroll` should be in [0, 1] in order to
+            plot it correctly.
         preset : {'default', 'plain', 'frame'}
             Preset themes for the plot.
             - In 'default' preset, the ticks, grid and labels are on.
@@ -292,7 +303,7 @@ class Track(object):
             when `xtick` is not 'off'.
         yticklabel : {'auto', 'name', 'number', 'off'}
             If 'name', use octave name and pitch name (key name when `is_drum`
-            is   True) as tick labels along the y-axis. If 'number', use pitch
+            is True) as tick labels along the y-axis. If 'number', use pitch
             number. If 'auto', set to 'name' when `ytick` is 'octave' and
             'number' when `ytick` is 'pitch'. Default to 'auto'. Only effective
             when `ytick` is not 'off'.
@@ -304,10 +315,10 @@ class Track(object):
         grid : {'x', 'y', 'both', 'off'}
             Add grid to the x-axis, y-axis, both or neither. Default to 'both'.
         grid_linestyle : str
-            Will be passed to :method:`matplotlib.axes.Axes.grid` as 'linestyle'
+            Will be passed to :meth:`matplotlib.axes.Axes.grid` as 'linestyle'
             argument.
         grid_linewidth : float
-            Will be passed to :method:`matplotlib.axes.Axes.grid` as 'linewidth'
+            Will be passed to :meth:`matplotlib.axes.Axes.grid` as 'linewidth'
             argument.
 
         Returns
@@ -316,6 +327,7 @@ class Track(object):
             A :class:`matplotlib.figure.Figure` object.
         ax : `matplotlib.axes.Axes` object
             A :class:`matplotlib.axes.Axes` object.
+
         """
         fig, ax = plt.subplots()
         if self.is_binarized():
@@ -343,6 +355,7 @@ class Track(object):
         ----------
         semitone : int
             Number of semitones to transpose the piano-roll.
+
         """
         if semitone > 0 and semitone < 128:
             self.pianoroll[:, semitone:] = self.pianoroll[:, :(128 - semitone)]

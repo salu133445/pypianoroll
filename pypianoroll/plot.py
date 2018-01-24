@@ -1,5 +1,5 @@
-"""
-Module for plotting multi-track and single-track piano-rolls
+"""Module for plotting multi-track and single-track piano-rolls
+
 """
 import numpy as np
 import pretty_midi
@@ -28,7 +28,7 @@ def plot_pianoroll(ax, pianoroll, is_drum=False, beat_resolution=None,
         `normalized` is False.
         - For 2D array, shape=(num_time_step, num_pitch).
         - For 3D array, shape=(num_time_step, num_pitch, num_channel), where
-          channels can be either RGB or RGBA.
+        channels can be either RGB or RGBA.
     is_drum : bool
         Drum indicator. True for drums. False for other instruments. Default
         to False.
@@ -42,15 +42,15 @@ def plot_pianoroll(ax, pianoroll, is_drum=False, beat_resolution=None,
         The normalization method to apply to the piano-roll. Default to
         'standard'. If `pianoroll` is binarized, use 'none' anyway.
         - For 'standard' normalization, the normalized values are given by
-          N = P / 128, where P, N is the original and normalized piano-roll,
-          respectively
+        N = P / 128, where P, N is the original and normalized piano-roll,
+        respectively
         - For 'auto' normalization, the normalized values are given by
-          N = (P - m) / (M - m), where P, N is the original and normalized
-          piano-roll, respectively, and M, m is the maximum and minimum of
-          the original piano-roll, respectively.
+        N = (P - m) / (M - m), where P, N is the original and normalized
+        piano-roll, respectively, and M, m is the maximum and minimum of the
+        original piano-roll, respectively.
         - If 'none', no normalization will be applied to the piano-roll. In
-          this case, the values of `pianoroll` should be in [0, 1] in order
-          to plot it correctly.
+        this case, the values of `pianoroll` should be in [0, 1] in order to
+        plot it correctly.
     preset : {'default', 'plain', 'frame'}
         Preset themes for the plot.
         - In 'default' preset, the ticks, grid and labels are on.
@@ -73,7 +73,7 @@ def plot_pianoroll(ax, pianoroll, is_drum=False, beat_resolution=None,
         when `xtick` is not 'off'.
     yticklabel : {'auto', 'name', 'number', 'off'}
         If 'name', use octave name and pitch name (key name when `is_drum`
-        is   True) as tick labels along the y-axis. If 'number', use pitch
+        is True) as tick labels along the y-axis. If 'number', use pitch
         number. If 'auto', set to 'name' when `ytick` is 'octave' and
         'number' when `ytick` is 'pitch'. Default to 'auto'. Only effective
         when `ytick` is not 'off'.
@@ -85,11 +85,12 @@ def plot_pianoroll(ax, pianoroll, is_drum=False, beat_resolution=None,
     grid : {'x', 'y', 'both', 'off'}
         Add grid to the x-axis, y-axis, both or neither. Default to 'both'.
     grid_linestyle : str
-        Will be passed to :method:`matplotlib.axes.Axes.grid` as 'linestyle'
+        Will be passed to :meth:`matplotlib.axes.Axes.grid` as 'linestyle'
         argument.
     grid_linewidth : float
-        Will be passed to :method:`matplotlib.axes.Axes.grid` as 'linewidth'
+        Will be passed to :meth:`matplotlib.axes.Axes.grid` as 'linewidth'
         argument.
+
     """
     if pianoroll.ndim not in (2, 3):
         raise ValueError("`pianoroll` must be a 2D or 3D numpy array")

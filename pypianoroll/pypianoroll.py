@@ -1,9 +1,5 @@
-"""
-Functions to manipulate multi-track and single-track piano-rolls with
-metadata.
+"""Functions to manipulate multi-track and single-track piano-rolls.
 
-Only :class:`pypianoroll.Multitrack` and :class:`pypianoroll.Track`
-objects are supported for most functions.
 """
 from copy import deepcopy
 import numpy as np
