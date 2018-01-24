@@ -205,30 +205,48 @@ def plot_pianoroll(ax, pianoroll, is_drum=False, beat_resolution=None,
         for step in downbeats:
             ax.axvline(x=step, color='k', linewidth=1)
 
-def save_video(filepath, obj, window, hop=1, fps=None):
+def save_video(filepath, obj, window, hop=1, fps=None, beat_resolution=24):
     fig, ax = plt.subplots()
+    plot_pianoroll(ax, obj.pianoroll[:window], is_drum=False, beat_resolution=beat_resolution,
+                   downbeats=None, normalization='standard', preset='default',
+                   cmap='Blues', tick_loc=None, xtick='auto', ytick='octave',
+                   xticklabel='on', yticklabel='auto', direction='in',
+                   label='both', grid='both', grid_linestyle=':',
+                   grid_linewidth=.5)
 
-    highest = obj.pianoroll.shape[1] - 1
-    extent = (0, window, 0, highest)
-    first = True
     def make_frame(t):
-        if first:
-            plot_pianoroll(ax, obj.pianoroll[:, :window], is_drum=False, beat_resolution=None,
-                            downbeats=None, normalization='standard', preset='default',
-                            cmap='Blues', tick_loc=None, xtick='auto', ytick='octave',
-                            xticklabel='on', yticklabel='auto', direction='in',
-                            label='both', grid='both', grid_linestyle=':',
-                            grid_linewidth=.5)
-            first = False
+        fig = plt.gcf()
+        ax = plt.gca()
+        f_idx = int(t * fps)
+        start = hop * f_idx
+        end = start + window
+        to_plot = obj.pianoroll[start:end].T / 128.
+        ax.imshow(to_plot, cmap='Blues', aspect='auto', vmin=0, vmax=1,
+                  interpolation='none', extent=(0, window, 0, 127),
+                  origin='lower')
+
+        next_major_idx = beat_resolution - start % beat_resolution
+        if start % beat_resolution < beat_resolution//2:
+            next_minor_idx = beat_resolution//2 - start % beat_resolution
         else:
-            f_idx = int(t * fps)
-            start_idx = hop * f_idx
-            ax.imshow(obj.pianoroll[:, start_idx:(start_idx + window)],
-                        cmap='Blues', aspect='auto', vmin=0, vmax=1,
-                        interpolation='none', extent=extent, origin='lower')
+            next_minor_idx = beat_resolution//2 - start % beat_resolution + beat_resolution
+        xticks_major = np.arange(next_major_idx, window, beat_resolution)
+        xticks_minor = np.arange(next_minor_idx, window, beat_resolution)
+        if end % beat_resolution < beat_resolution//2:
+            last_minor_idx = beat_resolution//2 - end % beat_resolution
+        else:
+            last_minor_idx = beat_resolution//2 - end % beat_resolution + beat_resolution
+        xtick_labels = np.arange((start + next_minor_idx)//beat_resolution, (end + last_minor_idx)//beat_resolution)
+        ax.set_xticks(xticks_major)
+        ax.set_xticklabels('')
+        ax.set_xticks(xticks_minor, minor=True)
+        ax.set_xticklabels(xtick_labels, minor=True)
+        ax.tick_params(axis='x', which='minor', width=0)
+
         return mplfig_to_npimage(fig)
 
-    num_frame = int((obj.pianoroll.shape[1] - window) / hop)
+    num_frame = int((obj.pianoroll.shape[0] - window) / hop)
     duration = int(num_frame / fps)
     animation = VideoClip(make_frame, duration=duration)
-    animation.write_videofile(filepath, fps, progress_bar=False)
+    animation.write_videofile(filepath, fps, codec='libx264')
+    plt.close()
