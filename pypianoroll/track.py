@@ -48,7 +48,7 @@ class Track(object):
         [1] https://www.midi.org/specifications/item/gm-level-1-sound-set
         """
         if pianoroll is None:
-            self.pianoroll = np.zeros((1, 128), bool)
+            self.pianoroll = np.zeros((0, 128), bool)
         else:
             self.pianoroll = pianoroll
         self.program = program
