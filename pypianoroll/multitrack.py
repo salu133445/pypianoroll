@@ -555,7 +555,7 @@ class Multitrack(object):
 
     def parse_midi(self, filepath, mode='sum', algorithm='normal',
                    binarized=False, compressed=True, collect_onsets_only=False,
-                   threshold=0, first_beat_time=None):
+                   collect_midi_info=False, threshold=0, first_beat_time=None):
         """
         Parse a MIDI file.
 
@@ -588,6 +588,9 @@ class Multitrack(object):
             True to collect only the onset of the notes (i.e. note on events) in
             all tracks, where the note off and duration information are dropped.
             False to parse regular piano-rolls.
+        collect_midi_info : bool
+            True to collect additional information in the MIDI file and return
+            in a dictionary format. False to collect and return nothing.
         threshold : int or float
             Threshold to binarize the parsed piano-rolls. Only effective when
             `binarized` is True. Default to zero.
@@ -620,13 +623,14 @@ class Multitrack(object):
         pm = pretty_midi.PrettyMIDI(filepath)
         midi_info = self.parse_pretty_midi(pm, mode, algorithm, binarized,
                                            compressed, collect_onsets_only,
-                                           threshold, first_beat_time)
+                                           collect_midi_info, threshold,
+                                           first_beat_time)
         return midi_info
 
     def parse_pretty_midi(self, pm, mode='sum', algorithm='normal',
                           binarized=False, skip_empty_tracks=True,
-                          collect_onsets_only=False, threshold=0,
-                          first_beat_time=None):
+                          collect_onsets_only=False, collect_midi_info=False,
+                          threshold=0, first_beat_time=None):
         """
         Parse a :class:`pretty_midi.PrettyMIDI` object.
 
@@ -660,6 +664,9 @@ class Multitrack(object):
             True to collect only the onset of the notes (i.e. note on events) in
             all tracks, where the note off and duration information are dropped.
             False to parse regular piano-rolls.
+        collect_midi_info : bool
+            True to collect additional information in the MIDI file and return
+            in a dictionary format. False to collect and return nothing.
         threshold : int or float
             Threshold to binarize the parsed piano-rolls. Only effective when
             `binarized` is True. Default to zero.
@@ -711,6 +718,7 @@ class Multitrack(object):
         # Set first_beat_time for 'normal' and 'strict' modes
         if algorithm == 'normal':
             if pm.time_signature_changes:
+                pm.time_signature_changes.sort(key=lambda x: x.time)
                 first_beat_time = pm.time_signature_changes[0].time
             else:
                 first_beat_time = pm.estimate_beat_start()
@@ -728,69 +736,12 @@ class Multitrack(object):
         tc_times = tc_times[arg_sorted]
         tempi = tempi[arg_sorted]
 
-        # The following section find the time (`one_beat_ahead`) that is exactly
-        # one beat before `first_beat_time`
-        # ========= start =========
-        remained_beat = 1.0
-        one_beat_ahead = first_beat_time
-        end = one_beat_ahead
-
-        # # Initialize `tc_idx` to the index of the nearest tempo change event
-        # # before `first_beat_time`
-        # tc_idx = 0
-        # if not tc_times.size:
-        #     estimated_tempo = pm.estimate_tempo()
-        #     tc_times = np.array([0.0])
-        #     tempi = np.array([estimated_tempo])
-        # else:
-        #     for idx, tc_time in enumerate(tc_times):
-        #         if tc_time > first_beat_time:
-        #             tc_idx = idx
-        #             break
-        #     tc_idx = max(0, tc_idx-1)
-
-        # while remained_beat > 0.0:
-        #     # Check if it is the first tempo change event. If so, reduce
-        #     # `one_beat_ahead` by the corresponding duration of `remained_beat`
-        #     # in current tempo and break iteration
-        #     if tc_idx < 1:
-        #         one_beat_ahead -= remained_beat * 60. / tempi[tc_idx]
-        #         break
-
-        #     # Check if current tempo can fill up `remained_beat`. If so, reduce
-        #     # `one_beat_ahead` by the corresponding duration of `remained_beat`
-        #     # in current tempo and break iteration
-        #     tc_duration_in_beat = (end - tc_times[tc_idx]) * tempi[tc_idx] / 60.
-        #     if remained_beat < tc_duration_in_beat:
-        #         one_beat_ahead -= remained_beat * 60. / tempi[tc_idx]
-        #         break
-
-        #     # Reduce `one_beat_ahead` by the duration of current tempo
-        #     one_beat_ahead -= (end - tc_times[tc_idx])
-
-        #     # Reduce `remained_beat` by the duration (in beat) of current tempo
-        #     remained_beat -= tc_duration_in_beat
-        #     end = tc_times[tc_idx]
-
-        #     tc_idx -= 1
-        # # ========== end ==========
-
-        # # Add an additional beat if any note found between `one_beat_ahead` and
-        # # `first_beat_time`
-        # incomplete_beat_found = False
-        # for instrument in pm.instruments:
-        #     for note in instrument.notes:
-        #         if ((one_beat_ahead < note.start < first_beat_time)
-        #                 or (one_beat_ahead < note.end < first_beat_time)):
-        #             incomplete_beat_found = True
-        #             break
-
-        incomplete_beat_found = False
-
         beat_times = pm.get_beats(first_beat_time)
         beat_times.sort()
-        num_beat = len(beat_times) + incomplete_beat_found
+        num_beat = len(beat_times)
         num_time_step = self.beat_resolution * num_beat
+
+        print beat_times
 
         # Parse downbeat array
         if not pm.time_signature_changes:
@@ -798,7 +749,7 @@ class Multitrack(object):
         else:
             self.downbeat = np.zeros((num_time_step, ), bool)
             self.downbeat[0] = True
-            start = int(incomplete_beat_found)
+            start = 0
             end = start
             for idx, tsc in enumerate(pm.time_signature_changes[:-1]):
                 end += np.searchsorted(beat_times[end:],
@@ -809,45 +760,11 @@ class Multitrack(object):
                 self.downbeat[start_idx:end_idx:stride] = True
                 start = end
 
-        # Parse tempo array
-        self.tempo = np.empty((num_time_step,))
-        if not tc_times.size:
-            self.tempo.fill(estimated_tempo)
-        else:
-            # here we assume all the tempo events are close to the beats and
-            # align time change event to the nearest beat times before it
-            start = np.searchsorted(beat_times, tc_times[0])
-            self.tempo[:start*self.beat_resolution] = tempi[0]
-            end = start
-            end_idx = end * self.beat_resolution
-            for idx, tempo in enumerate(tempi[:-1]):
-                end += np.searchsorted(beat_times[end:], tc_times[idx+1])
-                start_idx = start * self.beat_resolution
-                end_idx = end * self.beat_resolution
-                self.tempo[start_idx:end_idx] = tempo
-                start = end
-            self.tempo[end_idx:] = tempi[-1]
-
-        # # Find the corresponding time in the original MIDI file of each time
-        # # step in the piano-roll, tempo array and beat array
-        # if incomplete_beat_found:
-        #     one_beat_ahead = beat_times[0] - (60. / self.tempo[0])
-        #     beat_times = np.insert(beat_times, 0, one_beat_ahead)
-        # beat_times_tiled = np.tile(beat_times.reshape(-1, 1),
-        #                            (1, self.beat_resolution))
-        # tstep_durations = (self.tempo.reshape(-1, self.beat_resolution)
-        #                    / (60. * self.beat_resolution))
-        # tstep_durations[:, 1:] = (0.5 * tstep_durations[:, :-1]
-        #                           + 0.5 * tstep_durations[:, 1:])
-        # tstep_durations[:, 0] = 0.5 * tstep_durations[:, 0]
-        # tstep_durations[:, 1:] = np.cumsum(tstep_durations[:, :-1], axis=1)
-        # tstep_times = (beat_times_tiled + tstep_durations).reshape(-1,)
-        # print tstep_times[0:5]
-        # print tstep_times[5:10]
-        # print tstep_times[10:15]
-        # print tstep_times[15:20]
-        # print tstep_times[20:25]
-        # print tstep_times[25:30]
+        # Build tempo array
+        one_more_beat = 2 * beat_times[-1] - beat_times[-2]
+        beat_times_one_more = np.append(beat_times, one_more_beat)
+        bpm = 60. / np.diff(beat_times_one_more)
+        self.tempo = np.tile(bpm, (1, 24)).reshape(-1,)
 
         # Parse piano-roll
         self.tracks = []
@@ -862,8 +779,6 @@ class Multitrack(object):
             note_on_times = np.array([note.start for note in instrument.notes
                                       if note.end > first_beat_time])
             # note_ons = np.searchsorted(tstep_times, note_on_times)
-            one_more_beat = 2 * beat_times[-1] - beat_times[-2]
-            beat_times_one_more = np.append(beat_times, one_more_beat)
             beat_indices = np.searchsorted(beat_times, note_on_times) - 1
             remained = note_on_times - beat_times[beat_indices]
             ratios = remained / (beat_times_one_more[beat_indices + 1]
@@ -874,7 +789,12 @@ class Multitrack(object):
             if collect_onsets_only:
                 pianoroll[note_ons, pitches] = True
             elif instrument.is_drum:
-                pianoroll[note_ons, pitches] = True
+                if binarized:
+                    pianoroll[note_ons, pitches] = True
+                else:
+                    velocities = [note.velocity for note in instrument.notes
+                                  if note.end > first_beat_time]
+                    pianoroll[note_ons, pitches] = velocities
             else:
                 note_off_times = np.array([note.end for note in instrument.notes
                                            if note.end > first_beat_time])
@@ -922,6 +842,9 @@ class Multitrack(object):
             self.tracks.append(track)
 
         self.check_validity()
+
+        if not collect_midi_info:
+            return
 
         # Collect midi info into a dictionary and return it
         num_ts_change = len(pm.time_signature_changes)
