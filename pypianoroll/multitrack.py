@@ -741,8 +741,6 @@ class Multitrack(object):
         num_beat = len(beat_times)
         num_time_step = self.beat_resolution * num_beat
 
-        print beat_times
-
         # Parse downbeat array
         if not pm.time_signature_changes:
             self.downbeat = None
@@ -813,12 +811,12 @@ class Multitrack(object):
                     if velocity < 1 or (binarized and velocity <= threshold):
                         continue
 
-                    # if start > 0:
-                    #     if pianoroll[start - 1, pitches[idx]]:
-                    #         pianoroll[start - 1, pitches[idx]] = 0
-                    # if end < num_time_step - 1:
-                    #     if pianoroll[end + 1, pitches[idx]]:
-                    #         end -= 1
+                    if start > 0:
+                        if pianoroll[start - 1, pitches[idx]]:
+                            pianoroll[start - 1, pitches[idx]] = 0
+                    if end < num_time_step - 1:
+                        if pianoroll[end + 1, pitches[idx]]:
+                            end -= 1
 
                     if binarized:
                         if mode == 'sum':
