@@ -1,0 +1,1234 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Pypianoroll &mdash; pypianoroll 0.0.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="genindex.html"/>
+        <link rel="search" title="Search" href="search.html"/>
+    <link rel="top" title="pypianoroll 0.0.0 documentation" href="#"/> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="#" class="icon icon-home"> pypianoroll
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.0.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <!-- Local TOC -->
+              <div class="local-toc"><ul>
+<li><a class="reference internal" href="#">Pypianoroll</a></li>
+<li><a class="reference internal" href="#features">Features</a></li>
+<li><a class="reference internal" href="#multi-track-piano-roll">Multi-track Piano-roll</a></li>
+<li><a class="reference internal" href="#single-track-piano-roll">Single-track Piano-roll</a></li>
+<li><a class="reference internal" href="#indices-and-tables">Indices and tables</a></li>
+</ul>
+</div>
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="#">pypianoroll</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="#">Docs</a> &raquo;</li>
+        
+      <li>Pypianoroll</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/index.md.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <span class="target" id="module-pypianoroll"></span><div class="section" id="pypianoroll">
+<h1>Pypianoroll<a class="headerlink" href="#pypianoroll" title="Permalink to this headline">¶</a></h1>
+<p>A python package for handling multi-track piano-rolls.</p>
+</div>
+<div class="section" id="features">
+<h1>Features<a class="headerlink" href="#features" title="Permalink to this headline">¶</a></h1>
+<ul class="simple">
+<li>handle multi-track piano-rolls with metadata</li>
+<li>utilities to manipulate multi-track piano-rolls</li>
+<li>save/load with efficient sparse matrix representation</li>
+<li>write to MIDI file</li>
+</ul>
+</div>
+<div class="section" id="multi-track-piano-roll">
+<h1>Multi-track Piano-roll<a class="headerlink" href="#multi-track-piano-roll" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="pypianoroll.Multitrack">
+<em class="property">class </em><code class="descclassname">pypianoroll.</code><code class="descname">Multitrack</code><span class="sig-paren">(</span><em>filepath=None</em>, <em>filepath_json=None</em>, <em>tracks=None</em>, <em>tempo=120.0</em>, <em>downbeat=None</em>, <em>beat_resolution=24</em>, <em>name='unknown'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pypianoroll/multitrack.html#Multitrack"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypianoroll.Multitrack" title="Permalink to this definition">¶</a></dt>
+<dd><p>A multi-track piano-roll container</p>
+<dl class="attribute">
+<dt id="pypianoroll.Multitrack.tracks">
+<code class="descname">tracks</code><a class="headerlink" href="#pypianoroll.Multitrack.tracks" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>list</em> – List of <a class="reference internal" href="#pypianoroll.Track" title="pypianoroll.Track"><code class="xref py py-class docutils literal"><span class="pre">pypianoroll.Track</span></code></a> objects.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pypianoroll.Multitrack.tempo">
+<code class="descname">tempo</code><a class="headerlink" href="#pypianoroll.Multitrack.tempo" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>np.ndarray, shape=(num_time_step,), dtype=float</em> – Tempo array that indicates the tempo value (in bpm) at each time
+step. Length is the number of time steps.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pypianoroll.Multitrack.downbeat">
+<code class="descname">downbeat</code><a class="headerlink" href="#pypianoroll.Multitrack.downbeat" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>np.ndarray, shape=(num_time_step,), dtype=bool</em> – Downbeat array that indicates whether the time step contains a
+downbeat, i.e. the first time step of a bar. Length is the number of
+time steps.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pypianoroll.Multitrack.beat_resolution">
+<code class="descname">beat_resolution</code><a class="headerlink" href="#pypianoroll.Multitrack.beat_resolution" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>int</em> – Resolution of a beat (in time step).</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pypianoroll.Multitrack.name">
+<code class="descname">name</code><a class="headerlink" href="#pypianoroll.Multitrack.name" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>str</em> – Name of the multi-track piano-roll.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pypianoroll.Multitrack.append_track">
+<code class="descname">append_track</code><span class="sig-paren">(</span><em>track=None</em>, <em>pianoroll=None</em>, <em>program=0</em>, <em>is_drum=False</em>, <em>name='unknown'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pypianoroll/multitrack.html#Multitrack.append_track"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypianoroll.Multitrack.append_track" title="Permalink to this definition">¶</a></dt>
+<dd><p>Append a multitrack.Track instance to the track list or create a new
+multitrack.Track object and append it to the track list.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>track</strong> (<em>pianoroll.Track</em>) – A <a class="reference internal" href="#pypianoroll.Track" title="pypianoroll.Track"><code class="xref py py-class docutils literal"><span class="pre">pypianoroll.Track</span></code></a> instance to be appended to the track
+list.</li>
+<li><strong>pianoroll</strong> (<em>np.ndarray</em><em>, </em><em>shape=</em><em>(</em><em>num_time_step</em><em>, </em><em>128</em><em>)</em>) – Piano-roll matrix. First dimension represents time. Second dimension
+represents pitch. Available datatypes are bool, int, float.</li>
+<li><strong>program</strong> (<em>int</em>) – Program number according to General MIDI specification [1].
+Available values are 0 to 127. Default to 0 (Acoustic Grand Piano).</li>
+<li><strong>is_drum</strong> (<em>bool</em>) – Drum indicator. True for drums. False for other instruments. Default
+to False.</li>
+<li><strong>name</strong> (<em>str</em>) – Name of the track. Default to ‘unknown’.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">References</p>
+<p>[1] <a class="reference external" href="https://www.midi.org/specifications/item/gm-level-1-sound-set">https://www.midi.org/specifications/item/gm-level-1-sound-set</a></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pypianoroll.Multitrack.binarize">
+<code class="descname">binarize</code><span class="sig-paren">(</span><em>threshold=0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pypianoroll/multitrack.html#Multitrack.binarize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypianoroll.Multitrack.binarize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Binarize the piano-rolls of all tracks. Pass the track if its piano-roll
+is already binarized.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>threshold</strong> (<em>int</em><em> or </em><em>float</em>) – Threshold to binarize the piano-rolls. Default to zero.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pypianoroll.Multitrack.check_validity">
+<code class="descname">check_validity</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pypianoroll/multitrack.html#Multitrack.check_validity"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypianoroll.Multitrack.check_validity" title="Permalink to this definition">¶</a></dt>
+<dd><p>Raise an error if any invalid attribute found.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><ul class="first last simple">
+<li><code class="xref py py-exc docutils literal"><span class="pre">TypeError</span></code> – If an attribute has an invalid type.</li>
+<li><code class="xref py py-exc docutils literal"><span class="pre">ValueError</span></code> – If an attribute has an invalid value (of the correct type).</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pypianoroll.Multitrack.clip">
+<code class="descname">clip</code><span class="sig-paren">(</span><em>lower=0</em>, <em>upper=128</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pypianoroll/multitrack.html#Multitrack.clip"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypianoroll.Multitrack.clip" title="Permalink to this definition">¶</a></dt>
+<dd><p>Clip the piano-rolls by an lower bound and an upper bound specified by
+<cite>lower</cite> and <cite>upper</cite>, respectively.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>lower</strong> (<em>int</em><em> or </em><em>float</em>) – The lower bound to clip the piano-roll. Default to 0.</li>
+<li><strong>upper</strong> (<em>int</em><em> or </em><em>float</em>) – The upper bound to clip the piano-roll. Default to 128.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pypianoroll.Multitrack.copy">
+<code class="descname">copy</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pypianoroll/multitrack.html#Multitrack.copy"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypianoroll.Multitrack.copy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a copy of the object.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><strong>copied</strong> – A copy of the object.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><cite>pypianoroll.Multitrack</cite> object</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pypianoroll.Multitrack.get_active_length">
+<code class="descname">get_active_length</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pypianoroll/multitrack.html#Multitrack.get_active_length"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypianoroll.Multitrack.get_active_length" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the maximal active length (i.e. without trailing silence) of the
+piano-rolls (in time step).</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><strong>active_length</strong> – The maximal active length (i.e. without trailing silence) of the
+piano-rolls (in time step).</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">int</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pypianoroll.Multitrack.get_active_pitch_range">
+<code class="descname">get_active_pitch_range</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pypianoroll/multitrack.html#Multitrack.get_active_pitch_range"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypianoroll.Multitrack.get_active_pitch_range" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the overall active pitch range of the piano-rolls.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><ul class="simple">
+<li><strong>lowest</strong> (<em>int</em>) – The lowest active pitch of the piano-rolls.</li>
+<li><strong>highest</strong> (<em>int</em>) – The lowest highest pitch of the piano-rolls.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pypianoroll.Multitrack.get_downbeat_steps">
+<code class="descname">get_downbeat_steps</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pypianoroll/multitrack.html#Multitrack.get_downbeat_steps"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypianoroll.Multitrack.get_downbeat_steps" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a list of indices of time steps that contain downbeats.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><strong>downbeat_steps</strong> – Indices of time steps that contain downbeats.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">list</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pypianoroll.Multitrack.get_empty_tracks">
+<code class="descname">get_empty_tracks</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pypianoroll/multitrack.html#Multitrack.get_empty_tracks"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypianoroll.Multitrack.get_empty_tracks" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the indices of tracks with empty piano-rolls.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><strong>empty_track_indices</strong> – List of the indices of tracks with empty piano-rolls.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">list</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pypianoroll.Multitrack.get_maximal_length">
+<code class="descname">get_maximal_length</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pypianoroll/multitrack.html#Multitrack.get_maximal_length"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypianoroll.Multitrack.get_maximal_length" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the maximal length of the piano-rolls along the time axis (in
+time step).</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><strong>maximal_length</strong> – The maximal length of the piano-rolls along the time axis (in time
+step).</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">int</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pypianoroll.Multitrack.get_merged_pianoroll">
+<code class="descname">get_merged_pianoroll</code><span class="sig-paren">(</span><em>mode='sum'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pypianoroll/multitrack.html#Multitrack.get_merged_pianoroll"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypianoroll.Multitrack.get_merged_pianoroll" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a merged piano-roll.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>mode</strong> (<em>{'sum'</em><em>, </em><em>'max'</em><em>, </em><em>'any'}</em>) – Indicate the merging function to apply along the track axis. Default
+to ‘sum’.
+- In ‘sum’ mode, the piano-roll of the merged track is the summation
+of the collected piano-rolls. Note that for binarized piano-roll,
+integer summation is performed.
+- In ‘max’ mode, for each pixel, the maximal value among the
+collected piano-rolls is assigned to the merged piano-roll.
+- In ‘any’ mode, the value of a pixel in the merged piano-roll is
+True if any of the collected piano-rolls has nonzero value at that
+pixel; False if all piano-rolls are inactive (zero-valued) at that
+pixel.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><strong>merged</strong> – The merged piano-rolls.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">np.ndarray, shape=(num_time_step, 128)</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pypianoroll.Multitrack.get_num_downbeat">
+<code class="descname">get_num_downbeat</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pypianoroll/multitrack.html#Multitrack.get_num_downbeat"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypianoroll.Multitrack.get_num_downbeat" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the number of down beats. The return value is calculated based
+solely on <cite>downbeat</cite>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><strong>num_bar</strong> – The number of down beats according to <cite>downbeat</cite>.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">int</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pypianoroll.Multitrack.get_num_track">
+<code class="descname">get_num_track</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pypianoroll/multitrack.html#Multitrack.get_num_track"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypianoroll.Multitrack.get_num_track" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the number of tracks.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><strong>num_track</strong> – The number of tracks.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">int</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pypianoroll.Multitrack.get_stacked_pianorolls">
+<code class="descname">get_stacked_pianorolls</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pypianoroll/multitrack.html#Multitrack.get_stacked_pianorolls"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypianoroll.Multitrack.get_stacked_pianorolls" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a stacked multi-track piano-roll. The shape of the return
+np.ndarray is (num_time_step, 128, num_track).</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><strong>stacked</strong> – The stacked piano-roll.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">np.ndarray, shape=(num_time_step, 128, num_track)</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pypianoroll.Multitrack.is_binarized">
+<code class="descname">is_binarized</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pypianoroll/multitrack.html#Multitrack.is_binarized"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypianoroll.Multitrack.is_binarized" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return True if the pianorolls of all tracks are already binarized.
+Otherwise, return False.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><strong>is_binarized</strong> – True if all the collected piano-rolls are already binarized;
+otherwise, False.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">bool</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pypianoroll.Multitrack.load">
+<code class="descname">load</code><span class="sig-paren">(</span><em>filepath_npz</em>, <em>filepath_json</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pypianoroll/multitrack.html#Multitrack.load"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypianoroll.Multitrack.load" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load a previously saved .npz file and JSON file.</p>
+<p class="rubric">Notes</p>
+<p>Previous values of attributes will all be cleared.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>filepath_npz</strong> (<em>str</em>) – The path to the .npz file.</li>
+<li><strong>filepath_json</strong> (<em>str</em>) – The path to the JSON file.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pypianoroll.Multitrack.merge_tracks">
+<code class="descname">merge_tracks</code><span class="sig-paren">(</span><em>track_indices=None</em>, <em>mode='sum'</em>, <em>program=0</em>, <em>is_drum=False</em>, <em>name='merged'</em>, <em>remove_merged=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pypianoroll/multitrack.html#Multitrack.merge_tracks"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypianoroll.Multitrack.merge_tracks" title="Permalink to this definition">¶</a></dt>
+<dd><p>Merge piano-rolls of tracks specified by <cite>track_indices</cite>. The merged
+track will have program number as given by <cite>program</cite> and drum indicator
+as given by <cite>is_drum</cite>. The merged track will be appended at the end of
+the track list.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>track_indices</strong> (<em>list</em>) – List of indices that indicates which tracks to merge. If None,
+default to merge all tracks.</li>
+<li><strong>mode</strong> (<em>{'sum'</em><em>, </em><em>'max'</em><em>, </em><em>'any'}</em>) – Indicate the merging function to apply along the track axis. Default
+to ‘sum’.
+- In ‘sum’ mode, the piano-roll of the merged track is the summation
+of the collected piano-rolls. Note that for binarized piano-roll,
+integer summation is performed.
+- In ‘max’ mode, for each pixel, the maximal value among the
+collected piano-rolls is assigned to the merged piano-roll.
+- In ‘any’ mode, the value of a pixel in the merged piano-roll is
+True if any of the collected piano-rolls has nonzero value at that
+pixel; False if all piano-rolls are inactive (zero-valued) at that
+pixel.</li>
+<li><strong>program</strong> (<em>int</em>) – Program number to be assigned to the merged track. Available values
+are 0 to 127.</li>
+<li><strong>is_drum</strong> (<em>bool</em>) – Drum indicator to be assigned to the merged track.</li>
+<li><strong>name</strong> (<em>str</em>) – Name to be assigned to the merged track. Default to ‘merged’.</li>
+<li><strong>remove_merged</strong> (<em>bool</em>) – True to remove the merged tracks from the track list. False to keep
+them. Default to False.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pypianoroll.Multitrack.pad_to_same">
+<code class="descname">pad_to_same</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pypianoroll/multitrack.html#Multitrack.pad_to_same"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypianoroll.Multitrack.pad_to_same" title="Permalink to this definition">¶</a></dt>
+<dd><p>Pad shorter piano-rolls with zeros at the end along the time axis to the
+length of the piano-roll with the maximal length.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pypianoroll.Multitrack.parse_midi">
+<code class="descname">parse_midi</code><span class="sig-paren">(</span><em>filepath</em>, <em>mode='sum'</em>, <em>algorithm='normal'</em>, <em>binarized=False</em>, <em>compressed=True</em>, <em>collect_onsets_only=False</em>, <em>collect_midi_info=False</em>, <em>threshold=0</em>, <em>first_beat_time=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pypianoroll/multitrack.html#Multitrack.parse_midi"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypianoroll.Multitrack.parse_midi" title="Permalink to this definition">¶</a></dt>
+<dd><p>Parse a MIDI file.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>filepath</strong> (<em>str</em>) – The path to the MIDI file.</li>
+<li><strong>mode</strong> (<em>{'sum'</em><em>, </em><em>'max'</em><em>, </em><em>'any'}</em>) – Indicate the merging function to apply to duplicate notes. Default
+to ‘sum’.</li>
+<li><strong>algorithm</strong> (<em>{'normal'</em><em>, </em><em>'strict'</em><em>, </em><em>'custom'}</em>) – Indicate the method used to get the location of the first beat.
+Notes before it will be dropped unless an incomplete beat before it
+is found (see Notes for details). Default to ‘normal’.
+- The ‘normal’ algorithm estimate the location of the first beat by
+<code class="xref py py-meth docutils literal"><span class="pre">pretty_midi.PrettyMIDI.estimate_beat_start()</span></code>.
+- The ‘strict’ algorithm set the first beat at the event time of the
+first time signature change. If no time signature change event
+found, raise a ValueError.
+- The ‘custom’ algorithm take argument <cite>first_beat_time</cite> as the
+location of the first beat.</li>
+<li><strong>binarized</strong> (<em>bool</em>) – True to binarize the parsed piano-rolls before merging duplicate
+notes. False to use the original parsed piano-rolls. Default to
+False.</li>
+<li><strong>compressed</strong> (<em>bool</em>) – True to compress the pitch range of the parsed piano-rolls. False to
+use the original parsed piano-rolls. Deafault to True.</li>
+<li><strong>collect_onsets_only</strong> (<em>bool</em>) – True to collect only the onset of the notes (i.e. note on events) in
+all tracks, where the note off and duration information are dropped.
+False to parse regular piano-rolls.</li>
+<li><strong>collect_midi_info</strong> (<em>bool</em>) – True to collect additional information in the MIDI file and return
+in a dictionary format. False to collect and return nothing.</li>
+<li><strong>threshold</strong> (<em>int</em><em> or </em><em>float</em>) – Threshold to binarize the parsed piano-rolls. Only effective when
+<cite>binarized</cite> is True. Default to zero.</li>
+<li><strong>first_beat_time</strong> (<em>float</em>) – The location (in sec) of the first beat. Required and only effective
+when using ‘custom’ algorithm.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>midi_info</strong> – Contains additional information of the parsed MIDI file as fallows.
+- first_beat_time (float) : the location (in sec) of the first beat
+- incomplete_beat_at_start (bool) : indicate whether there is an
+incomplete beat before <cite>first_beat_time</cite>
+- num_time_signature_change (int) : the number of time signature
+change events
+- time_signature (str) : the time signature (in ‘X/X’ format) if
+there is only one time signature events. None if no time signature
+event found
+- tempo (float) : the tempo value (in bpm) if there is only one
+tempo change events. None if no tempo change event found</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">dict</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Notes</p>
+<p>If an incomplete beat before the first beat is found, an additional beat
+will be added before the (estimated) beat start time. However, notes
+before the (estimated) beat start time for more than one beat are
+dropped.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pypianoroll.Multitrack.parse_pretty_midi">
+<code class="descname">parse_pretty_midi</code><span class="sig-paren">(</span><em>pm</em>, <em>mode='sum'</em>, <em>algorithm='normal'</em>, <em>binarized=False</em>, <em>skip_empty_tracks=True</em>, <em>collect_onsets_only=False</em>, <em>collect_midi_info=False</em>, <em>threshold=0</em>, <em>first_beat_time=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pypianoroll/multitrack.html#Multitrack.parse_pretty_midi"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypianoroll.Multitrack.parse_pretty_midi" title="Permalink to this definition">¶</a></dt>
+<dd><p>Parse a <code class="xref py py-class docutils literal"><span class="pre">pretty_midi.PrettyMIDI</span></code> object.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>pm</strong> (<cite>pretty_midi.PrettyMIDI</cite> object) – The <code class="xref py py-class docutils literal"><span class="pre">pretty_midi.PrettyMIDI</span></code> object to be parsed.</li>
+<li><strong>mode</strong> (<em>{'sum'</em><em>, </em><em>'max'</em><em>, </em><em>'any'}</em>) – Indicate the merging function to apply to duplicate notes. Default
+to ‘sum’.</li>
+<li><strong>algorithm</strong> (<em>{'normal'</em><em>, </em><em>'strict'</em><em>, </em><em>'custom'}</em>) – Indicate the method used to get the location of the first beat.
+Notes before it will be dropped unless an incomplete beat before it
+is found (see Notes for details). Default to ‘normal’.
+- The ‘normal’ algorithm estimate the location of the first beat by
+<code class="xref py py-meth docutils literal"><span class="pre">pretty_midi.PrettyMIDI.estimate_beat_start()</span></code>.
+- The ‘strict’ algorithm set the first beat at the event time of the
+first time signature change. If no time signature change event
+found, raise a ValueError.
+- The ‘custom’ algorithm take argument <cite>first_beat_time</cite> as the
+location of the first beat.</li>
+<li><strong>binarized</strong> (<em>bool</em>) – True to binarize the parsed piano-rolls before merging duplicate
+notes. False to use the original parsed piano-rolls. Default to
+False.</li>
+<li><strong>skip_empty_tracks</strong> (<em>bool</em>) – True to remove tracks with empty piano-rolls and compress the pitch
+range of the parsed piano-rolls. False to retain the empty tracks
+and use the original parsed piano-rolls. Deafault to True.</li>
+<li><strong>collect_onsets_only</strong> (<em>bool</em>) – True to collect only the onset of the notes (i.e. note on events) in
+all tracks, where the note off and duration information are dropped.
+False to parse regular piano-rolls.</li>
+<li><strong>collect_midi_info</strong> (<em>bool</em>) – True to collect additional information in the MIDI file and return
+in a dictionary format. False to collect and return nothing.</li>
+<li><strong>threshold</strong> (<em>int</em><em> or </em><em>float</em>) – Threshold to binarize the parsed piano-rolls. Only effective when
+<cite>binarized</cite> is True. Default to zero.</li>
+<li><strong>first_beat_time</strong> (<em>float</em>) – The location (in sec) of the first beat. Required and only effective
+when using ‘custom’ algorithm.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>midi_info</strong> – Contains additional information of the parsed MIDI file as fallows.
+- first_beat_time (float) : the location (in sec) of the first beat
+- incomplete_beat_at_start (bool) : indicate whether there is an
+incomplete beat before <cite>first_beat_time</cite>
+- num_time_signature_change (int) : the number of time signature
+change events
+- time_signature (str) : the time signature (in ‘X/X’ format) if
+there is only one time signature events. None if no time signature
+event found
+- tempo (float) : the tempo value (in bpm) if there is only one
+tempo change events. None if no tempo change event found</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">dict</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Notes</p>
+<p>If an incomplete beat before the first beat is found, an additional beat
+will be added before the (estimated) beat start time. However, notes
+before the (estimated) beat start time for more than one beat are
+dropped.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pypianoroll.Multitrack.plot">
+<code class="descname">plot</code><span class="sig-paren">(</span><em>filepath=None</em>, <em>mode='separate'</em>, <em>track_label='name'</em>, <em>normalization='standard'</em>, <em>preset='default'</em>, <em>cmaps=None</em>, <em>tick_loc=None</em>, <em>xtick='auto'</em>, <em>ytick='octave'</em>, <em>xticklabel='on'</em>, <em>yticklabel='auto'</em>, <em>direction='in'</em>, <em>label='both'</em>, <em>grid='both'</em>, <em>grid_linestyle=':'</em>, <em>grid_linewidth=0.5</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pypianoroll/multitrack.html#Multitrack.plot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypianoroll.Multitrack.plot" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plot the piano-rolls or save a plot of them.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>filepath</strong> (<em>str</em>) – The filepath to save the plot. If None, default to save nothing.</li>
+<li><strong>mode</strong> (<em>{'separate'</em><em>, </em><em>'stacked'</em><em>, </em><em>'hybrid'}</em>) – Plotting modes. Default to ‘separate’.
+- In ‘separate’ mode, all the tracks are plotted separately.
+- In ‘stacked’ mode, a color is assigned based on <cite>cmaps</cite> to the
+piano-roll of each track and the piano-rolls are stacked and
+plotted as a colored image with RGB channels.
+- In ‘hybrid’ mode, the drum tracks are merged into a ‘Drums’ track,
+while the other tracks are merged into an ‘Others’ track, and the
+two merged tracks are then plotted separately.</li>
+<li><strong>track_label</strong> (<em>{'name'</em><em>, </em><em>'program'</em><em>, </em><em>'family'</em><em>, </em><em>'off'}</em>) – Add track name, program name, instrument family name or none as
+labels to the track. When <cite>mode</cite> is ‘hybrid’, all options other
+than ‘off’ will label the two track with ‘Drums’ and ‘Others’.</li>
+<li><strong>normalization</strong> (<em>{'standard'</em><em>, </em><em>'auto'</em><em>, </em><em>'none'}</em>) – The normalization method to apply to the piano-roll. Default to
+‘standard’. If <cite>pianoroll</cite> is binarized, use ‘none’ anyway.
+- For ‘standard’ normalization, the normalized values are given by
+N = P / 128, where P, N is the original and normalized piano-roll,
+respectively
+- For ‘auto’ normalization, the normalized values are given by
+N = (P - m) / (M - m), where P, N is the original and normalized
+piano-roll, respectively, and M, m is the maximum and minimum of the
+original piano-roll, respectively.
+- If ‘none’, no normalization will be applied to the piano-roll. In
+this case, the values of <cite>pianoroll</cite> should be in [0, 1] in order to
+plot it correctly.</li>
+<li><strong>preset</strong> (<em>{'default'</em><em>, </em><em>'plain'</em><em>, </em><em>'frame'}</em>) – Preset themes for the plot.
+- In ‘default’ preset, the ticks, grid and labels are on.
+- In ‘frame’ preset, the ticks and grid are both off.
+- In ‘plain’ preset, the x- and y-axis are both off.</li>
+<li><strong>cmaps</strong> (<em>tuple</em><em> or </em><em>list</em>) – List of <cite>matplotlib.colors.Colormap</cite> instances or colormap codes.
+- When <cite>mode</cite> is ‘separate’, each element will be passed to each
+call of <code class="xref py py-func docutils literal"><span class="pre">matplotlib.pyplot.imshow()</span></code>. Default to (‘Blues’,
+‘Oranges’, ‘Greens’, ‘Reds’, ‘Purples’, ‘Greys’).
+- when <cite>mode</cite> is stacked, a color is assigned based on <cite>cmaps</cite> to
+the piano-roll of each track. Default to (‘hsv’).
+- When <cite>mode</cite> is ‘hybrid’, the first (second) element is used in the
+‘Drums’ (‘Others’) track. Default to (‘Blues’, ‘Greens’).</li>
+<li><strong>tick_loc</strong> (<em>tuple</em><em> or </em><em>list</em>) – List of locations to put ticks. Availables elements are ‘bottom’,
+‘top’, ‘left’ and ‘right’. If None, default to (‘bottom’, ‘left’).</li>
+<li><strong>xtick</strong> (<em>{'auto'</em><em>, </em><em>'beat'</em><em>, </em><em>'step'</em><em>, </em><em>'off'}</em>) – Use beat number or step number as ticks along the x-axis, or
+automatically set to ‘beat’ when <cite>beat_resolution</cite> is given and set
+to ‘step’, otherwise. Default to ‘auto’.</li>
+<li><strong>ytick</strong> (<em>{'octave'</em><em>, </em><em>'pitch'</em><em>, </em><em>'off'}</em>) – Use octave or pitch as ticks along the y-axis. Default to ‘octave’.</li>
+<li><strong>xticklabel</strong> (<em>{'on'</em><em>, </em><em>'off'}</em>) – Indicate whether to add tick labels along the x-axis. Only effective
+when <cite>xtick</cite> is not ‘off’.</li>
+<li><strong>yticklabel</strong> (<em>{'auto'</em><em>, </em><em>'name'</em><em>, </em><em>'number'</em><em>, </em><em>'off'}</em>) – If ‘name’, use octave name and pitch name (key name when <cite>is_drum</cite>
+is True) as tick labels along the y-axis. If ‘number’, use pitch
+number. If ‘auto’, set to ‘name’ when <cite>ytick</cite> is ‘octave’ and
+‘number’ when <cite>ytick</cite> is ‘pitch’. Default to ‘auto’. Only effective
+when <cite>ytick</cite> is not ‘off’.</li>
+<li><strong>direction</strong> (<em>{'in'</em><em>, </em><em>'out'</em><em>, </em><em>'inout'}</em>) – Put ticks inside the axes, outside the axes, or both. Default to
+‘in’. Only effective when <cite>xtick</cite> and <cite>ytick</cite> are not both ‘off’.</li>
+<li><strong>label</strong> (<em>{'x'</em><em>, </em><em>'y'</em><em>, </em><em>'both'</em><em>, </em><em>'off'}</em>) – Add label to the x-axis, y-axis, both or neither. Default to ‘both’.</li>
+<li><strong>grid</strong> (<em>{'x'</em><em>, </em><em>'y'</em><em>, </em><em>'both'</em><em>, </em><em>'off'}</em>) – Add grid to the x-axis, y-axis, both or neither. Default to ‘both’.</li>
+<li><strong>grid_linestyle</strong> (<em>str</em>) – Will be passed to <code class="xref py py-meth docutils literal"><span class="pre">matplotlib.axes.Axes.grid()</span></code> as ‘linestyle’
+argument.</li>
+<li><strong>grid_linewidth</strong> (<em>float</em>) – Will be passed to <code class="xref py py-meth docutils literal"><span class="pre">matplotlib.axes.Axes.grid()</span></code> as ‘linewidth’
+argument.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><ul class="simple">
+<li><strong>fig</strong> (<cite>matplotlib.figure.Figure</cite> object) – A <code class="xref py py-class docutils literal"><span class="pre">matplotlib.figure.Figure</span></code> object.</li>
+<li><strong>axs</strong> (<em>list</em>) – List of <code class="xref py py-class docutils literal"><span class="pre">matplotlib.axes.Axes</span></code> object.</li>
+</ul>
+</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pypianoroll.Multitrack.remove_empty_tracks">
+<code class="descname">remove_empty_tracks</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pypianoroll/multitrack.html#Multitrack.remove_empty_tracks"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypianoroll.Multitrack.remove_empty_tracks" title="Permalink to this definition">¶</a></dt>
+<dd><p>Remove tracks with empty piano-rolls.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pypianoroll.Multitrack.remove_tracks">
+<code class="descname">remove_tracks</code><span class="sig-paren">(</span><em>track_indices</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pypianoroll/multitrack.html#Multitrack.remove_tracks"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypianoroll.Multitrack.remove_tracks" title="Permalink to this definition">¶</a></dt>
+<dd><p>Remove tracks specified by <cite>track_indices</cite>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>track_indices</strong> (<em>list</em>) – List of indices that indicates which tracks to remove.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pypianoroll.Multitrack.save">
+<code class="descname">save</code><span class="sig-paren">(</span><em>filepath_npz</em>, <em>filepath_json</em>, <em>compressed=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pypianoroll/multitrack.html#Multitrack.save"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypianoroll.Multitrack.save" title="Permalink to this definition">¶</a></dt>
+<dd><p>Save numpy arrays to a (compressed) .npz file and other information to a
+JSON file.</p>
+<p class="rubric">Notes</p>
+<ul class="simple">
+<li>To reduce the file size, the collected piano-rolls are first converted
+to instances of scipy.sparse.csc_matrix, whose component arrays are
+then collected and saved to the .npz file.</li>
+</ul>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>filepath_npz</strong> (<em>str</em>) – The path to write the .npz file.</li>
+<li><strong>filepath_json</strong> (<em>str</em>) – The path to write the JSON file.</li>
+<li><strong>compressed</strong> (<em>bool</em>) – True to save to a compressed .npz file. False to save to a
+uncompressed .npz file. Default to True.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pypianoroll.Multitrack.to_pretty_midi">
+<code class="descname">to_pretty_midi</code><span class="sig-paren">(</span><em>constant_tempo=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pypianoroll/multitrack.html#Multitrack.to_pretty_midi"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypianoroll.Multitrack.to_pretty_midi" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert to a <code class="xref py py-class docutils literal"><span class="pre">pretty_midi.PrettyMIDI</span></code> instance.</p>
+<p class="rubric">Notes</p>
+<ul class="simple">
+<li>Only constant tempo is supported by now.</li>
+<li>The velocities of the converted piano-rolls are cliiped into [0, 127],
+i.e. values below 0 and values beyond 127 are replaced by 127 and 0,
+respectively.</li>
+</ul>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>constant_tempo</strong> (<em>int</em>) – The constant tempo value of the output object. If None, default to
+use the first element of <cite>tempo</cite></td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><strong>pm</strong> – The converted <code class="xref py py-class docutils literal"><span class="pre">pretty_midi.PrettyMIDI</span></code> instance.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><cite>pretty_midi.PrettyMIDI</cite> object</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pypianoroll.Multitrack.transpose">
+<code class="descname">transpose</code><span class="sig-paren">(</span><em>semitone</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pypianoroll/multitrack.html#Multitrack.transpose"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypianoroll.Multitrack.transpose" title="Permalink to this definition">¶</a></dt>
+<dd><p>Transpose the piano-rolls by <cite>semitones</cite> semitones.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>semitone</strong> (<em>int</em>) – Number of semitones transpose the piano-rolls.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pypianoroll.Multitrack.trim_trailing_silence">
+<code class="descname">trim_trailing_silence</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pypianoroll/multitrack.html#Multitrack.trim_trailing_silence"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypianoroll.Multitrack.trim_trailing_silence" title="Permalink to this definition">¶</a></dt>
+<dd><p>Trim the trailing silence of the piano-roll.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pypianoroll.Multitrack.write_midi">
+<code class="descname">write_midi</code><span class="sig-paren">(</span><em>filepath</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pypianoroll/multitrack.html#Multitrack.write_midi"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypianoroll.Multitrack.write_midi" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write to a MIDI file</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>filepath</strong> (<em>str</em>) – The path to write the MIDI file.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="single-track-piano-roll">
+<h1>Single-track Piano-roll<a class="headerlink" href="#single-track-piano-roll" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="pypianoroll.Track">
+<em class="property">class </em><code class="descclassname">pypianoroll.</code><code class="descname">Track</code><span class="sig-paren">(</span><em>pianoroll=None</em>, <em>program=0</em>, <em>is_drum=False</em>, <em>name='unknown'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pypianoroll/track.html#Track"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypianoroll.Track" title="Permalink to this definition">¶</a></dt>
+<dd><p>A single-track piano-roll container.</p>
+<dl class="attribute">
+<dt id="pypianoroll.Track.pianoroll">
+<code class="descname">pianoroll</code><a class="headerlink" href="#pypianoroll.Track.pianoroll" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>np.ndarray, shape=(num_time_step, 128)</em> – Piano-roll matrix. First dimension represents time. Second dimension
+represents pitch.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pypianoroll.Track.program">
+<code class="descname">program</code><a class="headerlink" href="#pypianoroll.Track.program" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>int</em> – Program number according to General MIDI specification. Available
+values are 0 to 127. Default to 0 (Acoustic Grand Piano).</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pypianoroll.Track.is_drum">
+<code class="descname">is_drum</code><a class="headerlink" href="#pypianoroll.Track.is_drum" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>bool</em> – Drum indicator. True for drums. False for other instruments.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pypianoroll.Track.name">
+<code class="descname">name</code><a class="headerlink" href="#pypianoroll.Track.name" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>str</em> – Name of the track.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pypianoroll.Track.binarize">
+<code class="descname">binarize</code><span class="sig-paren">(</span><em>threshold=0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pypianoroll/track.html#Track.binarize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypianoroll.Track.binarize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Binarize the piano-roll. Do nothing if the piano-roll is already
+binarized.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>threshold</strong> (<em>int</em><em> or </em><em>float</em>) – Threshold to binarize the piano-rolls. Default to zero.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pypianoroll.Track.check_validity">
+<code class="descname">check_validity</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pypianoroll/track.html#Track.check_validity"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypianoroll.Track.check_validity" title="Permalink to this definition">¶</a></dt>
+<dd><p>“Raise error if any invalid attribute found.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pypianoroll.Track.clip">
+<code class="descname">clip</code><span class="sig-paren">(</span><em>lower=0</em>, <em>upper=128</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pypianoroll/track.html#Track.clip"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypianoroll.Track.clip" title="Permalink to this definition">¶</a></dt>
+<dd><p>Clip the piano-roll by an lower bound and an upper bound specified by
+<cite>lower</cite> and <cite>upper</cite>, respectively.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>lower</strong> (<em>int</em><em> or </em><em>float</em>) – The lower bound to clip the piano-roll. Default to 0.</li>
+<li><strong>upper</strong> (<em>int</em><em> or </em><em>float</em>) – The upper bound to clip the piano-roll. Default to 128.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pypianoroll.Track.copy">
+<code class="descname">copy</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pypianoroll/track.html#Track.copy"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypianoroll.Track.copy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a copy of the object.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><strong>copied</strong> – A copy of the object.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><cite>pypianoroll.Track</cite> object</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pypianoroll.Track.get_active_length">
+<code class="descname">get_active_length</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pypianoroll/track.html#Track.get_active_length"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypianoroll.Track.get_active_length" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the active length (i.e. without trailing silence) of the
+piano-roll (in time step).</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><strong>active_length</strong> – Length of the piano-roll without trailing silence (in time step).</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">int</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pypianoroll.Track.get_active_pitch_range">
+<code class="descname">get_active_pitch_range</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pypianoroll/track.html#Track.get_active_pitch_range"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypianoroll.Track.get_active_pitch_range" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the active pitch range in tuple (lowest, highest).</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>relative</strong> (<em>bool</em>) – True to return the relative pitch range , i.e. the corresponding
+indices in the pitch axis of the piano-roll. False to return the
+absolute pitch range. Default to False.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><ul class="simple">
+<li><strong>lowest</strong> (<em>int</em>) – The lowest active pitch in the piano-roll.</li>
+<li><strong>highest</strong> (<em>int</em>) – The highest active pitch in the piano-roll.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pypianoroll.Track.get_pianoroll_copy">
+<code class="descname">get_pianoroll_copy</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pypianoroll/track.html#Track.get_pianoroll_copy"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypianoroll.Track.get_pianoroll_copy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a copy of the piano-roll.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">A copy of the piano-roll.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">copied</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pypianoroll.Track.is_binarized">
+<code class="descname">is_binarized</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pypianoroll/track.html#Track.is_binarized"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypianoroll.Track.is_binarized" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return True if the piano-roll is already binarized. Otherwise, return
+False.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><strong>is_binarized</strong> – True if the piano-roll is already binarized; otherwise, False.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">bool</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pypianoroll.Track.pad">
+<code class="descname">pad</code><span class="sig-paren">(</span><em>pad_length</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pypianoroll/track.html#Track.pad"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypianoroll.Track.pad" title="Permalink to this definition">¶</a></dt>
+<dd><p>Pad the piano-roll with zeros at the end along the time axis.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>pad_length</strong> (<em>int</em>) – The length to pad along the time axis with zeros.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pypianoroll.Track.pad_to_multiple">
+<code class="descname">pad_to_multiple</code><span class="sig-paren">(</span><em>factor</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pypianoroll/track.html#Track.pad_to_multiple"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypianoroll.Track.pad_to_multiple" title="Permalink to this definition">¶</a></dt>
+<dd><p>Pad the piano-roll with zeros at the end along the time axis of
+minimal length to make the length of the resulting piano-roll a
+multiple of <cite>factor</cite>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>factor</strong> (<em>int</em>) – The value of which the length of the resulting piano-roll will be
+a multiple.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pypianoroll.Track.plot">
+<code class="descname">plot</code><span class="sig-paren">(</span><em>filepath=None</em>, <em>beat_resolution=None</em>, <em>downbeats=None</em>, <em>normalization='standard'</em>, <em>preset='default'</em>, <em>cmap='Blues'</em>, <em>tick_loc=None</em>, <em>xtick='auto'</em>, <em>ytick='octave'</em>, <em>xticklabel='on'</em>, <em>yticklabel='auto'</em>, <em>direction='in'</em>, <em>label='both'</em>, <em>grid='both'</em>, <em>grid_linestyle=':'</em>, <em>grid_linewidth=0.5</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pypianoroll/track.html#Track.plot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypianoroll.Track.plot" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plot the piano-roll or save a plot of the piano-roll.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>filepath</strong> – The filepath to save the plot. If None, default to save nothing.</li>
+<li><strong>beat_resolution</strong> (<em>int</em>) – Resolution of a beat (in time step). Required and only effective
+when <cite>xticklabel</cite> is ‘beat’.</li>
+<li><strong>downbeats</strong> (<em>list</em>) – Indices of time steps that contain downbeats., i.e. the first time
+step of a bar.</li>
+<li><strong>normalization</strong> (<em>{'standard'</em><em>, </em><em>'auto'</em><em>, </em><em>'none'}</em>) – The normalization method to apply to the piano-roll. Default to
+‘standard’. If <cite>pianoroll</cite> is binarized, use ‘none’ anyway.
+- For ‘standard’ normalization, the normalized values are given by
+N = P / 128, where P, N is the original and normalized piano-roll,
+respectively
+- For ‘auto’ normalization, the normalized values are given by
+N = (P - m) / (M - m), where P, N is the original and normalized
+piano-roll, respectively, and M, m is the maximum and minimum of the
+original piano-roll, respectively.
+- If ‘none’, no normalization will be applied to the piano-roll. In
+this case, the values of <cite>pianoroll</cite> should be in [0, 1] in order to
+plot it correctly.</li>
+<li><strong>preset</strong> (<em>{'default'</em><em>, </em><em>'plain'</em><em>, </em><em>'frame'}</em>) – Preset themes for the plot.
+- In ‘default’ preset, the ticks, grid and labels are on.
+- In ‘frame’ preset, the ticks and grid are both off.
+- In ‘plain’ preset, the x- and y-axis are both off.</li>
+<li><strong>cmap</strong> (<cite>matplotlib.colors.Colormap</cite>) – Colormap to use in <code class="xref py py-func docutils literal"><span class="pre">matplotlib.pyplot.imshow()</span></code>. Default to
+‘Blues’. Only effective when <cite>pianoroll</cite> is 2D.</li>
+<li><strong>tick_loc</strong> (<em>tuple</em><em> or </em><em>list</em>) – List of locations to put ticks. Availables elements are ‘bottom’,
+‘top’, ‘left’ and ‘right’. If None, default to (‘bottom’, ‘left’).</li>
+<li><strong>xtick</strong> (<em>{'auto'</em><em>, </em><em>'beat'</em><em>, </em><em>'step'</em><em>, </em><em>'off'}</em>) – Use beat number or step number as ticks along the x-axis, or
+automatically set to ‘beat’ when <cite>beat_resolution</cite> is given and set
+to ‘step’, otherwise. Default to ‘auto’.</li>
+<li><strong>ytick</strong> (<em>{'octave'</em><em>, </em><em>'pitch'</em><em>, </em><em>'off'}</em>) – Use octave or pitch as ticks along the y-axis. Default to ‘octave’.</li>
+<li><strong>xticklabel</strong> (<em>{'on'</em><em>, </em><em>'off'}</em>) – Indicate whether to add tick labels along the x-axis. Only effective
+when <cite>xtick</cite> is not ‘off’.</li>
+<li><strong>yticklabel</strong> (<em>{'auto'</em><em>, </em><em>'name'</em><em>, </em><em>'number'</em><em>, </em><em>'off'}</em>) – If ‘name’, use octave name and pitch name (key name when <cite>is_drum</cite>
+is True) as tick labels along the y-axis. If ‘number’, use pitch
+number. If ‘auto’, set to ‘name’ when <cite>ytick</cite> is ‘octave’ and
+‘number’ when <cite>ytick</cite> is ‘pitch’. Default to ‘auto’. Only effective
+when <cite>ytick</cite> is not ‘off’.</li>
+<li><strong>direction</strong> (<em>{'in'</em><em>, </em><em>'out'</em><em>, </em><em>'inout'}</em>) – Put ticks inside the axes, outside the axes, or both. Default to
+‘in’. Only effective when <cite>xtick</cite> and <cite>ytick</cite> are not both ‘off’.</li>
+<li><strong>label</strong> (<em>{'x'</em><em>, </em><em>'y'</em><em>, </em><em>'both'</em><em>, </em><em>'off'}</em>) – Add label to the x-axis, y-axis, both or neither. Default to ‘both’.</li>
+<li><strong>grid</strong> (<em>{'x'</em><em>, </em><em>'y'</em><em>, </em><em>'both'</em><em>, </em><em>'off'}</em>) – Add grid to the x-axis, y-axis, both or neither. Default to ‘both’.</li>
+<li><strong>grid_linestyle</strong> (<em>str</em>) – Will be passed to <code class="xref py py-meth docutils literal"><span class="pre">matplotlib.axes.Axes.grid()</span></code> as ‘linestyle’
+argument.</li>
+<li><strong>grid_linewidth</strong> (<em>float</em>) – Will be passed to <code class="xref py py-meth docutils literal"><span class="pre">matplotlib.axes.Axes.grid()</span></code> as ‘linewidth’
+argument.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><ul class="simple">
+<li><strong>fig</strong> (<cite>matplotlib.figure.Figure</cite> object) – A <code class="xref py py-class docutils literal"><span class="pre">matplotlib.figure.Figure</span></code> object.</li>
+<li><strong>ax</strong> (<cite>matplotlib.axes.Axes</cite> object) – A <code class="xref py py-class docutils literal"><span class="pre">matplotlib.axes.Axes</span></code> object.</li>
+</ul>
+</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pypianoroll.Track.transpose">
+<code class="descname">transpose</code><span class="sig-paren">(</span><em>semitone</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pypianoroll/track.html#Track.transpose"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypianoroll.Track.transpose" title="Permalink to this definition">¶</a></dt>
+<dd><p>Transpose the piano-roll by a certain semitones, where positive
+values are for higher key, while negative values are for lower key.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>semitone</strong> (<em>int</em>) – Number of semitones to transpose the piano-roll.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pypianoroll.Track.trim_trailing_silence">
+<code class="descname">trim_trailing_silence</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pypianoroll/track.html#Track.trim_trailing_silence"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypianoroll.Track.trim_trailing_silence" title="Permalink to this definition">¶</a></dt>
+<dd><p>Trim the trailing silence of the piano-roll.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="pypianoroll.save_video">
+<code class="descclassname">pypianoroll.</code><code class="descname">save_video</code><span class="sig-paren">(</span><em>filepath</em>, <em>obj</em>, <em>window</em>, <em>hop=1</em>, <em>fps=None</em>, <em>beat_resolution=24</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pypianoroll/plot.html#save_video"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypianoroll.save_video" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="indices-and-tables">
+<h1>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Permalink to this headline">¶</a></h1>
+<ul class="simple">
+<li><a class="reference internal" href="genindex.html"><span class="std std-ref">Index</span></a></li>
+<li><a class="reference internal" href="py-modindex.html"><span class="std std-ref">Module Index</span></a></li>
+<li><a class="reference internal" href="search.html"><span class="std std-ref">Search Page</span></a></li>
+</ul>
+</div>
+
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, Hao-Wen Dong.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'0.0.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>
