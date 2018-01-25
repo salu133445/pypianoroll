@@ -183,7 +183,7 @@
 <span class="sd">        `normalized` is False.</span>
 <span class="sd">        - For 2D array, shape=(num_time_step, num_pitch).</span>
 <span class="sd">        - For 3D array, shape=(num_time_step, num_pitch, num_channel), where</span>
-<span class="sd">          channels can be either RGB or RGBA.</span>
+<span class="sd">        channels can be either RGB or RGBA.</span>
 <span class="sd">    is_drum : bool</span>
 <span class="sd">        Drum indicator. True for drums. False for other instruments. Default</span>
 <span class="sd">        to False.</span>
@@ -197,15 +197,15 @@
 <span class="sd">        The normalization method to apply to the piano-roll. Default to</span>
 <span class="sd">        &#39;standard&#39;. If `pianoroll` is binarized, use &#39;none&#39; anyway.</span>
 <span class="sd">        - For &#39;standard&#39; normalization, the normalized values are given by</span>
-<span class="sd">          N = P / 128, where P, N is the original and normalized piano-roll,</span>
-<span class="sd">          respectively</span>
+<span class="sd">        N = P / 128, where P, N is the original and normalized piano-roll,</span>
+<span class="sd">        respectively</span>
 <span class="sd">        - For &#39;auto&#39; normalization, the normalized values are given by</span>
-<span class="sd">          N = (P - m) / (M - m), where P, N is the original and normalized</span>
-<span class="sd">          piano-roll, respectively, and M, m is the maximum and minimum of</span>
-<span class="sd">          the original piano-roll, respectively.</span>
+<span class="sd">        N = (P - m) / (M - m), where P, N is the original and normalized</span>
+<span class="sd">        piano-roll, respectively, and M, m is the maximum and minimum of the</span>
+<span class="sd">        original piano-roll, respectively.</span>
 <span class="sd">        - If &#39;none&#39;, no normalization will be applied to the piano-roll. In</span>
-<span class="sd">          this case, the values of `pianoroll` should be in [0, 1] in order</span>
-<span class="sd">          to plot it correctly.</span>
+<span class="sd">        this case, the values of `pianoroll` should be in [0, 1] in order to</span>
+<span class="sd">        plot it correctly.</span>
 <span class="sd">    preset : {&#39;default&#39;, &#39;plain&#39;, &#39;frame&#39;}</span>
 <span class="sd">        Preset themes for the plot.</span>
 <span class="sd">        - In &#39;default&#39; preset, the ticks, grid and labels are on.</span>
@@ -228,7 +228,7 @@
 <span class="sd">        when `xtick` is not &#39;off&#39;.</span>
 <span class="sd">    yticklabel : {&#39;auto&#39;, &#39;name&#39;, &#39;number&#39;, &#39;off&#39;}</span>
 <span class="sd">        If &#39;name&#39;, use octave name and pitch name (key name when `is_drum`</span>
-<span class="sd">        is   True) as tick labels along the y-axis. If &#39;number&#39;, use pitch</span>
+<span class="sd">        is True) as tick labels along the y-axis. If &#39;number&#39;, use pitch</span>
 <span class="sd">        number. If &#39;auto&#39;, set to &#39;name&#39; when `ytick` is &#39;octave&#39; and</span>
 <span class="sd">        &#39;number&#39; when `ytick` is &#39;pitch&#39;. Default to &#39;auto&#39;. Only effective</span>
 <span class="sd">        when `ytick` is not &#39;off&#39;.</span>
