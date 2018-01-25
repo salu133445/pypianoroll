@@ -491,26 +491,27 @@ class Multitrack(object):
             return csc_matrix((target_dict[name+'_csc_data'],
                                target_dict[name+'_csc_indices'],
                                target_dict[name+'_csc_indptr']),
-                              shape=target_dict[name+'_csc_shape'])
+                              shape=target_dict[name+'_csc_shape']).toarray()
 
         with open(filepath_json) as infile:
             info_dict = json.load(infile)
 
-        self.name = info_dict['name']
+        self.name = str(info_dict['name'])
         self.beat_resolution = info_dict['beat_resolution']
 
         with np.load(filepath_npz) as loaded:
             self.tempo = loaded['tempo']
             if 'downbeat' in loaded.files:
-                self.tempo = loaded['downbeat']
+                self.downbeat = loaded['downbeat']
 
             idx = 0
+            self.tracks = []
             while str(idx) in info_dict:
                 pianoroll = reconstruct_sparse(loaded,
                                                'pianoroll_{}'.format(idx))
                 track = Track(pianoroll, info_dict[str(idx)]['program'],
                               info_dict[str(idx)]['is_drum'],
-                              info_dict[str(idx)]['name'])
+                              str(info_dict[str(idx)]['name']))
                 self.tracks.append(track)
                 idx += 1
 
@@ -999,7 +1000,7 @@ class Multitrack(object):
         if cmaps is None:
             if mode == 'separate':
                 cmaps = ('Blues', 'Oranges', 'Greens', 'Reds', 'Purples',
-                        'Greys')
+                         'Greys')
             elif mode == 'stacked':
                 cmaps = ('hsv')
             else:
@@ -1158,7 +1159,7 @@ class Multitrack(object):
         info_dict = {'beat_resolution': self.beat_resolution,
                      'name': self.name}
 
-        if self.downbeat:
+        if self.downbeat.any():
             array_dict['downbeat'] = self.downbeat
 
         for idx, track in enumerate(self.tracks):
