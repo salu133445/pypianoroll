@@ -15,4 +15,4 @@ from .track import Track
 from .multitrack import Multitrack
 from .pypianoroll import (is_pianoroll, binarize, clip, copy, pad, pad_to_same,
                           plot, transpose, trim_trailing_silence)
-from .plot import (plot_pianoroll, save_video)
+from .plot import (plot_pianoroll, save_animation)
