@@ -6,8 +6,6 @@ import pretty_midi
 from matplotlib import pyplot as plt
 from moviepy.editor import VideoClip
 from moviepy.video.io.bindings import mplfig_to_npimage
-# from .track import Track
-# from .multitrack import Multitrack
 
 def plot_pianoroll(ax, pianoroll, is_drum=False, beat_resolution=None,
                    downbeats=None, normalization='standard', preset='default',
@@ -128,10 +126,8 @@ def plot_pianoroll(ax, pianoroll, is_drum=False, beat_resolution=None,
         max_value = np.max(to_plot)
         min_value = np.min(to_plot)
         to_plot = to_plot - min_value / (max_value - min_value)
-    highest = pianoroll.shape[1] - 1
-    extent = (0, pianoroll.shape[0], 0, highest)
-    ax.imshow(to_plot, cmap=cmap, aspect='auto', vmin=0, vmax=1,
-              interpolation='none', extent=extent, origin='lower')
+    ax.imshow(to_plot, cmap=cmap, aspect='auto', vmin=0, vmax=1, origin='lower',
+              interpolation='none')
 
     # tick setting
     if tick_loc is None:
@@ -206,48 +202,147 @@ def plot_pianoroll(ax, pianoroll, is_drum=False, beat_resolution=None,
         for step in downbeats:
             ax.axvline(x=step, color='k', linewidth=1)
 
-def save_video(filepath, obj, window, hop=1, fps=None, beat_resolution=24):
-    fig, ax = plt.subplots()
-    plot_pianoroll(ax, obj.pianoroll[:window], is_drum=False, beat_resolution=beat_resolution,
-                   downbeats=None, normalization='standard', preset='default',
-                   cmap='Blues', tick_loc=None, xtick='auto', ytick='octave',
-                   xticklabel='on', yticklabel='auto', direction='in',
-                   label='both', grid='both', grid_linestyle=':',
-                   grid_linewidth=.5)
+def save_animation(filepath, pianoroll, window, hop=1, fps=None, is_drum=False,
+                   beat_resolution=None, downbeats=None,
+                   normalization='standard', preset='default', cmap='Blues',
+                   tick_loc=None, xtick='auto', ytick='octave', xticklabel='on',
+                   yticklabel='auto', direction='in', label='both', grid='both',
+                   grid_linestyle=':', grid_linewidth=.5, **kwargs):
+    """
+    Save a piano-roll to an animation in video or GIF format.
 
+    Parameters
+    ----------
+    filepath : str
+        Path to save the video file.
+    pianoroll : np.ndarray
+        The piano-roll to be plotted. The values should be in [0, 1] when
+        `normalized` is False.
+        - For 2D array, shape=(num_time_step, num_pitch).
+        - For 3D array, shape=(num_time_step, num_pitch, num_channel), where
+        channels can be either RGB or RGBA.
+    window : int
+        Window size to be applied to `pianoroll` for the animation.
+    hop : int
+        Hop size to be applied to `pianoroll` for the animation.
+    fps : int
+        Number of frames per second in the resulting video or GIF file.
+    is_drum : bool
+        Drum indicator. True for drums. False for other instruments. Default
+        to False.
+    beat_resolution : int
+        Resolution of a beat (in time step). Required and only effective
+        when `xticklabel` is 'beat'.
+    downbeats : list
+        Indices of time steps that contain downbeats., i.e. the first time
+        step of a bar.
+    normalization : {'standard', 'auto', 'none'}
+        The normalization method to apply to the piano-roll. Default to
+        'standard'. If `pianoroll` is binarized, use 'none' anyway.
+        - For 'standard' normalization, the normalized values are given by
+        N = P / 128, where P, N is the original and normalized piano-roll,
+        respectively
+        - For 'auto' normalization, the normalized values are given by
+        N = (P - m) / (M - m), where P, N is the original and normalized
+        piano-roll, respectively, and M, m is the maximum and minimum of the
+        original piano-roll, respectively.
+        - If 'none', no normalization will be applied to the piano-roll. In
+        this case, the values of `pianoroll` should be in [0, 1] in order to
+        plot it correctly.
+    preset : {'default', 'plain', 'frame'}
+        Preset themes for the plot.
+        - In 'default' preset, the ticks, grid and labels are on.
+        - In 'frame' preset, the ticks and grid are both off.
+        - In 'plain' preset, the x- and y-axis are both off.
+    cmap :  `matplotlib.colors.Colormap`
+        Colormap to use in :func:`matplotlib.pyplot.imshow`. Default to
+        'Blues'. Only effective when `pianoroll` is 2D.
+    tick_loc : tuple or list
+        List of locations to put ticks. Availables elements are 'bottom',
+        'top', 'left' and 'right'. If None, default to ('bottom', 'left').
+    xtick : {'auto', 'beat', 'step', 'off'}
+        Use beat number or step number as ticks along the x-axis, or
+        automatically set to 'beat' when `beat_resolution` is given and set
+        to 'step', otherwise. Default to 'auto'.
+    ytick : {'octave', 'pitch', 'off'}
+        Use octave or pitch as ticks along the y-axis. Default to 'octave'.
+    xticklabel : {'on', 'off'}
+        Indicate whether to add tick labels along the x-axis. Only effective
+        when `xtick` is not 'off'.
+    yticklabel : {'auto', 'name', 'number', 'off'}
+        If 'name', use octave name and pitch name (key name when `is_drum`
+        is True) as tick labels along the y-axis. If 'number', use pitch
+        number. If 'auto', set to 'name' when `ytick` is 'octave' and
+        'number' when `ytick` is 'pitch'. Default to 'auto'. Only effective
+        when `ytick` is not 'off'.
+    direction : {'in', 'out', 'inout'}
+        Put ticks inside the axes, outside the axes, or both. Default to
+        'in'. Only effective when `xtick` and `ytick` are not both 'off'.
+    label : {'x', 'y', 'both', 'off'}
+        Add label to the x-axis, y-axis, both or neither. Default to 'both'.
+    grid : {'x', 'y', 'both', 'off'}
+        Add grid to the x-axis, y-axis, both or neither. Default to 'both'.
+    grid_linestyle : str
+        Will be passed to :meth:`matplotlib.axes.Axes.grid` as 'linestyle'
+        argument.
+    grid_linewidth : float
+        Will be passed to :meth:`matplotlib.axes.Axes.grid` as 'linewidth'
+        argument.
+
+    """
     def make_frame(t):
+        """Return an image of the frame for time t"""
         fig = plt.gcf()
         ax = plt.gca()
         f_idx = int(t * fps)
         start = hop * f_idx
         end = start + window
-        to_plot = obj.pianoroll[start:end].T / 128.
-        ax.imshow(to_plot, cmap='Blues', aspect='auto', vmin=0, vmax=1,
-                  interpolation='none', extent=(0, window, 0, 127),
-                  origin='lower')
+        to_plot = pianoroll[start:end].T / 128.
+        extent = (start, end - 1, 0, 127)
+        ax.imshow(to_plot, cmap=cmap, aspect='auto', vmin=0, vmax=1,
+                  origin='lower', interpolation='none', extent=extent)
 
-        next_major_idx = beat_resolution - start % beat_resolution
-        if start % beat_resolution < beat_resolution//2:
-            next_minor_idx = beat_resolution//2 - start % beat_resolution
-        else:
-            next_minor_idx = beat_resolution//2 - start % beat_resolution + beat_resolution
-        xticks_major = np.arange(next_major_idx, window, beat_resolution)
-        xticks_minor = np.arange(next_minor_idx, window, beat_resolution)
-        if end % beat_resolution < beat_resolution//2:
-            last_minor_idx = beat_resolution//2 - end % beat_resolution
-        else:
-            last_minor_idx = beat_resolution//2 - end % beat_resolution + beat_resolution
-        xtick_labels = np.arange((start + next_minor_idx)//beat_resolution, (end + last_minor_idx)//beat_resolution)
-        ax.set_xticks(xticks_major)
-        ax.set_xticklabels('')
-        ax.set_xticks(xticks_minor, minor=True)
-        ax.set_xticklabels(xtick_labels, minor=True)
-        ax.tick_params(axis='x', which='minor', width=0)
+        if xtick == 'beat':
+            next_major_idx = beat_resolution - start % beat_resolution
+            if start % beat_resolution < beat_resolution//2:
+                next_minor_idx = beat_resolution//2 - start % beat_resolution
+            else:
+                next_minor_idx = (beat_resolution//2 - start % beat_resolution
+                                  + beat_resolution)
+            xticks_major = np.arange(next_major_idx, window, beat_resolution)
+            xticks_minor = np.arange(next_minor_idx, window, beat_resolution)
+            if end % beat_resolution < beat_resolution//2:
+                last_minor_idx = beat_resolution//2 - end % beat_resolution
+            else:
+                last_minor_idx = (beat_resolution//2 - end % beat_resolution
+                                  + beat_resolution)
+            xtick_labels = np.arange((start + next_minor_idx)//beat_resolution,
+                                     (end + last_minor_idx)//beat_resolution)
+            ax.set_xticks(xticks_major)
+            ax.set_xticklabels('')
+            ax.set_xticks(xticks_minor, minor=True)
+            ax.set_xticklabels(xtick_labels, minor=True)
+            ax.tick_params(axis='x', which='minor', width=0)
 
         return mplfig_to_npimage(fig)
 
-    num_frame = int((obj.pianoroll.shape[0] - window) / hop)
+    if xtick == 'auto':
+        xtick = 'beat' if beat_resolution is not None else 'step'
+
+    fig, ax = plt.subplots()
+    plot_pianoroll(ax, pianoroll[:window], is_drum=is_drum,
+                   beat_resolution=beat_resolution, downbeats=downbeats,
+                   normalization=normalization, preset=preset, cmap=cmap,
+                   tick_loc=tick_loc, xtick=xtick, ytick=ytick,
+                   xticklabel=xticklabel, yticklabel=yticklabel,
+                   direction=direction, label='both', grid='both',
+                   grid_linestyle=':', grid_linewidth=.5)
+
+    num_frame = int((pianoroll.shape[0] - window) / hop)
     duration = int(num_frame / fps)
     animation = VideoClip(make_frame, duration=duration)
-    animation.write_videofile(filepath, fps, codec='libx264')
+    if filepath.endswith('.gif'):
+        animation.write_gif(filepath, fps, kwargs)
+    else:
+        animation.write_videofile(filepath, fps, kwargs)
     plt.close()
