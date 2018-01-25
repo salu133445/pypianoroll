@@ -173,7 +173,8 @@ man_pages = [
 #  dir menu entry, description, category)
 texinfo_documents = [
     (master_doc, 'pypianoroll', 'pypianoroll Documentation',
-     author, 'pypianoroll', 'One line description of project.',
+     author, 'pypianoroll',
+     'A python package for handling multi-track piano-rolls.',
      'Miscellaneous'),
 ]
 
