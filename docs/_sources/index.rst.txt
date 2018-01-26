@@ -11,7 +11,10 @@ Single-track Piano-roll
 .. autoclass:: Track
    :members:
 
-.. autofunction :: save_video
+Visualization Utilities
+=======================
+.. autofunction :: plot_pianoroll
+.. autofunction :: save_animation
 
 Indices and tables
 ==================
