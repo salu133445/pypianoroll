@@ -1245,8 +1245,9 @@ class Multitrack(object):
 
     def trim_trailing_silence(self):
         """Trim the trailing silence of the piano-roll."""
-        for track in self.tracks():
-            track.trim_trailing_silence()
+        active_length = self.get_active_length()
+        for track in self.tracks:
+            track = track[:active_length]
 
     def write_midi(self, filepath):
         """
