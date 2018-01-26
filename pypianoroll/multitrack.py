@@ -463,7 +463,7 @@ class Multitrack(object):
     def load(self, filepath):
         """
         Load a .npz file. Supports only files previously saved by
-        :meth:`pypianoroll.Multitrack.save`
+        :meth:`pypianoroll.Multitrack.save`.
 
         Notes
         -----
@@ -1115,7 +1115,7 @@ class Multitrack(object):
     def save(self, filepath, compressed=True):
         """
         Save to a (compressed) .npz file, which can be later loaded by
-        :meth:`pypianoroll.Multitrack.load`
+        :meth:`pypianoroll.Multitrack.load`.
 
         Notes
         -----
