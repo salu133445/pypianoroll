@@ -134,6 +134,21 @@ def plot(obj, **kwargs):
     _check_supported(obj)
     return obj.plot(**kwargs)
 
+def save(filepath, obj, compressed=True):
+    """
+    Save the object to a .npz file.
+
+    Parameters
+    ----------
+    filepath : str
+        The path to save the file.
+    obj: `pypianoroll.Multitrack` objects
+        The objecte to be saved.
+    """
+    if not isinstance(obj, Multitrack):
+        raise TypeError("Support only `pypianoroll.Multitrack` class objects")
+    obj.save(filepath, compressed)
+    
 def transpose(obj, semitone):
     """
     Return a copy of the object with piano-roll(s) transposed by
@@ -146,7 +161,7 @@ def transpose(obj, semitone):
     """
     _check_supported(obj)
     copied = deepcopy(obj)
-    copied.lowest_pitch += semitone
+    copied.transpose(semitone)
     return copied
 
 def trim_trailing_silence(obj):
@@ -156,6 +171,6 @@ def trim_trailing_silence(obj):
     """
     _check_supported(obj)
     copied = deepcopy(obj)
-    length = copied.get_length()
+    length = copied.get_active_length()
     copied.pianoroll = copied.pianoroll[:length]
     return copied
