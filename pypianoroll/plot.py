@@ -16,8 +16,8 @@ def plot_pianoroll(ax, pianoroll, is_drum=False, beat_resolution=None,
     """
     Plot a piano-roll given as a numpy array
 
-    Parmeters
-    ---------
+    Parameters
+    ----------
     ax : matplotlib.axes.Axes object
          The :class:`matplotlib.axes.Axes` object where the piano-roll will
          be plotted on.

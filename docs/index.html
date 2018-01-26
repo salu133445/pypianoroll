@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Pypianoroll &mdash; pypianoroll 0.0.1 documentation</title>
+  <title>Pypianoroll &mdash; pypianoroll 0.0.2 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="index" title="Index"
               href="genindex.html"/>
         <link rel="search" title="Search" href="search.html"/>
-    <link rel="top" title="pypianoroll 0.0.1 documentation" href="#"/> 
+    <link rel="top" title="pypianoroll 0.0.2 documentation" href="#"/> 
 
   
   <script src="_static/js/modernizr.min.js"></script>
@@ -64,7 +64,7 @@
             
             
               <div class="version">
-                0.0.1
+                0.0.2
               </div>
             
           
@@ -1161,27 +1161,25 @@ values are for higher key, while negative values are for lower key.</p>
 <dt id="pypianoroll.plot_pianoroll">
 <code class="descclassname">pypianoroll.</code><code class="descname">plot_pianoroll</code><span class="sig-paren">(</span><em>ax</em>, <em>pianoroll</em>, <em>is_drum=False</em>, <em>beat_resolution=None</em>, <em>downbeats=None</em>, <em>normalization='standard'</em>, <em>preset='default'</em>, <em>cmap='Blues'</em>, <em>tick_loc=None</em>, <em>xtick='auto'</em>, <em>ytick='octave'</em>, <em>xticklabel='on'</em>, <em>yticklabel='auto'</em>, <em>direction='in'</em>, <em>label='both'</em>, <em>grid='both'</em>, <em>grid_linestyle=':'</em>, <em>grid_linewidth=0.5</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pypianoroll/plot.html#plot_pianoroll"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypianoroll.plot_pianoroll" title="Permalink to this definition">¶</a></dt>
 <dd><p>Plot a piano-roll given as a numpy array</p>
-<dl class="docutils">
-<dt>ax <span class="classifier-delimiter">:</span> <span class="classifier">matplotlib.axes.Axes object</span></dt>
-<dd>The <code class="xref py py-class docutils literal"><span class="pre">matplotlib.axes.Axes</span></code> object where the piano-roll will
-be plotted on.</dd>
-<dt>pianoroll <span class="classifier-delimiter">:</span> <span class="classifier">np.ndarray</span></dt>
-<dd>The piano-roll to be plotted. The values should be in [0, 1] when
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>ax</strong> (<em>matplotlib.axes.Axes object</em>) – The <code class="xref py py-class docutils literal"><span class="pre">matplotlib.axes.Axes</span></code> object where the piano-roll will
+be plotted on.</li>
+<li><strong>pianoroll</strong> (<em>np.ndarray</em>) – The piano-roll to be plotted. The values should be in [0, 1] when
 <cite>normalized</cite> is False.
 - For 2D array, shape=(num_time_step, num_pitch).
 - For 3D array, shape=(num_time_step, num_pitch, num_channel), where
-channels can be either RGB or RGBA.</dd>
-<dt>is_drum <span class="classifier-delimiter">:</span> <span class="classifier">bool</span></dt>
-<dd>Drum indicator. True for drums. False for other instruments. Default
-to False.</dd>
-<dt>beat_resolution <span class="classifier-delimiter">:</span> <span class="classifier">int</span></dt>
-<dd>Resolution of a beat (in time step). Required and only effective
-when <cite>xticklabel</cite> is ‘beat’.</dd>
-<dt>downbeats <span class="classifier-delimiter">:</span> <span class="classifier">list</span></dt>
-<dd>Indices of time steps that contain downbeats., i.e. the first time
-step of a bar.</dd>
-<dt>normalization <span class="classifier-delimiter">:</span> <span class="classifier">{‘standard’, ‘auto’, ‘none’}</span></dt>
-<dd>The normalization method to apply to the piano-roll. Default to
+channels can be either RGB or RGBA.</li>
+<li><strong>is_drum</strong> (<em>bool</em>) – Drum indicator. True for drums. False for other instruments. Default
+to False.</li>
+<li><strong>beat_resolution</strong> (<em>int</em>) – Resolution of a beat (in time step). Required and only effective
+when <cite>xticklabel</cite> is ‘beat’.</li>
+<li><strong>downbeats</strong> (<em>list</em>) – Indices of time steps that contain downbeats., i.e. the first time
+step of a bar.</li>
+<li><strong>normalization</strong> (<em>{'standard'</em><em>, </em><em>'auto'</em><em>, </em><em>'none'}</em>) – The normalization method to apply to the piano-roll. Default to
 ‘standard’. If <cite>pianoroll</cite> is binarized, use ‘none’ anyway.
 - For ‘standard’ normalization, the normalized values are given by
 N = P / 128, where P, N is the original and normalized piano-roll,
@@ -1192,47 +1190,39 @@ piano-roll, respectively, and M, m is the maximum and minimum of the
 original piano-roll, respectively.
 - If ‘none’, no normalization will be applied to the piano-roll. In
 this case, the values of <cite>pianoroll</cite> should be in [0, 1] in order to
-plot it correctly.</dd>
-<dt>preset <span class="classifier-delimiter">:</span> <span class="classifier">{‘default’, ‘plain’, ‘frame’}</span></dt>
-<dd>Preset themes for the plot.
+plot it correctly.</li>
+<li><strong>preset</strong> (<em>{'default'</em><em>, </em><em>'plain'</em><em>, </em><em>'frame'}</em>) – Preset themes for the plot.
 - In ‘default’ preset, the ticks, grid and labels are on.
 - In ‘frame’ preset, the ticks and grid are both off.
-- In ‘plain’ preset, the x- and y-axis are both off.</dd>
-<dt>cmap <span class="classifier-delimiter">:</span> <span class="classifier"><cite>matplotlib.colors.Colormap</cite></span></dt>
-<dd>Colormap to use in <code class="xref py py-func docutils literal"><span class="pre">matplotlib.pyplot.imshow()</span></code>. Default to
-‘Blues’. Only effective when <cite>pianoroll</cite> is 2D.</dd>
-<dt>tick_loc <span class="classifier-delimiter">:</span> <span class="classifier">tuple or list</span></dt>
-<dd>List of locations to put ticks. Availables elements are ‘bottom’,
-‘top’, ‘left’ and ‘right’. If None, default to (‘bottom’, ‘left’).</dd>
-<dt>xtick <span class="classifier-delimiter">:</span> <span class="classifier">{‘auto’, ‘beat’, ‘step’, ‘off’}</span></dt>
-<dd>Use beat number or step number as ticks along the x-axis, or
+- In ‘plain’ preset, the x- and y-axis are both off.</li>
+<li><strong>cmap</strong> (<cite>matplotlib.colors.Colormap</cite>) – Colormap to use in <code class="xref py py-func docutils literal"><span class="pre">matplotlib.pyplot.imshow()</span></code>. Default to
+‘Blues’. Only effective when <cite>pianoroll</cite> is 2D.</li>
+<li><strong>tick_loc</strong> (<em>tuple</em><em> or </em><em>list</em>) – List of locations to put ticks. Availables elements are ‘bottom’,
+‘top’, ‘left’ and ‘right’. If None, default to (‘bottom’, ‘left’).</li>
+<li><strong>xtick</strong> (<em>{'auto'</em><em>, </em><em>'beat'</em><em>, </em><em>'step'</em><em>, </em><em>'off'}</em>) – Use beat number or step number as ticks along the x-axis, or
 automatically set to ‘beat’ when <cite>beat_resolution</cite> is given and set
-to ‘step’, otherwise. Default to ‘auto’.</dd>
-<dt>ytick <span class="classifier-delimiter">:</span> <span class="classifier">{‘octave’, ‘pitch’, ‘off’}</span></dt>
-<dd>Use octave or pitch as ticks along the y-axis. Default to ‘octave’.</dd>
-<dt>xticklabel <span class="classifier-delimiter">:</span> <span class="classifier">{‘on’, ‘off’}</span></dt>
-<dd>Indicate whether to add tick labels along the x-axis. Only effective
-when <cite>xtick</cite> is not ‘off’.</dd>
-<dt>yticklabel <span class="classifier-delimiter">:</span> <span class="classifier">{‘auto’, ‘name’, ‘number’, ‘off’}</span></dt>
-<dd>If ‘name’, use octave name and pitch name (key name when <cite>is_drum</cite>
+to ‘step’, otherwise. Default to ‘auto’.</li>
+<li><strong>ytick</strong> (<em>{'octave'</em><em>, </em><em>'pitch'</em><em>, </em><em>'off'}</em>) – Use octave or pitch as ticks along the y-axis. Default to ‘octave’.</li>
+<li><strong>xticklabel</strong> (<em>{'on'</em><em>, </em><em>'off'}</em>) – Indicate whether to add tick labels along the x-axis. Only effective
+when <cite>xtick</cite> is not ‘off’.</li>
+<li><strong>yticklabel</strong> (<em>{'auto'</em><em>, </em><em>'name'</em><em>, </em><em>'number'</em><em>, </em><em>'off'}</em>) – If ‘name’, use octave name and pitch name (key name when <cite>is_drum</cite>
 is True) as tick labels along the y-axis. If ‘number’, use pitch
 number. If ‘auto’, set to ‘name’ when <cite>ytick</cite> is ‘octave’ and
 ‘number’ when <cite>ytick</cite> is ‘pitch’. Default to ‘auto’. Only effective
-when <cite>ytick</cite> is not ‘off’.</dd>
-<dt>direction <span class="classifier-delimiter">:</span> <span class="classifier">{‘in’, ‘out’, ‘inout’}</span></dt>
-<dd>Put ticks inside the axes, outside the axes, or both. Default to
-‘in’. Only effective when <cite>xtick</cite> and <cite>ytick</cite> are not both ‘off’.</dd>
-<dt>label <span class="classifier-delimiter">:</span> <span class="classifier">{‘x’, ‘y’, ‘both’, ‘off’}</span></dt>
-<dd>Add label to the x-axis, y-axis, both or neither. Default to ‘both’.</dd>
-<dt>grid <span class="classifier-delimiter">:</span> <span class="classifier">{‘x’, ‘y’, ‘both’, ‘off’}</span></dt>
-<dd>Add grid to the x-axis, y-axis, both or neither. Default to ‘both’.</dd>
-<dt>grid_linestyle <span class="classifier-delimiter">:</span> <span class="classifier">str</span></dt>
-<dd>Will be passed to <code class="xref py py-meth docutils literal"><span class="pre">matplotlib.axes.Axes.grid()</span></code> as ‘linestyle’
-argument.</dd>
-<dt>grid_linewidth <span class="classifier-delimiter">:</span> <span class="classifier">float</span></dt>
-<dd>Will be passed to <code class="xref py py-meth docutils literal"><span class="pre">matplotlib.axes.Axes.grid()</span></code> as ‘linewidth’
-argument.</dd>
-</dl>
+when <cite>ytick</cite> is not ‘off’.</li>
+<li><strong>direction</strong> (<em>{'in'</em><em>, </em><em>'out'</em><em>, </em><em>'inout'}</em>) – Put ticks inside the axes, outside the axes, or both. Default to
+‘in’. Only effective when <cite>xtick</cite> and <cite>ytick</cite> are not both ‘off’.</li>
+<li><strong>label</strong> (<em>{'x'</em><em>, </em><em>'y'</em><em>, </em><em>'both'</em><em>, </em><em>'off'}</em>) – Add label to the x-axis, y-axis, both or neither. Default to ‘both’.</li>
+<li><strong>grid</strong> (<em>{'x'</em><em>, </em><em>'y'</em><em>, </em><em>'both'</em><em>, </em><em>'off'}</em>) – Add grid to the x-axis, y-axis, both or neither. Default to ‘both’.</li>
+<li><strong>grid_linestyle</strong> (<em>str</em>) – Will be passed to <code class="xref py py-meth docutils literal"><span class="pre">matplotlib.axes.Axes.grid()</span></code> as ‘linestyle’
+argument.</li>
+<li><strong>grid_linewidth</strong> (<em>float</em>) – Will be passed to <code class="xref py py-meth docutils literal"><span class="pre">matplotlib.axes.Axes.grid()</span></code> as ‘linewidth’
+argument.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="function">
@@ -1350,7 +1340,7 @@ argument.</li>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'./',
-            VERSION:'0.0.1',
+            VERSION:'0.0.2',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,
