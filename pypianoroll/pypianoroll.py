@@ -69,6 +69,20 @@ def copy(obj):
     copied = deepcopy(obj)
     return copied
 
+def load(filepath):
+    """
+    Return a :class:`pypianoroll.Multitrack` object loaded from a .npz file.
+
+    Parameters
+    ----------
+    filepath : str
+        The file path to the .npz file.
+    """
+    if not filepath.endswith('.npz'):
+        raise ValueError("Only .npz files are supported")
+    multitrack = Multitrack(filepath)
+    return multitrack
+
 def pad(obj, pad_length):
     """
     Return a copy of the object with piano-roll padded with zeros at the end
@@ -96,6 +110,21 @@ def pad_to_same(obj):
     copied = deepcopy(obj)
     copied.pad_to_same()
     return copied
+
+def parse(filepath):
+    """
+    Return a :class:`pypianoroll.Multitrack` object loaded from a MIDI
+    (.mid, .midi, .MID, .MIDI) file.
+
+    Parameters
+    ----------
+    filepath : str
+        The file path to the MIDI file.
+    """
+    if not filepath.endswith(('.mid', '.midi', '.MID', '.MIDI')):
+        raise ValueError("Only MIDI files are supported")
+    multitrack = Multitrack(filepath)
+    return multitrack
 
 def plot(obj, **kwargs):
     """
