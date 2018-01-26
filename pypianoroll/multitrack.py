@@ -3,6 +3,7 @@
 """
 from __future__ import division
 import json
+import zipfile
 from copy import deepcopy
 import numpy as np
 import pretty_midi
@@ -34,13 +35,12 @@ class Multitrack(object):
         Name of the multi-track piano-roll.
 
     """
-    def __init__(self, filepath=None, filepath_json=None, tracks=None,
-                 tempo=120.0, downbeat=None, beat_resolution=24,
-                 name='unknown'):
+    def __init__(self, filepath=None, tracks=None, tempo=120.0, downbeat=None,
+                 beat_resolution=24, name='unknown'):
         """
         Initialize the object by one of the following ways:
         - parsing a MIDI file
-        - loading a .npz file and a JSON file
+        - loading a .npz file
         - assigning values for attributes
 
         Notes
@@ -53,9 +53,6 @@ class Multitrack(object):
         filepath : str
             File path to a MIDI file (.mid, .midi, .MID, .MIDI) to be parsed or
             a .npz file to be loaded.
-        filepath_json : str
-            File path to a JSON file to be loaded. Required and only effective
-            when `filepath` is a .npz file.
         beat_resolution : int
             Resolution of a beat (in time step). Will be assigned to
             `beat_resolution` when `filepath` is not provided. Default to 24.
@@ -85,10 +82,7 @@ class Multitrack(object):
                 self.name = name
                 self.parse_midi(filepath)
             elif filepath.endswith('.npz'):
-                if filepath_json is None:
-                    raise TypeError("`filepath_json` must be given when "
-                                    "`filepath` is a .npz file")
-                self.load(filepath, filepath_json)
+                self.load(filepath)
             else:
                 raise ValueError("Unsupported file type")
         else:
@@ -466,9 +460,10 @@ class Multitrack(object):
                 return False
         return True
 
-    def load(self, filepath_npz, filepath_json):
+    def load(self, filepath):
         """
-        Load a previously saved .npz file and JSON file.
+        Load a .npz file. Supports only files previously saved by
+        :meth:`pypianoroll.Multitrack.save`
 
         Notes
         -----
@@ -476,10 +471,8 @@ class Multitrack(object):
 
         Parameters
         ----------
-        filepath_npz : str
+        filepath : str
             The path to the .npz file.
-        filepath_json : str
-            The path to the JSON file.
 
         """
         def reconstruct_sparse(target_dict, name):
@@ -493,13 +486,13 @@ class Multitrack(object):
                                target_dict[name+'_csc_indptr']),
                               shape=target_dict[name+'_csc_shape']).toarray()
 
-        with open(filepath_json) as infile:
-            info_dict = json.load(infile)
+        with np.load(filepath) as loaded:
+            if 'info.json' not in loaded:
+                raise ValueError("Cannot find 'info.json' in the .npz file")
+            info_dict = json.loads(loaded['info.json'])
+            self.name = str(info_dict['name'])
+            self.beat_resolution = info_dict['beat_resolution']
 
-        self.name = str(info_dict['name'])
-        self.beat_resolution = info_dict['beat_resolution']
-
-        with np.load(filepath_npz) as loaded:
             self.tempo = loaded['tempo']
             if 'downbeat' in loaded.files:
                 self.downbeat = loaded['downbeat']
@@ -1119,23 +1112,21 @@ class Multitrack(object):
         self.tracks = [track for idx, track in enumerate(self.tracks)
                        if idx not in track_indices]
 
-    def save(self, filepath_npz, filepath_json, compressed=True):
+    def save(self, filepath, compressed=True):
         """
-        Save numpy arrays to a (compressed) .npz file and other information to a
-        JSON file.
+        Save to a (compressed) .npz file, which can be later loaded by
+        :meth:`pypianoroll.Multitrack.load`
 
         Notes
         -----
         - To reduce the file size, the collected piano-rolls are first converted
-          to instances of scipy.sparse.csc_matrix, whose component arrays are
-          then collected and saved to the .npz file.
+        to instances of scipy.sparse.csc_matrix, whose component arrays are
+        then collected and saved to the .npz file.
 
         Parameters
         ----------
-        filepath_npz : str
+        filepath : str
             The path to write the .npz file.
-        filepath_json : str
-            The path to write the JSON file.
         compressed : bool
             True to save to a compressed .npz file. False to save to a
             uncompressed .npz file. Default to True.
@@ -1169,15 +1160,16 @@ class Multitrack(object):
                                    'is_drum': track.is_drum,
                                    'name': track.name}
 
-        if not filepath_npz.endswith('.npz'):
-            filepath_npz += '.npz'
+        if not filepath.endswith('.npz'):
+            filepath += '.npz'
         if compressed:
-            np.savez_compressed(filepath_npz, **array_dict)
+            np.savez_compressed(filepath, **array_dict)
         else:
-            np.savez(filepath_npz, **array_dict)
+            np.savez(filepath, **array_dict)
 
-        with open(filepath_json, 'w') as outfile:
-            json.dump(info_dict, outfile)
+        compression = zipfile.ZIP_DEFLATED if compressed else zipfile.ZIP_STORED
+        with zipfile.ZipFile(filepath, 'a') as zip_file:
+            zip_file.writestr('info.json', json.dumps(info_dict), compression)
 
     def to_pretty_midi(self, constant_tempo=None):
         """
