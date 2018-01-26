@@ -1,4 +1,4 @@
-from distutils.core import setup
+from setuptools import setup
 from codecs import open
 from os import path
 
@@ -11,14 +11,14 @@ execfile('pypianoroll/version.py')
 setup(
     name='pypianoroll',
     packages=['pypianoroll'],
-    version='0.0.1',
+    version='0.0.2',
     description='A python package for handling multi-track piano-rolls.',
     long_description=long_description,
     author='Hao-Wen Dong',
     author_email='salu133445@gmail.com',
     url='https://github.com/salu133445/pypianoroll',
     download_url='https://github.com/salu133445/pypianoroll/archive/'
-                 '0.0.1.tar.gz',
+                 '0.0.2.tar.gz',
     keywords=['music', 'audio', 'piano-roll', 'multi-track'],
     classifiers=[
         'Development Status :: 3 - Alpha',
