@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Python Module Index &mdash; pypianoroll 0.1.0 documentation</title>
+  <title>Parse &amp; Write &mdash; pypianoroll 0.1.0 documentation</title>
   
 
   
@@ -36,13 +36,8 @@
               href="genindex.html"/>
         <link rel="search" title="Search" href="search.html"/>
     <link rel="top" title="pypianoroll 0.1.0 documentation" href="index.html"/>
- 
-
-    <script type="text/javascript">
-      DOCUMENTATION_OPTIONS.COLLAPSE_INDEX = true;
-    </script>
-
-
+        <link rel="next" title="Visualization" href="visualization.html"/>
+        <link rel="prev" title="Save &amp; Load" href="save_load.html"/> 
 
   
   <script src="_static/js/modernizr.min.js"></script>
@@ -95,10 +90,10 @@
               
             
             
-              <ul>
+              <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="getting_started.html">Getting Started</a></li>
 <li class="toctree-l1"><a class="reference internal" href="save_load.html">Save &amp; Load</a></li>
-<li class="toctree-l1"><a class="reference internal" href="parse_write.html">Parse &amp; Write</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Parse &amp; Write</a></li>
 <li class="toctree-l1"><a class="reference internal" href="visualization.html">Visualization</a></li>
 <li class="toctree-l1"><a class="reference internal" href="utilities.html">Utilities</a></li>
 <li class="toctree-l1"><a class="reference internal" href="track.html">Single-track Piano-roll</a></li>
@@ -147,7 +142,7 @@
     
       <li><a href="index.html">Docs</a> &raquo;</li>
         
-      <li>Python Module Index</li>
+      <li>Parse &amp; Write</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -164,23 +159,48 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
+  <div class="section" id="parse-write">
+<span id="id1"></span><h1>Parse &amp; Write<a class="headerlink" href="#parse-write" title="Permalink to this headline">¶</a></h1>
+<p>Pypianoroll currently supports parsing from and writing to MIDI files. Supports
+for MusicXML and ABC format are in the plan.</p>
+<div class="section" id="related-functions">
+<h2>Related Functions<a class="headerlink" href="#related-functions" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="pypianoroll.parse">
+<code class="descclassname">pypianoroll.</code><code class="descname">parse</code><span class="sig-paren">(</span><em>filepath</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pypianoroll/utilities.html#parse"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypianoroll.parse" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a <a class="reference internal" href="multitrack.html#pypianoroll.Multitrack" title="pypianoroll.Multitrack"><code class="xref py py-class docutils literal"><span class="pre">pypianoroll.Multitrack</span></code></a> object loaded from a MIDI
+(.mid, .midi, .MID, .MIDI) file.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>filepath</strong> (<em>str</em>) – The file path to the MIDI file.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
 
-   <h1>Python Module Index</h1>
+<dl class="function">
+<dt id="pypianoroll.write">
+<code class="descclassname">pypianoroll.</code><code class="descname">write</code><span class="sig-paren">(</span><em>obj</em>, <em>filepath</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pypianoroll/utilities.html#write"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypianoroll.write" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write the object to a MIDI file.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>filepath</strong> (<em>str</em>) – The path to write the MIDI file.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
 
-   <div class="modindex-jumpbox">
-   <a href="#cap-p"><strong>p</strong></a>
-   </div>
-
-   <table class="indextable modindextable">
-     <tr class="pcap"><td></td><td>&#160;</td><td></td></tr>
-     <tr class="cap" id="cap-p"><td></td><td>
-       <strong>p</strong></td><td></td></tr>
-     <tr>
-       <td></td>
-       <td>
-       <a href="index.html#module-pypianoroll"><code class="xref">pypianoroll</code></a></td><td>
-       <em></em></td></tr>
-   </table>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Writing the tempo array and down beat array to tempo change and time
+signature change events are not supported yet.</p>
+</div>
+</div>
+</div>
 
 
            </div>
@@ -189,6 +209,15 @@
            </div>
           </div>
           <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="visualization.html" class="btn btn-neutral float-right" title="Visualization" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="save_load.html" class="btn btn-neutral" title="Save &amp; Load" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
   
 
   <hr/>

@@ -1,0 +1,410 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Visualization &mdash; pypianoroll 0.1.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="genindex.html"/>
+        <link rel="search" title="Search" href="search.html"/>
+    <link rel="top" title="pypianoroll 0.1.0 documentation" href="index.html"/>
+        <link rel="next" title="Utilities" href="utilities.html"/>
+        <link rel="prev" title="Parse &amp; Write" href="parse_write.html"/> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> pypianoroll
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="getting_started.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="save_load.html">Save &amp; Load</a></li>
+<li class="toctree-l1"><a class="reference internal" href="parse_write.html">Parse &amp; Write</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Visualization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="utilities.html">Utilities</a></li>
+<li class="toctree-l1"><a class="reference internal" href="track.html">Single-track Piano-roll</a></li>
+<li class="toctree-l1"><a class="reference internal" href="multitrack.html">Multi-track Piano-roll</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">pypianoroll</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>Visualization</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="visualization">
+<h1>Visualization<a class="headerlink" href="#visualization" title="Permalink to this headline">¶</a></h1>
+<p>Pypianoroll provides utilities for visualizing multi-track piano-rolls and
+creating piano-roll animations.</p>
+<p>Here are some examples.</p>
+<a class="reference internal image-reference" href="_images/multi-track.png"><img alt="_images/multi-track.png" class="align-center" src="_images/multi-track.png" style="width: 60%;" /></a>
+<a class="reference internal image-reference" href="_images/visualization_step_pitch.png"><img alt="_images/visualization_step_pitch.png" class="align-center" src="_images/visualization_step_pitch.png" style="width: 60%;" /></a>
+<a class="reference internal image-reference" href="_images/visualization_beat_octave.png"><img alt="_images/visualization_beat_octave.png" class="align-center" src="_images/visualization_beat_octave.png" style="width: 60%;" /></a>
+<div class="section" id="related-functions">
+<h2>Related Functions<a class="headerlink" href="#related-functions" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="pypianoroll.plot_pianoroll">
+<code class="descclassname">pypianoroll.</code><code class="descname">plot_pianoroll</code><span class="sig-paren">(</span><em>ax</em>, <em>pianoroll</em>, <em>is_drum=False</em>, <em>beat_resolution=None</em>, <em>downbeats=None</em>, <em>normalization='standard'</em>, <em>preset='default'</em>, <em>cmap='Blues'</em>, <em>tick_loc=None</em>, <em>xtick='auto'</em>, <em>ytick='octave'</em>, <em>xticklabel='on'</em>, <em>yticklabel='auto'</em>, <em>direction='in'</em>, <em>label='both'</em>, <em>grid='both'</em>, <em>grid_linestyle=':'</em>, <em>grid_linewidth=0.5</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pypianoroll/plot.html#plot_pianoroll"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypianoroll.plot_pianoroll" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plot a piano-roll given as a numpy array</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>ax</strong> (<em>matplotlib.axes.Axes object</em>) – The <code class="xref py py-class docutils literal"><span class="pre">matplotlib.axes.Axes</span></code> object where the piano-roll will
+be plotted on.</li>
+<li><strong>pianoroll</strong> (<em>np.ndarray</em>) – <p>The piano-roll to be plotted. The values should be in [0, 1] when
+<cite>normalized</cite> is False.</p>
+<ul>
+<li>For 2D array, shape=(num_time_step, num_pitch).</li>
+<li>For 3D array, shape=(num_time_step, num_pitch, num_channel), where
+channels can be either RGB or RGBA.</li>
+</ul>
+</li>
+<li><strong>is_drum</strong> (<em>bool</em>) – Drum indicator. True for drums. False for other instruments. Default
+to False.</li>
+<li><strong>beat_resolution</strong> (<em>int</em>) – Resolution of a beat (in time step). Required and only effective
+when <cite>xticklabel</cite> is ‘beat’.</li>
+<li><strong>downbeats</strong> (<em>list</em>) – Indices of time steps that contain downbeats., i.e. the first time
+step of a bar.</li>
+<li><strong>normalization</strong> (<em>{'standard'</em><em>, </em><em>'auto'</em><em>, </em><em>'none'}</em>) – <p>The normalization method to apply to the piano-roll. Default to
+‘standard’. If <cite>pianoroll</cite> is binarized, use ‘none’ anyway.</p>
+<ul>
+<li>For ‘standard’ normalization, the normalized values are given by
+N = P / 128, where P, N is the original and normalized piano-roll,
+respectively</li>
+<li>For ‘auto’ normalization, the normalized values are given by
+N = (P - m) / (M - m), where P, N is the original and normalized
+piano-roll, respectively, and M, m is the maximum and minimum of
+the original piano-roll, respectively.</li>
+<li>If ‘none’, no normalization will be applied to the piano-roll. In
+this case, the values of <cite>pianoroll</cite> should be in [0, 1] in order
+to plot it correctly.</li>
+</ul>
+</li>
+<li><strong>preset</strong> (<em>{'default'</em><em>, </em><em>'plain'</em><em>, </em><em>'frame'}</em>) – <p>Preset themes for the plot.</p>
+<ul>
+<li>In ‘default’ preset, the ticks, grid and labels are on.</li>
+<li>In ‘frame’ preset, the ticks and grid are both off.</li>
+<li>In ‘plain’ preset, the x- and y-axis are both off.</li>
+</ul>
+</li>
+<li><strong>cmap</strong> (<cite>matplotlib.colors.Colormap</cite>) – Colormap to use in <code class="xref py py-func docutils literal"><span class="pre">matplotlib.pyplot.imshow()</span></code>. Default to
+‘Blues’. Only effective when <cite>pianoroll</cite> is 2D.</li>
+<li><strong>tick_loc</strong> (<em>tuple</em><em> or </em><em>list</em>) – List of locations to put ticks. Availables elements are ‘bottom’,
+‘top’, ‘left’ and ‘right’. If None, default to (‘bottom’, ‘left’).</li>
+<li><strong>xtick</strong> (<em>{'auto'</em><em>, </em><em>'beat'</em><em>, </em><em>'step'</em><em>, </em><em>'off'}</em>) – Use beat number or step number as ticks along the x-axis, or
+automatically set to ‘beat’ when <cite>beat_resolution</cite> is given and set
+to ‘step’, otherwise. Default to ‘auto’.</li>
+<li><strong>ytick</strong> (<em>{'octave'</em><em>, </em><em>'pitch'</em><em>, </em><em>'off'}</em>) – Use octave or pitch as ticks along the y-axis. Default to ‘octave’.</li>
+<li><strong>xticklabel</strong> (<em>{'on'</em><em>, </em><em>'off'}</em>) – Indicate whether to add tick labels along the x-axis. Only effective
+when <cite>xtick</cite> is not ‘off’.</li>
+<li><strong>yticklabel</strong> (<em>{'auto'</em><em>, </em><em>'name'</em><em>, </em><em>'number'</em><em>, </em><em>'off'}</em>) – If ‘name’, use octave name and pitch name (key name when <cite>is_drum</cite>
+is True) as tick labels along the y-axis. If ‘number’, use pitch
+number. If ‘auto’, set to ‘name’ when <cite>ytick</cite> is ‘octave’ and
+‘number’ when <cite>ytick</cite> is ‘pitch’. Default to ‘auto’. Only effective
+when <cite>ytick</cite> is not ‘off’.</li>
+<li><strong>direction</strong> (<em>{'in'</em><em>, </em><em>'out'</em><em>, </em><em>'inout'}</em>) – Put ticks inside the axes, outside the axes, or both. Default to
+‘in’. Only effective when <cite>xtick</cite> and <cite>ytick</cite> are not both ‘off’.</li>
+<li><strong>label</strong> (<em>{'x'</em><em>, </em><em>'y'</em><em>, </em><em>'both'</em><em>, </em><em>'off'}</em>) – Add label to the x-axis, y-axis, both or neither. Default to ‘both’.</li>
+<li><strong>grid</strong> (<em>{'x'</em><em>, </em><em>'y'</em><em>, </em><em>'both'</em><em>, </em><em>'off'}</em>) – Add grid to the x-axis, y-axis, both or neither. Default to ‘both’.</li>
+<li><strong>grid_linestyle</strong> (<em>str</em>) – Will be passed to <code class="xref py py-meth docutils literal"><span class="pre">matplotlib.axes.Axes.grid()</span></code> as ‘linestyle’
+argument.</li>
+<li><strong>grid_linewidth</strong> (<em>float</em>) – Will be passed to <code class="xref py py-meth docutils literal"><span class="pre">matplotlib.axes.Axes.grid()</span></code> as ‘linewidth’
+argument.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="pypianoroll.plot">
+<code class="descclassname">pypianoroll.</code><code class="descname">plot</code><span class="sig-paren">(</span><em>obj</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pypianoroll/utilities.html#plot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypianoroll.plot" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plot the object. See <a class="reference internal" href="multitrack.html#pypianoroll.Multitrack.plot" title="pypianoroll.Multitrack.plot"><code class="xref py py-func docutils literal"><span class="pre">pypianoroll.Multitrack.plot()</span></code></a> and
+<a class="reference internal" href="track.html#pypianoroll.Track.plot" title="pypianoroll.Track.plot"><code class="xref py py-func docutils literal"><span class="pre">pypianoroll.Track.plot()</span></code></a> for full documentation.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="pypianoroll.save_animation">
+<code class="descclassname">pypianoroll.</code><code class="descname">save_animation</code><span class="sig-paren">(</span><em>filepath</em>, <em>pianoroll</em>, <em>window</em>, <em>hop=1</em>, <em>fps=None</em>, <em>is_drum=False</em>, <em>beat_resolution=None</em>, <em>downbeats=None</em>, <em>normalization='standard'</em>, <em>preset='default'</em>, <em>cmap='Blues'</em>, <em>tick_loc=None</em>, <em>xtick='auto'</em>, <em>ytick='octave'</em>, <em>xticklabel='on'</em>, <em>yticklabel='auto'</em>, <em>direction='in'</em>, <em>label='both'</em>, <em>grid='both'</em>, <em>grid_linestyle=':'</em>, <em>grid_linewidth=0.5</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pypianoroll/plot.html#save_animation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypianoroll.save_animation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Save a piano-roll to an animation in video or GIF format.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>filepath</strong> (<em>str</em>) – Path to save the video file.</li>
+<li><strong>pianoroll</strong> (<em>np.ndarray</em>) – <p>The piano-roll to be plotted. The values should be in [0, 1] when
+<cite>normalized</cite> is False.</p>
+<ul>
+<li>For 2D array, shape=(num_time_step, num_pitch).</li>
+<li>For 3D array, shape=(num_time_step, num_pitch, num_channel), where
+channels can be either RGB or RGBA.</li>
+</ul>
+</li>
+<li><strong>window</strong> (<em>int</em>) – Window size to be applied to <cite>pianoroll</cite> for the animation.</li>
+<li><strong>hop</strong> (<em>int</em>) – Hop size to be applied to <cite>pianoroll</cite> for the animation.</li>
+<li><strong>fps</strong> (<em>int</em>) – Number of frames per second in the resulting video or GIF file.</li>
+<li><strong>is_drum</strong> (<em>bool</em>) – Drum indicator. True for drums. False for other instruments. Default
+to False.</li>
+<li><strong>beat_resolution</strong> (<em>int</em>) – Resolution of a beat (in time step). Required and only effective
+when <cite>xticklabel</cite> is ‘beat’.</li>
+<li><strong>downbeats</strong> (<em>list</em>) – Indices of time steps that contain downbeats., i.e. the first time
+step of a bar.</li>
+<li><strong>normalization</strong> (<em>{'standard'</em><em>, </em><em>'auto'</em><em>, </em><em>'none'}</em>) – <p>The normalization method to apply to the piano-roll. Default to
+‘standard’. If <cite>pianoroll</cite> is binarized, use ‘none’ anyway.</p>
+<ul>
+<li>For ‘standard’ normalization, the normalized values are given by
+N = P / 128, where P, N is the original and normalized piano-roll,
+respectively</li>
+<li>For ‘auto’ normalization, the normalized values are given by
+N = (P - m) / (M - m), where P, N is the original and normalized
+piano-roll, respectively, and M, m is the maximum and minimum of the
+original piano-roll, respectively.</li>
+<li>If ‘none’, no normalization will be applied to the piano-roll. In
+this case, the values of <cite>pianoroll</cite> should be in [0, 1] in order to
+plot it correctly.</li>
+</ul>
+</li>
+<li><strong>preset</strong> (<em>{'default'</em><em>, </em><em>'plain'</em><em>, </em><em>'frame'}</em>) – <p>Preset themes for the plot.</p>
+<ul>
+<li>In ‘default’ preset, the ticks, grid and labels are on.</li>
+<li>In ‘frame’ preset, the ticks and grid are both off.</li>
+<li>In ‘plain’ preset, the x- and y-axis are both off.</li>
+</ul>
+</li>
+<li><strong>cmap</strong> (<cite>matplotlib.colors.Colormap</cite>) – Colormap to use in <code class="xref py py-func docutils literal"><span class="pre">matplotlib.pyplot.imshow()</span></code>. Default to
+‘Blues’. Only effective when <cite>pianoroll</cite> is 2D.</li>
+<li><strong>tick_loc</strong> (<em>tuple</em><em> or </em><em>list</em>) – List of locations to put ticks. Availables elements are ‘bottom’,
+‘top’, ‘left’ and ‘right’. If None, default to (‘bottom’, ‘left’).</li>
+<li><strong>xtick</strong> (<em>{'auto'</em><em>, </em><em>'beat'</em><em>, </em><em>'step'</em><em>, </em><em>'off'}</em>) – Use beat number or step number as ticks along the x-axis, or
+automatically set to ‘beat’ when <cite>beat_resolution</cite> is given and set
+to ‘step’, otherwise. Default to ‘auto’.</li>
+<li><strong>ytick</strong> (<em>{'octave'</em><em>, </em><em>'pitch'</em><em>, </em><em>'off'}</em>) – Use octave or pitch as ticks along the y-axis. Default to ‘octave’.</li>
+<li><strong>xticklabel</strong> (<em>{'on'</em><em>, </em><em>'off'}</em>) – Indicate whether to add tick labels along the x-axis. Only effective
+when <cite>xtick</cite> is not ‘off’.</li>
+<li><strong>yticklabel</strong> (<em>{'auto'</em><em>, </em><em>'name'</em><em>, </em><em>'number'</em><em>, </em><em>'off'}</em>) – If ‘name’, use octave name and pitch name (key name when <cite>is_drum</cite>
+is True) as tick labels along the y-axis. If ‘number’, use pitch
+number. If ‘auto’, set to ‘name’ when <cite>ytick</cite> is ‘octave’ and
+‘number’ when <cite>ytick</cite> is ‘pitch’. Default to ‘auto’. Only effective
+when <cite>ytick</cite> is not ‘off’.</li>
+<li><strong>direction</strong> (<em>{'in'</em><em>, </em><em>'out'</em><em>, </em><em>'inout'}</em>) – Put ticks inside the axes, outside the axes, or both. Default to
+‘in’. Only effective when <cite>xtick</cite> and <cite>ytick</cite> are not both ‘off’.</li>
+<li><strong>label</strong> (<em>{'x'</em><em>, </em><em>'y'</em><em>, </em><em>'both'</em><em>, </em><em>'off'}</em>) – Add label to the x-axis, y-axis, both or neither. Default to ‘both’.</li>
+<li><strong>grid</strong> (<em>{'x'</em><em>, </em><em>'y'</em><em>, </em><em>'both'</em><em>, </em><em>'off'}</em>) – Add grid to the x-axis, y-axis, both or neither. Default to ‘both’.</li>
+<li><strong>grid_linestyle</strong> (<em>str</em>) – Will be passed to <code class="xref py py-meth docutils literal"><span class="pre">matplotlib.axes.Axes.grid()</span></code> as ‘linestyle’
+argument.</li>
+<li><strong>grid_linewidth</strong> (<em>float</em>) – Will be passed to <code class="xref py py-meth docutils literal"><span class="pre">matplotlib.axes.Axes.grid()</span></code> as ‘linewidth’
+argument.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+</div>
+
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="utilities.html" class="btn btn-neutral float-right" title="Utilities" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="parse_write.html" class="btn btn-neutral" title="Parse &amp; Write" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, Hao-Wen Dong.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'0.1.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

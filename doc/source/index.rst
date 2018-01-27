@@ -1,23 +1,14 @@
-.. automodule:: pypianoroll
-   :members:
+.. include:: ../../README.rst
 
-Multi-track Piano-roll
-======================
-.. autoclass:: Multitrack
-   :members:
+Documentation
+=============
+.. toctree::
+    :titlesonly:
 
-Single-track Piano-roll
-=======================
-.. autoclass:: Track
-   :members:
-
-Visualization Utilities
-=======================
-.. autofunction :: plot_pianoroll
-.. autofunction :: save_animation
-
-Indices and tables
-==================
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
+    getting_started
+    save_load
+    parse_write
+    visualization
+    utilities
+    track
+    multitrack

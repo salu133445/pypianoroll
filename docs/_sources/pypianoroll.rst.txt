@@ -1,0 +1,14 @@
+Utilities
+=========
+
+The followings are utilities for handling both single-track and multi-track
+piano-rolls.
+
+.. autofunction :: is_pianoroll
+.. autofunction :: binarize
+.. autofunction :: clip
+.. autofunction :: copy
+.. autofunction :: pad
+.. autofunction :: pad_to_same
+.. autofunction :: transpose
+.. autofunction :: trim_trailing_silence

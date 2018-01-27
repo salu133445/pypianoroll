@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>pypianoroll.plot &mdash; pypianoroll 0.0.2 documentation</title>
+  <title>pypianoroll.plot &mdash; pypianoroll 0.1.0 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="index" title="Index"
               href="../../genindex.html"/>
         <link rel="search" title="Search" href="../../search.html"/>
-    <link rel="top" title="pypianoroll 0.0.2 documentation" href="../../index.html"/>
+    <link rel="top" title="pypianoroll 0.1.0 documentation" href="../../index.html"/>
         <link rel="up" title="Module code" href="../index.html"/> 
 
   
@@ -65,7 +65,7 @@
             
             
               <div class="version">
-                0.0.2
+                0.1.0
               </div>
             
           
@@ -89,8 +89,16 @@
               
             
             
-              <!-- Local TOC -->
-              <div class="local-toc"></div>
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../getting_started.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../save_load.html">Save &amp; Load</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../parse_write.html">Parse &amp; Write</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../visualization.html">Visualization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../utilities.html">Utilities</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../track.html">Single-track Piano-roll</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../multitrack.html">Multi-track Piano-roll</a></li>
+</ul>
+
             
           
         </div>
@@ -162,7 +170,7 @@
 <span class="kn">from</span> <span class="nn">moviepy.editor</span> <span class="k">import</span> <span class="n">VideoClip</span>
 <span class="kn">from</span> <span class="nn">moviepy.video.io.bindings</span> <span class="k">import</span> <span class="n">mplfig_to_npimage</span>
 
-<div class="viewcode-block" id="plot_pianoroll"><a class="viewcode-back" href="../../index.html#pypianoroll.plot_pianoroll">[docs]</a><span class="k">def</span> <span class="nf">plot_pianoroll</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">pianoroll</span><span class="p">,</span> <span class="n">is_drum</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">beat_resolution</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+<div class="viewcode-block" id="plot_pianoroll"><a class="viewcode-back" href="../../visualization.html#pypianoroll.plot_pianoroll">[docs]</a><span class="k">def</span> <span class="nf">plot_pianoroll</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">pianoroll</span><span class="p">,</span> <span class="n">is_drum</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">beat_resolution</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                    <span class="n">downbeats</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">normalization</span><span class="o">=</span><span class="s1">&#39;standard&#39;</span><span class="p">,</span> <span class="n">preset</span><span class="o">=</span><span class="s1">&#39;default&#39;</span><span class="p">,</span>
                    <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;Blues&#39;</span><span class="p">,</span> <span class="n">tick_loc</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">xtick</span><span class="o">=</span><span class="s1">&#39;auto&#39;</span><span class="p">,</span> <span class="n">ytick</span><span class="o">=</span><span class="s1">&#39;octave&#39;</span><span class="p">,</span>
                    <span class="n">xticklabel</span><span class="o">=</span><span class="s1">&#39;on&#39;</span><span class="p">,</span> <span class="n">yticklabel</span><span class="o">=</span><span class="s1">&#39;auto&#39;</span><span class="p">,</span> <span class="n">direction</span><span class="o">=</span><span class="s1">&#39;in&#39;</span><span class="p">,</span>
@@ -179,9 +187,11 @@
 <span class="sd">    pianoroll : np.ndarray</span>
 <span class="sd">        The piano-roll to be plotted. The values should be in [0, 1] when</span>
 <span class="sd">        `normalized` is False.</span>
+
 <span class="sd">        - For 2D array, shape=(num_time_step, num_pitch).</span>
 <span class="sd">        - For 3D array, shape=(num_time_step, num_pitch, num_channel), where</span>
-<span class="sd">        channels can be either RGB or RGBA.</span>
+<span class="sd">          channels can be either RGB or RGBA.</span>
+
 <span class="sd">    is_drum : bool</span>
 <span class="sd">        Drum indicator. True for drums. False for other instruments. Default</span>
 <span class="sd">        to False.</span>
@@ -194,21 +204,25 @@
 <span class="sd">    normalization : {&#39;standard&#39;, &#39;auto&#39;, &#39;none&#39;}</span>
 <span class="sd">        The normalization method to apply to the piano-roll. Default to</span>
 <span class="sd">        &#39;standard&#39;. If `pianoroll` is binarized, use &#39;none&#39; anyway.</span>
+
 <span class="sd">        - For &#39;standard&#39; normalization, the normalized values are given by</span>
-<span class="sd">        N = P / 128, where P, N is the original and normalized piano-roll,</span>
-<span class="sd">        respectively</span>
+<span class="sd">          N = P / 128, where P, N is the original and normalized piano-roll,</span>
+<span class="sd">          respectively</span>
 <span class="sd">        - For &#39;auto&#39; normalization, the normalized values are given by</span>
-<span class="sd">        N = (P - m) / (M - m), where P, N is the original and normalized</span>
-<span class="sd">        piano-roll, respectively, and M, m is the maximum and minimum of the</span>
-<span class="sd">        original piano-roll, respectively.</span>
+<span class="sd">          N = (P - m) / (M - m), where P, N is the original and normalized</span>
+<span class="sd">          piano-roll, respectively, and M, m is the maximum and minimum of</span>
+<span class="sd">          the original piano-roll, respectively.</span>
 <span class="sd">        - If &#39;none&#39;, no normalization will be applied to the piano-roll. In</span>
-<span class="sd">        this case, the values of `pianoroll` should be in [0, 1] in order to</span>
-<span class="sd">        plot it correctly.</span>
+<span class="sd">          this case, the values of `pianoroll` should be in [0, 1] in order</span>
+<span class="sd">          to plot it correctly.</span>
+
 <span class="sd">    preset : {&#39;default&#39;, &#39;plain&#39;, &#39;frame&#39;}</span>
 <span class="sd">        Preset themes for the plot.</span>
+
 <span class="sd">        - In &#39;default&#39; preset, the ticks, grid and labels are on.</span>
 <span class="sd">        - In &#39;frame&#39; preset, the ticks and grid are both off.</span>
 <span class="sd">        - In &#39;plain&#39; preset, the x- and y-axis are both off.</span>
+
 <span class="sd">    cmap :  `matplotlib.colors.Colormap`</span>
 <span class="sd">        Colormap to use in :func:`matplotlib.pyplot.imshow`. Default to</span>
 <span class="sd">        &#39;Blues&#39;. Only effective when `pianoroll` is 2D.</span>
@@ -357,7 +371,7 @@
         <span class="k">for</span> <span class="n">step</span> <span class="ow">in</span> <span class="n">downbeats</span><span class="p">:</span>
             <span class="n">ax</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">step</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="save_animation"><a class="viewcode-back" href="../../index.html#pypianoroll.save_animation">[docs]</a><span class="k">def</span> <span class="nf">save_animation</span><span class="p">(</span><span class="n">filepath</span><span class="p">,</span> <span class="n">pianoroll</span><span class="p">,</span> <span class="n">window</span><span class="p">,</span> <span class="n">hop</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">fps</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">is_drum</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+<div class="viewcode-block" id="save_animation"><a class="viewcode-back" href="../../visualization.html#pypianoroll.save_animation">[docs]</a><span class="k">def</span> <span class="nf">save_animation</span><span class="p">(</span><span class="n">filepath</span><span class="p">,</span> <span class="n">pianoroll</span><span class="p">,</span> <span class="n">window</span><span class="p">,</span> <span class="n">hop</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">fps</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">is_drum</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
                    <span class="n">beat_resolution</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">downbeats</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                    <span class="n">normalization</span><span class="o">=</span><span class="s1">&#39;standard&#39;</span><span class="p">,</span> <span class="n">preset</span><span class="o">=</span><span class="s1">&#39;default&#39;</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;Blues&#39;</span><span class="p">,</span>
                    <span class="n">tick_loc</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">xtick</span><span class="o">=</span><span class="s1">&#39;auto&#39;</span><span class="p">,</span> <span class="n">ytick</span><span class="o">=</span><span class="s1">&#39;octave&#39;</span><span class="p">,</span> <span class="n">xticklabel</span><span class="o">=</span><span class="s1">&#39;on&#39;</span><span class="p">,</span>
@@ -373,9 +387,11 @@
 <span class="sd">    pianoroll : np.ndarray</span>
 <span class="sd">        The piano-roll to be plotted. The values should be in [0, 1] when</span>
 <span class="sd">        `normalized` is False.</span>
+
 <span class="sd">        - For 2D array, shape=(num_time_step, num_pitch).</span>
 <span class="sd">        - For 3D array, shape=(num_time_step, num_pitch, num_channel), where</span>
-<span class="sd">        channels can be either RGB or RGBA.</span>
+<span class="sd">          channels can be either RGB or RGBA.</span>
+
 <span class="sd">    window : int</span>
 <span class="sd">        Window size to be applied to `pianoroll` for the animation.</span>
 <span class="sd">    hop : int</span>
@@ -394,21 +410,25 @@
 <span class="sd">    normalization : {&#39;standard&#39;, &#39;auto&#39;, &#39;none&#39;}</span>
 <span class="sd">        The normalization method to apply to the piano-roll. Default to</span>
 <span class="sd">        &#39;standard&#39;. If `pianoroll` is binarized, use &#39;none&#39; anyway.</span>
+
 <span class="sd">        - For &#39;standard&#39; normalization, the normalized values are given by</span>
-<span class="sd">        N = P / 128, where P, N is the original and normalized piano-roll,</span>
-<span class="sd">        respectively</span>
+<span class="sd">          N = P / 128, where P, N is the original and normalized piano-roll,</span>
+<span class="sd">          respectively</span>
 <span class="sd">        - For &#39;auto&#39; normalization, the normalized values are given by</span>
-<span class="sd">        N = (P - m) / (M - m), where P, N is the original and normalized</span>
-<span class="sd">        piano-roll, respectively, and M, m is the maximum and minimum of the</span>
-<span class="sd">        original piano-roll, respectively.</span>
+<span class="sd">          N = (P - m) / (M - m), where P, N is the original and normalized</span>
+<span class="sd">          piano-roll, respectively, and M, m is the maximum and minimum of the</span>
+<span class="sd">          original piano-roll, respectively.</span>
 <span class="sd">        - If &#39;none&#39;, no normalization will be applied to the piano-roll. In</span>
-<span class="sd">        this case, the values of `pianoroll` should be in [0, 1] in order to</span>
-<span class="sd">        plot it correctly.</span>
+<span class="sd">          this case, the values of `pianoroll` should be in [0, 1] in order to</span>
+<span class="sd">          plot it correctly.</span>
+
 <span class="sd">    preset : {&#39;default&#39;, &#39;plain&#39;, &#39;frame&#39;}</span>
 <span class="sd">        Preset themes for the plot.</span>
+
 <span class="sd">        - In &#39;default&#39; preset, the ticks, grid and labels are on.</span>
 <span class="sd">        - In &#39;frame&#39; preset, the ticks and grid are both off.</span>
 <span class="sd">        - In &#39;plain&#39; preset, the x- and y-axis are both off.</span>
+
 <span class="sd">    cmap :  `matplotlib.colors.Colormap`</span>
 <span class="sd">        Colormap to use in :func:`matplotlib.pyplot.imshow`. Default to</span>
 <span class="sd">        &#39;Blues&#39;. Only effective when `pianoroll` is 2D.</span>
@@ -537,7 +557,7 @@
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'0.0.2',
+            VERSION:'0.1.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,
