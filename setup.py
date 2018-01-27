@@ -11,14 +11,14 @@ execfile('pypianoroll/version.py')
 setup(
     name='pypianoroll',
     packages=['pypianoroll'],
-    version='0.0.2',
+    version=__version__,
     description='A python package for handling multi-track piano-rolls.',
     long_description=long_description,
     author='Hao-Wen Dong',
     author_email='salu133445@gmail.com',
     url='https://github.com/salu133445/pypianoroll',
-    download_url='https://github.com/salu133445/pypianoroll/archive/'
-                 '0.0.2.tar.gz',
+    download_url=('https://github.com/salu133445/pypianoroll/archive/'
+                  + __version__ + '.tar.gz'),
     keywords=['music', 'audio', 'piano-roll', 'multi-track'],
     classifiers=[
         'Development Status :: 3 - Alpha',
