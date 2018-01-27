@@ -12,7 +12,7 @@ Features
 - handle piano-rolls of multiple tracks with metadata
 - utilities for manipulating piano-rolls
 - save to and load from .npz files using efficient sparse matrix format
-- parse from and write to MIDI file
+- parse from and write to MIDI files
 
 Installation
 ============

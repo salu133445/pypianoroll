@@ -1,8 +1,10 @@
+.. _visualization:
+
 Visualization
 =============
 
-Pypianoroll provides utilities for visualizing multi-track piano-rolls and
-creating piano-roll animations.
+Pypianoroll provides utilities for visualizing piano-rolls and creating
+piano-roll animations.
 
 Here are some examples.
 
