@@ -271,21 +271,25 @@ class Track(object):
         normalization : {'standard', 'auto', 'none'}
             The normalization method to apply to the piano-roll. Default to
             'standard'. If `pianoroll` is binarized, use 'none' anyway.
+
             - For 'standard' normalization, the normalized values are given by
-            N = P / 128, where P, N is the original and normalized piano-roll,
-            respectively
+              N = P / 128, where P, N is the original and normalized piano-roll,
+              respectively
             - For 'auto' normalization, the normalized values are given by
-            N = (P - m) / (M - m), where P, N is the original and normalized
-            piano-roll, respectively, and M, m is the maximum and minimum of the
-            original piano-roll, respectively.
+              N = (P - m) / (M - m), where P, N is the original and normalized
+              piano-roll, respectively, and M, m is the maximum and minimum of
+              the original piano-roll, respectively.
             - If 'none', no normalization will be applied to the piano-roll. In
-            this case, the values of `pianoroll` should be in [0, 1] in order to
-            plot it correctly.
+              this case, the values of `pianoroll` should be in [0, 1] in order
+              to plot it correctly.
+
         preset : {'default', 'plain', 'frame'}
             Preset themes for the plot.
+
             - In 'default' preset, the ticks, grid and labels are on.
             - In 'frame' preset, the ticks and grid are both off.
             - In 'plain' preset, the x- and y-axis are both off.
+
         cmap :  `matplotlib.colors.Colormap`
             Colormap to use in :func:`matplotlib.pyplot.imshow`. Default to
             'Blues'. Only effective when `pianoroll` is 2D.
