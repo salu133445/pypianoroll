@@ -6,7 +6,7 @@ here = path.abspath(path.dirname(__file__))
 with open(path.join(here, 'README.rst'), encoding='utf-8') as f:
     long_description = f.read()
 
-execfile('pypianoroll/version.py')
+exec(compile(open('pypianoroll/version.py', "rb").read(), filename, 'exec'))
 
 setup(
     name='pypianoroll',
