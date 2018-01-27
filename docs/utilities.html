@@ -186,7 +186,7 @@ return False. Raise TypeError if the input object is not a numpy array.</p>
 
 <dl class="function">
 <dt id="pypianoroll.clip">
-<code class="descclassname">pypianoroll.</code><code class="descname">clip</code><span class="sig-paren">(</span><em>obj</em>, <em>lower=0</em>, <em>upper=128</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pypianoroll/utilities.html#clip"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypianoroll.clip" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">pypianoroll.</code><code class="descname">clip</code><span class="sig-paren">(</span><em>obj</em>, <em>lower=0</em>, <em>upper=127</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pypianoroll/utilities.html#clip"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypianoroll.clip" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a copy of the object with piano-roll(s) clipped by a lower bound
 and an upper bound specified by <cite>lower</cite> and <cite>upper</cite>, respectively.</p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -195,7 +195,7 @@ and an upper bound specified by <cite>lower</cite> and <cite>upper</cite>, respe
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
 <li><strong>lower</strong> (<em>int</em><em> or </em><em>float</em>) – The lower bound to clip the piano-roll. Default to 0.</li>
-<li><strong>upper</strong> (<em>int</em><em> or </em><em>float</em>) – The upper bound to clip the piano-roll. Default to 128.</li>
+<li><strong>upper</strong> (<em>int</em><em> or </em><em>float</em>) – The upper bound to clip the piano-roll. Default to 127.</li>
 </ul>
 </td>
 </tr>
@@ -235,8 +235,8 @@ maximal length.</p>
 <dl class="function">
 <dt id="pypianoroll.transpose">
 <code class="descclassname">pypianoroll.</code><code class="descname">transpose</code><span class="sig-paren">(</span><em>obj</em>, <em>semitone</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pypianoroll/utilities.html#transpose"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypianoroll.transpose" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return a copy of the object with piano-roll(s) transposed by
-<code class="docutils literal"><span class="pre">semitones</span></code> semitones.</p>
+<dd><p>Return a copy of the object with piano-roll(s) transposed by <cite>semitones</cite>
+semitones.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />

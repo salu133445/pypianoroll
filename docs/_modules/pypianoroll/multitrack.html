@@ -399,7 +399,7 @@
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
             <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;`name` must be of str type&quot;</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="Multitrack.clip"><a class="viewcode-back" href="../../multitrack.html#pypianoroll.Multitrack.clip">[docs]</a>    <span class="k">def</span> <span class="nf">clip</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lower</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">upper</span><span class="o">=</span><span class="mi">128</span><span class="p">):</span>
+<div class="viewcode-block" id="Multitrack.clip"><a class="viewcode-back" href="../../multitrack.html#pypianoroll.Multitrack.clip">[docs]</a>    <span class="k">def</span> <span class="nf">clip</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lower</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">upper</span><span class="o">=</span><span class="mi">127</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Clip the piano-rolls by an lower bound and an upper bound specified by</span>
 <span class="sd">        `lower` and `upper`, respectively.</span>
@@ -409,7 +409,7 @@
 <span class="sd">        lower : int or float</span>
 <span class="sd">            The lower bound to clip the piano-roll. Default to 0.</span>
 <span class="sd">        upper : int or float</span>
-<span class="sd">            The upper bound to clip the piano-roll. Default to 128.</span>
+<span class="sd">            The upper bound to clip the piano-roll. Default to 127.</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">for</span> <span class="n">track</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">tracks</span><span class="p">:</span>
@@ -659,7 +659,7 @@
         <span class="k">with</span> <span class="n">np</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">filepath</span><span class="p">)</span> <span class="k">as</span> <span class="n">loaded</span><span class="p">:</span>
             <span class="k">if</span> <span class="s1">&#39;info.json&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">loaded</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Cannot find &#39;info.json&#39; in the .npz file&quot;</span><span class="p">)</span>
-            <span class="n">info_dict</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">loaded</span><span class="p">[</span><span class="s1">&#39;info.json&#39;</span><span class="p">])</span>
+            <span class="n">info_dict</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">loaded</span><span class="p">[</span><span class="s1">&#39;info.json&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">))</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">info_dict</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">])</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">beat_resolution</span> <span class="o">=</span> <span class="n">info_dict</span><span class="p">[</span><span class="s1">&#39;beat_resolution&#39;</span><span class="p">]</span>
 
@@ -1022,8 +1022,8 @@
             <span class="k">if</span> <span class="n">skip_empty_tracks</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">pianoroll</span><span class="p">):</span>
                 <span class="k">continue</span>
 
-            <span class="n">track</span> <span class="o">=</span> <span class="n">Track</span><span class="p">(</span><span class="n">pianoroll</span><span class="p">,</span> <span class="n">instrument</span><span class="o">.</span><span class="n">program</span><span class="p">,</span> <span class="n">instrument</span><span class="o">.</span><span class="n">is_drum</span><span class="p">,</span>
-                          <span class="nb">str</span><span class="p">(</span><span class="n">instrument</span><span class="o">.</span><span class="n">name</span><span class="p">))</span>
+            <span class="n">track</span> <span class="o">=</span> <span class="n">Track</span><span class="p">(</span><span class="n">pianoroll</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">instrument</span><span class="o">.</span><span class="n">program</span><span class="p">),</span>
+                          <span class="nb">bool</span><span class="p">(</span><span class="n">instrument</span><span class="o">.</span><span class="n">is_drum</span><span class="p">),</span> <span class="nb">str</span><span class="p">(</span><span class="n">instrument</span><span class="o">.</span><span class="n">name</span><span class="p">))</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">tracks</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">track</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">check_validity</span><span class="p">()</span>
@@ -1396,7 +1396,7 @@
                                                 <span class="n">name</span><span class="o">=</span><span class="n">track</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
             <span class="n">copied</span> <span class="o">=</span> <span class="n">track</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
             <span class="n">copied</span><span class="o">.</span><span class="n">clip</span><span class="p">()</span>
-            <span class="n">clipped</span> <span class="o">=</span> <span class="n">track</span><span class="o">.</span><span class="n">pianoroll</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+            <span class="n">clipped</span> <span class="o">=</span> <span class="n">copied</span><span class="o">.</span><span class="n">pianoroll</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
             <span class="n">binarized</span> <span class="o">=</span> <span class="n">clipped</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">bool</span><span class="p">)</span>
             <span class="n">padded</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">pad</span><span class="p">(</span><span class="n">binarized</span><span class="p">,</span> <span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)),</span> <span class="s1">&#39;constant&#39;</span><span class="p">)</span>
             <span class="n">diff</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="n">padded</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>

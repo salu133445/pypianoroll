@@ -166,22 +166,22 @@
 <p>The main objects in Pypianoroll are <a class="reference internal" href="multitrack.html#pypianoroll.Multitrack" title="pypianoroll.Multitrack"><code class="xref py py-class docutils literal"><span class="pre">pypianoroll.Multitrack</span></code></a> and
 <a class="reference internal" href="track.html#pypianoroll.Track" title="pypianoroll.Track"><code class="xref py py-class docutils literal"><span class="pre">pypianoroll.Track</span></code></a> objects.</p>
 <p>A <a class="reference internal" href="track.html#pypianoroll.Track" title="pypianoroll.Track"><code class="xref py py-class docutils literal"><span class="pre">pypianoroll.Track</span></code></a> object is composed of a piano-roll matrix and
-additional track information (program number, drum indicator and track name).</p>
+additional track information (program number, drum indicator and its name).</p>
 <p>A <a class="reference internal" href="multitrack.html#pypianoroll.Multitrack" title="pypianoroll.Multitrack"><code class="xref py py-class docutils literal"><span class="pre">pypianoroll.Multitrack</span></code></a> object consists of a list of
-<a class="reference internal" href="track.html#pypianoroll.Track" title="pypianoroll.Track"><code class="xref py py-class docutils literal"><span class="pre">pypianoroll.Track</span></code></a> objects and additional tempo and down beat
-information and its name.</p>
+<a class="reference internal" href="track.html#pypianoroll.Track" title="pypianoroll.Track"><code class="xref py py-class docutils literal"><span class="pre">pypianoroll.Track</span></code></a> objects and additional and multi-track information
+(tempo and down beat information and its name).</p>
 <p>For more details, see <a class="reference internal" href="multitrack.html#multitrack"><span class="std std-ref">Multi-track Piano-roll</span></a> and <a class="reference internal" href="track.html#track"><span class="std std-ref">Single-track Piano-roll</span></a>.</p>
 </div>
-<div class="section" id="examples">
-<h2>Examples<a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="example">
+<h2>Example<a class="headerlink" href="#example" title="Permalink to this headline">¶</a></h2>
+<p>(The following example is also available as a Jupyter <a class="reference external" href="http://nbviewer.jupyter.org/github/salu133445/pypianoroll/blob/master/examples/example.ipynb">notebook</a>.)</p>
 <div class="highlight-python"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
 <span class="kn">from</span> <span class="nn">pypianoroll</span> <span class="kn">import</span> <span class="n">Multitrack</span><span class="p">,</span> <span class="n">Track</span>
 <span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">pyplot</span> <span class="k">as</span> <span class="n">plt</span>
 
 <span class="c1"># Create a piano-roll matrix, where the first and second axes represent time</span>
-<span class="c1"># and pitch, respectively.</span>
+<span class="c1"># and pitch, respectively, and assign a C major chord to the piano-roll</span>
 <span class="n">pianoroll</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">96</span><span class="p">,</span> <span class="mi">128</span><span class="p">))</span>
-<span class="c1"># Assign a C major chord to the piano-roll</span>
 <span class="n">C_maj</span> <span class="o">=</span> <span class="p">[</span><span class="mi">60</span><span class="p">,</span> <span class="mi">64</span><span class="p">,</span> <span class="mi">67</span><span class="p">,</span> <span class="mi">72</span><span class="p">,</span> <span class="mi">76</span><span class="p">,</span> <span class="mi">79</span><span class="p">,</span> <span class="mi">84</span><span class="p">]</span>
 <span class="n">pianoroll</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">95</span><span class="p">,</span> <span class="n">C_maj</span><span class="p">]</span> <span class="o">=</span> <span class="mi">100</span>
 
@@ -195,7 +195,7 @@ information and its name.</p>
 </pre></div>
 </div>
 <p>Here’s what the output should look like.</p>
-<img alt="_images/track_plot.png" class="align-center" src="_images/track_plot.png" />
+<img alt="_images/example_track_plot.png" class="align-center" src="_images/example_track_plot.png" />
 <div class="highlight-python"><div class="highlight"><pre><span></span><span class="c1"># Extend the piano-roll to demonstrate the usage of down beat array</span>
 <span class="n">track</span><span class="o">.</span><span class="n">pianoroll</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">tile</span><span class="p">(</span><span class="n">track</span><span class="o">.</span><span class="n">pianoroll</span><span class="p">,</span> <span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
 <span class="n">downbeats</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">96</span><span class="p">,</span> <span class="mi">192</span><span class="p">,</span> <span class="mi">288</span><span class="p">]</span>
@@ -215,7 +215,7 @@ information and its name.</p>
 </pre></div>
 </div>
 <p>Here’s what the output should look like.</p>
-<img alt="_images/multitrack_plot.png" class="align-center" src="_images/multitrack_plot.png" />
+<img alt="_images/example_multitrack_plot.png" class="align-center" src="_images/example_multitrack_plot.png" />
 <p>Here is how saving and loading works. (For more details, see <a class="reference internal" href="save_load.html#save-load"><span class="std std-ref">Save &amp; Load</span></a>)</p>
 <div class="highlight-python"><div class="highlight"><pre><span></span><span class="c1"># Save the `pypianoroll.Multitrack` instance to a .npz file</span>
 <span class="n">multitrack</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s1">&#39;./test.npz&#39;</span><span class="p">)</span>

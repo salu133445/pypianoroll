@@ -2,4 +2,5 @@
 
 Multi-track Piano-roll
 ======================
+
 .. autoclass:: pypianoroll.Multitrack
