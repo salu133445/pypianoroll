@@ -496,7 +496,7 @@ class Multitrack(object):
         with np.load(filepath) as loaded:
             if 'info.json' not in loaded:
                 raise ValueError("Cannot find 'info.json' in the .npz file")
-            info_dict = json.loads(loaded['info.json'])
+            info_dict = json.loads(loaded['info.json'].decode('utf-8'))
             self.name = str(info_dict['name'])
             self.beat_resolution = info_dict['beat_resolution']
 
