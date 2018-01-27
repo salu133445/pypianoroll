@@ -859,8 +859,8 @@ class Multitrack(object):
             if skip_empty_tracks and not np.any(pianoroll):
                 continue
 
-            track = Track(pianoroll, instrument.program, instrument.is_drum,
-                          str(instrument.name))
+            track = Track(pianoroll, int(instrument.program),
+                          bool(instrument.is_drum), str(instrument.name))
             self.tracks.append(track)
 
         self.check_validity()
