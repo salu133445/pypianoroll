@@ -24,9 +24,11 @@ def plot_pianoroll(ax, pianoroll, is_drum=False, beat_resolution=None,
     pianoroll : np.ndarray
         The piano-roll to be plotted. The values should be in [0, 1] when
         `normalized` is False.
+
         - For 2D array, shape=(num_time_step, num_pitch).
         - For 3D array, shape=(num_time_step, num_pitch, num_channel), where
-        channels can be either RGB or RGBA.
+          channels can be either RGB or RGBA.
+
     is_drum : bool
         Drum indicator. True for drums. False for other instruments. Default
         to False.
@@ -39,21 +41,25 @@ def plot_pianoroll(ax, pianoroll, is_drum=False, beat_resolution=None,
     normalization : {'standard', 'auto', 'none'}
         The normalization method to apply to the piano-roll. Default to
         'standard'. If `pianoroll` is binarized, use 'none' anyway.
+
         - For 'standard' normalization, the normalized values are given by
-        N = P / 128, where P, N is the original and normalized piano-roll,
-        respectively
+          N = P / 128, where P, N is the original and normalized piano-roll,
+          respectively
         - For 'auto' normalization, the normalized values are given by
-        N = (P - m) / (M - m), where P, N is the original and normalized
-        piano-roll, respectively, and M, m is the maximum and minimum of the
-        original piano-roll, respectively.
+          N = (P - m) / (M - m), where P, N is the original and normalized
+          piano-roll, respectively, and M, m is the maximum and minimum of
+          the original piano-roll, respectively.
         - If 'none', no normalization will be applied to the piano-roll. In
-        this case, the values of `pianoroll` should be in [0, 1] in order to
-        plot it correctly.
+          this case, the values of `pianoroll` should be in [0, 1] in order
+          to plot it correctly.
+
     preset : {'default', 'plain', 'frame'}
         Preset themes for the plot.
+
         - In 'default' preset, the ticks, grid and labels are on.
         - In 'frame' preset, the ticks and grid are both off.
         - In 'plain' preset, the x- and y-axis are both off.
+
     cmap :  `matplotlib.colors.Colormap`
         Colormap to use in :func:`matplotlib.pyplot.imshow`. Default to
         'Blues'. Only effective when `pianoroll` is 2D.
@@ -168,7 +174,7 @@ def plot_pianoroll(ax, pianoroll, is_drum=False, beat_resolution=None,
     if ytick == 'octave':
         ax.set_yticks(np.arange(0, 128, 12))
         if yticklabel == 'name':
-            ax.set_yticklabels(['C{}'.format(i - 2) for i in range(10)])
+            ax.set_yticklabels(['C{}'.format(i - 2) for i in range(11)])
     elif ytick == 'step':
         ax.set_yticks(np.arange(0, 128))
         if yticklabel == 'name':
@@ -187,7 +193,7 @@ def plot_pianoroll(ax, pianoroll, is_drum=False, beat_resolution=None,
             ax.set_xlabel('time (beat)')
 
     if label == 'y' or label == 'both':
-        if yticklabel == 'name' or (is_drum and yticklabel != 'off'):
+        if is_drum:
             ax.set_ylabel('key name')
         else:
             ax.set_ylabel('pitch')
@@ -218,9 +224,11 @@ def save_animation(filepath, pianoroll, window, hop=1, fps=None, is_drum=False,
     pianoroll : np.ndarray
         The piano-roll to be plotted. The values should be in [0, 1] when
         `normalized` is False.
+
         - For 2D array, shape=(num_time_step, num_pitch).
         - For 3D array, shape=(num_time_step, num_pitch, num_channel), where
-        channels can be either RGB or RGBA.
+          channels can be either RGB or RGBA.
+
     window : int
         Window size to be applied to `pianoroll` for the animation.
     hop : int
@@ -239,21 +247,25 @@ def save_animation(filepath, pianoroll, window, hop=1, fps=None, is_drum=False,
     normalization : {'standard', 'auto', 'none'}
         The normalization method to apply to the piano-roll. Default to
         'standard'. If `pianoroll` is binarized, use 'none' anyway.
+
         - For 'standard' normalization, the normalized values are given by
-        N = P / 128, where P, N is the original and normalized piano-roll,
-        respectively
+          N = P / 128, where P, N is the original and normalized piano-roll,
+          respectively
         - For 'auto' normalization, the normalized values are given by
-        N = (P - m) / (M - m), where P, N is the original and normalized
-        piano-roll, respectively, and M, m is the maximum and minimum of the
-        original piano-roll, respectively.
+          N = (P - m) / (M - m), where P, N is the original and normalized
+          piano-roll, respectively, and M, m is the maximum and minimum of the
+          original piano-roll, respectively.
         - If 'none', no normalization will be applied to the piano-roll. In
-        this case, the values of `pianoroll` should be in [0, 1] in order to
-        plot it correctly.
+          this case, the values of `pianoroll` should be in [0, 1] in order to
+          plot it correctly.
+
     preset : {'default', 'plain', 'frame'}
         Preset themes for the plot.
+
         - In 'default' preset, the ticks, grid and labels are on.
         - In 'frame' preset, the ticks and grid are both off.
         - In 'plain' preset, the x- and y-axis are both off.
+
     cmap :  `matplotlib.colors.Colormap`
         Colormap to use in :func:`matplotlib.pyplot.imshow`. Default to
         'Blues'. Only effective when `pianoroll` is 2D.
