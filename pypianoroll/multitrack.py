@@ -64,11 +64,13 @@ class Multitrack(object):
             step. Length is the number of time steps. Will be assigned to
             `tempo` when `filepath` is not provided. If an integer is provided,
             it will be first converted to a numpy array. Default to 120.0.
-        downbeat : np.ndarray, shape=(num_time_step,), dtype=bool
+        downbeat : list or np.ndarray, shape=(num_time_step,), dtype=bool
             Downbeat array that indicates whether the time step contains a
             downbeat, i.e. the first time step of a bar. Length is the number of
             time steps. Will be assigned to `downbeat` when `filepath` is not
-            provided.
+            provided. If a list of indices is provided, it will be viewed as the
+            time step indices of the down beats and converted to a numpy array.
+            Default is None.
         name : str
             Name of the multi-track piano-roll. Default to 'unknown'.
 
@@ -94,7 +96,11 @@ class Multitrack(object):
                 self.tempo = np.array([tempo])
             else:
                 self.tempo = tempo
-            self.downbeat = downbeat
+            if isinstance(downbeat, list):
+                self.downbeat = np.zeros((max(downbeat) + 1,), bool)
+                self.downbeat[downbeat] = True
+            else:
+                self.downbeat = downbeat
             self.beat_resolution = beat_resolution
             self.name = name
             self.check_validity()
@@ -346,15 +352,16 @@ class Multitrack(object):
         mode : {'sum', 'max', 'any'}
             Indicate the merging function to apply along the track axis. Default
             to 'sum'.
+
             - In 'sum' mode, the piano-roll of the merged track is the summation
-            of the collected piano-rolls. Note that for binarized piano-roll,
-            integer summation is performed.
+              of the collected piano-rolls. Note that for binarized piano-roll,
+              integer summation is performed.
             - In 'max' mode, for each pixel, the maximal value among the
-            collected piano-rolls is assigned to the merged piano-roll.
+              collected piano-rolls is assigned to the merged piano-roll.
             - In 'any' mode, the value of a pixel in the merged piano-roll is
-            True if any of the collected piano-rolls has nonzero value at that
-            pixel; False if all piano-rolls are inactive (zero-valued) at that
-            pixel.
+              True if any of the collected piano-rolls has nonzero value at that
+              pixel; False if all piano-rolls are inactive (zero-valued) at that
+              pixel.
 
         Returns
         -------
@@ -526,15 +533,17 @@ class Multitrack(object):
         mode : {'sum', 'max', 'any'}
             Indicate the merging function to apply along the track axis. Default
             to 'sum'.
+
             - In 'sum' mode, the piano-roll of the merged track is the summation
-            of the collected piano-rolls. Note that for binarized piano-roll,
-            integer summation is performed.
+              of the collected piano-rolls. Note that for binarized piano-roll,
+              integer summation is performed.
             - In 'max' mode, for each pixel, the maximal value among the
-            collected piano-rolls is assigned to the merged piano-roll.
+              collected piano-rolls is assigned to the merged piano-roll.
             - In 'any' mode, the value of a pixel in the merged piano-roll is
-            True if any of the collected piano-rolls has nonzero value at that
-            pixel; False if all piano-rolls are inactive (zero-valued) at that
-            pixel.
+              True if any of the collected piano-rolls has nonzero value at that
+              pixel; False if all piano-rolls are inactive (zero-valued) at that
+              pixel.
+
         program: int
             Program number to be assigned to the merged track. Available values
             are 0 to 127.
@@ -577,13 +586,15 @@ class Multitrack(object):
             Indicate the method used to get the location of the first beat.
             Notes before it will be dropped unless an incomplete beat before it
             is found (see Notes for details). Default to 'normal'.
+
             - The 'normal' algorithm estimate the location of the first beat by
-            :meth:`pretty_midi.PrettyMIDI.estimate_beat_start`.
+              :meth:`pretty_midi.PrettyMIDI.estimate_beat_start`.
             - The 'strict' algorithm set the first beat at the event time of the
-            first time signature change. If no time signature change event
-            found, raise a ValueError.
+              first time signature change. If no time signature change event
+              found, raise a ValueError.
             - The 'custom' algorithm take argument `first_beat_time` as the
-            location of the first beat.
+              location of the first beat.
+
         binarized : bool
             True to binarize the parsed piano-rolls before merging duplicate
             notes. False to use the original parsed piano-rolls. Default to
@@ -609,16 +620,17 @@ class Multitrack(object):
         -------
         midi_info : dict
             Contains additional information of the parsed MIDI file as fallows.
+
             - first_beat_time (float) : the location (in sec) of the first beat
             - incomplete_beat_at_start (bool) : indicate whether there is an
-            incomplete beat before `first_beat_time`
+              incomplete beat before `first_beat_time`
             - num_time_signature_change (int) : the number of time signature
-            change events
+              change events
             - time_signature (str) : the time signature (in 'X/X' format) if
-            there is only one time signature events. None if no time signature
-            event found
+              there is only one time signature events. None if no time signature
+              event found
             - tempo (float) : the tempo value (in bpm) if there is only one
-            tempo change events. None if no tempo change event found
+              tempo change events. None if no tempo change event found
 
         Notes
         -----
@@ -653,13 +665,15 @@ class Multitrack(object):
             Indicate the method used to get the location of the first beat.
             Notes before it will be dropped unless an incomplete beat before it
             is found (see Notes for details). Default to 'normal'.
+
             - The 'normal' algorithm estimate the location of the first beat by
-            :meth:`pretty_midi.PrettyMIDI.estimate_beat_start`.
+              :meth:`pretty_midi.PrettyMIDI.estimate_beat_start`.
             - The 'strict' algorithm set the first beat at the event time of the
-            first time signature change. If no time signature change event
-            found, raise a ValueError.
+              first time signature change. If no time signature change event
+              found, raise a ValueError.
             - The 'custom' algorithm take argument `first_beat_time` as the
-            location of the first beat.
+              location of the first beat.
+
         binarized : bool
             True to binarize the parsed piano-rolls before merging duplicate
             notes. False to use the original parsed piano-rolls. Default to
@@ -686,16 +700,17 @@ class Multitrack(object):
         -------
         midi_info : dict
             Contains additional information of the parsed MIDI file as fallows.
+
             - first_beat_time (float) : the location (in sec) of the first beat
             - incomplete_beat_at_start (bool) : indicate whether there is an
-            incomplete beat before `first_beat_time`
+              incomplete beat before `first_beat_time`
             - num_time_signature_change (int) : the number of time signature
-            change events
+              change events
             - time_signature (str) : the time signature (in 'X/X' format) if
-            there is only one time signature events. None if no time signature
-            event found
+              there is only one time signature events. None if no time signature
+              event found
             - tempo (float) : the tempo value (in bpm) if there is only one
-            tempo change events. None if no tempo change event found
+              tempo change events. None if no tempo change event found
 
         Notes
         -----
@@ -882,13 +897,15 @@ class Multitrack(object):
             The filepath to save the plot. If None, default to save nothing.
         mode : {'separate', 'stacked', 'hybrid'}
             Plotting modes. Default to 'separate'.
+
             - In 'separate' mode, all the tracks are plotted separately.
             - In 'stacked' mode, a color is assigned based on `cmaps` to the
-            piano-roll of each track and the piano-rolls are stacked and
-            plotted as a colored image with RGB channels.
+              piano-roll of each track and the piano-rolls are stacked and
+              plotted as a colored image with RGB channels.
             - In 'hybrid' mode, the drum tracks are merged into a 'Drums' track,
-            while the other tracks are merged into an 'Others' track, and the
-            two merged tracks are then plotted separately.
+              while the other tracks are merged into an 'Others' track, and the
+              two merged tracks are then plotted separately.
+
         track_label : {'name', 'program', 'family', 'off'}
             Add track name, program name, instrument family name or none as
             labels to the track. When `mode` is 'hybrid', all options other
@@ -896,30 +913,36 @@ class Multitrack(object):
         normalization : {'standard', 'auto', 'none'}
             The normalization method to apply to the piano-roll. Default to
             'standard'. If `pianoroll` is binarized, use 'none' anyway.
+
             - For 'standard' normalization, the normalized values are given by
-            N = P / 128, where P, N is the original and normalized piano-roll,
-            respectively
+              N = P / 128, where P, N is the original and normalized piano-roll,
+              respectively
             - For 'auto' normalization, the normalized values are given by
-            N = (P - m) / (M - m), where P, N is the original and normalized
-            piano-roll, respectively, and M, m is the maximum and minimum of the
-            original piano-roll, respectively.
+              N = (P - m) / (M - m), where P, N is the original and normalized
+              piano-roll, respectively, and M, m is the maximum and minimum of
+              original piano-roll, respectively.
             - If 'none', no normalization will be applied to the piano-roll. In
-            this case, the values of `pianoroll` should be in [0, 1] in order to
-            plot it correctly.
+              this case, the values of `pianoroll` should be in [0, 1] in order
+              to plot it correctly.
+
         preset : {'default', 'plain', 'frame'}
             Preset themes for the plot.
+
             - In 'default' preset, the ticks, grid and labels are on.
             - In 'frame' preset, the ticks and grid are both off.
             - In 'plain' preset, the x- and y-axis are both off.
+
         cmaps :  tuple or list
             List of `matplotlib.colors.Colormap` instances or colormap codes.
+
             - When `mode` is 'separate', each element will be passed to each
-            call of :func:`matplotlib.pyplot.imshow`. Default to ('Blues',
-            'Oranges', 'Greens', 'Reds', 'Purples', 'Greys').
-            - when `mode` is stacked, a color is assigned based on `cmaps` to
-            the piano-roll of each track. Default to ('hsv').
+              call of :func:`matplotlib.pyplot.imshow`. Default to ('Blues',
+              'Oranges', 'Greens', 'Reds', 'Purples', 'Greys').
+            - When `mode` is stacked, a color is assigned based on `cmaps` to
+              the piano-roll of each track. Default to ('hsv').
             - When `mode` is 'hybrid', the first (second) element is used in the
-            'Drums' ('Others') track. Default to ('Blues', 'Greens').
+              'Drums' ('Others') track. Default to ('Blues', 'Greens').
+
         tick_loc : tuple or list
             List of locations to put ticks. Availables elements are 'bottom',
             'top', 'left' and 'right'. If None, default to ('bottom', 'left').
@@ -978,6 +1001,7 @@ class Multitrack(object):
             ax.set_ylabel(get_track_label(track_label, track) + '\n\n'
                           + ax.get_ylabel())
 
+        self.check_validity()
         if not self.tracks:
             raise ValueError("There is no track to plot")
         if mode not in ('separate', 'stacked', 'hybrid'):
@@ -1119,9 +1143,9 @@ class Multitrack(object):
 
         Notes
         -----
-        - To reduce the file size, the collected piano-rolls are first converted
-        to instances of scipy.sparse.csc_matrix, whose component arrays are
-        then collected and saved to the .npz file.
+        To reduce the file size, the collected piano-rolls are first converted
+        to instances of scipy.sparse.csc_matrix, whose component arrays are then
+        collected and saved to the .npz file.
 
         Parameters
         ----------
@@ -1132,7 +1156,6 @@ class Multitrack(object):
             uncompressed .npz file. Default to True.
 
         """
-
         def update_sparse(target_dict, sparse_matrix, name):
             """
             Turn `sparse_matrix` into a scipy.sparse.csc_matrix and update its
@@ -1146,6 +1169,7 @@ class Multitrack(object):
             target_dict[name+'_csc_indptr'] = csc.indptr
             target_dict[name+'_csc_shape'] = csc.shape
 
+        self.check_validity()
         array_dict = {'tempo': self.tempo}
         info_dict = {'beat_resolution': self.beat_resolution,
                      'name': self.name}
@@ -1194,6 +1218,7 @@ class Multitrack(object):
             The converted :class:`pretty_midi.PrettyMIDI` instance.
 
         """
+        self.check_validity()
         pm = pretty_midi.PrettyMIDI(initial_tempo=self.tempo[0])
 
         # TODO: Add downbeat support -> time signature change events
@@ -1206,22 +1231,23 @@ class Multitrack(object):
             instrument = pretty_midi.Instrument(program=track.program,
                                                 is_drum=track.is_drum,
                                                 name=track.name)
-            track = track.copy().clip()
+            copied = track.copy()
+            copied.clip()
             clipped = track.pianoroll.astype(int)
             binarized = clipped.astype(bool)
             padded = np.pad(binarized, ((1, 1), (0, 0)), 'constant')
-            diff = np.diff(padded, axis=0)
+            diff = np.diff(padded.astype(int), axis=0)
 
             for pitch in range(128):
-                note_ons = np.nonzero(diff[:, pitch] > 0)
-                note_on_times = time_step_size * note_ons[0]
-                note_offs = np.nonzero(diff[:, pitch] < 0)
-                note_off_times = time_step_size * note_offs[0]
+                note_ons = np.nonzero(diff[:, pitch] > 0)[0]
+                note_on_times = time_step_size * note_ons
+                note_offs = np.nonzero(diff[:, pitch] < 0)[0]
+                note_off_times = time_step_size * note_offs
 
-                for idx, note_on_time in enumerate(note_on_times):
-                    velocity = np.mean(clipped[note_ons[idx]:note_offs[idx]])
-                    note = pretty_midi.Note(velocity=velocity, pitch=pitch,
-                                            start=note_on_time,
+                for idx, note_on in enumerate(note_ons):
+                    velocity = np.mean(clipped[note_on:note_offs[idx], pitch])
+                    note = pretty_midi.Note(velocity=int(velocity), pitch=pitch,
+                                            start=note_on_times[idx],
                                             end=note_off_times[idx])
                     instrument.notes.append(note)
 
@@ -1249,9 +1275,9 @@ class Multitrack(object):
         for track in self.tracks:
             track = track[:active_length]
 
-    def write_midi(self, filepath):
+    def write(self, filepath):
         """
-        Write to a MIDI file
+        Write to a MIDI file.
 
         Parameters
         ----------
@@ -1259,5 +1285,7 @@ class Multitrack(object):
             The path to write the MIDI file.
 
         """
+        if not filepath.endswith(('.mid', '.midi', '.MID', '.MIDI')):
+            filepath = filepath + '.mid'
         pm = self.to_pretty_midi()
         pm.write(filepath)
