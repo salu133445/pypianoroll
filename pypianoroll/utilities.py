@@ -1,4 +1,4 @@
-"""Functions to manipulate multi-track and single-track piano-rolls.
+"""Utilities for manipulating multi-track and single-track piano-rolls.
 
 """
 from copy import deepcopy
@@ -10,6 +10,7 @@ def _check_supported(obj):
     """
     Raise TypeError if the object is not a :class:`pypianoroll.Multitrack`
     or :class:`pypianoroll.Track` object. Otherwise, pass.
+
     """
     if not (isinstance(obj, Multitrack) or isinstance(obj, Track)):
         raise TypeError("Support only `pypianoroll.Multitrack` and "
@@ -19,6 +20,7 @@ def is_pianoroll(arr):
     """
     Return True if the array is a standard piano-roll matrix. Otherwise,
     return False. Raise TypeError if the input object is not a numpy array.
+
     """
     if not isinstance(arr, np.ndarray):
         raise TypeError("`arr` must be of np.ndarray type")
@@ -40,6 +42,7 @@ def binarize(obj, threshold=0):
     ----------
     threshold : int or float
         Threshold to binarize the piano-roll(s). Default to zero.
+
     """
     _check_supported(obj)
     copied = deepcopy(obj)
@@ -57,6 +60,7 @@ def clip(obj, lower=0, upper=128):
         The lower bound to clip the piano-roll. Default to 0.
     upper : int or float
         The upper bound to clip the piano-roll. Default to 128.
+
     """
     _check_supported(obj)
     copied = deepcopy(obj)
@@ -77,6 +81,7 @@ def load(filepath):
     ----------
     filepath : str
         The file path to the .npz file.
+
     """
     if not filepath.endswith('.npz'):
         raise ValueError("Only .npz files are supported")
@@ -92,6 +97,7 @@ def pad(obj, pad_length):
     ----------
     pad_length : int
         The length to pad along the time axis with zeros.
+
     """
     if not isinstance(obj, Track):
         raise TypeError("Support only `pypianoroll.Track` class objects")
@@ -104,6 +110,7 @@ def pad_to_same(obj):
     Return a copy of the object with shorter piano-rolls padded with zeros
     at the end along the time axis to the length of the piano-roll with the
     maximal length.
+
     """
     if not isinstance(obj, Multitrack):
         raise TypeError("Support only `pypianoroll.Multitrack` class objects")
@@ -120,6 +127,7 @@ def parse(filepath):
     ----------
     filepath : str
         The file path to the MIDI file.
+
     """
     if not filepath.endswith(('.mid', '.midi', '.MID', '.MIDI')):
         raise ValueError("Only MIDI files are supported")
@@ -130,6 +138,7 @@ def plot(obj, **kwargs):
     """
     Plot the object. See :func:`pypianoroll.Multitrack.plot` and
     :func:`pypianoroll.Track.plot` for full documentation.
+
     """
     _check_supported(obj)
     return obj.plot(**kwargs)
@@ -144,20 +153,22 @@ def save(filepath, obj, compressed=True):
         The path to save the file.
     obj: `pypianoroll.Multitrack` objects
         The objecte to be saved.
+
     """
     if not isinstance(obj, Multitrack):
         raise TypeError("Support only `pypianoroll.Multitrack` class objects")
     obj.save(filepath, compressed)
-    
+
 def transpose(obj, semitone):
     """
-    Return a copy of the object with piano-roll(s) transposed by
-    ``semitones`` semitones.
+    Return a copy of the object with piano-roll(s) transposed by `semitones`
+    semitones.
 
     Parameters
     ----------
     semitone : int
         Number of semitones to transpose the piano-roll(s).
+
     """
     _check_supported(obj)
     copied = deepcopy(obj)
@@ -168,9 +179,24 @@ def trim_trailing_silence(obj):
     """
     Return a copy of the object with trimmed trailing silence of the
     piano-roll(s).
+
     """
     _check_supported(obj)
     copied = deepcopy(obj)
     length = copied.get_active_length()
     copied.pianoroll = copied.pianoroll[:length]
     return copied
+
+def write(obj, filepath):
+    """
+    Write the object to a MIDI file.
+
+    Parameters
+    ----------
+    filepath : str
+        The path to write the MIDI file.
+
+    """
+    if not isinstance(obj, Multitrack):
+        raise TypeError("Support only `pypianoroll.Multitrack` class objects")
+    obj.write(filepath)
