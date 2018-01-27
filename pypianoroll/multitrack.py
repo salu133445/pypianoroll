@@ -1233,7 +1233,7 @@ class Multitrack(object):
                                                 name=track.name)
             copied = track.copy()
             copied.clip()
-            clipped = track.pianoroll.astype(int)
+            clipped = copied.pianoroll.astype(int)
             binarized = clipped.astype(bool)
             padded = np.pad(binarized, ((1, 1), (0, 0)), 'constant')
             diff = np.diff(padded.astype(int), axis=0)
