@@ -236,7 +236,7 @@ class Multitrack(object):
         if not isinstance(self.name, str):
             raise TypeError("`name` must be of str type")
 
-    def clip(self, lower=0, upper=128):
+    def clip(self, lower=0, upper=127):
         """
         Clip the piano-rolls by an lower bound and an upper bound specified by
         `lower` and `upper`, respectively.
@@ -246,7 +246,7 @@ class Multitrack(object):
         lower : int or float
             The lower bound to clip the piano-roll. Default to 0.
         upper : int or float
-            The upper bound to clip the piano-roll. Default to 128.
+            The upper bound to clip the piano-roll. Default to 127.
 
         """
         for track in self.tracks:
