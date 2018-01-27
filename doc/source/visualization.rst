@@ -8,17 +8,11 @@ piano-roll animations.
 
 Here are some examples.
 
-.. image:: figs/visualization_step_pitch.png
-    :width: 60%
-    :align: center
+.. image:: figs/visualization_track.png
 
-.. image:: figs/visualization_beat_octave.png
-    :width: 60%
-    :align: center
+.. image:: figs/visualization_multitrack.png
 
-.. image:: figs/multi-track.png
-    :width: 60%
-    :align: center
+.. image:: figs/visualization_multitrack_closeup.png
 
 Related Functions
 -----------------

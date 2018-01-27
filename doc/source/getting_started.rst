@@ -18,8 +18,10 @@ A :class:`pypianoroll.Multitrack` object consists of a list of
 
 For more details, see :ref:`multitrack` and :ref:`track`.
 
-Examples
---------
+Example
+-------
+
+(The following example is also available as a Jupyter notebook_.)
 
 .. code-block:: python
 
@@ -43,7 +45,7 @@ Examples
 
 Here's what the output should look like.
 
-.. image:: figs/track_plot.png
+.. image:: figs/example_track_plot.png
     :align: center
 
 .. code-block:: python
@@ -67,7 +69,7 @@ Here's what the output should look like.
 
 Here's what the output should look like.
 
-.. image:: figs/multitrack_plot.png
+.. image:: figs/example_multitrack_plot.png
     :align: center
 
 Here is how saving and loading works. (For more details, see :ref:`save_load`)
@@ -90,3 +92,5 @@ only MIDI files. (For more details, see :ref:`parse_write`)
 
     # Write the `pypianoroll.Multitrack` instance to a MIDI file
     another_multitrack.write('./test.mid')
+
+.. _notebook: http://nbviewer.jupyter.org/github/salu133445/pypianoroll/blob/master/examples/example.ipynb
