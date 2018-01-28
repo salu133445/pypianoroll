@@ -118,7 +118,7 @@ class Multitrack(object):
                               beat_resolution=self.beat_resolution,
                               name=self.name)
         if isinstance(val, list):
-            tracks = [self.tracks[i] for i in val[0]]
+            tracks = [self.tracks[i] for i in val]
         else:
             tracks = self.tracks[val]
         return Multitrack(tracks=tracks, tempo=self.tempo,
