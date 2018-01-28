@@ -1174,7 +1174,7 @@ class Multitrack(object):
         info_dict = {'beat_resolution': self.beat_resolution,
                      'name': self.name}
 
-        if self.downbeat:
+        if self.downbeat is not None:
             array_dict['downbeat'] = self.downbeat
 
         for idx, track in enumerate(self.tracks):
