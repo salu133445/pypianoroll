@@ -6,6 +6,10 @@ Visualization
 Pypianoroll provides utilities for visualizing piano-rolls and creating
 piano-roll animations.
 
+Note that, by default we assume the piano-roll is using symbolic timing, you may
+visualize traditional piano-roll, which use real timing, by setting up x-axis
+properties in the plotting functions as well.
+
 Here are some examples.
 
 .. image:: figs/visualization_track.png
