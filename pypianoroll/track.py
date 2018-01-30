@@ -2,6 +2,7 @@
 
 """
 from copy import deepcopy
+from six import string_types
 import numpy as np
 from matplotlib import pyplot as plt
 from .plot import plot_pianoroll
@@ -110,8 +111,8 @@ class Track(object):
         if not isinstance(self.is_drum, bool):
             raise TypeError("`is_drum` must be of boolean type")
         # name
-        if not isinstance(self.name, str):
-            raise TypeError("`name` must be of str type")
+        if not isinstance(self.name, string_types):
+            raise TypeError("`name` must be of string type")
 
     def clip(self, lower=0, upper=127):
         """
