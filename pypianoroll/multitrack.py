@@ -5,6 +5,7 @@ from __future__ import division
 import json
 import zipfile
 from copy import deepcopy
+from six import string_types
 import numpy as np
 import pretty_midi
 import matplotlib
@@ -77,8 +78,6 @@ class Multitrack(object):
         """
         # parse input file
         if filepath is not None:
-            if not isinstance(filepath, str):
-                raise TypeError("`filepath` must be of str type")
             if filepath.endswith(('.mid', '.midi', '.MID', '.MIDI')):
                 self.beat_resolution = beat_resolution
                 self.name = name
@@ -108,13 +107,17 @@ class Multitrack(object):
     def __getitem__(self, val):
         if isinstance(val, tuple):
             if isinstance(val[0], int):
-                tracks = self.tracks[val[0]][val[1:]]
+                tracks = [self.tracks[val[0]][val[1:]]]
             if isinstance(val[0], list):
                 tracks = [self.tracks[i][val[1:]] for i in val[0]]
             else:
                 tracks = [track[val[1:]] for track in self.tracks[val[0]]]
+            if self.downbeat is not None:
+                downbeat = self.downbeat[val[1]]
+            else:
+                downbeat = None
             return Multitrack(tracks=tracks, tempo=self.tempo[val[1]],
-                              downbeat=self.downbeat[val[1]],
+                              downbeat=downbeat,
                               beat_resolution=self.beat_resolution,
                               name=self.name)
         if isinstance(val, list):
@@ -233,7 +236,7 @@ class Multitrack(object):
         if self.beat_resolution%2 > 0:
             raise ValueError("`beat_resolution` must be an even number")
         # name
-        if not isinstance(self.name, str):
+        if not isinstance(self.name, string_types):
             raise TypeError("`name` must be of str type")
 
     def clip(self, lower=0, upper=127):
@@ -369,8 +372,6 @@ class Multitrack(object):
             The merged piano-rolls.
 
         """
-        if not isinstance(mode, str):
-            raise TypeError("`mode` must be a string in {'max', 'sum', 'any'}")
         if mode not in ['max', 'sum', 'any']:
             raise TypeError("`mode` must be one of {'max', 'sum', 'any'}")
 
@@ -497,7 +498,7 @@ class Multitrack(object):
             if 'info.json' not in loaded:
                 raise ValueError("Cannot find 'info.json' in the .npz file")
             info_dict = json.loads(loaded['info.json'].decode('utf-8'))
-            self.name = str(info_dict['name'])
+            self.name = info_dict['name']
             self.beat_resolution = info_dict['beat_resolution']
 
             self.tempo = loaded['tempo']
@@ -511,7 +512,7 @@ class Multitrack(object):
                                                'pianoroll_{}'.format(idx))
                 track = Track(pianoroll, info_dict[str(idx)]['program'],
                               info_dict[str(idx)]['is_drum'],
-                              str(info_dict[str(idx)]['name']))
+                              info_dict[str(idx)]['name'])
                 self.tracks.append(track)
                 idx += 1
 
@@ -556,8 +557,6 @@ class Multitrack(object):
             them. Default to False.
 
         """
-        if not isinstance(mode, str):
-            raise TypeError("`mode` must be a string in {'max', 'sum', 'any'}")
         if mode not in ['max', 'sum', 'any']:
             raise TypeError("`mode` must be one of {'max', 'sum', 'any'}")
 
@@ -720,14 +719,8 @@ class Multitrack(object):
         dropped.
 
         """
-        if not isinstance(mode, str):
-            raise TypeError("`mode` must be a string in {'max', 'sum', 'any'}")
         if mode not in ['max', 'sum', 'any']:
             raise TypeError("`mode` must be one of {'max', 'sum', 'any'}")
-
-        if not isinstance(algorithm, str):
-            raise TypeError("`algorithm` must be a string in {'normal', "
-                            "'strict', 'custom'}")
         if algorithm not in ['strict', 'normal', 'custom']:
             raise ValueError("`algorithm` must be one of 'normal', 'strict' "
                              "and 'custom'")
@@ -761,7 +754,10 @@ class Multitrack(object):
         tempi = tempi[arg_sorted]
 
         beat_times = pm.get_beats(first_beat_time)
+        if not len(beat_times):
+            raise ValueError("Cannot get beat timings to quantize piano-roll")
         beat_times.sort()
+
         num_beat = len(beat_times)
         num_time_step = self.beat_resolution * num_beat
 
@@ -835,7 +831,7 @@ class Multitrack(object):
                     if velocity < 1 or (binarized and velocity <= threshold):
                         continue
 
-                    if start > 0:
+                    if start > 0 and start < num_time_step:
                         if pianoroll[start - 1, pitches[idx]]:
                             pianoroll[start - 1, pitches[idx]] = 0
                     if end < num_time_step - 1:
@@ -860,7 +856,7 @@ class Multitrack(object):
                 continue
 
             track = Track(pianoroll, int(instrument.program),
-                          bool(instrument.is_drum), str(instrument.name))
+                          instrument.is_drum, instrument.name)
             self.tracks.append(track)
 
         self.check_validity()
