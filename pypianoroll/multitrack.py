@@ -640,16 +640,13 @@ class Multitrack(object):
 
         """
         pm = pretty_midi.PrettyMIDI(filepath)
-        midi_info = self.parse_pretty_midi(pm, mode, algorithm, binarized,
-                                           compressed, collect_onsets_only,
-                                           collect_midi_info, threshold,
-                                           first_beat_time)
-        return midi_info
+        self.parse_pretty_midi(pm, mode, algorithm, binarized, compressed,
+                               collect_onsets_only, threshold, first_beat_time)
 
     def parse_pretty_midi(self, pm, mode='sum', algorithm='normal',
                           binarized=False, skip_empty_tracks=True,
-                          collect_onsets_only=False, collect_midi_info=False,
-                          threshold=0, first_beat_time=None):
+                          collect_onsets_only=False, threshold=0,
+                          first_beat_time=None):
         """
         Parse a :class:`pretty_midi.PrettyMIDI` object.
 
@@ -685,31 +682,12 @@ class Multitrack(object):
             True to collect only the onset of the notes (i.e. note on events) in
             all tracks, where the note off and duration information are dropped.
             False to parse regular piano-rolls.
-        collect_midi_info : bool
-            True to collect additional information in the MIDI file and return
-            in a dictionary format. False to collect and return nothing.
         threshold : int or float
             Threshold to binarize the parsed piano-rolls. Only effective when
             `binarized` is True. Default to zero.
         first_beat_time : float
             The location (in sec) of the first beat. Required and only effective
             when using 'custom' algorithm.
-
-        Returns
-        -------
-        midi_info : dict
-            Contains additional information of the parsed MIDI file as fallows.
-
-            - first_beat_time (float) : the location (in sec) of the first beat
-            - incomplete_beat_at_start (bool) : indicate whether there is an
-              incomplete beat before `first_beat_time`
-            - num_time_signature_change (int) : the number of time signature
-              change events
-            - time_signature (str) : the time signature (in 'X/X' format) if
-              there is only one time signature events. None if no time signature
-              event found
-            - tempo (float) : the tempo value (in bpm) if there is only one
-              tempo change events. None if no tempo change event found
 
         Notes
         -----
@@ -796,7 +774,6 @@ class Multitrack(object):
                                 if note.end > first_beat_time])
             note_on_times = np.array([note.start for note in instrument.notes
                                       if note.end > first_beat_time])
-            # note_ons = np.searchsorted(tstep_times, note_on_times)
             beat_indices = np.searchsorted(beat_times, note_on_times) - 1
             remained = note_on_times - beat_times[beat_indices]
             ratios = remained / (beat_times_one_more[beat_indices + 1]
@@ -816,7 +793,6 @@ class Multitrack(object):
             else:
                 note_off_times = np.array([note.end for note in instrument.notes
                                            if note.end > first_beat_time])
-                # note_offs = np.searchsorted(tstep_times, note_off_times) + 1
                 beat_indices = np.searchsorted(beat_times, note_off_times) - 1
                 remained = note_off_times - beat_times[beat_indices]
                 ratios = remained / (beat_times_one_more[beat_indices + 1]
@@ -860,24 +836,6 @@ class Multitrack(object):
             self.tracks.append(track)
 
         self.check_validity()
-
-        if not collect_midi_info:
-            return
-
-        # Collect midi info into a dictionary and return it
-        num_ts_change = len(pm.time_signature_changes)
-        if num_ts_change == 1:
-            time_sign = '{}/{}'.format(pm.time_signature_changes[0].numerator,
-                                       pm.time_signature_changes[0].denominator)
-        else:
-            time_sign = None
-
-        midi_info = {'first_beat_time': first_beat_time,
-                     'num_time_signature_change': num_ts_change,
-                     'time_signature': time_sign,
-                     'tempo': tempi[0] if len(tc_times) == 1 else None}
-
-        return midi_info
 
     def plot(self, filepath=None, mode='separate', track_label='name',
              normalization='standard', preset='default', cmaps=None,
