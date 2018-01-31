@@ -803,16 +803,13 @@
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">pm</span> <span class="o">=</span> <span class="n">pretty_midi</span><span class="o">.</span><span class="n">PrettyMIDI</span><span class="p">(</span><span class="n">filepath</span><span class="p">)</span>
-        <span class="n">midi_info</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parse_pretty_midi</span><span class="p">(</span><span class="n">pm</span><span class="p">,</span> <span class="n">mode</span><span class="p">,</span> <span class="n">algorithm</span><span class="p">,</span> <span class="n">binarized</span><span class="p">,</span>
-                                           <span class="n">compressed</span><span class="p">,</span> <span class="n">collect_onsets_only</span><span class="p">,</span>
-                                           <span class="n">collect_midi_info</span><span class="p">,</span> <span class="n">threshold</span><span class="p">,</span>
-                                           <span class="n">first_beat_time</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">midi_info</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">parse_pretty_midi</span><span class="p">(</span><span class="n">pm</span><span class="p">,</span> <span class="n">mode</span><span class="p">,</span> <span class="n">algorithm</span><span class="p">,</span> <span class="n">binarized</span><span class="p">,</span> <span class="n">compressed</span><span class="p">,</span>
+                               <span class="n">collect_onsets_only</span><span class="p">,</span> <span class="n">threshold</span><span class="p">,</span> <span class="n">first_beat_time</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Multitrack.parse_pretty_midi"><a class="viewcode-back" href="../../multitrack.html#pypianoroll.Multitrack.parse_pretty_midi">[docs]</a>    <span class="k">def</span> <span class="nf">parse_pretty_midi</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pm</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;sum&#39;</span><span class="p">,</span> <span class="n">algorithm</span><span class="o">=</span><span class="s1">&#39;normal&#39;</span><span class="p">,</span>
                           <span class="n">binarized</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">skip_empty_tracks</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-                          <span class="n">collect_onsets_only</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">collect_midi_info</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-                          <span class="n">threshold</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">first_beat_time</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+                          <span class="n">collect_onsets_only</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">threshold</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+                          <span class="n">first_beat_time</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Parse a :class:`pretty_midi.PrettyMIDI` object.</span>
 
@@ -848,31 +845,12 @@
 <span class="sd">            True to collect only the onset of the notes (i.e. note on events) in</span>
 <span class="sd">            all tracks, where the note off and duration information are dropped.</span>
 <span class="sd">            False to parse regular piano-rolls.</span>
-<span class="sd">        collect_midi_info : bool</span>
-<span class="sd">            True to collect additional information in the MIDI file and return</span>
-<span class="sd">            in a dictionary format. False to collect and return nothing.</span>
 <span class="sd">        threshold : int or float</span>
 <span class="sd">            Threshold to binarize the parsed piano-rolls. Only effective when</span>
 <span class="sd">            `binarized` is True. Default to zero.</span>
 <span class="sd">        first_beat_time : float</span>
 <span class="sd">            The location (in sec) of the first beat. Required and only effective</span>
 <span class="sd">            when using &#39;custom&#39; algorithm.</span>
-
-<span class="sd">        Returns</span>
-<span class="sd">        -------</span>
-<span class="sd">        midi_info : dict</span>
-<span class="sd">            Contains additional information of the parsed MIDI file as fallows.</span>
-
-<span class="sd">            - first_beat_time (float) : the location (in sec) of the first beat</span>
-<span class="sd">            - incomplete_beat_at_start (bool) : indicate whether there is an</span>
-<span class="sd">              incomplete beat before `first_beat_time`</span>
-<span class="sd">            - num_time_signature_change (int) : the number of time signature</span>
-<span class="sd">              change events</span>
-<span class="sd">            - time_signature (str) : the time signature (in &#39;X/X&#39; format) if</span>
-<span class="sd">              there is only one time signature events. None if no time signature</span>
-<span class="sd">              event found</span>
-<span class="sd">            - tempo (float) : the tempo value (in bpm) if there is only one</span>
-<span class="sd">              tempo change events. None if no tempo change event found</span>
 
 <span class="sd">        Notes</span>
 <span class="sd">        -----</span>
@@ -959,7 +937,6 @@
                                 <span class="k">if</span> <span class="n">note</span><span class="o">.</span><span class="n">end</span> <span class="o">&gt;</span> <span class="n">first_beat_time</span><span class="p">])</span>
             <span class="n">note_on_times</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">note</span><span class="o">.</span><span class="n">start</span> <span class="k">for</span> <span class="n">note</span> <span class="ow">in</span> <span class="n">instrument</span><span class="o">.</span><span class="n">notes</span>
                                       <span class="k">if</span> <span class="n">note</span><span class="o">.</span><span class="n">end</span> <span class="o">&gt;</span> <span class="n">first_beat_time</span><span class="p">])</span>
-            <span class="c1"># note_ons = np.searchsorted(tstep_times, note_on_times)</span>
             <span class="n">beat_indices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">searchsorted</span><span class="p">(</span><span class="n">beat_times</span><span class="p">,</span> <span class="n">note_on_times</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span>
             <span class="n">remained</span> <span class="o">=</span> <span class="n">note_on_times</span> <span class="o">-</span> <span class="n">beat_times</span><span class="p">[</span><span class="n">beat_indices</span><span class="p">]</span>
             <span class="n">ratios</span> <span class="o">=</span> <span class="n">remained</span> <span class="o">/</span> <span class="p">(</span><span class="n">beat_times_one_more</span><span class="p">[</span><span class="n">beat_indices</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span>
@@ -979,7 +956,6 @@
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">note_off_times</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">note</span><span class="o">.</span><span class="n">end</span> <span class="k">for</span> <span class="n">note</span> <span class="ow">in</span> <span class="n">instrument</span><span class="o">.</span><span class="n">notes</span>
                                            <span class="k">if</span> <span class="n">note</span><span class="o">.</span><span class="n">end</span> <span class="o">&gt;</span> <span class="n">first_beat_time</span><span class="p">])</span>
-                <span class="c1"># note_offs = np.searchsorted(tstep_times, note_off_times) + 1</span>
                 <span class="n">beat_indices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">searchsorted</span><span class="p">(</span><span class="n">beat_times</span><span class="p">,</span> <span class="n">note_off_times</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span>
                 <span class="n">remained</span> <span class="o">=</span> <span class="n">note_off_times</span> <span class="o">-</span> <span class="n">beat_times</span><span class="p">[</span><span class="n">beat_indices</span><span class="p">]</span>
                 <span class="n">ratios</span> <span class="o">=</span> <span class="n">remained</span> <span class="o">/</span> <span class="p">(</span><span class="n">beat_times_one_more</span><span class="p">[</span><span class="n">beat_indices</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span>
@@ -1022,25 +998,7 @@
                           <span class="n">instrument</span><span class="o">.</span><span class="n">is_drum</span><span class="p">,</span> <span class="n">instrument</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">tracks</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">track</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">check_validity</span><span class="p">()</span>
-
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">collect_midi_info</span><span class="p">:</span>
-            <span class="k">return</span>
-
-        <span class="c1"># Collect midi info into a dictionary and return it</span>
-        <span class="n">num_ts_change</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">pm</span><span class="o">.</span><span class="n">time_signature_changes</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">num_ts_change</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
-            <span class="n">time_sign</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">pm</span><span class="o">.</span><span class="n">time_signature_changes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">numerator</span><span class="p">,</span>
-                                       <span class="n">pm</span><span class="o">.</span><span class="n">time_signature_changes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">denominator</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">time_sign</span> <span class="o">=</span> <span class="kc">None</span>
-
-        <span class="n">midi_info</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;first_beat_time&#39;</span><span class="p">:</span> <span class="n">first_beat_time</span><span class="p">,</span>
-                     <span class="s1">&#39;num_time_signature_change&#39;</span><span class="p">:</span> <span class="n">num_ts_change</span><span class="p">,</span>
-                     <span class="s1">&#39;time_signature&#39;</span><span class="p">:</span> <span class="n">time_sign</span><span class="p">,</span>
-                     <span class="s1">&#39;tempo&#39;</span><span class="p">:</span> <span class="n">tempi</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">tc_times</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span> <span class="k">else</span> <span class="kc">None</span><span class="p">}</span>
-
-        <span class="k">return</span> <span class="n">midi_info</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">check_validity</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="Multitrack.plot"><a class="viewcode-back" href="../../multitrack.html#pypianoroll.Multitrack.plot">[docs]</a>    <span class="k">def</span> <span class="nf">plot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filepath</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;separate&#39;</span><span class="p">,</span> <span class="n">track_label</span><span class="o">=</span><span class="s1">&#39;name&#39;</span><span class="p">,</span>
              <span class="n">normalization</span><span class="o">=</span><span class="s1">&#39;standard&#39;</span><span class="p">,</span> <span class="n">preset</span><span class="o">=</span><span class="s1">&#39;default&#39;</span><span class="p">,</span> <span class="n">cmaps</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>

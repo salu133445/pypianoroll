@@ -649,13 +649,13 @@ dropped.</p>
 
 <dl class="method">
 <dt id="pypianoroll.Multitrack.parse_pretty_midi">
-<code class="descname">parse_pretty_midi</code><span class="sig-paren">(</span><em>pm</em>, <em>mode='sum'</em>, <em>algorithm='normal'</em>, <em>binarized=False</em>, <em>skip_empty_tracks=True</em>, <em>collect_onsets_only=False</em>, <em>collect_midi_info=False</em>, <em>threshold=0</em>, <em>first_beat_time=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pypianoroll/multitrack.html#Multitrack.parse_pretty_midi"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypianoroll.Multitrack.parse_pretty_midi" title="Permalink to this definition">¶</a></dt>
+<code class="descname">parse_pretty_midi</code><span class="sig-paren">(</span><em>pm</em>, <em>mode='sum'</em>, <em>algorithm='normal'</em>, <em>binarized=False</em>, <em>skip_empty_tracks=True</em>, <em>collect_onsets_only=False</em>, <em>threshold=0</em>, <em>first_beat_time=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pypianoroll/multitrack.html#Multitrack.parse_pretty_midi"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypianoroll.Multitrack.parse_pretty_midi" title="Permalink to this definition">¶</a></dt>
 <dd><p>Parse a <code class="xref py py-class docutils literal"><span class="pre">pretty_midi.PrettyMIDI</span></code> object.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
 <li><strong>pm</strong> (<cite>pretty_midi.PrettyMIDI</cite> object) – The <code class="xref py py-class docutils literal"><span class="pre">pretty_midi.PrettyMIDI</span></code> object to be parsed.</li>
 <li><strong>mode</strong> (<em>{'sum'</em><em>, </em><em>'max'</em><em>, </em><em>'any'}</em>) – Indicate the merging function to apply to duplicate notes. Default
 to ‘sum’.</li>
@@ -681,32 +681,11 @@ and use the original parsed piano-rolls. Deafault to True.</li>
 <li><strong>collect_onsets_only</strong> (<em>bool</em>) – True to collect only the onset of the notes (i.e. note on events) in
 all tracks, where the note off and duration information are dropped.
 False to parse regular piano-rolls.</li>
-<li><strong>collect_midi_info</strong> (<em>bool</em>) – True to collect additional information in the MIDI file and return
-in a dictionary format. False to collect and return nothing.</li>
 <li><strong>threshold</strong> (<em>int</em><em> or </em><em>float</em>) – Threshold to binarize the parsed piano-rolls. Only effective when
 <cite>binarized</cite> is True. Default to zero.</li>
 <li><strong>first_beat_time</strong> (<em>float</em>) – The location (in sec) of the first beat. Required and only effective
 when using ‘custom’ algorithm.</li>
 </ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><p><strong>midi_info</strong> – Contains additional information of the parsed MIDI file as fallows.</p>
-<ul class="simple">
-<li>first_beat_time (float) : the location (in sec) of the first beat</li>
-<li>incomplete_beat_at_start (bool) : indicate whether there is an
-incomplete beat before <cite>first_beat_time</cite></li>
-<li>num_time_signature_change (int) : the number of time signature
-change events</li>
-<li>time_signature (str) : the time signature (in ‘X/X’ format) if
-there is only one time signature events. None if no time signature
-event found</li>
-<li>tempo (float) : the tempo value (in bpm) if there is only one
-tempo change events. None if no tempo change event found</li>
-</ul>
-</p>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">dict</p>
 </td>
 </tr>
 </tbody>
