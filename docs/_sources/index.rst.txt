@@ -27,7 +27,7 @@ Lakh Pianoroll Dataset
 ======================
 `Lakh Pianoroll Dataset`_ (LPD) is a new multi-track piano-roll dataset
 using Pypianoroll for efficient data I/O and to save space, which is used as the
-training dataset in our MuseGAN project.
+training dataset in our MuseGAN_ project.
 
-_Lakh Pianoroll Dataset: https://salu133445.github.io/musegan/dataset
-_MuseGAN: https://salu133445.github.io/musegan
+.. _Lakh Pianoroll Dataset: https://salu133445.github.io/musegan/dataset
+.. _MuseGAN: https://salu133445.github.io/musegan
