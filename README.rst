@@ -33,7 +33,7 @@ Citing
 ======
 Please cite the following paper if you use Pypianoroll in a published work:
 
-Hao-Wen Dong*, Wen-Yi Hsiao*, Li-Chia Yang and Yi-Hsuan Yang,
+Hao-Wen Dong, Wen-Yi Hsiao, Li-Chia Yang and Yi-Hsuan Yang,
 "MuseGAN: Multi-track Sequential Generative Adversarial Networks for Symbolic Music Generation and Accompaniment,"
 in AAAI Conference on Artificial Intelligence (AAAI), 2018.
 
