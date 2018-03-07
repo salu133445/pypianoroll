@@ -172,11 +172,27 @@ class Multitrack(object):
         """
         if track is not None:
             if not isinstance(track, Track):
-                raise TypeError("`track` must be a multitrack.Track instance")
+                raise TypeError("`track` must be a pypianoroll.Track instance")
             track.check_validity()
         else:
             track = Track(pianoroll, program, is_drum, name)
         self.tracks.append(track)
+
+    def assign_constant(self, value):
+        """
+        Assign a constant value to the nonzeros in the piano-rolls. If a
+        piano-roll is not binarized, its data type will be preserved. If a
+        piano-roll is binarized, it will be casted to the type of `value`.
+
+        Arguments
+        ---------
+        value : int or float
+            The constant value to be assigned to the nonzeros of the
+            piano-rolls.
+
+        """
+        for track in self.tracks:
+            track.assign_constant(value)
 
     def binarize(self, threshold=0):
         """
@@ -276,8 +292,8 @@ class Multitrack(object):
         """
         maximal_length = self.get_maximal_length()
         for track in self.tracks:
-            if track.pianoroll.shape[1] < maximal_length:
-                track.pad(maximal_length - track.pianoroll.shape[1])
+            if track.pianoroll.shape[0] < maximal_length:
+                track.pad(maximal_length - track.pianoroll.shape[0])
 
     def get_active_length(self):
         """
@@ -397,21 +413,8 @@ class Multitrack(object):
             The number of down beats according to `downbeat`.
 
         """
-        num_bar = np.sum(self.downbeat)
-        return num_bar
-
-    def get_num_track(self):
-        """
-        Return the number of tracks.
-
-        Returns
-        -------
-        num_track : int
-            The number of tracks.
-
-        """
-        num_track = len(self.tracks)
-        return num_track
+        num_downbeat = np.sum(self.downbeat)
+        return num_downbeat
 
     def get_active_pitch_range(self):
         """
@@ -570,7 +573,7 @@ class Multitrack(object):
 
     def parse_midi(self, filepath, mode='sum', algorithm='normal',
                    binarized=False, compressed=True, collect_onsets_only=False,
-                   collect_midi_info=False, threshold=0, first_beat_time=None):
+                   threshold=0, first_beat_time=None):
         """
         Parse a MIDI file.
 
@@ -605,9 +608,6 @@ class Multitrack(object):
             True to collect only the onset of the notes (i.e. note on events) in
             all tracks, where the note off and duration information are dropped.
             False to parse regular piano-rolls.
-        collect_midi_info : bool
-            True to collect additional information in the MIDI file and return
-            in a dictionary format. False to collect and return nothing.
         threshold : int or float
             Threshold to binarize the parsed piano-rolls. Only effective when
             `binarized` is True. Default to zero.
@@ -1004,7 +1004,10 @@ class Multitrack(object):
             if num_track > 1:
                 fig.subplots_adjust(hspace=0)
 
-            returns = (fig, axs)
+            if filepath is not None:
+                plt.savefig(filepath)
+
+            return (fig, axs)
 
         elif mode == 'stacked':
             is_all_drum = True
@@ -1034,7 +1037,10 @@ class Multitrack(object):
                            for idx, track in enumerate(self.tracks)]
                 plt.legend(handles=patches)
 
-            returns = (fig, [ax])
+            if filepath is not None:
+                plt.savefig(filepath)
+
+            return (fig, [ax])
 
         elif mode == 'hybrid':
             drums = [i for i, track in enumerate(self.tracks) if track.is_drum]
@@ -1065,12 +1071,10 @@ class Multitrack(object):
                 add_tracklabel(ax1, 'Drums')
                 add_tracklabel(ax2, 'Others')
 
-            returns = (fig, [ax1, ax2])
+            if filepath is not None:
+                plt.savefig(filepath)
 
-        if filepath is not None:
-            plt.savefig(filepath)
-
-        return returns
+            return (fig, [ax1, ax2])
 
     def remove_empty_tracks(self):
         """Remove tracks with empty piano-rolls."""
@@ -1149,22 +1153,27 @@ class Multitrack(object):
         with zipfile.ZipFile(filepath, 'a') as zip_file:
             zip_file.writestr('info.json', json.dumps(info_dict), compression)
 
-    def to_pretty_midi(self, constant_tempo=None):
+    def to_pretty_midi(self, constant_tempo=None, constant_velocity=100):
         """
         Convert to a :class:`pretty_midi.PrettyMIDI` instance.
 
         Notes
         -----
         - Only constant tempo is supported by now.
-        - The velocities of the converted piano-rolls are cliiped into [0, 127],
+        - The velocities of the converted piano-rolls are clipped to [0, 127],
           i.e. values below 0 and values beyond 127 are replaced by 127 and 0,
           respectively.
+        - Adjacent nonzero values of the same pitch will be considered a single
+          note with their mean as its velocity.
 
         Parameters
         ----------
         constant_tempo : int
             The constant tempo value of the output object. If None, default to
-            use the first element of `tempo`
+            use the first element of `tempo`.
+        constant_velocity : int
+            The constant velocity to be assigned to binarized tracks. Default to
+            100.
 
         Returns
         -------
@@ -1172,6 +1181,10 @@ class Multitrack(object):
             The converted :class:`pretty_midi.PrettyMIDI` instance.
 
         """
+        for track in self.tracks:
+            if track.is_binarized():
+                track.assign_constant(constant_velocity)
+
         self.check_validity()
         pm = pretty_midi.PrettyMIDI(initial_tempo=self.tempo[0])
 
