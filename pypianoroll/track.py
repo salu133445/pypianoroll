@@ -35,7 +35,7 @@ class Track(object):
         ----------
         pianoroll : np.ndarray, shape=(num_time_step, 128)
             Piano-roll matrix. First dimension represents time. Second dimension
-            represents pitch. Available datatypes are bool, int, float.
+            represents pitch. Available data types are bool, int, float.
         program: int
             Program number according to General MIDI specification [1].
             Available values are 0 to 127. Default to 0 (Acoustic Grand Piano).
@@ -72,6 +72,23 @@ class Track(object):
         return ("pianoroll :\n{},\nprogram : {},\nis_drum : {},\nname : {}"
                 .format(str(self.pianoroll), self.program, self.is_drum,
                         self.name))
+
+    def assign_constant(self, value):
+        """
+        Assign a constant value to all nonzeros in the piano-roll. If the
+        piano-roll is not binarized, its data type will be preserved. If the
+        piano-roll is binarized, it will be casted to the type of `value`.
+
+        Arguments
+        ---------
+        value : int or float
+            The constant value to be assigned to the nonzeros of the piano-roll.
+
+        """
+        if self.is_binarized():
+            self.pianoroll = self.pianoroll * value
+            return
+        self.pianoroll[self.pianoroll.nonzero()] = value
 
     def binarize(self, threshold=0):
         """
@@ -157,15 +174,15 @@ class Track(object):
 
     def pad_to_multiple(self, factor):
         """
-        Pad the piano-roll with zeros at the end along the time axis of
-        minimal length to make the length of the resulting piano-roll a
+        Pad the piano-roll with zeros at the end along the time axis with the
+        minimal length that make the length of the resulting piano-roll a
         multiple of `factor`.
 
         Parameters
         ----------
         factor : int
-            The value of which the length of the resulting piano-roll will be
-            a multiple.
+            The value which the length of the resulting piano-roll will be
+            a multiple of.
 
         """
         to_pad = factor - self.pianoroll.shape[0]%factor
@@ -248,7 +265,7 @@ class Track(object):
             True if the piano-roll is already binarized; otherwise, False.
 
         """
-        is_binarized = (self.pianoroll.dtype == bool)
+        is_binarized = np.issubdtype(self.pianoroll.dtype, np.bool)
         return is_binarized
 
     def plot(self, filepath=None, beat_resolution=None, downbeats=None,
