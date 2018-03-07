@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>pypianoroll.multitrack &mdash; pypianoroll 0.1.2 documentation</title>
+  <title>pypianoroll.multitrack &mdash; pypianoroll 0.1.3 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="index" title="Index"
               href="../../genindex.html"/>
         <link rel="search" title="Search" href="../../search.html"/>
-    <link rel="top" title="pypianoroll 0.1.2 documentation" href="../../index.html"/>
+    <link rel="top" title="pypianoroll 0.1.3 documentation" href="../../index.html"/>
         <link rel="up" title="Module code" href="../index.html"/> 
 
   
@@ -65,7 +65,7 @@
             
             
               <div class="version">
-                0.1.2
+                0.1.3
               </div>
             
           
@@ -335,11 +335,27 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">track</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">track</span><span class="p">,</span> <span class="n">Track</span><span class="p">):</span>
-                <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;`track` must be a multitrack.Track instance&quot;</span><span class="p">)</span>
+                <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;`track` must be a pypianoroll.Track instance&quot;</span><span class="p">)</span>
             <span class="n">track</span><span class="o">.</span><span class="n">check_validity</span><span class="p">()</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">track</span> <span class="o">=</span> <span class="n">Track</span><span class="p">(</span><span class="n">pianoroll</span><span class="p">,</span> <span class="n">program</span><span class="p">,</span> <span class="n">is_drum</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">tracks</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">track</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Multitrack.assign_constant"><a class="viewcode-back" href="../../multitrack.html#pypianoroll.Multitrack.assign_constant">[docs]</a>    <span class="k">def</span> <span class="nf">assign_constant</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Assign a constant value to the nonzeros in the piano-rolls. If a</span>
+<span class="sd">        piano-roll is not binarized, its data type will be preserved. If a</span>
+<span class="sd">        piano-roll is binarized, it will be casted to the type of `value`.</span>
+
+<span class="sd">        Arguments</span>
+<span class="sd">        ---------</span>
+<span class="sd">        value : int or float</span>
+<span class="sd">            The constant value to be assigned to the nonzeros of the</span>
+<span class="sd">            piano-rolls.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">track</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">tracks</span><span class="p">:</span>
+            <span class="n">track</span><span class="o">.</span><span class="n">assign_constant</span><span class="p">(</span><span class="n">value</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Multitrack.binarize"><a class="viewcode-back" href="../../multitrack.html#pypianoroll.Multitrack.binarize">[docs]</a>    <span class="k">def</span> <span class="nf">binarize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">threshold</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -439,8 +455,8 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">maximal_length</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_maximal_length</span><span class="p">()</span>
         <span class="k">for</span> <span class="n">track</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">tracks</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">track</span><span class="o">.</span><span class="n">pianoroll</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">maximal_length</span><span class="p">:</span>
-                <span class="n">track</span><span class="o">.</span><span class="n">pad</span><span class="p">(</span><span class="n">maximal_length</span> <span class="o">-</span> <span class="n">track</span><span class="o">.</span><span class="n">pianoroll</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span></div>
+            <span class="k">if</span> <span class="n">track</span><span class="o">.</span><span class="n">pianoroll</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">maximal_length</span><span class="p">:</span>
+                <span class="n">track</span><span class="o">.</span><span class="n">pad</span><span class="p">(</span><span class="n">maximal_length</span> <span class="o">-</span> <span class="n">track</span><span class="o">.</span><span class="n">pianoroll</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span></div>
 
 <div class="viewcode-block" id="Multitrack.get_active_length"><a class="viewcode-back" href="../../multitrack.html#pypianoroll.Multitrack.get_active_length">[docs]</a>    <span class="k">def</span> <span class="nf">get_active_length</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -560,21 +576,8 @@
 <span class="sd">            The number of down beats according to `downbeat`.</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">num_bar</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">downbeat</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">num_bar</span></div>
-
-<div class="viewcode-block" id="Multitrack.get_num_track"><a class="viewcode-back" href="../../multitrack.html#pypianoroll.Multitrack.get_num_track">[docs]</a>    <span class="k">def</span> <span class="nf">get_num_track</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Return the number of tracks.</span>
-
-<span class="sd">        Returns</span>
-<span class="sd">        -------</span>
-<span class="sd">        num_track : int</span>
-<span class="sd">            The number of tracks.</span>
-
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">num_track</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tracks</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">num_track</span></div>
+        <span class="n">num_downbeat</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">downbeat</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">num_downbeat</span></div>
 
 <div class="viewcode-block" id="Multitrack.get_active_pitch_range"><a class="viewcode-back" href="../../multitrack.html#pypianoroll.Multitrack.get_active_pitch_range">[docs]</a>    <span class="k">def</span> <span class="nf">get_active_pitch_range</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -733,7 +736,7 @@
 
 <div class="viewcode-block" id="Multitrack.parse_midi"><a class="viewcode-back" href="../../multitrack.html#pypianoroll.Multitrack.parse_midi">[docs]</a>    <span class="k">def</span> <span class="nf">parse_midi</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filepath</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;sum&#39;</span><span class="p">,</span> <span class="n">algorithm</span><span class="o">=</span><span class="s1">&#39;normal&#39;</span><span class="p">,</span>
                    <span class="n">binarized</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">compressed</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">collect_onsets_only</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-                   <span class="n">collect_midi_info</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">threshold</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">first_beat_time</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+                   <span class="n">threshold</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">first_beat_time</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Parse a MIDI file.</span>
 
@@ -768,9 +771,6 @@
 <span class="sd">            True to collect only the onset of the notes (i.e. note on events) in</span>
 <span class="sd">            all tracks, where the note off and duration information are dropped.</span>
 <span class="sd">            False to parse regular piano-rolls.</span>
-<span class="sd">        collect_midi_info : bool</span>
-<span class="sd">            True to collect additional information in the MIDI file and return</span>
-<span class="sd">            in a dictionary format. False to collect and return nothing.</span>
 <span class="sd">        threshold : int or float</span>
 <span class="sd">            Threshold to binarize the parsed piano-rolls. Only effective when</span>
 <span class="sd">            `binarized` is True. Default to zero.</span>
@@ -1167,7 +1167,10 @@
             <span class="k">if</span> <span class="n">num_track</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
                 <span class="n">fig</span><span class="o">.</span><span class="n">subplots_adjust</span><span class="p">(</span><span class="n">hspace</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 
-            <span class="n">returns</span> <span class="o">=</span> <span class="p">(</span><span class="n">fig</span><span class="p">,</span> <span class="n">axs</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">filepath</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">filepath</span><span class="p">)</span>
+
+            <span class="k">return</span> <span class="p">(</span><span class="n">fig</span><span class="p">,</span> <span class="n">axs</span><span class="p">)</span>
 
         <span class="k">elif</span> <span class="n">mode</span> <span class="o">==</span> <span class="s1">&#39;stacked&#39;</span><span class="p">:</span>
             <span class="n">is_all_drum</span> <span class="o">=</span> <span class="kc">True</span>
@@ -1197,7 +1200,10 @@
                            <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">track</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tracks</span><span class="p">)]</span>
                 <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">handles</span><span class="o">=</span><span class="n">patches</span><span class="p">)</span>
 
-            <span class="n">returns</span> <span class="o">=</span> <span class="p">(</span><span class="n">fig</span><span class="p">,</span> <span class="p">[</span><span class="n">ax</span><span class="p">])</span>
+            <span class="k">if</span> <span class="n">filepath</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">filepath</span><span class="p">)</span>
+
+            <span class="k">return</span> <span class="p">(</span><span class="n">fig</span><span class="p">,</span> <span class="p">[</span><span class="n">ax</span><span class="p">])</span>
 
         <span class="k">elif</span> <span class="n">mode</span> <span class="o">==</span> <span class="s1">&#39;hybrid&#39;</span><span class="p">:</span>
             <span class="n">drums</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">track</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tracks</span><span class="p">)</span> <span class="k">if</span> <span class="n">track</span><span class="o">.</span><span class="n">is_drum</span><span class="p">]</span>
@@ -1228,12 +1234,10 @@
                 <span class="n">add_tracklabel</span><span class="p">(</span><span class="n">ax1</span><span class="p">,</span> <span class="s1">&#39;Drums&#39;</span><span class="p">)</span>
                 <span class="n">add_tracklabel</span><span class="p">(</span><span class="n">ax2</span><span class="p">,</span> <span class="s1">&#39;Others&#39;</span><span class="p">)</span>
 
-            <span class="n">returns</span> <span class="o">=</span> <span class="p">(</span><span class="n">fig</span><span class="p">,</span> <span class="p">[</span><span class="n">ax1</span><span class="p">,</span> <span class="n">ax2</span><span class="p">])</span>
+            <span class="k">if</span> <span class="n">filepath</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">filepath</span><span class="p">)</span>
 
-        <span class="k">if</span> <span class="n">filepath</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">filepath</span><span class="p">)</span>
-
-        <span class="k">return</span> <span class="n">returns</span></div>
+            <span class="k">return</span> <span class="p">(</span><span class="n">fig</span><span class="p">,</span> <span class="p">[</span><span class="n">ax1</span><span class="p">,</span> <span class="n">ax2</span><span class="p">])</span></div>
 
 <div class="viewcode-block" id="Multitrack.remove_empty_tracks"><a class="viewcode-back" href="../../multitrack.html#pypianoroll.Multitrack.remove_empty_tracks">[docs]</a>    <span class="k">def</span> <span class="nf">remove_empty_tracks</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Remove tracks with empty piano-rolls.&quot;&quot;&quot;</span>
@@ -1312,22 +1316,27 @@
         <span class="k">with</span> <span class="n">zipfile</span><span class="o">.</span><span class="n">ZipFile</span><span class="p">(</span><span class="n">filepath</span><span class="p">,</span> <span class="s1">&#39;a&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">zip_file</span><span class="p">:</span>
             <span class="n">zip_file</span><span class="o">.</span><span class="n">writestr</span><span class="p">(</span><span class="s1">&#39;info.json&#39;</span><span class="p">,</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">info_dict</span><span class="p">),</span> <span class="n">compression</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="Multitrack.to_pretty_midi"><a class="viewcode-back" href="../../multitrack.html#pypianoroll.Multitrack.to_pretty_midi">[docs]</a>    <span class="k">def</span> <span class="nf">to_pretty_midi</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">constant_tempo</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="Multitrack.to_pretty_midi"><a class="viewcode-back" href="../../multitrack.html#pypianoroll.Multitrack.to_pretty_midi">[docs]</a>    <span class="k">def</span> <span class="nf">to_pretty_midi</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">constant_tempo</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">constant_velocity</span><span class="o">=</span><span class="mi">100</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Convert to a :class:`pretty_midi.PrettyMIDI` instance.</span>
 
 <span class="sd">        Notes</span>
 <span class="sd">        -----</span>
 <span class="sd">        - Only constant tempo is supported by now.</span>
-<span class="sd">        - The velocities of the converted piano-rolls are cliiped into [0, 127],</span>
+<span class="sd">        - The velocities of the converted piano-rolls are clipped to [0, 127],</span>
 <span class="sd">          i.e. values below 0 and values beyond 127 are replaced by 127 and 0,</span>
 <span class="sd">          respectively.</span>
+<span class="sd">        - Adjacent nonzero values of the same pitch will be considered a single</span>
+<span class="sd">          note with their mean as its velocity.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        constant_tempo : int</span>
 <span class="sd">            The constant tempo value of the output object. If None, default to</span>
-<span class="sd">            use the first element of `tempo`</span>
+<span class="sd">            use the first element of `tempo`.</span>
+<span class="sd">        constant_velocity : int</span>
+<span class="sd">            The constant velocity to be assigned to binarized tracks. Default to</span>
+<span class="sd">            100.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
@@ -1335,6 +1344,10 @@
 <span class="sd">            The converted :class:`pretty_midi.PrettyMIDI` instance.</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">track</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">tracks</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">track</span><span class="o">.</span><span class="n">is_binarized</span><span class="p">():</span>
+                <span class="n">track</span><span class="o">.</span><span class="n">assign_constant</span><span class="p">(</span><span class="n">constant_velocity</span><span class="p">)</span>
+
         <span class="bp">self</span><span class="o">.</span><span class="n">check_validity</span><span class="p">()</span>
         <span class="n">pm</span> <span class="o">=</span> <span class="n">pretty_midi</span><span class="o">.</span><span class="n">PrettyMIDI</span><span class="p">(</span><span class="n">initial_tempo</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">tempo</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
 
@@ -1442,7 +1455,7 @@
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'0.1.2',
+            VERSION:'0.1.3',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,

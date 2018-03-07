@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Multi-track Piano-roll &mdash; pypianoroll 0.1.2 documentation</title>
+  <title>Multi-track Piano-roll &mdash; pypianoroll 0.1.3 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="index" title="Index"
               href="genindex.html"/>
         <link rel="search" title="Search" href="search.html"/>
-    <link rel="top" title="pypianoroll 0.1.2 documentation" href="index.html"/>
+    <link rel="top" title="pypianoroll 0.1.3 documentation" href="index.html"/>
         <link rel="prev" title="Single-track Piano-roll" href="track.html"/> 
 
   
@@ -65,7 +65,7 @@
             
             
               <div class="version">
-                0.1.2
+                0.1.3
               </div>
             
           
@@ -257,6 +257,23 @@ to False.</li>
 </table>
 <p class="rubric">References</p>
 <p>[1] <a class="reference external" href="https://www.midi.org/specifications/item/gm-level-1-sound-set">https://www.midi.org/specifications/item/gm-level-1-sound-set</a></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pypianoroll.Multitrack.assign_constant">
+<code class="descname">assign_constant</code><span class="sig-paren">(</span><em>value</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pypianoroll/multitrack.html#Multitrack.assign_constant"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypianoroll.Multitrack.assign_constant" title="Permalink to this definition">¶</a></dt>
+<dd><p>Assign a constant value to the nonzeros in the piano-rolls. If a
+piano-roll is not binarized, its data type will be preserved. If a
+piano-roll is binarized, it will be casted to the type of <cite>value</cite>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>value</strong> (<em>int</em><em> or </em><em>float</em>) – The constant value to be assigned to the nonzeros of the
+piano-rolls.</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
@@ -462,22 +479,6 @@ solely on <cite>downbeat</cite>.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="pypianoroll.Multitrack.get_num_track">
-<code class="descname">get_num_track</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pypianoroll/multitrack.html#Multitrack.get_num_track"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypianoroll.Multitrack.get_num_track" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the number of tracks.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><strong>num_track</strong> – The number of tracks.</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">int</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
 <dt id="pypianoroll.Multitrack.get_stacked_pianorolls">
 <code class="descname">get_stacked_pianorolls</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pypianoroll/multitrack.html#Multitrack.get_stacked_pianorolls"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypianoroll.Multitrack.get_stacked_pianorolls" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a stacked multi-track piano-roll. The shape of the return
@@ -579,7 +580,7 @@ length of the piano-roll with the maximal length.</p>
 
 <dl class="method">
 <dt id="pypianoroll.Multitrack.parse_midi">
-<code class="descname">parse_midi</code><span class="sig-paren">(</span><em>filepath</em>, <em>mode='sum'</em>, <em>algorithm='normal'</em>, <em>binarized=False</em>, <em>compressed=True</em>, <em>collect_onsets_only=False</em>, <em>collect_midi_info=False</em>, <em>threshold=0</em>, <em>first_beat_time=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pypianoroll/multitrack.html#Multitrack.parse_midi"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypianoroll.Multitrack.parse_midi" title="Permalink to this definition">¶</a></dt>
+<code class="descname">parse_midi</code><span class="sig-paren">(</span><em>filepath</em>, <em>mode='sum'</em>, <em>algorithm='normal'</em>, <em>binarized=False</em>, <em>compressed=True</em>, <em>collect_onsets_only=False</em>, <em>threshold=0</em>, <em>first_beat_time=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pypianoroll/multitrack.html#Multitrack.parse_midi"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypianoroll.Multitrack.parse_midi" title="Permalink to this definition">¶</a></dt>
 <dd><p>Parse a MIDI file.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -610,8 +611,6 @@ use the original parsed piano-rolls. Deafault to True.</li>
 <li><strong>collect_onsets_only</strong> (<em>bool</em>) – True to collect only the onset of the notes (i.e. note on events) in
 all tracks, where the note off and duration information are dropped.
 False to parse regular piano-rolls.</li>
-<li><strong>collect_midi_info</strong> (<em>bool</em>) – True to collect additional information in the MIDI file and return
-in a dictionary format. False to collect and return nothing.</li>
 <li><strong>threshold</strong> (<em>int</em><em> or </em><em>float</em>) – Threshold to binarize the parsed piano-rolls. Only effective when
 <cite>binarized</cite> is True. Default to zero.</li>
 <li><strong>first_beat_time</strong> (<em>float</em>) – The location (in sec) of the first beat. Required and only effective
@@ -835,25 +834,34 @@ uncompressed .npz file. Default to True.</li>
 
 <dl class="method">
 <dt id="pypianoroll.Multitrack.to_pretty_midi">
-<code class="descname">to_pretty_midi</code><span class="sig-paren">(</span><em>constant_tempo=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pypianoroll/multitrack.html#Multitrack.to_pretty_midi"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypianoroll.Multitrack.to_pretty_midi" title="Permalink to this definition">¶</a></dt>
+<code class="descname">to_pretty_midi</code><span class="sig-paren">(</span><em>constant_tempo=None</em>, <em>constant_velocity=100</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pypianoroll/multitrack.html#Multitrack.to_pretty_midi"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypianoroll.Multitrack.to_pretty_midi" title="Permalink to this definition">¶</a></dt>
 <dd><p>Convert to a <code class="xref py py-class docutils literal"><span class="pre">pretty_midi.PrettyMIDI</span></code> instance.</p>
 <p class="rubric">Notes</p>
 <ul class="simple">
 <li>Only constant tempo is supported by now.</li>
-<li>The velocities of the converted piano-rolls are cliiped into [0, 127],
+<li>The velocities of the converted piano-rolls are clipped to [0, 127],
 i.e. values below 0 and values beyond 127 are replaced by 127 and 0,
 respectively.</li>
+<li>Adjacent nonzero values of the same pitch will be considered a single
+note with their mean as its velocity.</li>
 </ul>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>constant_tempo</strong> (<em>int</em>) – The constant tempo value of the output object. If None, default to
-use the first element of <cite>tempo</cite></td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>constant_tempo</strong> (<em>int</em>) – The constant tempo value of the output object. If None, default to
+use the first element of <cite>tempo</cite>.</li>
+<li><strong>constant_velocity</strong> (<em>int</em>) – The constant velocity to be assigned to binarized tracks. Default to
+100.</li>
+</ul>
+</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><strong>pm</strong> – The converted <code class="xref py py-class docutils literal"><span class="pre">pretty_midi.PrettyMIDI</span></code> instance.</td>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>pm</strong> – The converted <code class="xref py py-class docutils literal"><span class="pre">pretty_midi.PrettyMIDI</span></code> instance.</p>
+</td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><cite>pretty_midi.PrettyMIDI</cite> object</td>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><cite>pretty_midi.PrettyMIDI</cite> object</p>
+</td>
 </tr>
 </tbody>
 </table>
@@ -939,7 +947,7 @@ use the first element of <cite>tempo</cite></td>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'./',
-            VERSION:'0.1.2',
+            VERSION:'0.1.3',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,
