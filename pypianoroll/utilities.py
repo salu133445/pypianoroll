@@ -34,6 +34,22 @@ def is_pianoroll(arr):
         return False
     return True
 
+def assign_constant(obj, value):
+    """
+    Assign a constant value to the nonzeros in the piano-roll(s). If a
+    piano-roll is not binarized, its data type will be preserved. If a
+    piano-roll is binarized, it will be casted to the type of `value`.
+
+    Arguments
+    ---------
+    value : int or float
+        The constant value to be assigned to the nonzeros of the
+        piano-roll(s).
+
+    """
+    _check_supported(obj)
+    obj.assign_constant(value)
+
 def binarize(obj, threshold=0):
     """
     Return a copy of the object with binarized piano-roll(s).
@@ -116,6 +132,25 @@ def pad_to_same(obj):
         raise TypeError("Support only `pypianoroll.Multitrack` class objects")
     copied = deepcopy(obj)
     copied.pad_to_same()
+    return copied
+
+def pad_to_multiple(obj, factor):
+    """
+    Return a copy of the object with its piano-roll padded with zeros at the
+    end along the time axis with the minimal length that make the length of
+    the resulting piano-roll a multiple of `factor`.
+
+    Parameters
+    ----------
+    factor : int
+        The value which the length of the resulting piano-roll will be
+        a multiple of.
+
+    """
+    if not isinstance(obj, Track):
+        raise TypeError("Support only `pypianoroll.Track` class objects")
+    copied = deepcopy(obj)
+    copied.pad_to_multiple(factor)
     return copied
 
 def parse(filepath):

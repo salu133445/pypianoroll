@@ -14,7 +14,7 @@ Features
 from .version import __version__
 from .track import Track
 from .multitrack import Multitrack
-from .utilities import (is_pianoroll, binarize, clip, copy, load, pad,
-                        pad_to_same, parse, plot, save, transpose,
-                        trim_trailing_silence, write)
+from .utilities import (is_pianoroll, assign_constant, binarize, clip, copy,
+                        load, pad, pad_to_multiple, pad_to_same, parse, plot,
+                        save, transpose, trim_trailing_silence, write)
 from .plot import (plot_pianoroll, save_animation)
