@@ -749,7 +749,7 @@ class Multitrack(object):
             end = start
             for idx, tsc in enumerate(pm.time_signature_changes[:-1]):
                 end += np.searchsorted(beat_times[end:],
-                                       pm.time_signature_changes[idx+1])
+                                       pm.time_signature_changes[idx+1].time)
                 start_idx = start * self.beat_resolution
                 end_idx = end * self.beat_resolution
                 stride = tsc.numerator * self.beat_resolution
