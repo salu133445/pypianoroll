@@ -727,7 +727,7 @@ class Multitrack(object):
 
         # get tempo change event times and contents
         tc_times, tempi = pm.get_tempo_changes()
-        arg_sorted = np.argsort(tc_times.argsort)
+        arg_sorted = np.argsort(tc_times)
         tc_times = tc_times[arg_sorted]
         tempi = tempi[arg_sorted]
 
