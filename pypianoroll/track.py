@@ -5,7 +5,7 @@ from copy import deepcopy
 from six import string_types
 import numpy as np
 from matplotlib import pyplot as plt
-from .plot import plot_pianoroll
+from pypianoroll.plot import plot_pianoroll
 
 class Track(object):
     """
@@ -269,9 +269,9 @@ class Track(object):
         return is_binarized
 
     def plot(self, filepath=None, beat_resolution=None, downbeats=None,
-             normalization='standard', preset='default', cmap='Blues',
-             tick_loc=None, xtick='auto', ytick='octave', xticklabel='on',
-             yticklabel='auto', direction='in', label='both', grid='both',
+             preset='default', cmap='Blues', normalization='standard',
+             xtick='auto', ytick='octave', xticklabel='on', yticklabel='auto',
+             tick_loc=None, tick_direction='in', label='both', grid='both',
              grid_linestyle=':', grid_linewidth=.5):
         """
         Plot the piano-roll or save a plot of the piano-roll.
@@ -288,7 +288,7 @@ class Track(object):
             step of a bar.
         normalization : {'standard', 'auto', 'none'}
             The normalization method to apply to the piano-roll. Default to
-            'standard'. If `pianoroll` is binarized, use 'none' anyway.
+            'standard'. Only effective when `pianoroll` is not binarized.
 
             - For 'standard' normalization, the normalized values are given by
               N = P / 128, where P, N is the original and normalized piano-roll,
@@ -311,9 +311,6 @@ class Track(object):
         cmap :  `matplotlib.colors.Colormap`
             Colormap to use in :func:`matplotlib.pyplot.imshow`. Default to
             'Blues'. Only effective when `pianoroll` is 2D.
-        tick_loc : tuple or list
-            List of locations to put ticks. Availables elements are 'bottom',
-            'top', 'left' and 'right'. If None, default to ('bottom', 'left').
         xtick : {'auto', 'beat', 'step', 'off'}
             Use beat number or step number as ticks along the x-axis, or
             automatically set to 'beat' when `beat_resolution` is given and set
@@ -329,7 +326,10 @@ class Track(object):
             number. If 'auto', set to 'name' when `ytick` is 'octave' and
             'number' when `ytick` is 'pitch'. Default to 'auto'. Only effective
             when `ytick` is not 'off'.
-        direction : {'in', 'out', 'inout'}
+        tick_loc : tuple or list
+            List of locations to put ticks. Availables elements are 'bottom',
+            'top', 'left' and 'right'. If None, default to ('bottom', 'left').
+        tick_direction : {'in', 'out', 'inout'}
             Put ticks inside the axes, outside the axes, or both. Default to
             'in'. Only effective when `xtick` and `ytick` are not both 'off'.
         label : {'x', 'y', 'both', 'off'}
@@ -354,13 +354,12 @@ class Track(object):
         fig, ax = plt.subplots()
         if self.is_binarized():
             normalization = 'none'
-        plot_pianoroll(ax, self.pianoroll, self.is_drum,
-                       beat_resolution=beat_resolution, downbeats=downbeats,
-                       normalization=normalization, preset=preset, cmap=cmap,
-                       tick_loc=tick_loc, xtick=xtick, ytick=ytick,
+        plot_pianoroll(ax, self.pianoroll, self.is_drum, beat_resolution,
+                       downbeats, preset=preset, cmap=cmap,
+                       normalization=normalization, xtick=xtick, ytick=ytick,
                        xticklabel=xticklabel, yticklabel=yticklabel,
-                       direction=direction, label=label, grid=grid,
-                       grid_linestyle=grid_linestyle,
+                       tick_loc=tick_loc, tick_direction=tick_direction,
+                       label=label, grid=grid, grid_linestyle=grid_linestyle,
                        grid_linewidth=grid_linewidth)
 
         if filepath is not None:

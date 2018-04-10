@@ -2,17 +2,17 @@
 
 """
 import numpy as np
-import pretty_midi
 from matplotlib import pyplot as plt
 from moviepy.editor import VideoClip
 from moviepy.video.io.bindings import mplfig_to_npimage
+import pretty_midi
 
 def plot_pianoroll(ax, pianoroll, is_drum=False, beat_resolution=None,
-                   downbeats=None, normalization='standard', preset='default',
-                   cmap='Blues', tick_loc=None, xtick='auto', ytick='octave',
-                   xticklabel='on', yticklabel='auto', direction='in',
-                   label='both', grid='both', grid_linestyle=':',
-                   grid_linewidth=.5):
+                   downbeats=None, preset='default', cmap='Blues',
+                   normalization='standard', xtick='auto', ytick='octave',
+                   xticklabel='on', yticklabel='auto', tick_loc=None,
+                   tick_direction='in', label='both', grid='both',
+                   grid_linestyle=':', grid_linewidth=.5):
     """
     Plot a piano-roll given as a numpy array
 
@@ -25,9 +25,9 @@ def plot_pianoroll(ax, pianoroll, is_drum=False, beat_resolution=None,
         The piano-roll to be plotted. The values should be in [0, 1] when
         `normalized` is False.
 
-        - For 2D array, shape=(num_time_step, num_pitch).
-        - For 3D array, shape=(num_time_step, num_pitch, num_channel), where
-          channels can be either RGB or RGBA.
+        - For a 2D array, shape=(num_time_step, num_pitch).
+        - For a 3D array, shape=(num_time_step, num_pitch, num_channel),
+          where channels can be either RGB or RGBA.
 
     is_drum : bool
         Drum indicator. True for drums. False for other instruments. Default
@@ -38,9 +38,19 @@ def plot_pianoroll(ax, pianoroll, is_drum=False, beat_resolution=None,
     downbeats : list
         Indices of time steps that contain downbeats., i.e. the first time
         step of a bar.
+    preset : {'default', 'plain', 'frame'}
+        Preset themes for the plot.
+
+        - In 'default' preset, the ticks, grid and labels are on.
+        - In 'frame' preset, the ticks and grid are both off.
+        - In 'plain' preset, the x- and y-axis are both off.
+
+    cmap :  `matplotlib.colors.Colormap`
+        Colormap to use in :func:`matplotlib.pyplot.imshow`. Default to
+        'Blues'. Only effective when `pianoroll` is 2D.
     normalization : {'standard', 'auto', 'none'}
         The normalization method to apply to the piano-roll. Default to
-        'standard'. If `pianoroll` is binarized, use 'none' anyway.
+        'standard'. Only effective when `pianoroll` is not binarized.
 
         - For 'standard' normalization, the normalized values are given by
           N = P / 128, where P, N is the original and normalized piano-roll,
@@ -53,19 +63,6 @@ def plot_pianoroll(ax, pianoroll, is_drum=False, beat_resolution=None,
           this case, the values of `pianoroll` should be in [0, 1] in order
           to plot it correctly.
 
-    preset : {'default', 'plain', 'frame'}
-        Preset themes for the plot.
-
-        - In 'default' preset, the ticks, grid and labels are on.
-        - In 'frame' preset, the ticks and grid are both off.
-        - In 'plain' preset, the x- and y-axis are both off.
-
-    cmap :  `matplotlib.colors.Colormap`
-        Colormap to use in :func:`matplotlib.pyplot.imshow`. Default to
-        'Blues'. Only effective when `pianoroll` is 2D.
-    tick_loc : tuple or list
-        List of locations to put ticks. Availables elements are 'bottom',
-        'top', 'left' and 'right'. If None, default to ('bottom', 'left').
     xtick : {'auto', 'beat', 'step', 'off'}
         Use beat number or step number as ticks along the x-axis, or
         automatically set to 'beat' when `beat_resolution` is given and set
@@ -81,7 +78,10 @@ def plot_pianoroll(ax, pianoroll, is_drum=False, beat_resolution=None,
         number. If 'auto', set to 'name' when `ytick` is 'octave' and
         'number' when `ytick` is 'pitch'. Default to 'auto'. Only effective
         when `ytick` is not 'off'.
-    direction : {'in', 'out', 'inout'}
+    tick_loc : tuple or list
+        List of locations to put ticks. Availables elements are 'bottom',
+        'top', 'left' and 'right'. If None, default to ('bottom', 'left').
+    tick_direction : {'in', 'out', 'inout'}
         Put ticks inside the axes, outside the axes, or both. Default to
         'in'. Only effective when `xtick` and `ytick` are not both 'off'.
     label : {'x', 'y', 'both', 'off'}
@@ -114,8 +114,9 @@ def plot_pianoroll(ax, pianoroll, is_drum=False, beat_resolution=None,
     if yticklabel not in ('auto', 'name', 'number', 'off'):
         raise ValueError("`yticklabel` must be one of {'auto', 'name', "
                          "'number', 'off'}")
-    if direction not in ('in', 'out', 'inout'):
-        raise ValueError("`direction` must be one of {'in', 'out', 'inout'}")
+    if tick_direction not in ('in', 'out', 'inout'):
+        raise ValueError("`tick_direction` must be one of {'in', 'out',"
+                         "'inout'}")
     if label not in ('x', 'y', 'both', 'off'):
         raise ValueError("`label` must be one of {'x', 'y', 'both', 'off'}")
     if grid not in ('x', 'y', 'both', 'off'):
@@ -146,14 +147,14 @@ def plot_pianoroll(ax, pianoroll, is_drum=False, beat_resolution=None,
     if preset == 'plain':
         ax.axis('off')
     elif preset == 'frame':
-        ax.tick_params(direction=direction, bottom='off', top='off', left='off',
-                       right='off', labelbottom='off', labeltop='off',
-                       labelleft='off', labelright='off')
+        ax.tick_params(direction=tick_direction, bottom='off', top='off',
+                       left='off', right='off', labelbottom='off',
+                       labeltop='off', labelleft='off', labelright='off')
     else:
         labelbottom = 'on' if xticklabel != 'off' else 'off'
         labelleft = 'on' if yticklabel != 'off' else 'off'
 
-        ax.tick_params(direction=direction, bottom=('bottom' in tick_loc),
+        ax.tick_params(direction=tick_direction, bottom=('bottom' in tick_loc),
                        top=('top' in tick_loc), left=('left' in tick_loc),
                        right=('right' in tick_loc), labelbottom=labelbottom,
                        labeltop='off', labelleft=labelleft, labelright='off')
@@ -209,11 +210,12 @@ def plot_pianoroll(ax, pianoroll, is_drum=False, beat_resolution=None,
             ax.axvline(x=step, color='k', linewidth=1)
 
 def save_animation(filepath, pianoroll, window, hop=1, fps=None, is_drum=False,
-                   beat_resolution=None, downbeats=None,
-                   normalization='standard', preset='default', cmap='Blues',
-                   tick_loc=None, xtick='auto', ytick='octave', xticklabel='on',
-                   yticklabel='auto', direction='in', label='both', grid='both',
-                   grid_linestyle=':', grid_linewidth=.5, **kwargs):
+                   beat_resolution=None, downbeats=None, preset='default',
+                   cmap='Blues', normalization='standard', xtick='auto',
+                   ytick='octave', xticklabel='on', yticklabel='auto',
+                   tick_loc=None, tick_direction='in', label='both',
+                   grid='both', grid_linestyle=':', grid_linewidth=.5,
+                   **kwargs):
     """
     Save a piano-roll to an animation in video or GIF format.
 
@@ -225,9 +227,9 @@ def save_animation(filepath, pianoroll, window, hop=1, fps=None, is_drum=False,
         The piano-roll to be plotted. The values should be in [0, 1] when
         `normalized` is False.
 
-        - For 2D array, shape=(num_time_step, num_pitch).
-        - For 3D array, shape=(num_time_step, num_pitch, num_channel), where
-          channels can be either RGB or RGBA.
+        - For a 2D array, shape=(num_time_step, num_pitch).
+        - For a 3D array, shape=(num_time_step, num_pitch, num_channel),
+          where channels can be either RGB or RGBA.
 
     window : int
         Window size to be applied to `pianoroll` for the animation.
@@ -246,18 +248,18 @@ def save_animation(filepath, pianoroll, window, hop=1, fps=None, is_drum=False,
         step of a bar.
     normalization : {'standard', 'auto', 'none'}
         The normalization method to apply to the piano-roll. Default to
-        'standard'. If `pianoroll` is binarized, use 'none' anyway.
+        'standard'. Only effective when `pianoroll` is not binarized.
 
         - For 'standard' normalization, the normalized values are given by
           N = P / 128, where P, N is the original and normalized piano-roll,
           respectively
         - For 'auto' normalization, the normalized values are given by
           N = (P - m) / (M - m), where P, N is the original and normalized
-          piano-roll, respectively, and M, m is the maximum and minimum of the
-          original piano-roll, respectively.
+          piano-roll, respectively, and M, m is the maximum and minimum of
+          the original piano-roll, respectively.
         - If 'none', no normalization will be applied to the piano-roll. In
-          this case, the values of `pianoroll` should be in [0, 1] in order to
-          plot it correctly.
+          this case, the values of `pianoroll` should be in [0, 1] in order
+          to plot it correctly.
 
     preset : {'default', 'plain', 'frame'}
         Preset themes for the plot.
@@ -269,9 +271,6 @@ def save_animation(filepath, pianoroll, window, hop=1, fps=None, is_drum=False,
     cmap :  `matplotlib.colors.Colormap`
         Colormap to use in :func:`matplotlib.pyplot.imshow`. Default to
         'Blues'. Only effective when `pianoroll` is 2D.
-    tick_loc : tuple or list
-        List of locations to put ticks. Availables elements are 'bottom',
-        'top', 'left' and 'right'. If None, default to ('bottom', 'left').
     xtick : {'auto', 'beat', 'step', 'off'}
         Use beat number or step number as ticks along the x-axis, or
         automatically set to 'beat' when `beat_resolution` is given and set
@@ -287,7 +286,10 @@ def save_animation(filepath, pianoroll, window, hop=1, fps=None, is_drum=False,
         number. If 'auto', set to 'name' when `ytick` is 'octave' and
         'number' when `ytick` is 'pitch'. Default to 'auto'. Only effective
         when `ytick` is not 'off'.
-    direction : {'in', 'out', 'inout'}
+    tick_loc : tuple or list
+        List of locations to put ticks. Availables elements are 'bottom',
+        'top', 'left' and 'right'. If None, default to ('bottom', 'left').
+    tick_direction : {'in', 'out', 'inout'}
         Put ticks inside the axes, outside the axes, or both. Default to
         'in'. Only effective when `xtick` and `ytick` are not both 'off'.
     label : {'x', 'y', 'both', 'off'}
@@ -342,13 +344,12 @@ def save_animation(filepath, pianoroll, window, hop=1, fps=None, is_drum=False,
         xtick = 'beat' if beat_resolution is not None else 'step'
 
     fig, ax = plt.subplots()
-    plot_pianoroll(ax, pianoroll[:window], is_drum=is_drum,
-                   beat_resolution=beat_resolution, downbeats=downbeats,
-                   normalization=normalization, preset=preset, cmap=cmap,
-                   tick_loc=tick_loc, xtick=xtick, ytick=ytick,
-                   xticklabel=xticklabel, yticklabel=yticklabel,
-                   direction=direction, label='both', grid='both',
-                   grid_linestyle=':', grid_linewidth=.5)
+    plot_pianoroll(ax, pianoroll[:window], is_drum, beat_resolution, downbeats,
+                   preset=preset, cmap=cmap, normalization=normalization,
+                   xtick=xtick, ytick=ytick, xticklabel=xticklabel,
+                   yticklabel=yticklabel, tick_loc=tick_loc,
+                   tick_direction=tick_direction, label=label, grid=grid,
+                   grid_linestyle=grid_linestyle, grid_linewidth=grid_linewidth)
 
     num_frame = int((pianoroll.shape[0] - window) / hop)
     duration = int(num_frame / fps)

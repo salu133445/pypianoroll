@@ -3,8 +3,8 @@
 """
 from copy import deepcopy
 import numpy as np
-from .track import Track
-from .multitrack import Multitrack
+from pypianoroll.track import Track
+from pypianoroll.multitrack import Multitrack
 
 def _check_supported(obj):
     """
