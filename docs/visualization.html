@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Visualization &mdash; pypianoroll 0.1.3 documentation</title>
+  <title>Visualization &mdash; pypianoroll 0.1.2 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="index" title="Index"
               href="genindex.html"/>
         <link rel="search" title="Search" href="search.html"/>
-    <link rel="top" title="pypianoroll 0.1.3 documentation" href="index.html"/>
+    <link rel="top" title="pypianoroll 0.1.2 documentation" href="index.html"/>
         <link rel="next" title="Utilities" href="utilities.html"/>
         <link rel="prev" title="Parse &amp; Write" href="parse_write.html"/> 
 
@@ -66,7 +66,7 @@
             
             
               <div class="version">
-                0.1.3
+                0.1.2
               </div>
             
           
@@ -181,7 +181,7 @@ properties in the plotting functions as well.</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>ax</strong> (<em>matplotlib.axes.Axes object</em>) – The <code class="xref py py-class docutils literal"><span class="pre">matplotlib.axes.Axes</span></code> object where the piano-roll will
+<li><strong>ax</strong> (<em>matplotlib.axes.Axes object</em>) – The <a class="reference external" href="https://matplotlib.org/api/axes_api.html#matplotlib.axes.Axes" title="(in Matplotlib v2.2.2)"><code class="xref py py-class docutils literal"><span class="pre">matplotlib.axes.Axes</span></code></a> object where the piano-roll will
 be plotted on.</li>
 <li><strong>pianoroll</strong> (<em>np.ndarray</em>) – <p>The piano-roll to be plotted. The values should be in [0, 1] when
 <cite>normalized</cite> is False.</p>
@@ -219,7 +219,7 @@ to plot it correctly.</li>
 <li>In ‘plain’ preset, the x- and y-axis are both off.</li>
 </ul>
 </li>
-<li><strong>cmap</strong> (<cite>matplotlib.colors.Colormap</cite>) – Colormap to use in <code class="xref py py-func docutils literal"><span class="pre">matplotlib.pyplot.imshow()</span></code>. Default to
+<li><strong>cmap</strong> (<cite>matplotlib.colors.Colormap</cite>) – Colormap to use in <a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.pyplot.imshow.html#matplotlib.pyplot.imshow" title="(in Matplotlib v2.2.2)"><code class="xref py py-func docutils literal"><span class="pre">matplotlib.pyplot.imshow()</span></code></a>. Default to
 ‘Blues’. Only effective when <cite>pianoroll</cite> is 2D.</li>
 <li><strong>tick_loc</strong> (<em>tuple</em><em> or </em><em>list</em>) – List of locations to put ticks. Availables elements are ‘bottom’,
 ‘top’, ‘left’ and ‘right’. If None, default to (‘bottom’, ‘left’).</li>
@@ -238,9 +238,9 @@ when <cite>ytick</cite> is not ‘off’.</li>
 ‘in’. Only effective when <cite>xtick</cite> and <cite>ytick</cite> are not both ‘off’.</li>
 <li><strong>label</strong> (<em>{'x'</em><em>, </em><em>'y'</em><em>, </em><em>'both'</em><em>, </em><em>'off'}</em>) – Add label to the x-axis, y-axis, both or neither. Default to ‘both’.</li>
 <li><strong>grid</strong> (<em>{'x'</em><em>, </em><em>'y'</em><em>, </em><em>'both'</em><em>, </em><em>'off'}</em>) – Add grid to the x-axis, y-axis, both or neither. Default to ‘both’.</li>
-<li><strong>grid_linestyle</strong> (<em>str</em>) – Will be passed to <code class="xref py py-meth docutils literal"><span class="pre">matplotlib.axes.Axes.grid()</span></code> as ‘linestyle’
+<li><strong>grid_linestyle</strong> (<em>str</em>) – Will be passed to <a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.axes.Axes.grid.html#matplotlib.axes.Axes.grid" title="(in Matplotlib v2.2.2)"><code class="xref py py-meth docutils literal"><span class="pre">matplotlib.axes.Axes.grid()</span></code></a> as ‘linestyle’
 argument.</li>
-<li><strong>grid_linewidth</strong> (<em>float</em>) – Will be passed to <code class="xref py py-meth docutils literal"><span class="pre">matplotlib.axes.Axes.grid()</span></code> as ‘linewidth’
+<li><strong>grid_linewidth</strong> (<em>float</em>) – Will be passed to <a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.axes.Axes.grid.html#matplotlib.axes.Axes.grid" title="(in Matplotlib v2.2.2)"><code class="xref py py-meth docutils literal"><span class="pre">matplotlib.axes.Axes.grid()</span></code></a> as ‘linewidth’
 argument.</li>
 </ul>
 </td>
@@ -305,7 +305,7 @@ plot it correctly.</li>
 <li>In ‘plain’ preset, the x- and y-axis are both off.</li>
 </ul>
 </li>
-<li><strong>cmap</strong> (<cite>matplotlib.colors.Colormap</cite>) – Colormap to use in <code class="xref py py-func docutils literal"><span class="pre">matplotlib.pyplot.imshow()</span></code>. Default to
+<li><strong>cmap</strong> (<cite>matplotlib.colors.Colormap</cite>) – Colormap to use in <a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.pyplot.imshow.html#matplotlib.pyplot.imshow" title="(in Matplotlib v2.2.2)"><code class="xref py py-func docutils literal"><span class="pre">matplotlib.pyplot.imshow()</span></code></a>. Default to
 ‘Blues’. Only effective when <cite>pianoroll</cite> is 2D.</li>
 <li><strong>tick_loc</strong> (<em>tuple</em><em> or </em><em>list</em>) – List of locations to put ticks. Availables elements are ‘bottom’,
 ‘top’, ‘left’ and ‘right’. If None, default to (‘bottom’, ‘left’).</li>
@@ -324,9 +324,9 @@ when <cite>ytick</cite> is not ‘off’.</li>
 ‘in’. Only effective when <cite>xtick</cite> and <cite>ytick</cite> are not both ‘off’.</li>
 <li><strong>label</strong> (<em>{'x'</em><em>, </em><em>'y'</em><em>, </em><em>'both'</em><em>, </em><em>'off'}</em>) – Add label to the x-axis, y-axis, both or neither. Default to ‘both’.</li>
 <li><strong>grid</strong> (<em>{'x'</em><em>, </em><em>'y'</em><em>, </em><em>'both'</em><em>, </em><em>'off'}</em>) – Add grid to the x-axis, y-axis, both or neither. Default to ‘both’.</li>
-<li><strong>grid_linestyle</strong> (<em>str</em>) – Will be passed to <code class="xref py py-meth docutils literal"><span class="pre">matplotlib.axes.Axes.grid()</span></code> as ‘linestyle’
+<li><strong>grid_linestyle</strong> (<em>str</em>) – Will be passed to <a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.axes.Axes.grid.html#matplotlib.axes.Axes.grid" title="(in Matplotlib v2.2.2)"><code class="xref py py-meth docutils literal"><span class="pre">matplotlib.axes.Axes.grid()</span></code></a> as ‘linestyle’
 argument.</li>
-<li><strong>grid_linewidth</strong> (<em>float</em>) – Will be passed to <code class="xref py py-meth docutils literal"><span class="pre">matplotlib.axes.Axes.grid()</span></code> as ‘linewidth’
+<li><strong>grid_linewidth</strong> (<em>float</em>) – Will be passed to <a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.axes.Axes.grid.html#matplotlib.axes.Axes.grid" title="(in Matplotlib v2.2.2)"><code class="xref py py-meth docutils literal"><span class="pre">matplotlib.axes.Axes.grid()</span></code></a> as ‘linewidth’
 argument.</li>
 </ul>
 </td>
@@ -382,7 +382,7 @@ argument.</li>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'./',
-            VERSION:'0.1.3',
+            VERSION:'0.1.2',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,
