@@ -1,4 +1,3 @@
-#!/usr/bin/env python2
 # -*- coding: utf-8 -*-
 #
 # pypianoroll documentation build configuration file, created by
@@ -19,9 +18,9 @@
 
 import os
 import sys
-sys.path.insert(0, os.path.abspath('../../'))
-
 import pypianoroll
+
+sys.path.insert(0, os.path.abspath('../../'))
 
 # -- General configuration ------------------------------------------------
 
@@ -35,7 +34,7 @@ import pypianoroll
 extensions = [
     'sphinx.ext.autodoc',
     'sphinx.ext.doctest',
-    # 'sphinx.ext.intersphinx',
+    'sphinx.ext.intersphinx',
     'sphinx.ext.viewcode',
     'sphinx.ext.githubpages',
     'sphinx.ext.napoleon'
@@ -179,9 +178,9 @@ texinfo_documents = [
 
 # Example configuration for intersphinx: refer to the Python standard library.
 intersphinx_mapping = {
-    # 'matplotlib': ('http://matplotlib.org', None),
-    # 'scipy': ('https://docs.scipy.org/doc/scipy/reference/', None),
-    # 'numpy': ('http://docs.scipy.org/doc/numpy/', None)
+    'matplotlib': ('http://matplotlib.org', None),
+    'scipy': ('https://docs.scipy.org/doc/scipy/reference/', None),
+    'numpy': ('http://docs.scipy.org/doc/numpy/', None)
 }
 
 autoclass_content = 'both'
