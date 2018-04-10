@@ -8,7 +8,7 @@ with open(readme_path, encoding='utf-8') as f:
     long_description = f.read()
 
 version = {}
-with open("pypianoroll/version.py") as f:
+with open(os.path.join('pypianoroll', 'version.py')) as f:
     exec(f.read(), version)
 
 setup(
