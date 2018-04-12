@@ -198,7 +198,7 @@ values are 0 to 127. Default to 0 (Acoustic Grand Piano).</p>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
 <li><strong>pianoroll</strong> (<em>np.ndarray</em><em>, </em><em>shape=</em><em>(</em><em>num_time_step</em><em>, </em><em>128</em><em>)</em>) – Piano-roll matrix. First dimension represents time. Second dimension
-represents pitch. Available datatypes are bool, int, float.</li>
+represents pitch. Available data types are bool, int, float.</li>
 <li><strong>program</strong> (<em>int</em>) – Program number according to General MIDI specification [1].
 Available values are 0 to 127. Default to 0 (Acoustic Grand Piano).</li>
 <li><strong>is_drum</strong> (<em>bool</em>) – Drum indicator. True for drums. False for other instruments. Default
@@ -211,6 +211,22 @@ to False.</li>
 </table>
 <p class="rubric">References</p>
 <p>[1] <a class="reference external" href="https://www.midi.org/specifications/item/gm-level-1-sound-set">https://www.midi.org/specifications/item/gm-level-1-sound-set</a></p>
+<dl class="method">
+<dt id="pypianoroll.Track.assign_constant">
+<code class="descname">assign_constant</code><span class="sig-paren">(</span><em>value</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pypianoroll/track.html#Track.assign_constant"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypianoroll.Track.assign_constant" title="Permalink to this definition">¶</a></dt>
+<dd><p>Assign a constant value to all nonzeros in the piano-roll. If the
+piano-roll is not binarized, its data type will be preserved. If the
+piano-roll is binarized, it will be casted to the type of <cite>value</cite>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>value</strong> (<em>int</em><em> or </em><em>float</em>) – The constant value to be assigned to the nonzeros of the piano-roll.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
 <dl class="method">
 <dt id="pypianoroll.Track.binarize">
 <code class="descname">binarize</code><span class="sig-paren">(</span><em>threshold=0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pypianoroll/track.html#Track.binarize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypianoroll.Track.binarize" title="Permalink to this definition">¶</a></dt>
@@ -356,15 +372,15 @@ False.</p>
 <dl class="method">
 <dt id="pypianoroll.Track.pad_to_multiple">
 <code class="descname">pad_to_multiple</code><span class="sig-paren">(</span><em>factor</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pypianoroll/track.html#Track.pad_to_multiple"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypianoroll.Track.pad_to_multiple" title="Permalink to this definition">¶</a></dt>
-<dd><p>Pad the piano-roll with zeros at the end along the time axis of
-minimal length to make the length of the resulting piano-roll a
+<dd><p>Pad the piano-roll with zeros at the end along the time axis with the
+minimal length that make the length of the resulting piano-roll a
 multiple of <cite>factor</cite>.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>factor</strong> (<em>int</em>) – The value of which the length of the resulting piano-roll will be
-a multiple.</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>factor</strong> (<em>int</em>) – The value which the length of the resulting piano-roll will be
+a multiple of.</td>
 </tr>
 </tbody>
 </table>
@@ -372,7 +388,7 @@ a multiple.</td>
 
 <dl class="method">
 <dt id="pypianoroll.Track.plot">
-<code class="descname">plot</code><span class="sig-paren">(</span><em>filepath=None</em>, <em>beat_resolution=None</em>, <em>downbeats=None</em>, <em>normalization='standard'</em>, <em>preset='default'</em>, <em>cmap='Blues'</em>, <em>tick_loc=None</em>, <em>xtick='auto'</em>, <em>ytick='octave'</em>, <em>xticklabel='on'</em>, <em>yticklabel='auto'</em>, <em>direction='in'</em>, <em>label='both'</em>, <em>grid='both'</em>, <em>grid_linestyle=':'</em>, <em>grid_linewidth=0.5</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pypianoroll/track.html#Track.plot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypianoroll.Track.plot" title="Permalink to this definition">¶</a></dt>
+<code class="descname">plot</code><span class="sig-paren">(</span><em>filepath=None</em>, <em>beat_resolution=None</em>, <em>downbeats=None</em>, <em>preset='default'</em>, <em>cmap='Blues'</em>, <em>normalization='standard'</em>, <em>xtick='auto'</em>, <em>ytick='octave'</em>, <em>xticklabel='on'</em>, <em>yticklabel='auto'</em>, <em>tick_loc=None</em>, <em>tick_direction='in'</em>, <em>label='both'</em>, <em>grid='both'</em>, <em>grid_linestyle=':'</em>, <em>grid_linewidth=0.5</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pypianoroll/track.html#Track.plot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypianoroll.Track.plot" title="Permalink to this definition">¶</a></dt>
 <dd><p>Plot the piano-roll or save a plot of the piano-roll.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -385,7 +401,7 @@ when <cite>xticklabel</cite> is ‘beat’.</li>
 <li><strong>downbeats</strong> (<em>list</em>) – Indices of time steps that contain downbeats., i.e. the first time
 step of a bar.</li>
 <li><strong>normalization</strong> (<em>{'standard'</em><em>, </em><em>'auto'</em><em>, </em><em>'none'}</em>) – <p>The normalization method to apply to the piano-roll. Default to
-‘standard’. If <cite>pianoroll</cite> is binarized, use ‘none’ anyway.</p>
+‘standard’. Only effective when <cite>pianoroll</cite> is not binarized.</p>
 <ul>
 <li>For ‘standard’ normalization, the normalized values are given by
 N = P / 128, where P, N is the original and normalized piano-roll,
@@ -408,8 +424,6 @@ to plot it correctly.</li>
 </li>
 <li><strong>cmap</strong> (<cite>matplotlib.colors.Colormap</cite>) – Colormap to use in <a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.pyplot.imshow.html#matplotlib.pyplot.imshow" title="(in Matplotlib v2.2.2)"><code class="xref py py-func docutils literal"><span class="pre">matplotlib.pyplot.imshow()</span></code></a>. Default to
 ‘Blues’. Only effective when <cite>pianoroll</cite> is 2D.</li>
-<li><strong>tick_loc</strong> (<em>tuple</em><em> or </em><em>list</em>) – List of locations to put ticks. Availables elements are ‘bottom’,
-‘top’, ‘left’ and ‘right’. If None, default to (‘bottom’, ‘left’).</li>
 <li><strong>xtick</strong> (<em>{'auto'</em><em>, </em><em>'beat'</em><em>, </em><em>'step'</em><em>, </em><em>'off'}</em>) – Use beat number or step number as ticks along the x-axis, or
 automatically set to ‘beat’ when <cite>beat_resolution</cite> is given and set
 to ‘step’, otherwise. Default to ‘auto’.</li>
@@ -421,7 +435,9 @@ is True) as tick labels along the y-axis. If ‘number’, use pitch
 number. If ‘auto’, set to ‘name’ when <cite>ytick</cite> is ‘octave’ and
 ‘number’ when <cite>ytick</cite> is ‘pitch’. Default to ‘auto’. Only effective
 when <cite>ytick</cite> is not ‘off’.</li>
-<li><strong>direction</strong> (<em>{'in'</em><em>, </em><em>'out'</em><em>, </em><em>'inout'}</em>) – Put ticks inside the axes, outside the axes, or both. Default to
+<li><strong>tick_loc</strong> (<em>tuple</em><em> or </em><em>list</em>) – List of locations to put ticks. Availables elements are ‘bottom’,
+‘top’, ‘left’ and ‘right’. If None, default to (‘bottom’, ‘left’).</li>
+<li><strong>tick_direction</strong> (<em>{'in'</em><em>, </em><em>'out'</em><em>, </em><em>'inout'}</em>) – Put ticks inside the axes, outside the axes, or both. Default to
 ‘in’. Only effective when <cite>xtick</cite> and <cite>ytick</cite> are not both ‘off’.</li>
 <li><strong>label</strong> (<em>{'x'</em><em>, </em><em>'y'</em><em>, </em><em>'both'</em><em>, </em><em>'off'}</em>) – Add label to the x-axis, y-axis, both or neither. Default to ‘both’.</li>
 <li><strong>grid</strong> (<em>{'x'</em><em>, </em><em>'y'</em><em>, </em><em>'both'</em><em>, </em><em>'off'}</em>) – Add grid to the x-axis, y-axis, both or neither. Default to ‘both’.</li>

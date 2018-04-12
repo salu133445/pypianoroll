@@ -174,7 +174,7 @@ properties in the plotting functions as well.</p>
 <h2>Related Functions<a class="headerlink" href="#related-functions" title="Permalink to this headline">¶</a></h2>
 <dl class="function">
 <dt id="pypianoroll.plot_pianoroll">
-<code class="descclassname">pypianoroll.</code><code class="descname">plot_pianoroll</code><span class="sig-paren">(</span><em>ax</em>, <em>pianoroll</em>, <em>is_drum=False</em>, <em>beat_resolution=None</em>, <em>downbeats=None</em>, <em>normalization='standard'</em>, <em>preset='default'</em>, <em>cmap='Blues'</em>, <em>tick_loc=None</em>, <em>xtick='auto'</em>, <em>ytick='octave'</em>, <em>xticklabel='on'</em>, <em>yticklabel='auto'</em>, <em>direction='in'</em>, <em>label='both'</em>, <em>grid='both'</em>, <em>grid_linestyle=':'</em>, <em>grid_linewidth=0.5</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pypianoroll/plot.html#plot_pianoroll"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypianoroll.plot_pianoroll" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">pypianoroll.</code><code class="descname">plot_pianoroll</code><span class="sig-paren">(</span><em>ax</em>, <em>pianoroll</em>, <em>is_drum=False</em>, <em>beat_resolution=None</em>, <em>downbeats=None</em>, <em>preset='default'</em>, <em>cmap='Blues'</em>, <em>normalization='standard'</em>, <em>xtick='auto'</em>, <em>ytick='octave'</em>, <em>xticklabel='on'</em>, <em>yticklabel='auto'</em>, <em>tick_loc=None</em>, <em>tick_direction='in'</em>, <em>label='both'</em>, <em>grid='both'</em>, <em>grid_linestyle=':'</em>, <em>grid_linewidth=0.5</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pypianoroll/plot.html#plot_pianoroll"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypianoroll.plot_pianoroll" title="Permalink to this definition">¶</a></dt>
 <dd><p>Plot a piano-roll given as a numpy array</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -186,9 +186,9 @@ be plotted on.</li>
 <li><strong>pianoroll</strong> (<em>np.ndarray</em>) – <p>The piano-roll to be plotted. The values should be in [0, 1] when
 <cite>normalized</cite> is False.</p>
 <ul>
-<li>For 2D array, shape=(num_time_step, num_pitch).</li>
-<li>For 3D array, shape=(num_time_step, num_pitch, num_channel), where
-channels can be either RGB or RGBA.</li>
+<li>For a 2D array, shape=(num_time_step, num_pitch).</li>
+<li>For a 3D array, shape=(num_time_step, num_pitch, num_channel),
+where channels can be either RGB or RGBA.</li>
 </ul>
 </li>
 <li><strong>is_drum</strong> (<em>bool</em>) – Drum indicator. True for drums. False for other instruments. Default
@@ -197,8 +197,17 @@ to False.</li>
 when <cite>xticklabel</cite> is ‘beat’.</li>
 <li><strong>downbeats</strong> (<em>list</em>) – Indices of time steps that contain downbeats., i.e. the first time
 step of a bar.</li>
+<li><strong>preset</strong> (<em>{'default'</em><em>, </em><em>'plain'</em><em>, </em><em>'frame'}</em>) – <p>Preset themes for the plot.</p>
+<ul>
+<li>In ‘default’ preset, the ticks, grid and labels are on.</li>
+<li>In ‘frame’ preset, the ticks and grid are both off.</li>
+<li>In ‘plain’ preset, the x- and y-axis are both off.</li>
+</ul>
+</li>
+<li><strong>cmap</strong> (<cite>matplotlib.colors.Colormap</cite>) – Colormap to use in <a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.pyplot.imshow.html#matplotlib.pyplot.imshow" title="(in Matplotlib v2.2.2)"><code class="xref py py-func docutils literal"><span class="pre">matplotlib.pyplot.imshow()</span></code></a>. Default to
+‘Blues’. Only effective when <cite>pianoroll</cite> is 2D.</li>
 <li><strong>normalization</strong> (<em>{'standard'</em><em>, </em><em>'auto'</em><em>, </em><em>'none'}</em>) – <p>The normalization method to apply to the piano-roll. Default to
-‘standard’. If <cite>pianoroll</cite> is binarized, use ‘none’ anyway.</p>
+‘standard’. Only effective when <cite>pianoroll</cite> is not binarized.</p>
 <ul>
 <li>For ‘standard’ normalization, the normalized values are given by
 N = P / 128, where P, N is the original and normalized piano-roll,
@@ -212,17 +221,6 @@ this case, the values of <cite>pianoroll</cite> should be in [0, 1] in order
 to plot it correctly.</li>
 </ul>
 </li>
-<li><strong>preset</strong> (<em>{'default'</em><em>, </em><em>'plain'</em><em>, </em><em>'frame'}</em>) – <p>Preset themes for the plot.</p>
-<ul>
-<li>In ‘default’ preset, the ticks, grid and labels are on.</li>
-<li>In ‘frame’ preset, the ticks and grid are both off.</li>
-<li>In ‘plain’ preset, the x- and y-axis are both off.</li>
-</ul>
-</li>
-<li><strong>cmap</strong> (<cite>matplotlib.colors.Colormap</cite>) – Colormap to use in <a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.pyplot.imshow.html#matplotlib.pyplot.imshow" title="(in Matplotlib v2.2.2)"><code class="xref py py-func docutils literal"><span class="pre">matplotlib.pyplot.imshow()</span></code></a>. Default to
-‘Blues’. Only effective when <cite>pianoroll</cite> is 2D.</li>
-<li><strong>tick_loc</strong> (<em>tuple</em><em> or </em><em>list</em>) – List of locations to put ticks. Availables elements are ‘bottom’,
-‘top’, ‘left’ and ‘right’. If None, default to (‘bottom’, ‘left’).</li>
 <li><strong>xtick</strong> (<em>{'auto'</em><em>, </em><em>'beat'</em><em>, </em><em>'step'</em><em>, </em><em>'off'}</em>) – Use beat number or step number as ticks along the x-axis, or
 automatically set to ‘beat’ when <cite>beat_resolution</cite> is given and set
 to ‘step’, otherwise. Default to ‘auto’.</li>
@@ -234,7 +232,9 @@ is True) as tick labels along the y-axis. If ‘number’, use pitch
 number. If ‘auto’, set to ‘name’ when <cite>ytick</cite> is ‘octave’ and
 ‘number’ when <cite>ytick</cite> is ‘pitch’. Default to ‘auto’. Only effective
 when <cite>ytick</cite> is not ‘off’.</li>
-<li><strong>direction</strong> (<em>{'in'</em><em>, </em><em>'out'</em><em>, </em><em>'inout'}</em>) – Put ticks inside the axes, outside the axes, or both. Default to
+<li><strong>tick_loc</strong> (<em>tuple</em><em> or </em><em>list</em>) – List of locations to put ticks. Availables elements are ‘bottom’,
+‘top’, ‘left’ and ‘right’. If None, default to (‘bottom’, ‘left’).</li>
+<li><strong>tick_direction</strong> (<em>{'in'</em><em>, </em><em>'out'</em><em>, </em><em>'inout'}</em>) – Put ticks inside the axes, outside the axes, or both. Default to
 ‘in’. Only effective when <cite>xtick</cite> and <cite>ytick</cite> are not both ‘off’.</li>
 <li><strong>label</strong> (<em>{'x'</em><em>, </em><em>'y'</em><em>, </em><em>'both'</em><em>, </em><em>'off'}</em>) – Add label to the x-axis, y-axis, both or neither. Default to ‘both’.</li>
 <li><strong>grid</strong> (<em>{'x'</em><em>, </em><em>'y'</em><em>, </em><em>'both'</em><em>, </em><em>'off'}</em>) – Add grid to the x-axis, y-axis, both or neither. Default to ‘both’.</li>
@@ -258,7 +258,7 @@ argument.</li>
 
 <dl class="function">
 <dt id="pypianoroll.save_animation">
-<code class="descclassname">pypianoroll.</code><code class="descname">save_animation</code><span class="sig-paren">(</span><em>filepath</em>, <em>pianoroll</em>, <em>window</em>, <em>hop=1</em>, <em>fps=None</em>, <em>is_drum=False</em>, <em>beat_resolution=None</em>, <em>downbeats=None</em>, <em>normalization='standard'</em>, <em>preset='default'</em>, <em>cmap='Blues'</em>, <em>tick_loc=None</em>, <em>xtick='auto'</em>, <em>ytick='octave'</em>, <em>xticklabel='on'</em>, <em>yticklabel='auto'</em>, <em>direction='in'</em>, <em>label='both'</em>, <em>grid='both'</em>, <em>grid_linestyle=':'</em>, <em>grid_linewidth=0.5</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pypianoroll/plot.html#save_animation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypianoroll.save_animation" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">pypianoroll.</code><code class="descname">save_animation</code><span class="sig-paren">(</span><em>filepath</em>, <em>pianoroll</em>, <em>window</em>, <em>hop=1</em>, <em>fps=None</em>, <em>is_drum=False</em>, <em>beat_resolution=None</em>, <em>downbeats=None</em>, <em>preset='default'</em>, <em>cmap='Blues'</em>, <em>normalization='standard'</em>, <em>xtick='auto'</em>, <em>ytick='octave'</em>, <em>xticklabel='on'</em>, <em>yticklabel='auto'</em>, <em>tick_loc=None</em>, <em>tick_direction='in'</em>, <em>label='both'</em>, <em>grid='both'</em>, <em>grid_linestyle=':'</em>, <em>grid_linewidth=0.5</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pypianoroll/plot.html#save_animation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypianoroll.save_animation" title="Permalink to this definition">¶</a></dt>
 <dd><p>Save a piano-roll to an animation in video or GIF format.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -269,9 +269,9 @@ argument.</li>
 <li><strong>pianoroll</strong> (<em>np.ndarray</em>) – <p>The piano-roll to be plotted. The values should be in [0, 1] when
 <cite>normalized</cite> is False.</p>
 <ul>
-<li>For 2D array, shape=(num_time_step, num_pitch).</li>
-<li>For 3D array, shape=(num_time_step, num_pitch, num_channel), where
-channels can be either RGB or RGBA.</li>
+<li>For a 2D array, shape=(num_time_step, num_pitch).</li>
+<li>For a 3D array, shape=(num_time_step, num_pitch, num_channel),
+where channels can be either RGB or RGBA.</li>
 </ul>
 </li>
 <li><strong>window</strong> (<em>int</em>) – Window size to be applied to <cite>pianoroll</cite> for the animation.</li>
@@ -284,18 +284,18 @@ when <cite>xticklabel</cite> is ‘beat’.</li>
 <li><strong>downbeats</strong> (<em>list</em>) – Indices of time steps that contain downbeats., i.e. the first time
 step of a bar.</li>
 <li><strong>normalization</strong> (<em>{'standard'</em><em>, </em><em>'auto'</em><em>, </em><em>'none'}</em>) – <p>The normalization method to apply to the piano-roll. Default to
-‘standard’. If <cite>pianoroll</cite> is binarized, use ‘none’ anyway.</p>
+‘standard’. Only effective when <cite>pianoroll</cite> is not binarized.</p>
 <ul>
 <li>For ‘standard’ normalization, the normalized values are given by
 N = P / 128, where P, N is the original and normalized piano-roll,
 respectively</li>
 <li>For ‘auto’ normalization, the normalized values are given by
 N = (P - m) / (M - m), where P, N is the original and normalized
-piano-roll, respectively, and M, m is the maximum and minimum of the
-original piano-roll, respectively.</li>
+piano-roll, respectively, and M, m is the maximum and minimum of
+the original piano-roll, respectively.</li>
 <li>If ‘none’, no normalization will be applied to the piano-roll. In
-this case, the values of <cite>pianoroll</cite> should be in [0, 1] in order to
-plot it correctly.</li>
+this case, the values of <cite>pianoroll</cite> should be in [0, 1] in order
+to plot it correctly.</li>
 </ul>
 </li>
 <li><strong>preset</strong> (<em>{'default'</em><em>, </em><em>'plain'</em><em>, </em><em>'frame'}</em>) – <p>Preset themes for the plot.</p>
@@ -307,8 +307,6 @@ plot it correctly.</li>
 </li>
 <li><strong>cmap</strong> (<cite>matplotlib.colors.Colormap</cite>) – Colormap to use in <a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.pyplot.imshow.html#matplotlib.pyplot.imshow" title="(in Matplotlib v2.2.2)"><code class="xref py py-func docutils literal"><span class="pre">matplotlib.pyplot.imshow()</span></code></a>. Default to
 ‘Blues’. Only effective when <cite>pianoroll</cite> is 2D.</li>
-<li><strong>tick_loc</strong> (<em>tuple</em><em> or </em><em>list</em>) – List of locations to put ticks. Availables elements are ‘bottom’,
-‘top’, ‘left’ and ‘right’. If None, default to (‘bottom’, ‘left’).</li>
 <li><strong>xtick</strong> (<em>{'auto'</em><em>, </em><em>'beat'</em><em>, </em><em>'step'</em><em>, </em><em>'off'}</em>) – Use beat number or step number as ticks along the x-axis, or
 automatically set to ‘beat’ when <cite>beat_resolution</cite> is given and set
 to ‘step’, otherwise. Default to ‘auto’.</li>
@@ -320,7 +318,9 @@ is True) as tick labels along the y-axis. If ‘number’, use pitch
 number. If ‘auto’, set to ‘name’ when <cite>ytick</cite> is ‘octave’ and
 ‘number’ when <cite>ytick</cite> is ‘pitch’. Default to ‘auto’. Only effective
 when <cite>ytick</cite> is not ‘off’.</li>
-<li><strong>direction</strong> (<em>{'in'</em><em>, </em><em>'out'</em><em>, </em><em>'inout'}</em>) – Put ticks inside the axes, outside the axes, or both. Default to
+<li><strong>tick_loc</strong> (<em>tuple</em><em> or </em><em>list</em>) – List of locations to put ticks. Availables elements are ‘bottom’,
+‘top’, ‘left’ and ‘right’. If None, default to (‘bottom’, ‘left’).</li>
+<li><strong>tick_direction</strong> (<em>{'in'</em><em>, </em><em>'out'</em><em>, </em><em>'inout'}</em>) – Put ticks inside the axes, outside the axes, or both. Default to
 ‘in’. Only effective when <cite>xtick</cite> and <cite>ytick</cite> are not both ‘off’.</li>
 <li><strong>label</strong> (<em>{'x'</em><em>, </em><em>'y'</em><em>, </em><em>'both'</em><em>, </em><em>'off'}</em>) – Add label to the x-axis, y-axis, both or neither. Default to ‘both’.</li>
 <li><strong>grid</strong> (<em>{'x'</em><em>, </em><em>'y'</em><em>, </em><em>'both'</em><em>, </em><em>'off'}</em>) – Add grid to the x-axis, y-axis, both or neither. Default to ‘both’.</li>

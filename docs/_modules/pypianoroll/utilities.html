@@ -166,8 +166,8 @@
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="kn">from</span> <span class="nn">copy</span> <span class="k">import</span> <span class="n">deepcopy</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">from</span> <span class="nn">.track</span> <span class="k">import</span> <span class="n">Track</span>
-<span class="kn">from</span> <span class="nn">.multitrack</span> <span class="k">import</span> <span class="n">Multitrack</span>
+<span class="kn">from</span> <span class="nn">pypianoroll.track</span> <span class="k">import</span> <span class="n">Track</span>
+<span class="kn">from</span> <span class="nn">pypianoroll.multitrack</span> <span class="k">import</span> <span class="n">Multitrack</span>
 
 <span class="k">def</span> <span class="nf">_check_supported</span><span class="p">(</span><span class="n">obj</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
@@ -196,6 +196,22 @@
     <span class="k">if</span> <span class="n">arr</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">!=</span> <span class="mi">128</span><span class="p">:</span>
         <span class="k">return</span> <span class="kc">False</span>
     <span class="k">return</span> <span class="kc">True</span></div>
+
+<span class="k">def</span> <span class="nf">assign_constant</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Assign a constant value to the nonzeros in the piano-roll(s). If a</span>
+<span class="sd">    piano-roll is not binarized, its data type will be preserved. If a</span>
+<span class="sd">    piano-roll is binarized, it will be casted to the type of `value`.</span>
+
+<span class="sd">    Arguments</span>
+<span class="sd">    ---------</span>
+<span class="sd">    value : int or float</span>
+<span class="sd">        The constant value to be assigned to the nonzeros of the</span>
+<span class="sd">        piano-roll(s).</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">_check_supported</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span>
+    <span class="n">obj</span><span class="o">.</span><span class="n">assign_constant</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
 
 <div class="viewcode-block" id="binarize"><a class="viewcode-back" href="../../utilities.html#pypianoroll.binarize">[docs]</a><span class="k">def</span> <span class="nf">binarize</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">threshold</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
@@ -280,6 +296,25 @@
     <span class="n">copied</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span>
     <span class="n">copied</span><span class="o">.</span><span class="n">pad_to_same</span><span class="p">()</span>
     <span class="k">return</span> <span class="n">copied</span></div>
+
+<span class="k">def</span> <span class="nf">pad_to_multiple</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">factor</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Return a copy of the object with its piano-roll padded with zeros at the</span>
+<span class="sd">    end along the time axis with the minimal length that make the length of</span>
+<span class="sd">    the resulting piano-roll a multiple of `factor`.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    factor : int</span>
+<span class="sd">        The value which the length of the resulting piano-roll will be</span>
+<span class="sd">        a multiple of.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">Track</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;Support only `pypianoroll.Track` class objects&quot;</span><span class="p">)</span>
+    <span class="n">copied</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span>
+    <span class="n">copied</span><span class="o">.</span><span class="n">pad_to_multiple</span><span class="p">(</span><span class="n">factor</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">copied</span>
 
 <div class="viewcode-block" id="parse"><a class="viewcode-back" href="../../parse_write.html#pypianoroll.parse">[docs]</a><span class="k">def</span> <span class="nf">parse</span><span class="p">(</span><span class="n">filepath</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
