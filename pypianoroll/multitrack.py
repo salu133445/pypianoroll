@@ -643,20 +643,24 @@ class Multitrack(object):
         self.parse_pretty_midi(pm, mode, algorithm, binarized, compressed,
                                collect_onsets_only, threshold, first_beat_time)
 
-    def parse_pretty_midi(self, pm, mode='sum', algorithm='normal',
+    def parse_pretty_midi(self, pm, mode='max', algorithm='normal',
                           binarized=False, skip_empty_tracks=True,
                           collect_onsets_only=False, threshold=0,
                           first_beat_time=None):
         """
-        Parse a :class:`pretty_midi.PrettyMIDI` object.
+        Parse a :class:`pretty_midi.PrettyMIDI` object. The data type of the
+        resulting piano-rolls is automatically determined (int if 'mode' is
+        'sum', np.uint8 if `mode` is 'max' and `binarized` is False, bool if
+        `mode` is 'max' and `binarized` is True).
 
         Parameters
         ----------
         pm : `pretty_midi.PrettyMIDI` object
             The :class:`pretty_midi.PrettyMIDI` object to be parsed.
-        mode : {'sum', 'max', 'any'}
-            Indicate the merging function to apply to duplicate notes. Default
-            to 'sum'.
+        mode : {'max', 'sum'}
+            Indicate the merging function to apply to duplicate notes. Note that
+            'max' is implemented using 'any' operation when `binarized` is True.
+            Default to 'max'.
         algorithm : {'normal', 'strict', 'custom'}
             Indicate the method used to get the location of the first beat.
             Notes before it will be dropped unless an incomplete beat before it
@@ -697,9 +701,9 @@ class Multitrack(object):
         dropped.
 
         """
-        if mode not in ['max', 'sum', 'any']:
-            raise TypeError("`mode` must be one of {'max', 'sum', 'any'}")
-        if algorithm not in ['strict', 'normal', 'custom']:
+        if mode not in ('max', 'sum'):
+            raise TypeError("`mode` must be one of {'max', 'sum'}")
+        if algorithm not in ('strict', 'normal', 'custom'):
             raise ValueError("`algorithm` must be one of 'normal', 'strict' "
                              "and 'custom'")
         if algorithm == 'custom':
@@ -765,8 +769,10 @@ class Multitrack(object):
         # Parse piano-roll
         self.tracks = []
         for instrument in pm.instruments:
-            if binarized or mode == 'any':
+            if binarized:
                 pianoroll = np.zeros((num_time_step, 128), bool)
+            elif mode == 'max':
+                pianoroll = np.zeros((num_time_step, 128), np.uint8)
             else:
                 pianoroll = np.zeros((num_time_step, 128), int)
 
@@ -804,7 +810,9 @@ class Multitrack(object):
                     end = note_offs[idx] + 1
                     velocity = instrument.notes[idx].velocity
 
-                    if velocity < 1 or (binarized and velocity <= threshold):
+                    if velocity < 1:
+                        continue
+                    if binarized and velocity <= threshold:
                         continue
 
                     if start > 0 and start < num_time_step:
@@ -817,16 +825,13 @@ class Multitrack(object):
                     if binarized:
                         if mode == 'sum':
                             pianoroll[start:end, pitches[idx]] += 1
-                        elif mode == 'max' or mode == 'any':
+                        elif mode == 'max':
                             pianoroll[start:end, pitches[idx]] = True
                     elif mode == 'sum':
                         pianoroll[start:end, pitches[idx]] += velocity
                     elif mode == 'max':
                         maximum = np.maximum(pianoroll[start:end], velocity)
                         pianoroll[start:end, pitches[idx]] = maximum
-                    elif mode == 'any':
-                        if velocity:
-                            pianoroll[start:end, pitches[idx]] = True
 
             if skip_empty_tracks and not np.any(pianoroll):
                 continue
