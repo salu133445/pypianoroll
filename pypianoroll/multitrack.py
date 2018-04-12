@@ -1099,7 +1099,7 @@ class Multitrack(object):
         self.tracks = [track for idx, track in enumerate(self.tracks)
                        if idx not in track_indices]
 
-    def save(self, filepath, compressed=True):
+    def save(self, filepath, compressed=False):
         """
         Save to a (compressed) .npz file, which can be later loaded by
         :meth:`pypianoroll.Multitrack.load`.
