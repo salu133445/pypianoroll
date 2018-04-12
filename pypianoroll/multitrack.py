@@ -571,7 +571,7 @@ class Multitrack(object):
         if remove_merged:
             self.remove_tracks(track_indices)
 
-    def parse_midi(self, filepath, mode='sum', algorithm='normal',
+    def parse_midi(self, filepath, mode='max', algorithm='normal',
                    binarized=False, compressed=True, collect_onsets_only=False,
                    threshold=0, first_beat_time=None):
         """
@@ -581,9 +581,9 @@ class Multitrack(object):
         ----------
         filepath : str
             The path to the MIDI file.
-        mode : {'sum', 'max', 'any'}
+        mode : {'sum', 'max'}
             Indicate the merging function to apply to duplicate notes. Default
-            to 'sum'.
+            to 'max'.
         algorithm : {'normal', 'strict', 'custom'}
             Indicate the method used to get the location of the first beat.
             Notes before it will be dropped unless an incomplete beat before it
@@ -658,9 +658,8 @@ class Multitrack(object):
         pm : `pretty_midi.PrettyMIDI` object
             The :class:`pretty_midi.PrettyMIDI` object to be parsed.
         mode : {'max', 'sum'}
-            Indicate the merging function to apply to duplicate notes. Note that
-            'max' is implemented using 'any' operation when `binarized` is True.
-            Default to 'max'.
+            Indicate the merging function to apply to duplicate notes. Default
+            to 'max'.
         algorithm : {'normal', 'strict', 'custom'}
             Indicate the method used to get the location of the first beat.
             Notes before it will be dropped unless an incomplete beat before it
