@@ -388,8 +388,8 @@ class Multitrack(object):
             The merged piano-rolls.
 
         """
-        if mode not in ['max', 'sum', 'any']:
-            raise TypeError("`mode` must be one of {'max', 'sum', 'any'}")
+        if mode not in ('max', 'sum', 'any'):
+            raise ValueError("`mode` must be one of {'max', 'sum', 'any'}")
 
         stacked = self.get_stacked_pianorolls()
 
@@ -560,8 +560,8 @@ class Multitrack(object):
             them. Default to False.
 
         """
-        if mode not in ['max', 'sum', 'any']:
-            raise TypeError("`mode` must be one of {'max', 'sum', 'any'}")
+        if mode not in ('max', 'sum', 'any'):
+            raise ValueError("`mode` must be one of {'max', 'sum', 'any'}")
 
         merged = self[track_indices].get_merged_pianoroll(mode)
 
@@ -701,7 +701,7 @@ class Multitrack(object):
 
         """
         if mode not in ('max', 'sum'):
-            raise TypeError("`mode` must be one of {'max', 'sum'}")
+            raise ValueError("`mode` must be one of {'max', 'sum'}")
         if algorithm not in ('strict', 'normal', 'custom'):
             raise ValueError("`algorithm` must be one of 'normal', 'strict' "
                              "and 'custom'")
