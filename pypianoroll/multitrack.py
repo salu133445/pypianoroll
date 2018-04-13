@@ -506,6 +506,8 @@ class Multitrack(object):
             self.tempo = loaded['tempo']
             if 'downbeat' in loaded.files:
                 self.downbeat = loaded['downbeat']
+            else:
+                self.downbeat = None
 
             idx = 0
             self.tracks = []
