@@ -229,9 +229,9 @@ class Multitrack(object):
         # tempo
         if not isinstance(self.tempo, np.ndarray):
             raise TypeError("`tempo` must be of int or np.ndarray type")
-        elif not (np.issubdtype(self.tempo.dtype, np.int),
-                  np.issubdtype(self.tempo.dtype, np.float)):
-            raise TypeError("Data type of `tempo` must be int or float.")
+        elif not np.issubdtype(self.tempo.dtype, np.number):
+            raise TypeError("Data type of `tempo` must be of a subdtype of "
+                            "np.number")
         elif self.tempo.ndim != 1:
             raise ValueError("`tempo` must be a 1D numpy array")
         if np.any(self.tempo <= 0.0):

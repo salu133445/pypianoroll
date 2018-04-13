@@ -110,10 +110,9 @@ class Track(object):
         if not isinstance(self.pianoroll, np.ndarray):
             raise TypeError("`pianoroll` must be of np.ndarray type")
         if not (np.issubdtype(self.pianoroll.dtype, np.bool_)
-                or np.issubdtype(self.pianoroll.dtype, np.int)
-                or np.issubdtype(self.pianoroll.dtype, np.float)):
-            raise TypeError("Data type of `pianoroll` must be one of bool, int "
-                            "and float.")
+                or np.issubdtype(self.pianoroll.dtype, np.number)):
+            raise TypeError("Data type of `pianoroll` must be of a subdtype of "
+                            "np.bool_ or np.number")
         if self.pianoroll.ndim != 2:
             raise ValueError("`pianoroll` must be a 2D numpy array")
         if self.pianoroll.shape[1] != 128:
