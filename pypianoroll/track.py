@@ -109,7 +109,7 @@ class Track(object):
         # pianoroll
         if not isinstance(self.pianoroll, np.ndarray):
             raise TypeError("`pianoroll` must be of np.ndarray type")
-        if not (np.issubdtype(self.pianoroll.dtype, np.bool)
+        if not (np.issubdtype(self.pianoroll.dtype, np.bool_)
                 or np.issubdtype(self.pianoroll.dtype, np.int)
                 or np.issubdtype(self.pianoroll.dtype, np.float)):
             raise TypeError("Data type of `pianoroll` must be one of bool, int "
@@ -265,7 +265,7 @@ class Track(object):
             True if the piano-roll is already binarized; otherwise, False.
 
         """
-        is_binarized = np.issubdtype(self.pianoroll.dtype, np.bool)
+        is_binarized = np.issubdtype(self.pianoroll.dtype, np.bool_)
         return is_binarized
 
     def plot(self, filepath=None, beat_resolution=None, downbeats=None,

@@ -240,7 +240,7 @@ class Multitrack(object):
         if self.downbeat is not None:
             if not isinstance(self.downbeat, np.ndarray):
                 raise TypeError("`downbeat` must be of np.ndarray type")
-            if not np.issubdtype(self.downbeat.dtype, np.bool):
+            if not np.issubdtype(self.downbeat.dtype, np.bool_):
                 raise TypeError("Data type of `downbeat` must be bool.")
             if self.downbeat.ndim != 1:
                 raise ValueError("`downbeat` must be a 1D numpy array")
