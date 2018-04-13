@@ -357,9 +357,8 @@ class Multitrack(object):
         """
         maximal_length = 0
         for track in self.tracks:
-            now_length = track.pianoroll.shape[0]
             if maximal_length < track.pianoroll.shape[0]:
-                maximal_length = now_length
+                maximal_length = track.pianoroll.shape[0]
         return maximal_length
 
     def get_merged_pianoroll(self, mode='sum'):
@@ -735,7 +734,7 @@ class Multitrack(object):
         tempi = tempi[arg_sorted]
 
         beat_times = pm.get_beats(first_beat_time)
-        if not beat_times:
+        if not len(beat_times):
             raise ValueError("Cannot get beat timings to quantize piano-roll")
         beat_times.sort()
 
@@ -829,7 +828,8 @@ class Multitrack(object):
                     elif mode == 'sum':
                         pianoroll[start:end, pitches[idx]] += velocity
                     elif mode == 'max':
-                        maximum = np.maximum(pianoroll[start:end], velocity)
+                        maximum = np.maximum(pianoroll[start:end, pitches[idx]],
+                                             velocity)
                         pianoroll[start:end, pitches[idx]] = maximum
 
             if skip_empty_tracks and not np.any(pianoroll):
