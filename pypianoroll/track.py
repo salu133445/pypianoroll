@@ -5,6 +5,7 @@ from copy import deepcopy
 from six import string_types
 import numpy as np
 from matplotlib import pyplot as plt
+from utilities import check_pianoroll
 from pypianoroll.plot import plot_pianoroll
 
 class Track(object):
@@ -58,7 +59,7 @@ class Track(object):
         self.is_drum = is_drum
         self.name = name
 
-        self.check_validity()
+        self._check_validity()
 
     def __getitem__(self, val):
         return Track(self.pianoroll[val], self.program, self.is_drum, self.name)
@@ -104,20 +105,10 @@ class Track(object):
         if not self.is_binarized():
             self.pianoroll = (self.pianoroll > threshold)
 
-    def check_validity(self):
+    def _check_validity(self):
         """"Raise error if any invalid attribute found."""
         # pianoroll
-        if not isinstance(self.pianoroll, np.ndarray):
-            raise TypeError("`pianoroll` must be of np.ndarray type")
-        if not (np.issubdtype(self.pianoroll.dtype, np.bool_)
-                or np.issubdtype(self.pianoroll.dtype, np.number)):
-            raise TypeError("Data type of `pianoroll` must be of a subdtype of "
-                            "np.bool_ or np.number")
-        if self.pianoroll.ndim != 2:
-            raise ValueError("`pianoroll` must be a 2D numpy array")
-        if self.pianoroll.shape[1] != 128:
-            raise ValueError("The shape of `pianoroll` must be (num_time_step, "
-                             "128)")
+        check_pianoroll(self.pianoroll)
         # program
         if not isinstance(self.program, int):
             raise TypeError("`program` must be of int type")
@@ -268,10 +259,10 @@ class Track(object):
         return is_binarized
 
     def plot(self, filepath=None, beat_resolution=None, downbeats=None,
-             preset='default', cmap='Blues', normalization='standard',
-             xtick='auto', ytick='octave', xticklabel='on', yticklabel='auto',
-             tick_loc=None, tick_direction='in', label='both', grid='both',
-             grid_linestyle=':', grid_linewidth=.5):
+             preset='default', cmap='Blues', xtick='auto', ytick='octave',
+             xticklabel='on', yticklabel='auto', tick_loc=None,
+             tick_direction='in', label='both', grid='both', grid_linestyle=':',
+             grid_linewidth=.5):
         """
         Plot the piano-roll or save a plot of the piano-roll.
 
@@ -285,20 +276,6 @@ class Track(object):
         downbeats : list
             Indices of time steps that contain downbeats., i.e. the first time
             step of a bar.
-        normalization : {'standard', 'auto', 'none'}
-            The normalization method to apply to the piano-roll. Default to
-            'standard'. Only effective when `pianoroll` is not binarized.
-
-            - For 'standard' normalization, the normalized values are given by
-              N = P / 128, where P, N is the original and normalized piano-roll,
-              respectively
-            - For 'auto' normalization, the normalized values are given by
-              N = (P - m) / (M - m), where P, N is the original and normalized
-              piano-roll, respectively, and M, m is the maximum and minimum of
-              the original piano-roll, respectively.
-            - If 'none', no normalization will be applied to the piano-roll. In
-              this case, the values of `pianoroll` should be in [0, 1] in order
-              to plot it correctly.
 
         preset : {'default', 'plain', 'frame'}
             Preset themes for the plot.
@@ -351,14 +328,12 @@ class Track(object):
 
         """
         fig, ax = plt.subplots()
-        if self.is_binarized():
-            normalization = 'none'
         plot_pianoroll(ax, self.pianoroll, self.is_drum, beat_resolution,
-                       downbeats, preset=preset, cmap=cmap,
-                       normalization=normalization, xtick=xtick, ytick=ytick,
-                       xticklabel=xticklabel, yticklabel=yticklabel,
-                       tick_loc=tick_loc, tick_direction=tick_direction,
-                       label=label, grid=grid, grid_linestyle=grid_linestyle,
+                       downbeats, preset=preset, cmap=cmap, xtick=xtick,
+                       ytick=ytick, xticklabel=xticklabel,
+                       yticklabel=yticklabel, tick_loc=tick_loc,
+                       tick_direction=tick_direction, label=label, grid=grid,
+                       grid_linestyle=grid_linestyle,
                        grid_linewidth=grid_linewidth)
 
         if filepath is not None:
