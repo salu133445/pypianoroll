@@ -24,8 +24,8 @@ def check_pianoroll(arr):
     """
     if not isinstance(arr, np.ndarray):
         raise TypeError("`arr` must be of np.ndarray type")
-    if not (np.issubdtype(arr.dtype, np.bool_) or
-            np.issubdtype(arr.dtype, np.number)):
+    if not (np.issubdtype(arr.dtype, np.bool_)
+            or np.issubdtype(arr.dtype, np.number)):
         return False
     if arr.ndim != 2:
         return False
