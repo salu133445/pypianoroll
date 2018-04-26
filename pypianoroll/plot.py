@@ -88,7 +88,7 @@ def plot_pianoroll(ax, pianoroll, is_drum=False, beat_resolution=None,
     if xtick not in ('auto', 'beat', 'step', 'off'):
         raise ValueError("`xtick` must be one of {'auto', 'beat', 'step', "
                          "'none'}")
-    if xtick is 'beat' and beat_resolution is None:
+    if xtick == 'beat' and beat_resolution is None:
         raise ValueError("`beat_resolution` must be a number when `xtick` "
                          "is 'beat'")
     if ytick not in ('octave', 'pitch', 'off'):
@@ -112,7 +112,7 @@ def plot_pianoroll(ax, pianoroll, is_drum=False, beat_resolution=None,
     else:
         to_plot = pianoroll.T
     if (np.issubdtype(pianoroll.dtype, np.bool_)
-        or np.issubdtype(pianoroll.dtype, np.floating)):
+            or np.issubdtype(pianoroll.dtype, np.floating)):
         ax.imshow(to_plot, cmap=cmap, aspect='auto', vmin=0, vmax=1,
                   origin='lower', interpolation='none')
     elif np.issubdtype(pianoroll.dtype, np.integer):
