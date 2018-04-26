@@ -1207,23 +1207,24 @@ class Multitrack(object):
                                                 name=track.name)
             copied = track.copy()
             copied.clip()
-            clipped = copied.pianoroll.astype(int)
-            binarized = clipped.astype(bool)
+            clipped = copied.pianoroll.astype(np.uint8)
+            binarized = (clipped > 0)
             padded = np.pad(binarized, ((1, 1), (0, 0)), 'constant')
-            diff = np.diff(padded.astype(int), axis=0)
+            diff = np.diff(padded.astype(np.int8), axis=0)
 
-            for pitch in range(128):
-                note_ons = np.nonzero(diff[:, pitch] > 0)[0]
-                note_on_times = time_step_size * note_ons
-                note_offs = np.nonzero(diff[:, pitch] < 0)[0]
-                note_off_times = time_step_size * note_offs
+            positives = np.nonzero((diff > 0).T)
+            pitches = positives[0]
+            note_ons = positives[1]
+            note_on_times = time_step_size * note_ons
+            note_offs = np.nonzero((diff < 0).T)[1]
+            note_off_times = time_step_size * note_offs
 
-                for idx, note_on in enumerate(note_ons):
-                    velocity = np.mean(clipped[note_on:note_offs[idx], pitch])
-                    note = pretty_midi.Note(velocity=int(velocity), pitch=pitch,
-                                            start=note_on_times[idx],
-                                            end=note_off_times[idx])
-                    instrument.notes.append(note)
+            for idx, pitch in enumerate(pitches):
+                velocity = np.mean(clipped[note_ons[idx]:note_offs[idx], pitch])
+                note = pretty_midi.Note(velocity=int(velocity), pitch=pitch,
+                                        start=note_on_times[idx],
+                                        end=note_off_times[idx])
+                instrument.notes.append(note)
 
             instrument.notes.sort(key=lambda x: x.start)
             pm.instruments.append(instrument)
