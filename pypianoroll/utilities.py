@@ -12,11 +12,11 @@ def _check_supported(obj):
     or :class:`pypianoroll.Track` object. Otherwise, pass.
 
     """
-    if not (isinstance(obj, Multitrack) or isinstance(obj, Track)):
+    if not isinstance(obj, (Multitrack, Track)):
         raise TypeError("Support only `pypianoroll.Multitrack` and "
                         "`pypianoroll.Track` class objects")
 
-def is_pianoroll(arr):
+def check_pianoroll(arr):
     """
     Return True if the array is a standard piano-roll matrix. Otherwise,
     return False. Raise TypeError if the input object is not a numpy array.
@@ -24,8 +24,8 @@ def is_pianoroll(arr):
     """
     if not isinstance(arr, np.ndarray):
         raise TypeError("`arr` must be of np.ndarray type")
-    if not (np.issubdtype(arr.dtype, np.bool_)
-            or np.issubdtype(arr.dtype, np.number)):
+    if not (np.issubdtype(arr.dtype, np.bool_) or
+            np.issubdtype(arr.dtype, np.number)):
         return False
     if arr.ndim != 2:
         return False
@@ -186,7 +186,7 @@ def save(filepath, obj, compressed=True):
     filepath : str
         The path to save the file.
     obj: `pypianoroll.Multitrack` objects
-        The objecte to be saved.
+        The object to be saved.
 
     """
     if not isinstance(obj, Multitrack):
