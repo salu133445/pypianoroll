@@ -102,7 +102,7 @@ class Multitrack(object):
                 self.downbeat = downbeat
             self.beat_resolution = beat_resolution
             self.name = name
-            self.check_validity()
+            self._check_validity()
 
     def __getitem__(self, val):
         if isinstance(val, tuple):
@@ -173,7 +173,7 @@ class Multitrack(object):
         if track is not None:
             if not isinstance(track, Track):
                 raise TypeError("`track` must be a pypianoroll.Track instance")
-            track.check_validity()
+            track._check_validity()
         else:
             track = Track(pianoroll, program, is_drum, name)
         self.tracks.append(track)
@@ -208,7 +208,7 @@ class Multitrack(object):
         for track in self.tracks:
             track.binarize(threshold)
 
-    def check_validity(self):
+    def _check_validity(self):
         """
         Raise an error if any invalid attribute found.
 
@@ -225,7 +225,7 @@ class Multitrack(object):
             if not isinstance(track, Track):
                 raise TypeError("`tracks` must be a list of "
                                 "`pypianoroll.Track` instances")
-            track.check_validity()
+            track._check_validity()
         # tempo
         if not isinstance(self.tempo, np.ndarray):
             raise TypeError("`tempo` must be of int or np.ndarray type")
@@ -520,7 +520,7 @@ class Multitrack(object):
                 self.tracks.append(track)
                 idx += 1
 
-        self.check_validity()
+        self._check_validity()
 
     def merge_tracks(self, track_indices=None, mode='sum', program=0,
                      is_drum=False, name='merged', remove_merged=False):
@@ -841,7 +841,7 @@ class Multitrack(object):
                           instrument.is_drum, instrument.name)
             self.tracks.append(track)
 
-        self.check_validity()
+        self._check_validity()
 
     def plot(self, filepath=None, mode='separate', track_label='name',
              normalization='standard', preset='default', cmaps=None,
@@ -961,7 +961,7 @@ class Multitrack(object):
             ax.set_ylabel(get_track_label(track_label, track) + '\n\n'
                           + ax.get_ylabel())
 
-        self.check_validity()
+        self._check_validity()
         if not self.tracks:
             raise ValueError("There is no track to plot")
         if mode not in ('separate', 'stacked', 'hybrid'):
@@ -1134,7 +1134,7 @@ class Multitrack(object):
             target_dict[name+'_csc_indptr'] = csc.indptr
             target_dict[name+'_csc_shape'] = csc.shape
 
-        self.check_validity()
+        self._check_validity()
         array_dict = {'tempo': self.tempo}
         info_dict = {'beat_resolution': self.beat_resolution,
                      'name': self.name}
@@ -1192,7 +1192,7 @@ class Multitrack(object):
             if track.is_binarized():
                 track.assign_constant(constant_velocity)
 
-        self.check_validity()
+        self._check_validity()
         pm = pretty_midi.PrettyMIDI(initial_tempo=self.tempo[0])
 
         # TODO: Add downbeat support -> time signature change events
