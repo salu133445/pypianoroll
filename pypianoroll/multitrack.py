@@ -17,7 +17,7 @@ from pypianoroll.plot import plot_pianoroll
 
 class Multitrack(object):
     """
-    A multi-track piano-roll container
+    A multi-track piano-roll container.
 
     Attributes
     ----------
@@ -844,10 +844,10 @@ class Multitrack(object):
         self._check_validity()
 
     def plot(self, filepath=None, mode='separate', track_label='name',
-             normalization='standard', preset='default', cmaps=None,
-             xtick='auto', ytick='octave', xticklabel='on', yticklabel='auto',
-             tick_loc=None, tick_direction='in', label='both', grid='both',
-             grid_linestyle=':', grid_linewidth=.5):
+             preset='default', cmaps=None, xtick='auto', ytick='octave',
+             xticklabel='on', yticklabel='auto', tick_loc=None,
+             tick_direction='in', label='both', grid='both', grid_linestyle=':',
+             grid_linewidth=.5):
         """
         Plot the piano-rolls or save a plot of them.
 
@@ -870,21 +870,6 @@ class Multitrack(object):
             Add track name, program name, instrument family name or none as
             labels to the track. When `mode` is 'hybrid', all options other
             than 'off' will label the two track with 'Drums' and 'Others'.
-        normalization : {'standard', 'auto', 'none'}
-            The normalization method to apply to the piano-roll. Default to
-            'standard'. Only effective when `pianoroll` is not binarized.
-
-            - For 'standard' normalization, the normalized values are given by
-              N = P / 128, where P, N is the original and normalized piano-roll,
-              respectively
-            - For 'auto' normalization, the normalized values are given by
-              N = (P - m) / (M - m), where P, N is the original and normalized
-              piano-roll, respectively, and M, m is the maximum and minimum of
-              the original piano-roll, respectively.
-            - If 'none', no normalization will be applied to the piano-roll. In
-              this case, the values of `pianoroll` should be in [0, 1] in order
-              to plot it correctly.
-
         preset : {'default', 'plain', 'frame'}
             Preset themes for the plot.
 
@@ -971,9 +956,6 @@ class Multitrack(object):
             raise ValueError("`track_label` must be one of {'name', 'program', "
                              "'family'}")
 
-        if self.is_binarized():
-            normalization = 'none'
-
         if cmaps is None:
             if mode == 'separate':
                 cmaps = ('Blues', 'Oranges', 'Greens', 'Reds', 'Purples',
@@ -997,8 +979,7 @@ class Multitrack(object):
                 now_xticklabel = xticklabel if idx < num_track else 'off'
                 plot_pianoroll(axs[idx], track.pianoroll, False,
                                self.beat_resolution, downbeats, preset=preset,
-                               cmap=cmaps[idx%len(cmaps)],
-                               normalization=normalization, xtick=xtick,
+                               cmap=cmaps[idx%len(cmaps)], xtick=xtick,
                                ytick=ytick, xticklabel=now_xticklabel,
                                yticklabel=yticklabel, tick_loc=tick_loc,
                                tick_direction=tick_direction, label=label,
@@ -1030,8 +1011,7 @@ class Multitrack(object):
             stacked = recolored.reshape(stacked.shape[:2] + (3, ))
 
             plot_pianoroll(ax, stacked, is_all_drum, self.beat_resolution,
-                           downbeats, preset=preset,
-                           normalization=normalization, xtick=xtick,
+                           downbeats, preset=preset, xtick=xtick,
                            ytick=ytick, xticklabel=xticklabel,
                            yticklabel=yticklabel, tick_loc=tick_loc,
                            tick_direction=tick_direction, label=label,
@@ -1057,20 +1037,18 @@ class Multitrack(object):
 
             fig, (ax1, ax2) = plt.subplots(2, sharex=True, sharey=True)
             plot_pianoroll(ax1, merged_drums, True, self.beat_resolution,
-                           downbeats, preset=preset, cmap=cmaps[0],
-                           normalization=normalization, xtick=xtick,
+                           downbeats, preset=preset, cmap=cmaps[0], xtick=xtick,
                            ytick=ytick, xticklabel=xticklabel,
                            yticklabel=yticklabel, tick_loc=tick_loc,
                            tick_direction=tick_direction, label=label,
                            grid=grid, grid_linestyle=grid_linestyle,
                            grid_linewidth=grid_linewidth)
             plot_pianoroll(ax2, merged_others, False, self.beat_resolution,
-                           downbeats, preset=preset, cmap=cmaps[1],
-                           normalization=normalization,
-                           ytick=ytick, xticklabel=xticklabel,
-                           yticklabel=yticklabel, tick_loc=tick_loc,
-                           tick_direction=tick_direction, label=label,
-                           grid=grid, grid_linestyle=grid_linestyle,
+                           downbeats, preset=preset, cmap=cmaps[1], ytick=ytick,
+                           xticklabel=xticklabel, yticklabel=yticklabel,
+                           tick_loc=tick_loc, tick_direction=tick_direction,
+                           label=label, grid=grid,
+                           grid_linestyle=grid_linestyle,
                            grid_linewidth=grid_linewidth)
             fig.subplots_adjust(hspace=0)
 
