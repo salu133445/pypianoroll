@@ -1,4 +1,4 @@
-"""Module for plotting multi-track and single-track piano-rolls
+"""Module for plotting multi-track and single-track piano-rolls.
 
 """
 import numpy as np
@@ -8,13 +8,12 @@ from moviepy.video.io.bindings import mplfig_to_npimage
 import pretty_midi
 
 def plot_pianoroll(ax, pianoroll, is_drum=False, beat_resolution=None,
-                   downbeats=None, preset='default', cmap='Blues',
-                   normalization='standard', xtick='auto', ytick='octave',
-                   xticklabel='on', yticklabel='auto', tick_loc=None,
-                   tick_direction='in', label='both', grid='both',
-                   grid_linestyle=':', grid_linewidth=.5):
+                   downbeats=None, preset='default', cmap='Blues', xtick='auto',
+                   ytick='octave', xticklabel='on', yticklabel='auto',
+                   tick_loc=None, tick_direction='in', label='both',
+                   grid='both', grid_linestyle=':', grid_linewidth=.5):
     """
-    Plot a piano-roll given as a numpy array
+    Plot a piano-roll given as a numpy array.
 
     Parameters
     ----------
@@ -22,8 +21,8 @@ def plot_pianoroll(ax, pianoroll, is_drum=False, beat_resolution=None,
          The :class:`matplotlib.axes.Axes` object where the piano-roll will
          be plotted on.
     pianoroll : np.ndarray
-        The piano-roll to be plotted. The values should be in [0, 1] when
-        `normalized` is False.
+        The piano-roll to be plotted. The values should be in [0, 1] when data
+        type is float, and in [0, 127] when data type is integer.
 
         - For a 2D array, shape=(num_time_step, num_pitch).
         - For a 3D array, shape=(num_time_step, num_pitch, num_channel),
@@ -48,21 +47,6 @@ def plot_pianoroll(ax, pianoroll, is_drum=False, beat_resolution=None,
     cmap :  `matplotlib.colors.Colormap`
         Colormap to use in :func:`matplotlib.pyplot.imshow`. Default to
         'Blues'. Only effective when `pianoroll` is 2D.
-    normalization : {'standard', 'auto', 'none'}
-        The normalization method to apply to the piano-roll. Default to
-        'standard'. Only effective when `pianoroll` is not binarized.
-
-        - For 'standard' normalization, the normalized values are given by
-          N = P / 128, where P, N is the original and normalized piano-roll,
-          respectively
-        - For 'auto' normalization, the normalized values are given by
-          N = (P - m) / (M - m), where P, N is the original and normalized
-          piano-roll, respectively, and M, m is the maximum and minimum of
-          the original piano-roll, respectively.
-        - If 'none', no normalization will be applied to the piano-roll. In
-          this case, the values of `pianoroll` should be in [0, 1] in order
-          to plot it correctly.
-
     xtick : {'auto', 'beat', 'step', 'off'}
         Use beat number or step number as ticks along the x-axis, or
         automatically set to 'beat' when `beat_resolution` is given and set
@@ -127,14 +111,15 @@ def plot_pianoroll(ax, pianoroll, is_drum=False, beat_resolution=None,
         to_plot = pianoroll.transpose(1, 0, 2)
     else:
         to_plot = pianoroll.T
-    if normalization == 'standard':
-        to_plot = to_plot / 128.
-    elif normalization == 'auto':
-        max_value = np.max(to_plot)
-        min_value = np.min(to_plot)
-        to_plot = to_plot - min_value / (max_value - min_value)
-    ax.imshow(to_plot, cmap=cmap, aspect='auto', vmin=0, vmax=1, origin='lower',
-              interpolation='none')
+    if (np.issubdtype(pianoroll.dtype, np.bool_)
+        or np.issubdtype(pianoroll.dtype, np.floating)):
+        ax.imshow(to_plot, cmap=cmap, aspect='auto', vmin=0, vmax=1,
+                  origin='lower', interpolation='none')
+    elif np.issubdtype(pianoroll.dtype, np.integer):
+        ax.imshow(to_plot, cmap=cmap, aspect='auto', vmin=0, vmax=127,
+                  origin='lower', interpolation='none')
+    else:
+        raise TypeError("Unsupported data type for `pianoroll`")
 
     # tick setting
     if tick_loc is None:
@@ -211,11 +196,10 @@ def plot_pianoroll(ax, pianoroll, is_drum=False, beat_resolution=None,
 
 def save_animation(filepath, pianoroll, window, hop=1, fps=None, is_drum=False,
                    beat_resolution=None, downbeats=None, preset='default',
-                   cmap='Blues', normalization='standard', xtick='auto',
-                   ytick='octave', xticklabel='on', yticklabel='auto',
-                   tick_loc=None, tick_direction='in', label='both',
-                   grid='both', grid_linestyle=':', grid_linewidth=.5,
-                   **kwargs):
+                   cmap='Blues', xtick='auto', ytick='octave', xticklabel='on',
+                   yticklabel='auto', tick_loc=None, tick_direction='in',
+                   label='both', grid='both', grid_linestyle=':',
+                   grid_linewidth=.5, **kwargs):
     """
     Save a piano-roll to an animation in video or GIF format.
 
@@ -224,8 +208,8 @@ def save_animation(filepath, pianoroll, window, hop=1, fps=None, is_drum=False,
     filepath : str
         Path to save the video file.
     pianoroll : np.ndarray
-        The piano-roll to be plotted. The values should be in [0, 1] when
-        `normalized` is False.
+        The piano-roll to be plotted. The values should be in [0, 1] when data
+        type is float, and in [0, 127] when data type is integer.
 
         - For a 2D array, shape=(num_time_step, num_pitch).
         - For a 3D array, shape=(num_time_step, num_pitch, num_channel),
@@ -246,20 +230,6 @@ def save_animation(filepath, pianoroll, window, hop=1, fps=None, is_drum=False,
     downbeats : list
         Indices of time steps that contain downbeats., i.e. the first time
         step of a bar.
-    normalization : {'standard', 'auto', 'none'}
-        The normalization method to apply to the piano-roll. Default to
-        'standard'. Only effective when `pianoroll` is not binarized.
-
-        - For 'standard' normalization, the normalized values are given by
-          N = P / 128, where P, N is the original and normalized piano-roll,
-          respectively
-        - For 'auto' normalization, the normalized values are given by
-          N = (P - m) / (M - m), where P, N is the original and normalized
-          piano-roll, respectively, and M, m is the maximum and minimum of
-          the original piano-roll, respectively.
-        - If 'none', no normalization will be applied to the piano-roll. In
-          this case, the values of `pianoroll` should be in [0, 1] in order
-          to plot it correctly.
 
     preset : {'default', 'plain', 'frame'}
         Preset themes for the plot.
@@ -305,15 +275,15 @@ def save_animation(filepath, pianoroll, window, hop=1, fps=None, is_drum=False,
 
     """
     def make_frame(t):
-        """Return an image of the frame for time t"""
+        """Return an image of the frame for time t."""
         fig = plt.gcf()
         ax = plt.gca()
         f_idx = int(t * fps)
         start = hop * f_idx
         end = start + window
-        to_plot = pianoroll[start:end].T / 128.
+        to_plot = transposed[:, start:end]
         extent = (start, end - 1, 0, 127)
-        ax.imshow(to_plot, cmap=cmap, aspect='auto', vmin=0, vmax=1,
+        ax.imshow(to_plot, cmap=cmap, aspect='auto', vmin=vmin, vmax=vmax,
                   origin='lower', interpolation='none', extent=extent)
 
         if xtick == 'beat':
@@ -345,14 +315,25 @@ def save_animation(filepath, pianoroll, window, hop=1, fps=None, is_drum=False,
 
     fig, ax = plt.subplots()
     plot_pianoroll(ax, pianoroll[:window], is_drum, beat_resolution, downbeats,
-                   preset=preset, cmap=cmap, normalization=normalization,
-                   xtick=xtick, ytick=ytick, xticklabel=xticklabel,
-                   yticklabel=yticklabel, tick_loc=tick_loc,
-                   tick_direction=tick_direction, label=label, grid=grid,
-                   grid_linestyle=grid_linestyle, grid_linewidth=grid_linewidth)
+                   preset=preset, cmap=cmap, xtick=xtick, ytick=ytick,
+                   xticklabel=xticklabel, yticklabel=yticklabel,
+                   tick_loc=tick_loc, tick_direction=tick_direction,
+                   label=label, grid=grid, grid_linestyle=grid_linestyle,
+                   grid_linewidth=grid_linewidth)
 
     num_frame = int((pianoroll.shape[0] - window) / hop)
     duration = int(num_frame / fps)
+
+    if (np.issubdtype(pianoroll.dtype, np.bool_)
+        or np.issubdtype(pianoroll.dtype, np.floating)):
+        vmax = 1
+    elif np.issubdtype(pianoroll.dtype, np.integer):
+        vmax = 127
+    else:
+        raise TypeError("Unsupported data type for `pianoroll`")
+    vmin = 0
+
+    transposed = pianoroll.T
     animation = VideoClip(make_frame, duration=duration)
     if filepath.endswith('.gif'):
         animation.write_gif(filepath, fps, kwargs)
