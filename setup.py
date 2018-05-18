@@ -29,15 +29,23 @@ setup(
         'License :: OSI Approved :: MIT License',
         'Programming Language :: Python',
     ],
+    setup_requires=[
+        'pytest-runner>=2.0,<3.0'
+    ],
     install_requires=[
-        'six>=1.0.0',
-        'numpy>=1.10.0',
-        'scipy>=1.0.0',
-        'pretty_midi>=0.2.8',
+        'six>=1.0.0,<2.0',
+        'numpy>=1.10.0,<2.0',
+        'scipy>=1.0.0,<2.0',
+        'pretty_midi>=0.2.8,<1.0',
     ],
     extras_require={
         'plot':  ['matplotlib>=1.5'],
         'animation': ['moviepy>=0.2.3.2'],
+        'pytest':[
+            'pytest>=3.0.0,<4.0',
+            'pytest-cov>=2.5.1,<3.0',
+            'coveralls>=1.1,<2.0',
+        ]
     },
     test_suite='tests',
 )
