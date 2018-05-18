@@ -7,6 +7,11 @@ A python package for handling multi-track piano-rolls.
    :target: https://badge.fury.io/py/pypianoroll
 .. image:: https://img.shields.io/badge/License-MIT-blue.svg
    :target: https://github.com/salu133445/musegan/blob/master/LICENSE.txt
+.. image:: https://travis-ci.org/salu133445/pypianoroll.svg
+   :target: https://travis-ci.org/salu133445/pypianoroll
+.. image:: https://coveralls.io/repos/github/salu133445/pypianoroll/badge.svg
+   :target: https://coveralls.io/github/salu133445/pypianoroll
+
 
 Features
 --------
