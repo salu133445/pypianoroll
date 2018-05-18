@@ -9,5 +9,8 @@ script:
   - python tests/test_multitrack.py
 install:
   - pip install -e .
+after_success:
+  - pip install coveralls
+  - coveralls
 notifications:
   email: false
