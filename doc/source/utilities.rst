@@ -3,10 +3,9 @@
 Utilities
 =========
 
-Some utility functions are provided. In general, functions listed below will not
-modify the input objects and return a copy instead, while methods for
-:class:`pypianoroll.Track` and :class:`pypianoroll.Multitrack` may modify the
-input objects.
+In general, functions listed below will not modify the input objects and return
+a copy instead, while methods for :class:`pypianoroll.Track` and
+:class:`pypianoroll.Multitrack` may modify the input objects.
 
 .. autofunction:: pypianoroll.check_pianoroll
 .. autofunction:: pypianoroll.assign_constant
