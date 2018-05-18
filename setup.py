@@ -21,6 +21,7 @@ setup(
     url='https://github.com/salu133445/pypianoroll',
     download_url=('https://github.com/salu133445/pypianoroll/archive/'
                   + VERSION['__version__'] + '.tar.gz'),
+    project_urls={"Documentation": "https://salu133445.github.io/pypianoroll/"},
     keywords=['music', 'audio', 'pianoroll', 'multitrack'],
     classifiers=[
         'Development Status :: 3 - Alpha',
@@ -38,7 +39,5 @@ setup(
         'plot':  ['matplotlib>=1.5'],
         'animation': ['moviepy>=0.2.3.2'],
     },
-    project_urls={
-        "Documentation": "https://salu133445.github.io/pypianoroll/"
-    }
+    test_suite='tests',
 )
