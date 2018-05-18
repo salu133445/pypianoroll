@@ -21,6 +21,8 @@ Here are some examples.
 Related Functions
 -----------------
 
-.. autofunction :: pypianoroll.plot_pianoroll
 .. autofunction :: pypianoroll.plot
+.. autofunction :: pypianoroll.plot_pianoroll
+.. autofunction :: pypianoroll.plot.plot_track
+.. autofunction :: pypianoroll.plot.plot_multitrack
 .. autofunction :: pypianoroll.save_animation
