@@ -1,0 +1,12 @@
+language: python
+python:
+  - 2.7
+  - 3.5
+script:
+  - python tests/test_track.py
+  - python tests/test_multitrack.py
+install:
+  - pip install six
+  - pip install numpy
+  - pip install scipy
+  - pip install pretty_midi
