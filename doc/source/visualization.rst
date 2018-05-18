@@ -23,6 +23,6 @@ Related Functions
 
 .. autofunction :: pypianoroll.plot
 .. autofunction :: pypianoroll.plot_pianoroll
-.. autofunction :: pypianoroll.plot_track
-.. autofunction :: pypianoroll.plot_multitrack
+.. autofunction :: pypianoroll.plot.plot_track
+.. autofunction :: pypianoroll.plot.plot_multitrack
 .. autofunction :: pypianoroll.save_animation
