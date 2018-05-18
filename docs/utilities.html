@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Utilities &mdash; pypianoroll 0.3.0 documentation</title>
+  <title>Utilities &mdash; pypianoroll 0.4.0 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="index" title="Index"
               href="genindex.html"/>
         <link rel="search" title="Search" href="search.html"/>
-    <link rel="top" title="pypianoroll 0.3.0 documentation" href="index.html"/>
+    <link rel="top" title="pypianoroll 0.4.0 documentation" href="index.html"/>
         <link rel="next" title="Single-track Piano-roll" href="track.html"/>
         <link rel="prev" title="Visualization" href="visualization.html"/> 
 
@@ -66,7 +66,7 @@
             
             
               <div class="version">
-                0.3.0
+                0.4.0
               </div>
             
           
@@ -161,13 +161,31 @@
             
   <div class="section" id="utilities">
 <span id="id1"></span><h1>Utilities<a class="headerlink" href="#utilities" title="Permalink to this headline">¶</a></h1>
-<p>The followings are utilities for handling both single-track and multi-track
-piano-rolls.</p>
+<p>In general, functions listed below will not modify the input objects and return
+a copy instead, while methods for <a class="reference internal" href="track.html#pypianoroll.Track" title="pypianoroll.Track"><code class="xref py py-class docutils literal"><span class="pre">pypianoroll.Track</span></code></a> and
+<a class="reference internal" href="multitrack.html#pypianoroll.Multitrack" title="pypianoroll.Multitrack"><code class="xref py py-class docutils literal"><span class="pre">pypianoroll.Multitrack</span></code></a> may modify the input objects.</p>
 <dl class="function">
-<dt id="pypianoroll.is_pianoroll">
-<code class="descclassname">pypianoroll.</code><code class="descname">is_pianoroll</code><span class="sig-paren">(</span><em>arr</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pypianoroll/utilities.html#is_pianoroll"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypianoroll.is_pianoroll" title="Permalink to this definition">¶</a></dt>
+<dt id="pypianoroll.check_pianoroll">
+<code class="descclassname">pypianoroll.</code><code class="descname">check_pianoroll</code><span class="sig-paren">(</span><em>arr</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pypianoroll/utilities.html#check_pianoroll"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypianoroll.check_pianoroll" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return True if the array is a standard piano-roll matrix. Otherwise,
 return False. Raise TypeError if the input object is not a numpy array.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="pypianoroll.assign_constant">
+<code class="descclassname">pypianoroll.</code><code class="descname">assign_constant</code><span class="sig-paren">(</span><em>obj</em>, <em>value</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pypianoroll/utilities.html#assign_constant"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypianoroll.assign_constant" title="Permalink to this definition">¶</a></dt>
+<dd><p>Assign a constant value to the nonzeros in the piano-roll(s). If a
+piano-roll is not binarized, its data type will be preserved. If a
+piano-roll is binarized, it will be casted to the type of <cite>value</cite>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>value</strong> (<em>int</em><em> or </em><em>float</em>) – The constant value to be assigned to the nonzeros of the
+piano-roll(s).</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="function">
@@ -219,6 +237,23 @@ along the time axis.</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>pad_length</strong> (<em>int</em>) – The length to pad along the time axis with zeros.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="pypianoroll.pad_to_multiple">
+<code class="descclassname">pypianoroll.</code><code class="descname">pad_to_multiple</code><span class="sig-paren">(</span><em>obj</em>, <em>factor</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pypianoroll/utilities.html#pad_to_multiple"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypianoroll.pad_to_multiple" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a copy of the object with its piano-roll padded with zeros at the
+end along the time axis with the minimal length that make the length of
+the resulting piano-roll a multiple of <cite>factor</cite>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>factor</strong> (<em>int</em>) – The value which the length of the resulting piano-roll will be
+a multiple of.</td>
 </tr>
 </tbody>
 </table>
@@ -300,7 +335,7 @@ piano-roll(s).</p>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'./',
-            VERSION:'0.3.0',
+            VERSION:'0.4.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,

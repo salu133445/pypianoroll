@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>pypianoroll.utilities &mdash; pypianoroll 0.3.0 documentation</title>
+  <title>pypianoroll.utilities &mdash; pypianoroll 0.4.0 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="index" title="Index"
               href="../../genindex.html"/>
         <link rel="search" title="Search" href="../../search.html"/>
-    <link rel="top" title="pypianoroll 0.3.0 documentation" href="../../index.html"/>
+    <link rel="top" title="pypianoroll 0.4.0 documentation" href="../../index.html"/>
         <link rel="up" title="Module code" href="../index.html"/> 
 
   
@@ -65,7 +65,7 @@
             
             
               <div class="version">
-                0.3.0
+                0.4.0
               </div>
             
           
@@ -164,6 +164,7 @@
 <span></span><span class="sd">&quot;&quot;&quot;Utilities for manipulating multi-track and single-track piano-rolls.</span>
 
 <span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">absolute_import</span><span class="p">,</span> <span class="n">division</span><span class="p">,</span> <span class="n">print_function</span>
 <span class="kn">from</span> <span class="nn">copy</span> <span class="k">import</span> <span class="n">deepcopy</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">from</span> <span class="nn">pypianoroll.track</span> <span class="k">import</span> <span class="n">Track</span>
@@ -175,11 +176,11 @@
 <span class="sd">    or :class:`pypianoroll.Track` object. Otherwise, pass.</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">Multitrack</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">Track</span><span class="p">)):</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="p">(</span><span class="n">Multitrack</span><span class="p">,</span> <span class="n">Track</span><span class="p">)):</span>
         <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;Support only `pypianoroll.Multitrack` and &quot;</span>
                         <span class="s2">&quot;`pypianoroll.Track` class objects&quot;</span><span class="p">)</span>
 
-<div class="viewcode-block" id="is_pianoroll"><a class="viewcode-back" href="../../utilities.html#pypianoroll.is_pianoroll">[docs]</a><span class="k">def</span> <span class="nf">is_pianoroll</span><span class="p">(</span><span class="n">arr</span><span class="p">):</span>
+<div class="viewcode-block" id="check_pianoroll"><a class="viewcode-back" href="../../utilities.html#pypianoroll.check_pianoroll">[docs]</a><span class="k">def</span> <span class="nf">check_pianoroll</span><span class="p">(</span><span class="n">arr</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Return True if the array is a standard piano-roll matrix. Otherwise,</span>
 <span class="sd">    return False. Raise TypeError if the input object is not a numpy array.</span>
@@ -196,7 +197,7 @@
         <span class="k">return</span> <span class="kc">False</span>
     <span class="k">return</span> <span class="kc">True</span></div>
 
-<span class="k">def</span> <span class="nf">assign_constant</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+<div class="viewcode-block" id="assign_constant"><a class="viewcode-back" href="../../utilities.html#pypianoroll.assign_constant">[docs]</a><span class="k">def</span> <span class="nf">assign_constant</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Assign a constant value to the nonzeros in the piano-roll(s). If a</span>
 <span class="sd">    piano-roll is not binarized, its data type will be preserved. If a</span>
@@ -210,7 +211,7 @@
 
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">_check_supported</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span>
-    <span class="n">obj</span><span class="o">.</span><span class="n">assign_constant</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+    <span class="n">obj</span><span class="o">.</span><span class="n">assign_constant</span><span class="p">(</span><span class="n">value</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="binarize"><a class="viewcode-back" href="../../utilities.html#pypianoroll.binarize">[docs]</a><span class="k">def</span> <span class="nf">binarize</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">threshold</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
@@ -277,10 +278,27 @@
 <span class="sd">        The length to pad along the time axis with zeros.</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">Track</span><span class="p">):</span>
-        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;Support only `pypianoroll.Track` class objects&quot;</span><span class="p">)</span>
+    <span class="n">_check_supported</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span>
     <span class="n">copied</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span>
     <span class="n">copied</span><span class="o">.</span><span class="n">pad</span><span class="p">(</span><span class="n">pad_length</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">copied</span></div>
+
+<div class="viewcode-block" id="pad_to_multiple"><a class="viewcode-back" href="../../utilities.html#pypianoroll.pad_to_multiple">[docs]</a><span class="k">def</span> <span class="nf">pad_to_multiple</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">factor</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Return a copy of the object with its piano-roll padded with zeros at the</span>
+<span class="sd">    end along the time axis with the minimal length that make the length of</span>
+<span class="sd">    the resulting piano-roll a multiple of `factor`.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    factor : int</span>
+<span class="sd">        The value which the length of the resulting piano-roll will be</span>
+<span class="sd">        a multiple of.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">_check_supported</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span>
+    <span class="n">copied</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span>
+    <span class="n">copied</span><span class="o">.</span><span class="n">pad_to_multiple</span><span class="p">(</span><span class="n">factor</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">copied</span></div>
 
 <div class="viewcode-block" id="pad_to_same"><a class="viewcode-back" href="../../utilities.html#pypianoroll.pad_to_same">[docs]</a><span class="k">def</span> <span class="nf">pad_to_same</span><span class="p">(</span><span class="n">obj</span><span class="p">):</span>
@@ -295,25 +313,6 @@
     <span class="n">copied</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span>
     <span class="n">copied</span><span class="o">.</span><span class="n">pad_to_same</span><span class="p">()</span>
     <span class="k">return</span> <span class="n">copied</span></div>
-
-<span class="k">def</span> <span class="nf">pad_to_multiple</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">factor</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Return a copy of the object with its piano-roll padded with zeros at the</span>
-<span class="sd">    end along the time axis with the minimal length that make the length of</span>
-<span class="sd">    the resulting piano-roll a multiple of `factor`.</span>
-
-<span class="sd">    Parameters</span>
-<span class="sd">    ----------</span>
-<span class="sd">    factor : int</span>
-<span class="sd">        The value which the length of the resulting piano-roll will be</span>
-<span class="sd">        a multiple of.</span>
-
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">Track</span><span class="p">):</span>
-        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;Support only `pypianoroll.Track` class objects&quot;</span><span class="p">)</span>
-    <span class="n">copied</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span>
-    <span class="n">copied</span><span class="o">.</span><span class="n">pad_to_multiple</span><span class="p">(</span><span class="n">factor</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">copied</span>
 
 <div class="viewcode-block" id="parse"><a class="viewcode-back" href="../../parse_write.html#pypianoroll.parse">[docs]</a><span class="k">def</span> <span class="nf">parse</span><span class="p">(</span><span class="n">filepath</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
@@ -349,7 +348,7 @@
 <span class="sd">    filepath : str</span>
 <span class="sd">        The path to save the file.</span>
 <span class="sd">    obj: `pypianoroll.Multitrack` objects</span>
-<span class="sd">        The objecte to be saved.</span>
+<span class="sd">        The object to be saved.</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">Multitrack</span><span class="p">):</span>
@@ -433,7 +432,7 @@
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'0.3.0',
+            VERSION:'0.4.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,
