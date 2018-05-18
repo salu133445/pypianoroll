@@ -4,13 +4,12 @@ python:
   - 3.4
   - 3.5
   - 3.6
-script:
-  - python tests/test_track.py
-  - python tests/test_multitrack.py
 install:
   - pip install -e .
+  - pip install -e .[pytest]
+script:
+  - python setup.py pytest --addopts "--cov pypianoroll"
 after_success:
-  - pip install coveralls
   - coveralls
 notifications:
   email: false
