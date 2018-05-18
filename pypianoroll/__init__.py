@@ -11,6 +11,7 @@ Features
 - parse from and write to MIDI files
 
 """
+from __future__ import absolute_import, division, print_function
 from pypianoroll.version import __version__
 from pypianoroll.track import Track
 from pypianoroll.multitrack import Multitrack

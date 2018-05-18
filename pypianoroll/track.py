@@ -1,12 +1,11 @@
 """Class for single-track piano-rolls with metadata.
 
 """
+from __future__ import absolute_import, division, print_function
 from copy import deepcopy
 from six import string_types
 import numpy as np
-from matplotlib import pyplot as plt
-from utilities import check_pianoroll
-from pypianoroll.plot import plot_pianoroll
+from pypianoroll.plot import plot_track
 
 class Track(object):
     """
@@ -26,7 +25,6 @@ class Track(object):
         Name of the track.
 
     """
-
     def __init__(self, pianoroll=None, program=0, is_drum=False,
                  name='unknown'):
         """
@@ -59,7 +57,7 @@ class Track(object):
         self.is_drum = is_drum
         self.name = name
 
-        self._check_validity()
+        self.check_validity()
 
     def __getitem__(self, val):
         return Track(self.pianoroll[val], self.program, self.is_drum, self.name)
@@ -74,7 +72,7 @@ class Track(object):
                 .format(str(self.pianoroll), self.program, self.is_drum,
                         self.name))
 
-    def assign_constant(self, value):
+    def assign_constant(self, value, dtype=None):
         """
         Assign a constant value to all nonzeros in the piano-roll. If the
         piano-roll is not binarized, its data type will be preserved. If the
@@ -86,10 +84,17 @@ class Track(object):
             The constant value to be assigned to the nonzeros of the piano-roll.
 
         """
-        if self.is_binarized():
-            self.pianoroll = self.pianoroll * value
+        if not self.is_binarized():
+            self.pianoroll[self.pianoroll.nonzero()] = value
             return
-        self.pianoroll[self.pianoroll.nonzero()] = value
+        if dtype is None:
+            if isinstance(value, int):
+                dtype = int
+            elif isinstance(value, float):
+                dtype = float
+        nonzero = self.pianoroll.nonzero()
+        self.pianoroll = np.zeros(self.pianoroll.shape, dtype)
+        self.pianoroll[nonzero] = value
 
     def binarize(self, threshold=0):
         """
@@ -105,10 +110,19 @@ class Track(object):
         if not self.is_binarized():
             self.pianoroll = (self.pianoroll > threshold)
 
-    def _check_validity(self):
+    def check_validity(self):
         """"Raise error if any invalid attribute found."""
         # pianoroll
-        check_pianoroll(self.pianoroll)
+        if not isinstance(self.pianoroll, np.ndarray):
+            raise TypeError("`pianoroll` must be of np.ndarray type")
+        if not (np.issubdtype(self.pianoroll.dtype, np.bool_)
+                or np.issubdtype(self.pianoroll.dtype, np.number)):
+            raise TypeError("Data type of `pianoroll` must be np.bool_ or a "
+                            "member in np.number")
+        if self.pianoroll.ndim != 2:
+            raise ValueError("Dimension of `pianoroll` must be 2")
+        if self.pianoroll.shape[1] != 128:
+            raise ValueError("Time axis length of `pianoroll` must be 128")
         # program
         if not isinstance(self.program, int):
             raise TypeError("`program` must be of int type")
@@ -180,17 +194,8 @@ class Track(object):
                                 'constant')
 
     def get_pianoroll_copy(self):
-        """
-        Return a copy of the piano-roll.
-
-        Returns
-        -------
-        copied :
-            A copy of the piano-roll.
-
-        """
-        copied = np.copy(self.pianoroll)
-        return copied
+        """Return a copy of the piano-roll matrix."""
+        return np.copy(self.pianoroll)
 
     def get_active_length(self):
         """
@@ -203,7 +208,7 @@ class Track(object):
             Length of the piano-roll without trailing silence (in time step).
 
         """
-        non_zero_steps = np.any((self.pianoroll > 0), axis=1)
+        non_zero_steps = np.any(self.pianoroll, axis=1)
         inv_last_non_zero_step = np.argmax(np.flip(non_zero_steps, axis=0))
         active_length = self.pianoroll.shape[0] - inv_last_non_zero_step
         return active_length
@@ -258,88 +263,11 @@ class Track(object):
         is_binarized = np.issubdtype(self.pianoroll.dtype, np.bool_)
         return is_binarized
 
-    def plot(self, filepath=None, beat_resolution=None, downbeats=None,
-             preset='default', cmap='Blues', xtick='auto', ytick='octave',
-             xticklabel='on', yticklabel='auto', tick_loc=None,
-             tick_direction='in', label='both', grid='both', grid_linestyle=':',
-             grid_linewidth=.5):
-        """
-        Plot the piano-roll or save a plot of the piano-roll.
+    def plot(self, **kwargs):
+        """Plot the piano-roll or save a plot of the piano-roll. See
+        :func:`pypianoroll.plot.plot_track` for full documentation."""
+        plot_track(self, kwargs)
 
-        Parameters
-        ----------
-        filepath :
-            The filepath to save the plot. If None, default to save nothing.
-        beat_resolution : int
-            Resolution of a beat (in time step). Required and only effective
-            when `xticklabel` is 'beat'.
-        downbeats : list
-            Indices of time steps that contain downbeats., i.e. the first time
-            step of a bar.
-
-        preset : {'default', 'plain', 'frame'}
-            Preset themes for the plot.
-
-            - In 'default' preset, the ticks, grid and labels are on.
-            - In 'frame' preset, the ticks and grid are both off.
-            - In 'plain' preset, the x- and y-axis are both off.
-
-        cmap :  `matplotlib.colors.Colormap`
-            Colormap to use in :func:`matplotlib.pyplot.imshow`. Default to
-            'Blues'. Only effective when `pianoroll` is 2D.
-        xtick : {'auto', 'beat', 'step', 'off'}
-            Use beat number or step number as ticks along the x-axis, or
-            automatically set to 'beat' when `beat_resolution` is given and set
-            to 'step', otherwise. Default to 'auto'.
-        ytick : {'octave', 'pitch', 'off'}
-            Use octave or pitch as ticks along the y-axis. Default to 'octave'.
-        xticklabel : {'on', 'off'}
-            Indicate whether to add tick labels along the x-axis. Only effective
-            when `xtick` is not 'off'.
-        yticklabel : {'auto', 'name', 'number', 'off'}
-            If 'name', use octave name and pitch name (key name when `is_drum`
-            is True) as tick labels along the y-axis. If 'number', use pitch
-            number. If 'auto', set to 'name' when `ytick` is 'octave' and
-            'number' when `ytick` is 'pitch'. Default to 'auto'. Only effective
-            when `ytick` is not 'off'.
-        tick_loc : tuple or list
-            List of locations to put ticks. Availables elements are 'bottom',
-            'top', 'left' and 'right'. If None, default to ('bottom', 'left').
-        tick_direction : {'in', 'out', 'inout'}
-            Put ticks inside the axes, outside the axes, or both. Default to
-            'in'. Only effective when `xtick` and `ytick` are not both 'off'.
-        label : {'x', 'y', 'both', 'off'}
-            Add label to the x-axis, y-axis, both or neither. Default to 'both'.
-        grid : {'x', 'y', 'both', 'off'}
-            Add grid to the x-axis, y-axis, both or neither. Default to 'both'.
-        grid_linestyle : str
-            Will be passed to :meth:`matplotlib.axes.Axes.grid` as 'linestyle'
-            argument.
-        grid_linewidth : float
-            Will be passed to :meth:`matplotlib.axes.Axes.grid` as 'linewidth'
-            argument.
-
-        Returns
-        -------
-        fig : `matplotlib.figure.Figure` object
-            A :class:`matplotlib.figure.Figure` object.
-        ax : `matplotlib.axes.Axes` object
-            A :class:`matplotlib.axes.Axes` object.
-
-        """
-        fig, ax = plt.subplots()
-        plot_pianoroll(ax, self.pianoroll, self.is_drum, beat_resolution,
-                       downbeats, preset=preset, cmap=cmap, xtick=xtick,
-                       ytick=ytick, xticklabel=xticklabel,
-                       yticklabel=yticklabel, tick_loc=tick_loc,
-                       tick_direction=tick_direction, label=label, grid=grid,
-                       grid_linestyle=grid_linestyle,
-                       grid_linewidth=grid_linewidth)
-
-        if filepath is not None:
-            plt.savefig(filepath)
-
-        return fig, ax
 
     def transpose(self, semitone):
         """

@@ -1,6 +1,7 @@
 """Utilities for manipulating multi-track and single-track piano-rolls.
 
 """
+from __future__ import absolute_import, division, print_function
 from copy import deepcopy
 import numpy as np
 from pypianoroll.track import Track
@@ -114,23 +115,9 @@ def pad(obj, pad_length):
         The length to pad along the time axis with zeros.
 
     """
-    if not isinstance(obj, Track):
-        raise TypeError("Support only `pypianoroll.Track` class objects")
+    _check_supported(obj)
     copied = deepcopy(obj)
     copied.pad(pad_length)
-    return copied
-
-def pad_to_same(obj):
-    """
-    Return a copy of the object with shorter piano-rolls padded with zeros
-    at the end along the time axis to the length of the piano-roll with the
-    maximal length.
-
-    """
-    if not isinstance(obj, Multitrack):
-        raise TypeError("Support only `pypianoroll.Multitrack` class objects")
-    copied = deepcopy(obj)
-    copied.pad_to_same()
     return copied
 
 def pad_to_multiple(obj, factor):
@@ -146,10 +133,22 @@ def pad_to_multiple(obj, factor):
         a multiple of.
 
     """
-    if not isinstance(obj, Track):
-        raise TypeError("Support only `pypianoroll.Track` class objects")
+    _check_supported(obj)
     copied = deepcopy(obj)
     copied.pad_to_multiple(factor)
+    return copied
+
+def pad_to_same(obj):
+    """
+    Return a copy of the object with shorter piano-rolls padded with zeros
+    at the end along the time axis to the length of the piano-roll with the
+    maximal length.
+
+    """
+    if not isinstance(obj, Multitrack):
+        raise TypeError("Support only `pypianoroll.Multitrack` class objects")
+    copied = deepcopy(obj)
+    copied.pad_to_same()
     return copied
 
 def parse(filepath):
