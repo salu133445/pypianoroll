@@ -1,9 +1,14 @@
 language: python
 python:
+  - 2.6
   - 2.7
+  - 3.4
   - 3.5
+  - 3.6
 script:
   - python tests/test_track.py
   - python tests/test_multitrack.py
 install:
   - pip install -e .
+notifications:
+  email: false
