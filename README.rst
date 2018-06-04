@@ -36,6 +36,12 @@ PYPI_ or Github_ first):
 
     $ python setup.py install
 
+Documentation
+-------------
+
+Documentation is provided as docstrings with the code. An online version is
+also available here_.
+
 Citing
 ------
 
@@ -48,3 +54,4 @@ in AAAI Conference on Artificial Intelligence (AAAI), 2018.
 
 .. _PYPI: https://pypi.python.org/pypi/pypianoroll
 .. _Github: https://github.com/salu133445/pypianoroll
+.. _here: https://salu133445.github.io/pypianoroll/
