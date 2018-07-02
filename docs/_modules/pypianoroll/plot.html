@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>pypianoroll.plot &mdash; pypianoroll 0.4.2 documentation</title>
+  <title>pypianoroll.plot &mdash; pypianoroll 0.4.3 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="index" title="Index"
               href="../../genindex.html"/>
         <link rel="search" title="Search" href="../../search.html"/>
-    <link rel="top" title="pypianoroll 0.4.2 documentation" href="../../index.html"/>
+    <link rel="top" title="pypianoroll 0.4.3 documentation" href="../../index.html"/>
         <link rel="up" title="Module code" href="../index.html"/> 
 
   
@@ -65,7 +65,7 @@
             
             
               <div class="version">
-                0.4.2
+                0.4.3
               </div>
             
           
@@ -273,7 +273,7 @@
                          <span class="s2">&quot;is &#39;beat&#39;&quot;</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">ytick</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">&#39;octave&#39;</span><span class="p">,</span> <span class="s1">&#39;pitch&#39;</span><span class="p">,</span> <span class="s1">&#39;off&#39;</span><span class="p">):</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;`ytick` must be one of {octave&#39;, &#39;pitch&#39;, &#39;off&#39;}&quot;</span><span class="p">)</span>
-    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">xticklabel</span><span class="p">,</span> <span class="nb">bool</span><span class="p">):</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">xticklabel</span><span class="p">,</span> <span class="nb">bool</span><span class="p">):</span>
         <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;`xticklabel` must be of bool type&quot;</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">yticklabel</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">&#39;auto&#39;</span><span class="p">,</span> <span class="s1">&#39;name&#39;</span><span class="p">,</span> <span class="s1">&#39;number&#39;</span><span class="p">,</span> <span class="s1">&#39;off&#39;</span><span class="p">):</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;`yticklabel` must be one of {&#39;auto&#39;, &#39;name&#39;, &quot;</span>
@@ -352,7 +352,7 @@
 
     <span class="c1"># axis labels</span>
     <span class="k">if</span> <span class="n">label</span> <span class="o">==</span> <span class="s1">&#39;x&#39;</span> <span class="ow">or</span> <span class="n">label</span> <span class="o">==</span> <span class="s1">&#39;both&#39;</span><span class="p">:</span>
-        <span class="k">if</span> <span class="n">xtick</span> <span class="o">==</span> <span class="s1">&#39;step&#39;</span> <span class="ow">or</span> <span class="n">xticklabel</span> <span class="o">==</span> <span class="s1">&#39;off&#39;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">xtick</span> <span class="o">==</span> <span class="s1">&#39;step&#39;</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">xticklabel</span><span class="p">:</span>
             <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;time (step)&#39;</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;time (beat)&#39;</span><span class="p">)</span>
@@ -387,7 +387,7 @@
 <span class="sd">        The filepath to save the plot. If None, default to save nothing.</span>
 <span class="sd">    beat_resolution : int</span>
 <span class="sd">        Resolution of a beat (in time step). Required and only effective</span>
-<span class="sd">        when `xticklabel` is &#39;beat&#39;.</span>
+<span class="sd">        when `xtick` is &#39;beat&#39;.</span>
 <span class="sd">    downbeats : list</span>
 <span class="sd">        Indices of time steps that contain downbeats., i.e. the first time</span>
 <span class="sd">        step of a bar.</span>
@@ -711,7 +711,7 @@
 <span class="sd">        to False.</span>
 <span class="sd">    beat_resolution : int</span>
 <span class="sd">        Resolution of a beat (in time step). Required and only effective</span>
-<span class="sd">        when `xticklabel` is &#39;beat&#39;.</span>
+<span class="sd">        when `xtick` is &#39;beat&#39;.</span>
 <span class="sd">    downbeats : list</span>
 <span class="sd">        Indices of time steps that contain downbeats., i.e. the first time</span>
 <span class="sd">        step of a bar.</span>
@@ -864,7 +864,7 @@
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'0.4.2',
+            VERSION:'0.4.3',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,
