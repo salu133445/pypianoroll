@@ -110,7 +110,7 @@ def plot_pianoroll(ax, pianoroll, is_drum=False, beat_resolution=None,
                          "is 'beat'")
     if ytick not in ('octave', 'pitch', 'off'):
         raise ValueError("`ytick` must be one of {octave', 'pitch', 'off'}")
-    if isinstance(xticklabel, bool):
+    if not isinstance(xticklabel, bool):
         raise TypeError("`xticklabel` must be of bool type")
     if yticklabel not in ('auto', 'name', 'number', 'off'):
         raise ValueError("`yticklabel` must be one of {'auto', 'name', "
@@ -189,7 +189,7 @@ def plot_pianoroll(ax, pianoroll, is_drum=False, beat_resolution=None,
 
     # axis labels
     if label == 'x' or label == 'both':
-        if xtick == 'step' or xticklabel == 'off':
+        if xtick == 'step' or not xticklabel:
             ax.set_xlabel('time (step)')
         else:
             ax.set_xlabel('time (beat)')
@@ -224,7 +224,7 @@ def plot_track(track, filepath=None, beat_resolution=None, downbeats=None,
         The filepath to save the plot. If None, default to save nothing.
     beat_resolution : int
         Resolution of a beat (in time step). Required and only effective
-        when `xticklabel` is 'beat'.
+        when `xtick` is 'beat'.
     downbeats : list
         Indices of time steps that contain downbeats., i.e. the first time
         step of a bar.
@@ -548,7 +548,7 @@ def save_animation(filepath, pianoroll, window, hop=1, fps=None, is_drum=False,
         to False.
     beat_resolution : int
         Resolution of a beat (in time step). Required and only effective
-        when `xticklabel` is 'beat'.
+        when `xtick` is 'beat'.
     downbeats : list
         Indices of time steps that contain downbeats., i.e. the first time
         step of a bar.
