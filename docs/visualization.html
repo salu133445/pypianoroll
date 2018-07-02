@@ -181,7 +181,7 @@ properties in the plotting functions as well.</p>
 
 <dl class="function">
 <dt id="pypianoroll.plot_pianoroll">
-<code class="descclassname">pypianoroll.</code><code class="descname">plot_pianoroll</code><span class="sig-paren">(</span><em>ax</em>, <em>pianoroll</em>, <em>is_drum=False</em>, <em>beat_resolution=None</em>, <em>downbeats=None</em>, <em>preset='default'</em>, <em>cmap='Blues'</em>, <em>xtick='auto'</em>, <em>ytick='octave'</em>, <em>xticklabel='on'</em>, <em>yticklabel='auto'</em>, <em>tick_loc=None</em>, <em>tick_direction='in'</em>, <em>label='both'</em>, <em>grid='both'</em>, <em>grid_linestyle=':'</em>, <em>grid_linewidth=0.5</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pypianoroll/plot.html#plot_pianoroll"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypianoroll.plot_pianoroll" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">pypianoroll.</code><code class="descname">plot_pianoroll</code><span class="sig-paren">(</span><em>ax</em>, <em>pianoroll</em>, <em>is_drum=False</em>, <em>beat_resolution=None</em>, <em>downbeats=None</em>, <em>preset='default'</em>, <em>cmap='Blues'</em>, <em>xtick='auto'</em>, <em>ytick='octave'</em>, <em>xticklabel=True</em>, <em>yticklabel='auto'</em>, <em>tick_loc=None</em>, <em>tick_direction='in'</em>, <em>label='both'</em>, <em>grid='both'</em>, <em>grid_linestyle=':'</em>, <em>grid_linewidth=0.5</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pypianoroll/plot.html#plot_pianoroll"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypianoroll.plot_pianoroll" title="Permalink to this definition">¶</a></dt>
 <dd><p>Plot a piano-roll given as a numpy array.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -217,7 +217,7 @@ step of a bar.</li>
 automatically set to ‘beat’ when <cite>beat_resolution</cite> is given and set
 to ‘step’, otherwise. Default to ‘auto’.</li>
 <li><strong>ytick</strong> (<em>{'octave'</em><em>, </em><em>'pitch'</em><em>, </em><em>'off'}</em>) – Use octave or pitch as ticks along the y-axis. Default to ‘octave’.</li>
-<li><strong>xticklabel</strong> (<em>{'on'</em><em>, </em><em>'off'}</em>) – Indicate whether to add tick labels along the x-axis. Only effective
+<li><strong>xticklabel</strong> (<em>bool</em>) – Indicate whether to add tick labels along the x-axis. Only effective
 when <cite>xtick</cite> is not ‘off’.</li>
 <li><strong>yticklabel</strong> (<em>{'auto'</em><em>, </em><em>'name'</em><em>, </em><em>'number'</em><em>, </em><em>'off'}</em>) – If ‘name’, use octave name and pitch name (key name when <cite>is_drum</cite>
 is True) as tick labels along the y-axis. If ‘number’, use pitch
@@ -243,7 +243,7 @@ argument.</li>
 
 <dl class="function">
 <dt id="pypianoroll.plot.plot_track">
-<code class="descclassname">pypianoroll.plot.</code><code class="descname">plot_track</code><span class="sig-paren">(</span><em>track</em>, <em>filepath=None</em>, <em>beat_resolution=None</em>, <em>downbeats=None</em>, <em>preset='default'</em>, <em>cmap='Blues'</em>, <em>xtick='auto'</em>, <em>ytick='octave'</em>, <em>xticklabel='on'</em>, <em>yticklabel='auto'</em>, <em>tick_loc=None</em>, <em>tick_direction='in'</em>, <em>label='both'</em>, <em>grid='both'</em>, <em>grid_linestyle=':'</em>, <em>grid_linewidth=0.5</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pypianoroll/plot.html#plot_track"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypianoroll.plot.plot_track" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">pypianoroll.plot.</code><code class="descname">plot_track</code><span class="sig-paren">(</span><em>track</em>, <em>filepath=None</em>, <em>beat_resolution=None</em>, <em>downbeats=None</em>, <em>preset='default'</em>, <em>cmap='Blues'</em>, <em>xtick='auto'</em>, <em>ytick='octave'</em>, <em>xticklabel=True</em>, <em>yticklabel='auto'</em>, <em>tick_loc=None</em>, <em>tick_direction='in'</em>, <em>label='both'</em>, <em>grid='both'</em>, <em>grid_linestyle=':'</em>, <em>grid_linewidth=0.5</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pypianoroll/plot.html#plot_track"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypianoroll.plot.plot_track" title="Permalink to this definition">¶</a></dt>
 <dd><p>Plot the piano-roll or save a plot of the piano-roll.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -268,7 +268,7 @@ step of a bar.</li>
 automatically set to ‘beat’ when <cite>beat_resolution</cite> is given and set
 to ‘step’, otherwise. Default to ‘auto’.</li>
 <li><strong>ytick</strong> (<em>{'octave'</em><em>, </em><em>'pitch'</em><em>, </em><em>'off'}</em>) – Use octave or pitch as ticks along the y-axis. Default to ‘octave’.</li>
-<li><strong>xticklabel</strong> (<em>{'on'</em><em>, </em><em>'off'}</em>) – Indicate whether to add tick labels along the x-axis. Only effective
+<li><strong>xticklabel</strong> (<em>bool</em>) – Indicate whether to add tick labels along the x-axis. Only effective
 when <cite>xtick</cite> is not ‘off’.</li>
 <li><strong>yticklabel</strong> (<em>{'auto'</em><em>, </em><em>'name'</em><em>, </em><em>'number'</em><em>, </em><em>'off'}</em>) – If ‘name’, use octave name and pitch name (key name when <cite>is_drum</cite>
 is True) as tick labels along the y-axis. If ‘number’, use pitch
@@ -301,7 +301,7 @@ argument.</li>
 
 <dl class="function">
 <dt id="pypianoroll.plot.plot_multitrack">
-<code class="descclassname">pypianoroll.plot.</code><code class="descname">plot_multitrack</code><span class="sig-paren">(</span><em>multitrack</em>, <em>filepath=None</em>, <em>mode='separate'</em>, <em>track_label='name'</em>, <em>preset='default'</em>, <em>cmaps=None</em>, <em>xtick='auto'</em>, <em>ytick='octave'</em>, <em>xticklabel='on'</em>, <em>yticklabel='auto'</em>, <em>tick_loc=None</em>, <em>tick_direction='in'</em>, <em>label='both'</em>, <em>grid='both'</em>, <em>grid_linestyle=':'</em>, <em>grid_linewidth=0.5</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pypianoroll/plot.html#plot_multitrack"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypianoroll.plot.plot_multitrack" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">pypianoroll.plot.</code><code class="descname">plot_multitrack</code><span class="sig-paren">(</span><em>multitrack</em>, <em>filepath=None</em>, <em>mode='separate'</em>, <em>track_label='name'</em>, <em>preset='default'</em>, <em>cmaps=None</em>, <em>xtick='auto'</em>, <em>ytick='octave'</em>, <em>xticklabel=True</em>, <em>yticklabel='auto'</em>, <em>tick_loc=None</em>, <em>tick_direction='in'</em>, <em>label='both'</em>, <em>grid='both'</em>, <em>grid_linestyle=':'</em>, <em>grid_linewidth=0.5</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pypianoroll/plot.html#plot_multitrack"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypianoroll.plot.plot_multitrack" title="Permalink to this definition">¶</a></dt>
 <dd><p>Plot the piano-rolls or save a plot of them.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -360,7 +360,7 @@ than ‘off’ will label the two track with ‘Drums’ and ‘Others’.</li>
 automatically set to ‘beat’ when <cite>beat_resolution</cite> is given and set
 to ‘step’, otherwise. Default to ‘auto’.</li>
 <li><strong>ytick</strong> (<em>{'octave'</em><em>, </em><em>'pitch'</em><em>, </em><em>'off'}</em>) – Use octave or pitch as ticks along the y-axis. Default to ‘octave’.</li>
-<li><strong>xticklabel</strong> (<em>{'on'</em><em>, </em><em>'off'}</em>) – Indicate whether to add tick labels along the x-axis. Only effective
+<li><strong>xticklabel</strong> (<em>bool</em>) – Indicate whether to add tick labels along the x-axis. Only effective
 when <cite>xtick</cite> is not ‘off’.</li>
 <li><strong>yticklabel</strong> (<em>{'auto'</em><em>, </em><em>'name'</em><em>, </em><em>'number'</em><em>, </em><em>'off'}</em>) – If ‘name’, use octave name and pitch name (key name when <cite>is_drum</cite>
 is True) as tick labels along the y-axis. If ‘number’, use pitch
@@ -393,7 +393,7 @@ argument.</li>
 
 <dl class="function">
 <dt id="pypianoroll.save_animation">
-<code class="descclassname">pypianoroll.</code><code class="descname">save_animation</code><span class="sig-paren">(</span><em>filepath</em>, <em>pianoroll</em>, <em>window</em>, <em>hop=1</em>, <em>fps=None</em>, <em>is_drum=False</em>, <em>beat_resolution=None</em>, <em>downbeats=None</em>, <em>preset='default'</em>, <em>cmap='Blues'</em>, <em>xtick='auto'</em>, <em>ytick='octave'</em>, <em>xticklabel='on'</em>, <em>yticklabel='auto'</em>, <em>tick_loc=None</em>, <em>tick_direction='in'</em>, <em>label='both'</em>, <em>grid='both'</em>, <em>grid_linestyle=':'</em>, <em>grid_linewidth=0.5</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pypianoroll/plot.html#save_animation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypianoroll.save_animation" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">pypianoroll.</code><code class="descname">save_animation</code><span class="sig-paren">(</span><em>filepath</em>, <em>pianoroll</em>, <em>window</em>, <em>hop=1</em>, <em>fps=None</em>, <em>is_drum=False</em>, <em>beat_resolution=None</em>, <em>downbeats=None</em>, <em>preset='default'</em>, <em>cmap='Blues'</em>, <em>xtick='auto'</em>, <em>ytick='octave'</em>, <em>xticklabel=True</em>, <em>yticklabel='auto'</em>, <em>tick_loc=None</em>, <em>tick_direction='in'</em>, <em>label='both'</em>, <em>grid='both'</em>, <em>grid_linestyle=':'</em>, <em>grid_linewidth=0.5</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pypianoroll/plot.html#save_animation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypianoroll.save_animation" title="Permalink to this definition">¶</a></dt>
 <dd><p>Save a piano-roll to an animation in video or GIF format.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -431,7 +431,7 @@ step of a bar.</li>
 automatically set to ‘beat’ when <cite>beat_resolution</cite> is given and set
 to ‘step’, otherwise. Default to ‘auto’.</li>
 <li><strong>ytick</strong> (<em>{'octave'</em><em>, </em><em>'pitch'</em><em>, </em><em>'off'}</em>) – Use octave or pitch as ticks along the y-axis. Default to ‘octave’.</li>
-<li><strong>xticklabel</strong> (<em>{'on'</em><em>, </em><em>'off'}</em>) – Indicate whether to add tick labels along the x-axis. Only effective
+<li><strong>xticklabel</strong> (<em>bool</em>) – Indicate whether to add tick labels along the x-axis. Only effective
 when <cite>xtick</cite> is not ‘off’.</li>
 <li><strong>yticklabel</strong> (<em>{'auto'</em><em>, </em><em>'name'</em><em>, </em><em>'number'</em><em>, </em><em>'off'}</em>) – If ‘name’, use octave name and pitch name (key name when <cite>is_drum</cite>
 is True) as tick labels along the y-axis. If ‘number’, use pitch
