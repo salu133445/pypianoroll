@@ -661,7 +661,7 @@ def save_animation(filepath, pianoroll, window, hop=1, fps=None, is_drum=False,
     transposed = pianoroll.T
     animation = VideoClip(make_frame, duration=duration)
     if filepath.endswith('.gif'):
-        animation.write_gif(filepath, fps, kwargs)
+        animation.write_gif(filepath, fps, **kwargs)
     else:
-        animation.write_videofile(filepath, fps, kwargs)
+        animation.write_videofile(filepath, fps, **kwargs)
     plt.close()

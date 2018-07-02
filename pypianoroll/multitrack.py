@@ -581,19 +581,7 @@ class Multitrack(object):
 
         """
         pm = pretty_midi.PrettyMIDI(filepath)
-        mode = kwargs.get('mode', 'max')
-        algorithm = kwargs.get('algorithm', 'normal')
-        binarized = kwargs.get('binarized', False)
-        skip_empty_tracks = kwargs.get('skip_empty_tracks', True)
-        collect_onsets_only = kwargs.get('collect_onsets_only', False)
-        threshold = kwargs.get('threshold', 0)
-        first_beat_time = kwargs.get('first_beat_time')
-        self.parse_pretty_midi(pm, mode=mode, algorithm=algorithm,
-                               binarized=binarized,
-                               skip_empty_tracks=skip_empty_tracks,
-                               collect_onsets_only=collect_onsets_only,
-                               threshold=threshold,
-                               first_beat_time=first_beat_time)
+        self.parse_pretty_midi(pm, **kwargs)
 
     def parse_pretty_midi(self, pm, mode='max', algorithm='normal',
                           binarized=False, skip_empty_tracks=True,
@@ -797,7 +785,7 @@ class Multitrack(object):
     def plot(self, **kwargs):
         """Plot the piano-rolls or save a plot of them. See
         :func:`pypianoroll.plot.plot_multitrack` for full documentation."""
-        plot_multitrack(self, kwargs)
+        plot_multitrack(self, **kwargs)
 
     def remove_empty_tracks(self):
         """Remove tracks with empty piano-rolls."""
