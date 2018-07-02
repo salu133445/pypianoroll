@@ -785,7 +785,7 @@ class Multitrack(object):
     def plot(self, **kwargs):
         """Plot the piano-rolls or save a plot of them. See
         :func:`pypianoroll.plot.plot_multitrack` for full documentation."""
-        plot_multitrack(self, **kwargs)
+        return plot_multitrack(self, **kwargs)
 
     def remove_empty_tracks(self):
         """Remove tracks with empty piano-rolls."""
