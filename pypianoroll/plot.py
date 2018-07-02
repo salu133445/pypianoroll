@@ -22,7 +22,7 @@ except ImportError:
 
 def plot_pianoroll(ax, pianoroll, is_drum=False, beat_resolution=None,
                    downbeats=None, preset='default', cmap='Blues', xtick='auto',
-                   ytick='octave', xticklabel='on', yticklabel='auto',
+                   ytick='octave', xticklabel=True, yticklabel='auto',
                    tick_loc=None, tick_direction='in', label='both',
                    grid='both', grid_linestyle=':', grid_linewidth=.5):
     """
@@ -66,7 +66,7 @@ def plot_pianoroll(ax, pianoroll, is_drum=False, beat_resolution=None,
         to 'step', otherwise. Default to 'auto'.
     ytick : {'octave', 'pitch', 'off'}
         Use octave or pitch as ticks along the y-axis. Default to 'octave'.
-    xticklabel : {'on', 'off'}
+    xticklabel : bool
         Indicate whether to add tick labels along the x-axis. Only effective
         when `xtick` is not 'off'.
     yticklabel : {'auto', 'name', 'number', 'off'}
@@ -110,8 +110,8 @@ def plot_pianoroll(ax, pianoroll, is_drum=False, beat_resolution=None,
                          "is 'beat'")
     if ytick not in ('octave', 'pitch', 'off'):
         raise ValueError("`ytick` must be one of {octave', 'pitch', 'off'}")
-    if xticklabel not in ('on', 'off'):
-        raise ValueError("`xticklabel` must be 'on' or 'off'")
+    if isinstance(xticklabel, bool):
+        raise TypeError("`xticklabel` must be of bool type")
     if yticklabel not in ('auto', 'name', 'number', 'off'):
         raise ValueError("`yticklabel` must be one of {'auto', 'name', "
                          "'number', 'off'}")
@@ -149,17 +149,16 @@ def plot_pianoroll(ax, pianoroll, is_drum=False, beat_resolution=None,
     if preset == 'plain':
         ax.axis('off')
     elif preset == 'frame':
-        ax.tick_params(direction=tick_direction, bottom='off', top='off',
-                       left='off', right='off', labelbottom='off',
-                       labeltop='off', labelleft='off', labelright='off')
+        ax.tick_params(direction=tick_direction, bottom=False, top=False,
+                       left=False, right=False, labelbottom=False,
+                       labeltop=False, labelleft=False, labelright=False)
     else:
-        labelbottom = 'on' if xticklabel != 'off' else 'off'
-        labelleft = 'on' if yticklabel != 'off' else 'off'
-
         ax.tick_params(direction=tick_direction, bottom=('bottom' in tick_loc),
                        top=('top' in tick_loc), left=('left' in tick_loc),
-                       right=('right' in tick_loc), labelbottom=labelbottom,
-                       labeltop='off', labelleft=labelleft, labelright='off')
+                       right=('right' in tick_loc),
+                       labelbottom=(xticklabel != 'off'),
+                       labelleft=(yticklabel != 'off'),
+                       labeltop=False, labelright=False)
 
     # x-axis
     if xtick == 'beat' and preset != 'frame':
@@ -213,7 +212,7 @@ def plot_pianoroll(ax, pianoroll, is_drum=False, beat_resolution=None,
 
 def plot_track(track, filepath=None, beat_resolution=None, downbeats=None,
                preset='default', cmap='Blues', xtick='auto', ytick='octave',
-               xticklabel='on', yticklabel='auto', tick_loc=None,
+               xticklabel=True, yticklabel='auto', tick_loc=None,
                tick_direction='in', label='both', grid='both',
                grid_linestyle=':', grid_linewidth=.5):
     """
@@ -246,7 +245,7 @@ def plot_track(track, filepath=None, beat_resolution=None, downbeats=None,
         to 'step', otherwise. Default to 'auto'.
     ytick : {'octave', 'pitch', 'off'}
         Use octave or pitch as ticks along the y-axis. Default to 'octave'.
-    xticklabel : {'on', 'off'}
+    xticklabel : bool
         Indicate whether to add tick labels along the x-axis. Only effective
         when `xtick` is not 'off'.
     yticklabel : {'auto', 'name', 'number', 'off'}
@@ -299,7 +298,7 @@ def plot_track(track, filepath=None, beat_resolution=None, downbeats=None,
 
 def plot_multitrack(multitrack, filepath=None, mode='separate',
                     track_label='name', preset='default', cmaps=None,
-                    xtick='auto', ytick='octave', xticklabel='on',
+                    xtick='auto', ytick='octave', xticklabel=True,
                     yticklabel='auto', tick_loc=None, tick_direction='in',
                     label='both', grid='both', grid_linestyle=':',
                     grid_linewidth=.5):
@@ -349,7 +348,7 @@ def plot_multitrack(multitrack, filepath=None, mode='separate',
         to 'step', otherwise. Default to 'auto'.
     ytick : {'octave', 'pitch', 'off'}
         Use octave or pitch as ticks along the y-axis. Default to 'octave'.
-    xticklabel : {'on', 'off'}
+    xticklabel : bool
         Indicate whether to add tick labels along the x-axis. Only effective
         when `xtick` is not 'off'.
     yticklabel : {'auto', 'name', 'number', 'off'}
@@ -434,7 +433,7 @@ def plot_multitrack(multitrack, filepath=None, mode='separate',
             axs = [ax]
 
         for idx, track in enumerate(multitrack.tracks):
-            now_xticklabel = xticklabel if idx < num_track else 'off'
+            now_xticklabel = xticklabel if idx < num_track else False
             plot_pianoroll(axs[idx], track.pianoroll, False,
                            multitrack.beat_resolution, downbeats, preset=preset,
                            cmap=cmaps[idx%len(cmaps)], xtick=xtick, ytick=ytick,
@@ -519,7 +518,7 @@ def plot_multitrack(multitrack, filepath=None, mode='separate',
 
 def save_animation(filepath, pianoroll, window, hop=1, fps=None, is_drum=False,
                    beat_resolution=None, downbeats=None, preset='default',
-                   cmap='Blues', xtick='auto', ytick='octave', xticklabel='on',
+                   cmap='Blues', xtick='auto', ytick='octave', xticklabel=True,
                    yticklabel='auto', tick_loc=None, tick_direction='in',
                    label='both', grid='both', grid_linestyle=':',
                    grid_linewidth=.5, **kwargs):
@@ -570,7 +569,7 @@ def save_animation(filepath, pianoroll, window, hop=1, fps=None, is_drum=False,
         to 'step', otherwise. Default to 'auto'.
     ytick : {'octave', 'pitch', 'off'}
         Use octave or pitch as ticks along the y-axis. Default to 'octave'.
-    xticklabel : {'on', 'off'}
+    xticklabel : bool
         Indicate whether to add tick labels along the x-axis. Only effective
         when `xtick` is not 'off'.
     yticklabel : {'auto', 'name', 'number', 'off'}
