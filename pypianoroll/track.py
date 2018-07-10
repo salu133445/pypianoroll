@@ -189,9 +189,10 @@ class Track(object):
             a multiple of.
 
         """
-        to_pad = factor - self.pianoroll.shape[0]%factor
-        self.pianoroll = np.pad(self.pianoroll, ((0, to_pad), (0, 0)),
-                                'constant')
+        remainder = self.pianoroll.shape[0] % factor
+        if remainder:
+            pad_width = ((0, (factor - remainder)), (0, 0))
+            self.pianoroll = np.pad(self.pianoroll, pad_width, 'constant')
 
     def get_pianoroll_copy(self):
         """Return a copy of the piano-roll matrix."""
