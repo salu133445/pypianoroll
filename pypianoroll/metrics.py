@@ -1,4 +1,4 @@
-"""Metrics for evaluating multi-track and single-track piano-rolls for automatic
+"""Metrics for evaluating multitrack and single-track pianorolls for automatic
 music generation systems.
 """
 import numpy as np
@@ -15,26 +15,35 @@ def _validate_pianoroll(arr):
     if arr.shape[1] != 128:
         raise ValueError("The length of the second axis of `arr` must be 128.")
 
-def to_chroma(pianoroll):
-    """Return the chroma features (not normalized)."""
+def _to_chroma(pianoroll):
+    """Return the unnormalized chroma features of a pianoroll."""
     _validate_pianoroll(pianoroll)
     reshaped = pianoroll[:, :120].reshape(-1, 12, 10)
     reshaped[..., :8] += pianoroll[:, 120:].reshape(-1, 1, 8)
     return np.sum(reshaped, 1)
 
 def empty_beat_rate(pianoroll, beat_resolution):
-    """Return the ratio of empty beats to the total number of beats."""
-    reshaped = pianoroll.reshape(-1, beat_resolution, pianoroll.shape[1])
-    return np.count_nonzero(reshaped.any(1), 0)
+    """Return the ratio of empty beats to the total number of beats in a
+    pianoroll."""
+    _validate_pianoroll(pianoroll)
+    reshaped = pianoroll.reshape(-1, beat_resolution * pianoroll.shape[1])
+    n_empty_beats = np.count_nonzero(reshaped.any(1))
+    return n_empty_beats / len(reshaped)
 
 def n_pitches_used(pianoroll):
-    """Return the number of unique pitches used per bar."""
+    """Return the number of unique pitches used in a pianoroll."""
     _validate_pianoroll(pianoroll)
     return np.count_nonzero(np.any(pianoroll, 0))
 
+def n_pitche_classes_used(pianoroll):
+    """Return the number of unique pitch classes used in a pianoroll."""
+    _validate_pianoroll(pianoroll)
+    chroma = _to_chroma(pianoroll)
+    return np.count_nonzero(np.any(chroma, 0))
+
 def qualified_note_rate(pianoroll, threshold=2):
     """Return the ratio of the number of the qualified notes (notes longer than
-    `threshold` (in time step)) to the total number of notes in a piano-roll."""
+    `threshold` (in time step)) to the total number of notes in a pianoroll."""
     _validate_pianoroll(pianoroll)
     if np.issubdtype(pianoroll.dtype, np.bool_):
         pianoroll = pianoroll.astype(np.uint8)
@@ -47,13 +56,15 @@ def qualified_note_rate(pianoroll, threshold=2):
 
 def polyphonic_rate(pianoroll, threshold=2):
     """Return the ratio of the number of time steps where the number of pitches
-    being played is larger than `threshold` to the total number of time steps"""
+    being played is larger than `threshold` to the total number of time steps
+    in a pianoroll."""
     _validate_pianoroll(pianoroll)
     n_poly = np.count_nonzero(np.count_nonzero(pianoroll, 1) > threshold)
     return n_poly / len(pianoroll)
 
 def drum_in_pattern_rate(pianoroll, beat_resolution, tolerance=0.1):
-    """Return the drum_in_pattern_rate metric value."""
+    """Return the ratio of the number of drum notes that lie on the drum
+    pattern (i.e., at certain time steps) to the total number of drum notes."""
     if beat_resolution not in (4, 6, 8, 9, 12, 16, 18, 24):
         raise ValueError("Unsupported beat resolution. Only 4, 6, 8 ,9, 12, "
                          "16, 18, 42 are supported.")
@@ -84,7 +95,9 @@ def drum_in_pattern_rate(pianoroll, beat_resolution, tolerance=0.1):
     return n_in_pattern / np.count_nonzero(pianoroll)
 
 def in_scale_rate(pianoroll, key=3, kind='major'):
-    """Return the in_scale_rate metric value. Default to C major scale."""
+    """Return the ratio of the number of nonzero entries that lie in a specific
+    scale to the total number of nonzero entries in a pianoroll. Default to C
+    major scale."""
     if not isinstance(key, int):
         raise TypeError("`key` must an integer.")
     if key > 11 or key < 0:
@@ -101,14 +114,14 @@ def in_scale_rate(pianoroll, key=3, kind='major'):
             a_scale_mask = np.array([1, 0, 1, 0, 1, 1, 0, 1, 0, 1, 0, 1], bool)
         return np.roll(a_scale_mask, key)
 
-    chroma = to_chroma(pianoroll)
+    chroma = _to_chroma(pianoroll)
     scale_mask = _scale_mask(key, kind)
     n_in_scale = np.sum(scale_mask.reshape(-1, 12) * chroma)
     return n_in_scale / np.count_nonzero(pianoroll)
 
 def tonal_distance(pianoroll_1, pianoroll_2, beat_resolution, r1=1.0, r2=1.0,
                    r3=0.5):
-    """Return the tonal distance [1] between two pianorolls.
+    """Return the tonal distance [1] between the two input pianorolls.
 
     [1] Christopher Harte, Mark Sandler, and Martin Gasser. Detecting
         harmonic change in musical audio. In Proc. ACM Workshop on Audio and
@@ -134,7 +147,7 @@ def tonal_distance(pianoroll_1, pianoroll_2, beat_resolution, r1=1.0, r2=1.0,
     def _to_tonal_space(pianoroll, tonal_matrix):
         """Return the tensor in tonal space where chroma features are normalized
         per beat."""
-        beat_chroma = to_chroma(pianoroll).reshape(-1, beat_resolution, 12)
+        beat_chroma = _to_chroma(pianoroll).reshape(-1, beat_resolution, 12)
         beat_chroma = beat_chroma / np.sum(beat_chroma, 2, keepdims=True)
         return np.matmul(tonal_matrix, beat_chroma.T).T
 
