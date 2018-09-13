@@ -55,13 +55,13 @@ class MultitrackTestCase(unittest.TestCase):
         """Test method `Multitrack.get_downbeat_steps()`."""
         self.assertEqual(self.multitrack.get_downbeat_steps(), [0, 96])
 
-    def test_get_maximal_length(self):
-        """Test method `Multitrack.get_maximal_length()`."""
-        self.assertEqual(self.multitrack.get_maximal_length(), 192)
+    def test_get_max_length(self):
+        """Test method `Multitrack.get_max_length()`."""
+        self.assertEqual(self.multitrack.get_max_length(), 192)
 
-    def test_get_num_downbeat(self):
-        """Test method `Multitrack.get_num_downbeat()`."""
-        self.assertEqual(self.multitrack.get_num_downbeat(), 2)
+    def test_count_downbeat(self):
+        """Test method `Multitrack.count_downbeat()`."""
+        self.assertEqual(self.multitrack.count_downbeat(), 2)
 
     def test_get_stacked_pianoroll(self):
         """Test method `Multitrack.get_stacked_pianoroll()`."""
