@@ -63,9 +63,9 @@ class MultitrackTestCase(unittest.TestCase):
         """Test method `Multitrack.get_num_downbeat()`."""
         self.assertEqual(self.multitrack.get_num_downbeat(), 2)
 
-    def test_get_stacked_pianorolls(self):
-        """Test method `Multitrack.get_stacked_pianorolls()`."""
-        stacked = self.multitrack.get_stacked_pianorolls()
+    def test_get_stacked_pianoroll(self):
+        """Test method `Multitrack.get_stacked_pianoroll()`."""
+        stacked = self.multitrack.get_stacked_pianoroll()
         self.assertEqual(stacked.shape, (192, 128, 2))
 
     def test_remove_tracks(self):
