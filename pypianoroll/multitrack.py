@@ -392,7 +392,7 @@ class Multitrack(object):
         if mode not in ('max', 'sum', 'any'):
             raise ValueError("`mode` must be one of {'max', 'sum', 'any'}")
 
-        stacked = self.get_stacked_pianorolls()
+        stacked = self.get_stacked_pianoroll()
 
         if mode == 'any':
             merged = np.any(stacked, axis=2)
@@ -408,7 +408,7 @@ class Multitrack(object):
         solely on `downbeat`."""
         return len(np.nonzero(self.downbeat)[0])
 
-    def get_stacked_pianorolls(self):
+    def get_stacked_pianoroll(self):
         """
         Return a stacked multi-track piano-roll. The shape of the return
         np.ndarray is (num_time_step, 128, num_track).
