@@ -3,17 +3,19 @@ music generation systems.
 """
 import numpy as np
 
-def _validate_pianoroll(arr):
+def _validate_pianoroll(pianoroll):
     """Raise an error if the input array is not a standard pianoroll."""
-    if not isinstance(arr, np.ndarray):
-        raise TypeError("`arr` must be of np.ndarray type.")
-    if not (np.issubdtype(arr.dtype, np.bool_)
-            or np.issubdtype(arr.dtype, np.number)):
-        raise TypeError("`arr` must be a subtype of np.bool_ or np.number.")
-    if arr.ndim != 2:
-        raise ValueError("`arr` must have exactly two dimensions.")
-    if arr.shape[1] != 128:
-        raise ValueError("The length of the second axis of `arr` must be 128.")
+    if not isinstance(pianoroll, np.ndarray):
+        raise TypeError("`pianoroll` must be of np.ndarray type.")
+    if not (np.issubdtype(pianoroll.dtype, np.bool_)
+            or np.issubdtype(pianoroll.dtype, np.number)):
+        raise TypeError("The data type of `pianoroll` must be np.bool_ or a "
+                        "subdtype of  np.number.")
+    if pianoroll.ndim != 2:
+        raise ValueError("`pianoroll` must have exactly two dimensions.")
+    if pianoroll.shape[1] != 128:
+        raise ValueError("The length of the second axis of `pianoroll` must be "
+                         "128.")
 
 def _to_chroma(pianoroll):
     """Return the unnormalized chroma features of a pianoroll."""
