@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Visualization &mdash; pypianoroll 0.4.6 documentation</title>
+  <title>Visualization &mdash; pypianoroll 0.5.0 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="index" title="Index"
               href="genindex.html"/>
         <link rel="search" title="Search" href="search.html"/>
-    <link rel="top" title="pypianoroll 0.4.6 documentation" href="index.html"/>
+    <link rel="top" title="pypianoroll 0.5.0 documentation" href="index.html"/>
         <link rel="next" title="Utilities" href="utilities.html"/>
         <link rel="prev" title="Parse &amp; Write" href="parse_write.html"/> 
 
@@ -66,7 +66,7 @@
             
             
               <div class="version">
-                0.4.6
+                0.5.0
               </div>
             
           
@@ -182,15 +182,15 @@ properties in the plotting functions as well.</p>
 <dl class="function">
 <dt id="pypianoroll.plot_pianoroll">
 <code class="descclassname">pypianoroll.</code><code class="descname">plot_pianoroll</code><span class="sig-paren">(</span><em>ax</em>, <em>pianoroll</em>, <em>is_drum=False</em>, <em>beat_resolution=None</em>, <em>downbeats=None</em>, <em>preset='default'</em>, <em>cmap='Blues'</em>, <em>xtick='auto'</em>, <em>ytick='octave'</em>, <em>xticklabel=True</em>, <em>yticklabel='auto'</em>, <em>tick_loc=None</em>, <em>tick_direction='in'</em>, <em>label='both'</em>, <em>grid='both'</em>, <em>grid_linestyle=':'</em>, <em>grid_linewidth=0.5</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pypianoroll/plot.html#plot_pianoroll"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypianoroll.plot_pianoroll" title="Permalink to this definition">¶</a></dt>
-<dd><p>Plot a piano-roll given as a numpy array.</p>
+<dd><p>Plot a pianoroll given as a numpy array.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>ax</strong> (<em>matplotlib.axes.Axes object</em>) – The <a class="reference external" href="https://matplotlib.org/api/axes_api.html#matplotlib.axes.Axes" title="(in Matplotlib v2.2.2)"><code class="xref py py-class docutils literal"><span class="pre">matplotlib.axes.Axes</span></code></a> object where the piano-roll will
-be plotted on.</li>
-<li><strong>pianoroll</strong> (<em>np.ndarray</em>) – <p>The piano-roll to be plotted. The values should be in [0, 1] when data
+<li><strong>ax</strong> (<em>matplotlib.axes.Axes object</em>) – A <a class="reference external" href="https://matplotlib.org/api/axes_api.html#matplotlib.axes.Axes" title="(in Matplotlib v2.2.3)"><code class="xref py py-class docutils literal"><span class="pre">matplotlib.axes.Axes</span></code></a> object where the pianoroll will be
+plotted on.</li>
+<li><strong>pianoroll</strong> (<em>np.ndarray</em>) – <p>A pianoroll to be plotted. The values should be in [0, 1] when data
 type is float, and in [0, 127] when data type is integer.</p>
 <ul>
 <li>For a 2D array, shape=(num_time_step, num_pitch).</li>
@@ -198,41 +198,47 @@ type is float, and in [0, 127] when data type is integer.</p>
 where channels can be either RGB or RGBA.</li>
 </ul>
 </li>
-<li><strong>is_drum</strong> (<em>bool</em>) – Drum indicator. True for drums. False for other instruments. Default
-to False.</li>
-<li><strong>beat_resolution</strong> (<em>int</em>) – Resolution of a beat (in time step). Required and only effective
-when <cite>xticklabel</cite> is ‘beat’.</li>
-<li><strong>downbeats</strong> (<em>list</em>) – Indices of time steps that contain downbeats., i.e. the first time
-step of a bar.</li>
-<li><strong>preset</strong> (<em>{'default'</em><em>, </em><em>'plain'</em><em>, </em><em>'frame'}</em>) – <p>Preset themes for the plot.</p>
+<li><strong>is_drum</strong> (<em>bool</em>) – <dl class="docutils">
+<dt>A boolean number that indicates whether it is a percussion track.</dt>
+<dd>Defaults to False.</dd>
+</dl>
+</li>
+<li><strong>beat_resolution</strong> (<em>int</em>) – The number of time steps used to represent a beat. Required and only
+effective when <cite>xtick</cite> is ‘beat’.</li>
+<li><strong>downbeats</strong> (<em>list</em>) – An array that indicates whether the time step contains a downbeat
+(i.e., the first time step of a bar).</li>
+<li><strong>preset</strong> (<em>{'default'</em><em>, </em><em>'plain'</em><em>, </em><em>'frame'}</em>) – <p>A string that indicates the preset theme to use.</p>
 <ul>
 <li>In ‘default’ preset, the ticks, grid and labels are on.</li>
 <li>In ‘frame’ preset, the ticks and grid are both off.</li>
 <li>In ‘plain’ preset, the x- and y-axis are both off.</li>
 </ul>
 </li>
-<li><strong>cmap</strong> (<cite>matplotlib.colors.Colormap</cite>) – Colormap to use in <a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.pyplot.imshow.html#matplotlib.pyplot.imshow" title="(in Matplotlib v2.2.2)"><code class="xref py py-func docutils literal"><span class="pre">matplotlib.pyplot.imshow()</span></code></a>. Default to
+<li><strong>cmap</strong> (<cite>matplotlib.colors.Colormap</cite>) – The colormap to use in <a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.pyplot.imshow.html#matplotlib.pyplot.imshow" title="(in Matplotlib v2.2.3)"><code class="xref py py-func docutils literal"><span class="pre">matplotlib.pyplot.imshow()</span></code></a>. Defaults to
 ‘Blues’. Only effective when <cite>pianoroll</cite> is 2D.</li>
-<li><strong>xtick</strong> (<em>{'auto'</em><em>, </em><em>'beat'</em><em>, </em><em>'step'</em><em>, </em><em>'off'}</em>) – Use beat number or step number as ticks along the x-axis, or
-automatically set to ‘beat’ when <cite>beat_resolution</cite> is given and set
-to ‘step’, otherwise. Default to ‘auto’.</li>
-<li><strong>ytick</strong> (<em>{'octave'</em><em>, </em><em>'pitch'</em><em>, </em><em>'off'}</em>) – Use octave or pitch as ticks along the y-axis. Default to ‘octave’.</li>
-<li><strong>xticklabel</strong> (<em>bool</em>) – Indicate whether to add tick labels along the x-axis. Only effective
-when <cite>xtick</cite> is not ‘off’.</li>
+<li><strong>xtick</strong> (<em>{'auto'</em><em>, </em><em>'beat'</em><em>, </em><em>'step'</em><em>, </em><em>'off'}</em>) – A string that indicates what to use as ticks along the x-axis. If
+‘auto’ is given, automatically set to ‘beat’ if <cite>beat_resolution</cite> is
+also given and set to ‘step’, otherwise. Defaults to ‘auto’.</li>
+<li><strong>ytick</strong> (<em>{'octave'</em><em>, </em><em>'pitch'</em><em>, </em><em>'off'}</em>) – A string that indicates what to use as ticks along the y-axis.
+Defaults to ‘octave’.</li>
+<li><strong>xticklabel</strong> (<em>bool</em>) – Whether to add tick labels along the x-axis. Only effective when
+<cite>xtick</cite> is not ‘off’.</li>
 <li><strong>yticklabel</strong> (<em>{'auto'</em><em>, </em><em>'name'</em><em>, </em><em>'number'</em><em>, </em><em>'off'}</em>) – If ‘name’, use octave name and pitch name (key name when <cite>is_drum</cite>
 is True) as tick labels along the y-axis. If ‘number’, use pitch
 number. If ‘auto’, set to ‘name’ when <cite>ytick</cite> is ‘octave’ and
-‘number’ when <cite>ytick</cite> is ‘pitch’. Default to ‘auto’. Only effective
+‘number’ when <cite>ytick</cite> is ‘pitch’. Defaults to ‘auto’. Only effective
 when <cite>ytick</cite> is not ‘off’.</li>
-<li><strong>tick_loc</strong> (<em>tuple</em><em> or </em><em>list</em>) – List of locations to put ticks. Availables elements are ‘bottom’,
-‘top’, ‘left’ and ‘right’. If None, default to (‘bottom’, ‘left’).</li>
-<li><strong>tick_direction</strong> (<em>{'in'</em><em>, </em><em>'out'</em><em>, </em><em>'inout'}</em>) – Put ticks inside the axes, outside the axes, or both. Default to
-‘in’. Only effective when <cite>xtick</cite> and <cite>ytick</cite> are not both ‘off’.</li>
-<li><strong>label</strong> (<em>{'x'</em><em>, </em><em>'y'</em><em>, </em><em>'both'</em><em>, </em><em>'off'}</em>) – Add label to the x-axis, y-axis, both or neither. Default to ‘both’.</li>
-<li><strong>grid</strong> (<em>{'x'</em><em>, </em><em>'y'</em><em>, </em><em>'both'</em><em>, </em><em>'off'}</em>) – Add grid to the x-axis, y-axis, both or neither. Default to ‘both’.</li>
-<li><strong>grid_linestyle</strong> (<em>str</em>) – Will be passed to <a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.axes.Axes.grid.html#matplotlib.axes.Axes.grid" title="(in Matplotlib v2.2.2)"><code class="xref py py-meth docutils literal"><span class="pre">matplotlib.axes.Axes.grid()</span></code></a> as ‘linestyle’
+<li><strong>tick_loc</strong> (<em>tuple</em><em> or </em><em>list</em>) – The locations to put the ticks. Availables elements are ‘bottom’,
+‘top’, ‘left’ and ‘right’. Defaults to (‘bottom’, ‘left’).</li>
+<li><strong>tick_direction</strong> (<em>{'in'</em><em>, </em><em>'out'</em><em>, </em><em>'inout'}</em>) – A string that indicates where to put the ticks. Defaults to ‘in’.
+Only effective when one of <cite>xtick</cite> and <cite>ytick</cite> is on.</li>
+<li><strong>label</strong> (<em>{'x'</em><em>, </em><em>'y'</em><em>, </em><em>'both'</em><em>, </em><em>'off'}</em>) – A string that indicates whether to add labels to the x-axis and
+y-axis. Defaults to ‘both’.</li>
+<li><strong>grid</strong> (<em>{'x'</em><em>, </em><em>'y'</em><em>, </em><em>'both'</em><em>, </em><em>'off'}</em>) – A string that indicates whether to add grids to the x-axis, y-axis,
+both or neither. Defaults to ‘both’.</li>
+<li><strong>grid_linestyle</strong> (<em>str</em>) – Will be passed to <a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.axes.Axes.grid.html#matplotlib.axes.Axes.grid" title="(in Matplotlib v2.2.3)"><code class="xref py py-meth docutils literal"><span class="pre">matplotlib.axes.Axes.grid()</span></code></a> as ‘linestyle’
 argument.</li>
-<li><strong>grid_linewidth</strong> (<em>float</em>) – Will be passed to <a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.axes.Axes.grid.html#matplotlib.axes.Axes.grid" title="(in Matplotlib v2.2.2)"><code class="xref py py-meth docutils literal"><span class="pre">matplotlib.axes.Axes.grid()</span></code></a> as ‘linewidth’
+<li><strong>grid_linewidth</strong> (<em>float</em>) – Will be passed to <a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.axes.Axes.grid.html#matplotlib.axes.Axes.grid" title="(in Matplotlib v2.2.3)"><code class="xref py py-meth docutils literal"><span class="pre">matplotlib.axes.Axes.grid()</span></code></a> as ‘linewidth’
 argument.</li>
 </ul>
 </td>
@@ -243,54 +249,57 @@ argument.</li>
 
 <dl class="function">
 <dt id="pypianoroll.plot.plot_track">
-<code class="descclassname">pypianoroll.plot.</code><code class="descname">plot_track</code><span class="sig-paren">(</span><em>track</em>, <em>filepath=None</em>, <em>beat_resolution=None</em>, <em>downbeats=None</em>, <em>preset='default'</em>, <em>cmap='Blues'</em>, <em>xtick='auto'</em>, <em>ytick='octave'</em>, <em>xticklabel=True</em>, <em>yticklabel='auto'</em>, <em>tick_loc=None</em>, <em>tick_direction='in'</em>, <em>label='both'</em>, <em>grid='both'</em>, <em>grid_linestyle=':'</em>, <em>grid_linewidth=0.5</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pypianoroll/plot.html#plot_track"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypianoroll.plot.plot_track" title="Permalink to this definition">¶</a></dt>
-<dd><p>Plot the piano-roll or save a plot of the piano-roll.</p>
+<code class="descclassname">pypianoroll.plot.</code><code class="descname">plot_track</code><span class="sig-paren">(</span><em>track</em>, <em>filename=None</em>, <em>beat_resolution=None</em>, <em>downbeats=None</em>, <em>preset='default'</em>, <em>cmap='Blues'</em>, <em>xtick='auto'</em>, <em>ytick='octave'</em>, <em>xticklabel=True</em>, <em>yticklabel='auto'</em>, <em>tick_loc=None</em>, <em>tick_direction='in'</em>, <em>label='both'</em>, <em>grid='both'</em>, <em>grid_linestyle=':'</em>, <em>grid_linewidth=0.5</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pypianoroll/plot.html#plot_track"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypianoroll.plot.plot_track" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plot the pianoroll or save a plot of the pianoroll.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>filepath</strong> – The filepath to save the plot. If None, default to save nothing.</li>
-<li><strong>beat_resolution</strong> (<em>int</em>) – Resolution of a beat (in time step). Required and only effective
-when <cite>xtick</cite> is ‘beat’.</li>
-<li><strong>downbeats</strong> (<em>list</em>) – Indices of time steps that contain downbeats., i.e. the first time
-step of a bar.</li>
-<li><strong>preset</strong> (<em>{'default'</em><em>, </em><em>'plain'</em><em>, </em><em>'frame'}</em>) – <p>Preset themes for the plot.</p>
+<li><strong>filename</strong> – The filename to which the plot is saved. If None, save nothing.</li>
+<li><strong>beat_resolution</strong> (<em>int</em>) – The number of time steps used to represent a beat. Required and only
+effective when <cite>xtick</cite> is ‘beat’.</li>
+<li><strong>downbeats</strong> (<em>list</em>) – An array that indicates whether the time step contains a downbeat
+(i.e., the first time step of a bar).</li>
+<li><strong>preset</strong> (<em>{'default'</em><em>, </em><em>'plain'</em><em>, </em><em>'frame'}</em>) – <p>A string that indicates the preset theme to use.</p>
 <ul>
 <li>In ‘default’ preset, the ticks, grid and labels are on.</li>
 <li>In ‘frame’ preset, the ticks and grid are both off.</li>
 <li>In ‘plain’ preset, the x- and y-axis are both off.</li>
 </ul>
 </li>
-<li><strong>cmap</strong> (<cite>matplotlib.colors.Colormap</cite>) – Colormap to use in <a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.pyplot.imshow.html#matplotlib.pyplot.imshow" title="(in Matplotlib v2.2.2)"><code class="xref py py-func docutils literal"><span class="pre">matplotlib.pyplot.imshow()</span></code></a>. Default to
+<li><strong>cmap</strong> (<cite>matplotlib.colors.Colormap</cite>) – The colormap to use in <a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.pyplot.imshow.html#matplotlib.pyplot.imshow" title="(in Matplotlib v2.2.3)"><code class="xref py py-func docutils literal"><span class="pre">matplotlib.pyplot.imshow()</span></code></a>. Defaults to
 ‘Blues’. Only effective when <cite>pianoroll</cite> is 2D.</li>
-<li><strong>xtick</strong> (<em>{'auto'</em><em>, </em><em>'beat'</em><em>, </em><em>'step'</em><em>, </em><em>'off'}</em>) – Use beat number or step number as ticks along the x-axis, or
-automatically set to ‘beat’ when <cite>beat_resolution</cite> is given and set
-to ‘step’, otherwise. Default to ‘auto’.</li>
-<li><strong>ytick</strong> (<em>{'octave'</em><em>, </em><em>'pitch'</em><em>, </em><em>'off'}</em>) – Use octave or pitch as ticks along the y-axis. Default to ‘octave’.</li>
-<li><strong>xticklabel</strong> (<em>bool</em>) – Indicate whether to add tick labels along the x-axis. Only effective
-when <cite>xtick</cite> is not ‘off’.</li>
+<li><strong>xtick</strong> (<em>{'auto'</em><em>, </em><em>'beat'</em><em>, </em><em>'step'</em><em>, </em><em>'off'}</em>) – A string that indicates what to use as ticks along the x-axis. If
+‘auto’ is given, automatically set to ‘beat’ if <cite>beat_resolution</cite> is
+also given and set to ‘step’, otherwise. Defaults to ‘auto’.</li>
+<li><strong>ytick</strong> (<em>{'octave'</em><em>, </em><em>'pitch'</em><em>, </em><em>'off'}</em>) – A string that indicates what to use as ticks along the y-axis.
+Defaults to ‘octave’.</li>
+<li><strong>xticklabel</strong> (<em>bool</em>) – Whether to add tick labels along the x-axis. Only effective when
+<cite>xtick</cite> is not ‘off’.</li>
 <li><strong>yticklabel</strong> (<em>{'auto'</em><em>, </em><em>'name'</em><em>, </em><em>'number'</em><em>, </em><em>'off'}</em>) – If ‘name’, use octave name and pitch name (key name when <cite>is_drum</cite>
 is True) as tick labels along the y-axis. If ‘number’, use pitch
 number. If ‘auto’, set to ‘name’ when <cite>ytick</cite> is ‘octave’ and
-‘number’ when <cite>ytick</cite> is ‘pitch’. Default to ‘auto’. Only effective
+‘number’ when <cite>ytick</cite> is ‘pitch’. Defaults to ‘auto’. Only effective
 when <cite>ytick</cite> is not ‘off’.</li>
-<li><strong>tick_loc</strong> (<em>tuple</em><em> or </em><em>list</em>) – List of locations to put ticks. Availables elements are ‘bottom’,
-‘top’, ‘left’ and ‘right’. If None, default to (‘bottom’, ‘left’).</li>
-<li><strong>tick_direction</strong> (<em>{'in'</em><em>, </em><em>'out'</em><em>, </em><em>'inout'}</em>) – Put ticks inside the axes, outside the axes, or both. Default to
-‘in’. Only effective when <cite>xtick</cite> and <cite>ytick</cite> are not both ‘off’.</li>
-<li><strong>label</strong> (<em>{'x'</em><em>, </em><em>'y'</em><em>, </em><em>'both'</em><em>, </em><em>'off'}</em>) – Add label to the x-axis, y-axis, both or neither. Default to ‘both’.</li>
-<li><strong>grid</strong> (<em>{'x'</em><em>, </em><em>'y'</em><em>, </em><em>'both'</em><em>, </em><em>'off'}</em>) – Add grid to the x-axis, y-axis, both or neither. Default to ‘both’.</li>
-<li><strong>grid_linestyle</strong> (<em>str</em>) – Will be passed to <a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.axes.Axes.grid.html#matplotlib.axes.Axes.grid" title="(in Matplotlib v2.2.2)"><code class="xref py py-meth docutils literal"><span class="pre">matplotlib.axes.Axes.grid()</span></code></a> as ‘linestyle’
+<li><strong>tick_loc</strong> (<em>tuple</em><em> or </em><em>list</em>) – The locations to put the ticks. Availables elements are ‘bottom’,
+‘top’, ‘left’ and ‘right’. Defaults to (‘bottom’, ‘left’).</li>
+<li><strong>tick_direction</strong> (<em>{'in'</em><em>, </em><em>'out'</em><em>, </em><em>'inout'}</em>) – A string that indicates where to put the ticks. Defaults to ‘in’.
+Only effective when one of <cite>xtick</cite> and <cite>ytick</cite> is on.</li>
+<li><strong>label</strong> (<em>{'x'</em><em>, </em><em>'y'</em><em>, </em><em>'both'</em><em>, </em><em>'off'}</em>) – A string that indicates whether to add labels to the x-axis and
+y-axis. Defaults to ‘both’.</li>
+<li><strong>grid</strong> (<em>{'x'</em><em>, </em><em>'y'</em><em>, </em><em>'both'</em><em>, </em><em>'off'}</em>) – A string that indicates whether to add grids to the x-axis, y-axis,
+both or neither. Defaults to ‘both’.</li>
+<li><strong>grid_linestyle</strong> (<em>str</em>) – Will be passed to <a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.axes.Axes.grid.html#matplotlib.axes.Axes.grid" title="(in Matplotlib v2.2.3)"><code class="xref py py-meth docutils literal"><span class="pre">matplotlib.axes.Axes.grid()</span></code></a> as ‘linestyle’
 argument.</li>
-<li><strong>grid_linewidth</strong> (<em>float</em>) – Will be passed to <a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.axes.Axes.grid.html#matplotlib.axes.Axes.grid" title="(in Matplotlib v2.2.2)"><code class="xref py py-meth docutils literal"><span class="pre">matplotlib.axes.Axes.grid()</span></code></a> as ‘linewidth’
+<li><strong>grid_linewidth</strong> (<em>float</em>) – Will be passed to <a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.axes.Axes.grid.html#matplotlib.axes.Axes.grid" title="(in Matplotlib v2.2.3)"><code class="xref py py-meth docutils literal"><span class="pre">matplotlib.axes.Axes.grid()</span></code></a> as ‘linewidth’
 argument.</li>
 </ul>
 </td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><ul class="simple">
-<li><strong>fig</strong> (<cite>matplotlib.figure.Figure</cite> object) – A <a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.figure.Figure.html#matplotlib.figure.Figure" title="(in Matplotlib v2.2.2)"><code class="xref py py-class docutils literal"><span class="pre">matplotlib.figure.Figure</span></code></a> object.</li>
-<li><strong>ax</strong> (<cite>matplotlib.axes.Axes</cite> object) – A <a class="reference external" href="https://matplotlib.org/api/axes_api.html#matplotlib.axes.Axes" title="(in Matplotlib v2.2.2)"><code class="xref py py-class docutils literal"><span class="pre">matplotlib.axes.Axes</span></code></a> object.</li>
+<li><strong>fig</strong> (<cite>matplotlib.figure.Figure</cite> object) – A <a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.figure.Figure.html#matplotlib.figure.Figure" title="(in Matplotlib v2.2.3)"><code class="xref py py-class docutils literal"><span class="pre">matplotlib.figure.Figure</span></code></a> object.</li>
+<li><strong>ax</strong> (<cite>matplotlib.axes.Axes</cite> object) – A <a class="reference external" href="https://matplotlib.org/api/axes_api.html#matplotlib.axes.Axes" title="(in Matplotlib v2.2.3)"><code class="xref py py-class docutils literal"><span class="pre">matplotlib.axes.Axes</span></code></a> object.</li>
 </ul>
 </p>
 </td>
@@ -301,20 +310,21 @@ argument.</li>
 
 <dl class="function">
 <dt id="pypianoroll.plot.plot_multitrack">
-<code class="descclassname">pypianoroll.plot.</code><code class="descname">plot_multitrack</code><span class="sig-paren">(</span><em>multitrack</em>, <em>filepath=None</em>, <em>mode='separate'</em>, <em>track_label='name'</em>, <em>preset='default'</em>, <em>cmaps=None</em>, <em>xtick='auto'</em>, <em>ytick='octave'</em>, <em>xticklabel=True</em>, <em>yticklabel='auto'</em>, <em>tick_loc=None</em>, <em>tick_direction='in'</em>, <em>label='both'</em>, <em>grid='both'</em>, <em>grid_linestyle=':'</em>, <em>grid_linewidth=0.5</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pypianoroll/plot.html#plot_multitrack"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypianoroll.plot.plot_multitrack" title="Permalink to this definition">¶</a></dt>
-<dd><p>Plot the piano-rolls or save a plot of them.</p>
+<code class="descclassname">pypianoroll.plot.</code><code class="descname">plot_multitrack</code><span class="sig-paren">(</span><em>multitrack</em>, <em>filename=None</em>, <em>mode='separate'</em>, <em>track_label='name'</em>, <em>preset='default'</em>, <em>cmaps=None</em>, <em>xtick='auto'</em>, <em>ytick='octave'</em>, <em>xticklabel=True</em>, <em>yticklabel='auto'</em>, <em>tick_loc=None</em>, <em>tick_direction='in'</em>, <em>label='both'</em>, <em>grid='both'</em>, <em>grid_linestyle=':'</em>, <em>grid_linewidth=0.5</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pypianoroll/plot.html#plot_multitrack"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypianoroll.plot.plot_multitrack" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plot the pianorolls or save a plot of them.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>filepath</strong> (<em>str</em>) – The filepath to save the plot. If None, default to save nothing.</li>
-<li><strong>mode</strong> (<em>{'separate'</em><em>, </em><em>'stacked'</em><em>, </em><em>'hybrid'}</em>) – <p>Plotting modes. Default to ‘separate’.</p>
+<li><strong>filename</strong> (<em>str</em>) – The filename to which the plot is saved. If None, save nothing.</li>
+<li><strong>mode</strong> (<em>{'separate'</em><em>, </em><em>'stacked'</em><em>, </em><em>'hybrid'}</em>) – <p>A string that indicate the plotting mode to use. Defaults to
+‘separate’.</p>
 <ul>
 <li>In ‘separate’ mode, all the tracks are plotted separately.</li>
 <li><dl class="first docutils">
 <dt>In ‘stacked’ mode, a color is assigned based on <cite>cmaps</cite> to the</dt>
-<dd>piano-roll of each track and the piano-rolls are stacked and
+<dd>pianoroll of each track and the pianorolls are stacked and
 plotted as a colored image with RGB channels.</dd>
 </dl>
 </li>
@@ -326,63 +336,66 @@ two merged tracks are then plotted separately.</dd>
 </li>
 </ul>
 </li>
-<li><strong>track_label</strong> (<em>{'name'</em><em>, </em><em>'program'</em><em>, </em><em>'family'</em><em>, </em><em>'off'}</em>) – Add track name, program name, instrument family name or none as
-labels to the track. When <cite>mode</cite> is ‘hybrid’, all options other
-than ‘off’ will label the two track with ‘Drums’ and ‘Others’.</li>
-<li><strong>preset</strong> (<em>{'default'</em><em>, </em><em>'plain'</em><em>, </em><em>'frame'}</em>) – <p>Preset themes for the plot.</p>
+<li><strong>track_label</strong> (<em>{'name'</em><em>, </em><em>'program'</em><em>, </em><em>'family'</em><em>, </em><em>'off'}</em>) – A sting that indicates what to use as labels to the track. When
+<cite>mode</cite> is ‘hybrid’, all options other than ‘off’ will label the two
+track with ‘Drums’ and ‘Others’.</li>
+<li><strong>preset</strong> (<em>{'default'</em><em>, </em><em>'plain'</em><em>, </em><em>'frame'}</em>) – <p>A string that indicates the preset theme to use.</p>
 <ul>
 <li>In ‘default’ preset, the ticks, grid and labels are on.</li>
 <li>In ‘frame’ preset, the ticks and grid are both off.</li>
 <li>In ‘plain’ preset, the x- and y-axis are both off.</li>
 </ul>
 </li>
-<li><strong>cmaps</strong> (<em>tuple</em><em> or </em><em>list</em>) – <p>List of <cite>matplotlib.colors.Colormap</cite> instances or colormap codes.</p>
+<li><strong>cmaps</strong> (<em>tuple</em><em> or </em><em>list</em>) – <p>The <cite>matplotlib.colors.Colormap</cite> instances or colormap codes to use.</p>
 <ul>
 <li><dl class="first docutils">
 <dt>When <cite>mode</cite> is ‘separate’, each element will be passed to each</dt>
-<dd>call of <a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.pyplot.imshow.html#matplotlib.pyplot.imshow" title="(in Matplotlib v2.2.2)"><code class="xref py py-func docutils literal"><span class="pre">matplotlib.pyplot.imshow()</span></code></a>. Default to (‘Blues’,
+<dd>call of <a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.pyplot.imshow.html#matplotlib.pyplot.imshow" title="(in Matplotlib v2.2.3)"><code class="xref py py-func docutils literal"><span class="pre">matplotlib.pyplot.imshow()</span></code></a>. Defaults to (‘Blues’,
 ‘Oranges’, ‘Greens’, ‘Reds’, ‘Purples’, ‘Greys’).</dd>
 </dl>
 </li>
 <li><dl class="first docutils">
 <dt>When <cite>mode</cite> is stacked, a color is assigned based on <cite>cmaps</cite> to</dt>
-<dd>the piano-roll of each track. Default to (‘hsv’).</dd>
+<dd>the pianoroll of each track. Defaults to (‘hsv’).</dd>
 </dl>
 </li>
 <li><dl class="first docutils">
 <dt>When <cite>mode</cite> is ‘hybrid’, the first (second) element is used in the</dt>
-<dd>’Drums’ (‘Others’) track. Default to (‘Blues’, ‘Greens’).</dd>
+<dd>’Drums’ (‘Others’) track. Defaults to (‘Blues’, ‘Greens’).</dd>
 </dl>
 </li>
 </ul>
 </li>
-<li><strong>xtick</strong> (<em>{'auto'</em><em>, </em><em>'beat'</em><em>, </em><em>'step'</em><em>, </em><em>'off'}</em>) – Use beat number or step number as ticks along the x-axis, or
-automatically set to ‘beat’ when <cite>beat_resolution</cite> is given and set
-to ‘step’, otherwise. Default to ‘auto’.</li>
-<li><strong>ytick</strong> (<em>{'octave'</em><em>, </em><em>'pitch'</em><em>, </em><em>'off'}</em>) – Use octave or pitch as ticks along the y-axis. Default to ‘octave’.</li>
-<li><strong>xticklabel</strong> (<em>bool</em>) – Indicate whether to add tick labels along the x-axis. Only effective
-when <cite>xtick</cite> is not ‘off’.</li>
+<li><strong>xtick</strong> (<em>{'auto'</em><em>, </em><em>'beat'</em><em>, </em><em>'step'</em><em>, </em><em>'off'}</em>) – A string that indicates what to use as ticks along the x-axis. If
+‘auto’ is given, automatically set to ‘beat’ if <cite>beat_resolution</cite> is
+also given and set to ‘step’, otherwise. Defaults to ‘auto’.</li>
+<li><strong>ytick</strong> (<em>{'octave'</em><em>, </em><em>'pitch'</em><em>, </em><em>'off'}</em>) – A string that indicates what to use as ticks along the y-axis.
+Defaults to ‘octave’.</li>
+<li><strong>xticklabel</strong> (<em>bool</em>) – Whether to add tick labels along the x-axis. Only effective when
+<cite>xtick</cite> is not ‘off’.</li>
 <li><strong>yticklabel</strong> (<em>{'auto'</em><em>, </em><em>'name'</em><em>, </em><em>'number'</em><em>, </em><em>'off'}</em>) – If ‘name’, use octave name and pitch name (key name when <cite>is_drum</cite>
 is True) as tick labels along the y-axis. If ‘number’, use pitch
 number. If ‘auto’, set to ‘name’ when <cite>ytick</cite> is ‘octave’ and
-‘number’ when <cite>ytick</cite> is ‘pitch’. Default to ‘auto’. Only effective
+‘number’ when <cite>ytick</cite> is ‘pitch’. Defaults to ‘auto’. Only effective
 when <cite>ytick</cite> is not ‘off’.</li>
-<li><strong>tick_loc</strong> (<em>tuple</em><em> or </em><em>list</em>) – List of locations to put ticks. Availables elements are ‘bottom’,
-‘top’, ‘left’ and ‘right’. If None, default to (‘bottom’, ‘left’).</li>
-<li><strong>tick_direction</strong> (<em>{'in'</em><em>, </em><em>'out'</em><em>, </em><em>'inout'}</em>) – Put ticks inside the axes, outside the axes, or both. Default to
-‘in’. Only effective when <cite>xtick</cite> and <cite>ytick</cite> are not both ‘off’.</li>
-<li><strong>label</strong> (<em>{'x'</em><em>, </em><em>'y'</em><em>, </em><em>'both'</em><em>, </em><em>'off'}</em>) – Add label to the x-axis, y-axis, both or neither. Default to ‘both’.</li>
-<li><strong>grid</strong> (<em>{'x'</em><em>, </em><em>'y'</em><em>, </em><em>'both'</em><em>, </em><em>'off'}</em>) – Add grid to the x-axis, y-axis, both or neither. Default to ‘both’.</li>
-<li><strong>grid_linestyle</strong> (<em>str</em>) – Will be passed to <a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.axes.Axes.grid.html#matplotlib.axes.Axes.grid" title="(in Matplotlib v2.2.2)"><code class="xref py py-meth docutils literal"><span class="pre">matplotlib.axes.Axes.grid()</span></code></a> as ‘linestyle’
+<li><strong>tick_loc</strong> (<em>tuple</em><em> or </em><em>list</em>) – The locations to put the ticks. Availables elements are ‘bottom’,
+‘top’, ‘left’ and ‘right’. Defaults to (‘bottom’, ‘left’).</li>
+<li><strong>tick_direction</strong> (<em>{'in'</em><em>, </em><em>'out'</em><em>, </em><em>'inout'}</em>) – A string that indicates where to put the ticks. Defaults to ‘in’.
+Only effective when one of <cite>xtick</cite> and <cite>ytick</cite> is on.</li>
+<li><strong>label</strong> (<em>{'x'</em><em>, </em><em>'y'</em><em>, </em><em>'both'</em><em>, </em><em>'off'}</em>) – A string that indicates whether to add labels to the x-axis and
+y-axis. Defaults to ‘both’.</li>
+<li><strong>grid</strong> (<em>{'x'</em><em>, </em><em>'y'</em><em>, </em><em>'both'</em><em>, </em><em>'off'}</em>) – A string that indicates whether to add grids to the x-axis, y-axis,
+both or neither. Defaults to ‘both’.</li>
+<li><strong>grid_linestyle</strong> (<em>str</em>) – Will be passed to <a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.axes.Axes.grid.html#matplotlib.axes.Axes.grid" title="(in Matplotlib v2.2.3)"><code class="xref py py-meth docutils literal"><span class="pre">matplotlib.axes.Axes.grid()</span></code></a> as ‘linestyle’
 argument.</li>
-<li><strong>grid_linewidth</strong> (<em>float</em>) – Will be passed to <a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.axes.Axes.grid.html#matplotlib.axes.Axes.grid" title="(in Matplotlib v2.2.2)"><code class="xref py py-meth docutils literal"><span class="pre">matplotlib.axes.Axes.grid()</span></code></a> as ‘linewidth’
+<li><strong>grid_linewidth</strong> (<em>float</em>) – Will be passed to <a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.axes.Axes.grid.html#matplotlib.axes.Axes.grid" title="(in Matplotlib v2.2.3)"><code class="xref py py-meth docutils literal"><span class="pre">matplotlib.axes.Axes.grid()</span></code></a> as ‘linewidth’
 argument.</li>
 </ul>
 </td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><ul class="simple">
-<li><strong>fig</strong> (<cite>matplotlib.figure.Figure</cite> object) – A <a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.figure.Figure.html#matplotlib.figure.Figure" title="(in Matplotlib v2.2.2)"><code class="xref py py-class docutils literal"><span class="pre">matplotlib.figure.Figure</span></code></a> object.</li>
-<li><strong>axs</strong> (<em>list</em>) – List of <a class="reference external" href="https://matplotlib.org/api/axes_api.html#matplotlib.axes.Axes" title="(in Matplotlib v2.2.2)"><code class="xref py py-class docutils literal"><span class="pre">matplotlib.axes.Axes</span></code></a> object.</li>
+<li><strong>fig</strong> (<cite>matplotlib.figure.Figure</cite> object) – A <a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.figure.Figure.html#matplotlib.figure.Figure" title="(in Matplotlib v2.2.3)"><code class="xref py py-class docutils literal"><span class="pre">matplotlib.figure.Figure</span></code></a> object.</li>
+<li><strong>axs</strong> (<em>list</em>) – List of <a class="reference external" href="https://matplotlib.org/api/axes_api.html#matplotlib.axes.Axes" title="(in Matplotlib v2.2.3)"><code class="xref py py-class docutils literal"><span class="pre">matplotlib.axes.Axes</span></code></a> object.</li>
 </ul>
 </p>
 </td>
@@ -393,15 +406,15 @@ argument.</li>
 
 <dl class="function">
 <dt id="pypianoroll.save_animation">
-<code class="descclassname">pypianoroll.</code><code class="descname">save_animation</code><span class="sig-paren">(</span><em>filepath</em>, <em>pianoroll</em>, <em>window</em>, <em>hop=1</em>, <em>fps=None</em>, <em>is_drum=False</em>, <em>beat_resolution=None</em>, <em>downbeats=None</em>, <em>preset='default'</em>, <em>cmap='Blues'</em>, <em>xtick='auto'</em>, <em>ytick='octave'</em>, <em>xticklabel=True</em>, <em>yticklabel='auto'</em>, <em>tick_loc=None</em>, <em>tick_direction='in'</em>, <em>label='both'</em>, <em>grid='both'</em>, <em>grid_linestyle=':'</em>, <em>grid_linewidth=0.5</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pypianoroll/plot.html#save_animation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypianoroll.save_animation" title="Permalink to this definition">¶</a></dt>
-<dd><p>Save a piano-roll to an animation in video or GIF format.</p>
+<code class="descclassname">pypianoroll.</code><code class="descname">save_animation</code><span class="sig-paren">(</span><em>filename</em>, <em>pianoroll</em>, <em>window</em>, <em>hop=1</em>, <em>fps=None</em>, <em>is_drum=False</em>, <em>beat_resolution=None</em>, <em>downbeats=None</em>, <em>preset='default'</em>, <em>cmap='Blues'</em>, <em>xtick='auto'</em>, <em>ytick='octave'</em>, <em>xticklabel=True</em>, <em>yticklabel='auto'</em>, <em>tick_loc=None</em>, <em>tick_direction='in'</em>, <em>label='both'</em>, <em>grid='both'</em>, <em>grid_linestyle=':'</em>, <em>grid_linewidth=0.5</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pypianoroll/plot.html#save_animation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypianoroll.save_animation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Save a pianoroll to an animation in video or GIF format.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>filepath</strong> (<em>str</em>) – Path to save the video file.</li>
-<li><strong>pianoroll</strong> (<em>np.ndarray</em>) – <p>The piano-roll to be plotted. The values should be in [0, 1] when data
+<li><strong>filename</strong> (<em>str</em>) – The filename to which the animation is saved.</li>
+<li><strong>pianoroll</strong> (<em>np.ndarray</em>) – <p>A pianoroll to be plotted. The values should be in [0, 1] when data
 type is float, and in [0, 127] when data type is integer.</p>
 <ul>
 <li>For a 2D array, shape=(num_time_step, num_pitch).</li>
@@ -409,44 +422,47 @@ type is float, and in [0, 127] when data type is integer.</p>
 where channels can be either RGB or RGBA.</li>
 </ul>
 </li>
-<li><strong>window</strong> (<em>int</em>) – Window size to be applied to <cite>pianoroll</cite> for the animation.</li>
-<li><strong>hop</strong> (<em>int</em>) – Hop size to be applied to <cite>pianoroll</cite> for the animation.</li>
-<li><strong>fps</strong> (<em>int</em>) – Number of frames per second in the resulting video or GIF file.</li>
-<li><strong>is_drum</strong> (<em>bool</em>) – Drum indicator. True for drums. False for other instruments. Default
-to False.</li>
-<li><strong>beat_resolution</strong> (<em>int</em>) – Resolution of a beat (in time step). Required and only effective
-when <cite>xtick</cite> is ‘beat’.</li>
-<li><strong>downbeats</strong> (<em>list</em>) – Indices of time steps that contain downbeats., i.e. the first time
-step of a bar.</li>
-<li><strong>preset</strong> (<em>{'default'</em><em>, </em><em>'plain'</em><em>, </em><em>'frame'}</em>) – <p>Preset themes for the plot.</p>
+<li><strong>window</strong> (<em>int</em>) – The window size to be applied to <cite>pianoroll</cite> for the animation.</li>
+<li><strong>hop</strong> (<em>int</em>) – The hop size to be applied to <cite>pianoroll</cite> for the animation.</li>
+<li><strong>fps</strong> (<em>int</em>) – The number of frames per second in the resulting video or GIF file.</li>
+<li><strong>is_drum</strong> (<em>bool</em>) – A boolean number that indicates whether it is a percussion track.
+Defaults to False.</li>
+<li><strong>beat_resolution</strong> (<em>int</em>) – The number of time steps used to represent a beat. Required and only
+effective when <cite>xtick</cite> is ‘beat’.</li>
+<li><strong>downbeats</strong> (<em>list</em>) – An array that indicates whether the time step contains a downbeat
+(i.e., the first time step of a bar).</li>
+<li><strong>preset</strong> (<em>{'default'</em><em>, </em><em>'plain'</em><em>, </em><em>'frame'}</em>) – <p>A string that indicates the preset theme to use.</p>
 <ul>
 <li>In ‘default’ preset, the ticks, grid and labels are on.</li>
 <li>In ‘frame’ preset, the ticks and grid are both off.</li>
 <li>In ‘plain’ preset, the x- and y-axis are both off.</li>
 </ul>
 </li>
-<li><strong>cmap</strong> (<cite>matplotlib.colors.Colormap</cite>) – Colormap to use in <a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.pyplot.imshow.html#matplotlib.pyplot.imshow" title="(in Matplotlib v2.2.2)"><code class="xref py py-func docutils literal"><span class="pre">matplotlib.pyplot.imshow()</span></code></a>. Default to
+<li><strong>cmap</strong> (<cite>matplotlib.colors.Colormap</cite>) – The colormap to use in <a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.pyplot.imshow.html#matplotlib.pyplot.imshow" title="(in Matplotlib v2.2.3)"><code class="xref py py-func docutils literal"><span class="pre">matplotlib.pyplot.imshow()</span></code></a>. Defaults to
 ‘Blues’. Only effective when <cite>pianoroll</cite> is 2D.</li>
-<li><strong>xtick</strong> (<em>{'auto'</em><em>, </em><em>'beat'</em><em>, </em><em>'step'</em><em>, </em><em>'off'}</em>) – Use beat number or step number as ticks along the x-axis, or
-automatically set to ‘beat’ when <cite>beat_resolution</cite> is given and set
-to ‘step’, otherwise. Default to ‘auto’.</li>
-<li><strong>ytick</strong> (<em>{'octave'</em><em>, </em><em>'pitch'</em><em>, </em><em>'off'}</em>) – Use octave or pitch as ticks along the y-axis. Default to ‘octave’.</li>
-<li><strong>xticklabel</strong> (<em>bool</em>) – Indicate whether to add tick labels along the x-axis. Only effective
-when <cite>xtick</cite> is not ‘off’.</li>
+<li><strong>xtick</strong> (<em>{'auto'</em><em>, </em><em>'beat'</em><em>, </em><em>'step'</em><em>, </em><em>'off'}</em>) – A string that indicates what to use as ticks along the x-axis. If
+‘auto’ is given, automatically set to ‘beat’ if <cite>beat_resolution</cite> is
+also given and set to ‘step’, otherwise. Defaults to ‘auto’.</li>
+<li><strong>ytick</strong> (<em>{'octave'</em><em>, </em><em>'pitch'</em><em>, </em><em>'off'}</em>) – A string that indicates what to use as ticks along the y-axis.
+Defaults to ‘octave’.</li>
+<li><strong>xticklabel</strong> (<em>bool</em>) – Whether to add tick labels along the x-axis. Only effective when
+<cite>xtick</cite> is not ‘off’.</li>
 <li><strong>yticklabel</strong> (<em>{'auto'</em><em>, </em><em>'name'</em><em>, </em><em>'number'</em><em>, </em><em>'off'}</em>) – If ‘name’, use octave name and pitch name (key name when <cite>is_drum</cite>
 is True) as tick labels along the y-axis. If ‘number’, use pitch
 number. If ‘auto’, set to ‘name’ when <cite>ytick</cite> is ‘octave’ and
-‘number’ when <cite>ytick</cite> is ‘pitch’. Default to ‘auto’. Only effective
+‘number’ when <cite>ytick</cite> is ‘pitch’. Defaults to ‘auto’. Only effective
 when <cite>ytick</cite> is not ‘off’.</li>
-<li><strong>tick_loc</strong> (<em>tuple</em><em> or </em><em>list</em>) – List of locations to put ticks. Availables elements are ‘bottom’,
-‘top’, ‘left’ and ‘right’. If None, default to (‘bottom’, ‘left’).</li>
-<li><strong>tick_direction</strong> (<em>{'in'</em><em>, </em><em>'out'</em><em>, </em><em>'inout'}</em>) – Put ticks inside the axes, outside the axes, or both. Default to
-‘in’. Only effective when <cite>xtick</cite> and <cite>ytick</cite> are not both ‘off’.</li>
-<li><strong>label</strong> (<em>{'x'</em><em>, </em><em>'y'</em><em>, </em><em>'both'</em><em>, </em><em>'off'}</em>) – Add label to the x-axis, y-axis, both or neither. Default to ‘both’.</li>
-<li><strong>grid</strong> (<em>{'x'</em><em>, </em><em>'y'</em><em>, </em><em>'both'</em><em>, </em><em>'off'}</em>) – Add grid to the x-axis, y-axis, both or neither. Default to ‘both’.</li>
-<li><strong>grid_linestyle</strong> (<em>str</em>) – Will be passed to <a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.axes.Axes.grid.html#matplotlib.axes.Axes.grid" title="(in Matplotlib v2.2.2)"><code class="xref py py-meth docutils literal"><span class="pre">matplotlib.axes.Axes.grid()</span></code></a> as ‘linestyle’
+<li><strong>tick_loc</strong> (<em>tuple</em><em> or </em><em>list</em>) – The locations to put the ticks. Availables elements are ‘bottom’,
+‘top’, ‘left’ and ‘right’. Defaults to (‘bottom’, ‘left’).</li>
+<li><strong>tick_direction</strong> (<em>{'in'</em><em>, </em><em>'out'</em><em>, </em><em>'inout'}</em>) – A string that indicates where to put the ticks. Defaults to ‘in’.
+Only effective when one of <cite>xtick</cite> and <cite>ytick</cite> is on.</li>
+<li><strong>label</strong> (<em>{'x'</em><em>, </em><em>'y'</em><em>, </em><em>'both'</em><em>, </em><em>'off'}</em>) – A string that indicates whether to add labels to the x-axis and
+y-axis. Defaults to ‘both’.</li>
+<li><strong>grid</strong> (<em>{'x'</em><em>, </em><em>'y'</em><em>, </em><em>'both'</em><em>, </em><em>'off'}</em>) – A string that indicates whether to add grids to the x-axis, y-axis,
+both or neither. Defaults to ‘both’.</li>
+<li><strong>grid_linestyle</strong> (<em>str</em>) – Will be passed to <a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.axes.Axes.grid.html#matplotlib.axes.Axes.grid" title="(in Matplotlib v2.2.3)"><code class="xref py py-meth docutils literal"><span class="pre">matplotlib.axes.Axes.grid()</span></code></a> as ‘linestyle’
 argument.</li>
-<li><strong>grid_linewidth</strong> (<em>float</em>) – Will be passed to <a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.axes.Axes.grid.html#matplotlib.axes.Axes.grid" title="(in Matplotlib v2.2.2)"><code class="xref py py-meth docutils literal"><span class="pre">matplotlib.axes.Axes.grid()</span></code></a> as ‘linewidth’
+<li><strong>grid_linewidth</strong> (<em>float</em>) – Will be passed to <a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.axes.Axes.grid.html#matplotlib.axes.Axes.grid" title="(in Matplotlib v2.2.3)"><code class="xref py py-meth docutils literal"><span class="pre">matplotlib.axes.Axes.grid()</span></code></a> as ‘linewidth’
 argument.</li>
 </ul>
 </td>
@@ -502,7 +518,7 @@ argument.</li>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'./',
-            VERSION:'0.4.6',
+            VERSION:'0.5.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,
