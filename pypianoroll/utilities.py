@@ -151,7 +151,7 @@ def pad_to_same(obj):
     copied.pad_to_same()
     return copied
 
-def parse(filepath):
+def parse(filepath, beat_resolution=24, name='unknown'):
     """
     Return a :class:`pypianoroll.Multitrack` object loaded from a MIDI
     (.mid, .midi, .MID, .MIDI) file.
@@ -164,8 +164,7 @@ def parse(filepath):
     """
     if not filepath.endswith(('.mid', '.midi', '.MID', '.MIDI')):
         raise ValueError("Only MIDI files are supported")
-    multitrack = Multitrack(filepath)
-    return multitrack
+    return Multitrack(filepath, beat_resolution=beat_resolution, name=name)
 
 def plot(obj, **kwargs):
     """
