@@ -47,10 +47,12 @@ Citing
 
 Please cite the following paper if you use Pypianoroll in a published work:
 
-Hao-Wen Dong, Wen-Yi Hsiao, Li-Chia Yang and Yi-Hsuan Yang,
-"MuseGAN: Multi-track Sequential Generative Adversarial Networks for Symbolic
-Music Generation and Accompaniment,"
-in AAAI Conference on Artificial Intelligence (AAAI), 2018.
+Hao-Wen Dong, Wen-Yi Hsiao, and Yi-Hsuan Yang,
+"Pypianoroll: Open Source Python Package for Handling Multitrack Pianoroll,"
+in *ISMIR Late-Breaking Demos Session*, 2018.
+
+Here are the :download:`paper <pdf/pypianoroll-ismir2018-paper.pdf>` and the
+:download:`poster <pdf/pypianoroll-ismir2018-poster.pdf>`.
 
 .. _PYPI: https://pypi.python.org/pypi/pypianoroll
 .. _Github: https://github.com/salu133445/pypianoroll
