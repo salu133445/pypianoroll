@@ -11,6 +11,7 @@ Documentation
     parse_write
     visualization
     utilities
+    metrics
     track
     multitrack
 

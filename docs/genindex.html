@@ -95,6 +95,7 @@
 <li class="toctree-l1"><a class="reference internal" href="parse_write.html">Parse &amp; Write</a></li>
 <li class="toctree-l1"><a class="reference internal" href="visualization.html">Visualization</a></li>
 <li class="toctree-l1"><a class="reference internal" href="utilities.html">Utilities</a></li>
+<li class="toctree-l1"><a class="reference internal" href="metrics.html">Metrics</a></li>
 <li class="toctree-l1"><a class="reference internal" href="track.html">Single-track Piano-roll</a></li>
 <li class="toctree-l1"><a class="reference internal" href="multitrack.html">Multi-track Piano-roll</a></li>
 </ul>
@@ -166,12 +167,14 @@
  | <a href="#B"><strong>B</strong></a>
  | <a href="#C"><strong>C</strong></a>
  | <a href="#D"><strong>D</strong></a>
+ | <a href="#E"><strong>E</strong></a>
  | <a href="#G"><strong>G</strong></a>
  | <a href="#I"><strong>I</strong></a>
  | <a href="#L"><strong>L</strong></a>
  | <a href="#M"><strong>M</strong></a>
  | <a href="#N"><strong>N</strong></a>
  | <a href="#P"><strong>P</strong></a>
+ | <a href="#Q"><strong>Q</strong></a>
  | <a href="#R"><strong>R</strong></a>
  | <a href="#S"><strong>S</strong></a>
  | <a href="#T"><strong>T</strong></a>
@@ -250,6 +253,18 @@
       <li><a href="multitrack.html#pypianoroll.Multitrack.downbeat">downbeat (pypianoroll.Multitrack attribute)</a>
 </li>
   </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="metrics.html#pypianoroll.metrics.drum_in_pattern_rate">drum_in_pattern_rate() (in module pypianoroll.metrics)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="E">E</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="metrics.html#pypianoroll.metrics.empty_beat_rate">empty_beat_rate() (in module pypianoroll.metrics)</a>
+</li>
+  </ul></td>
 </tr></table>
 
 <h2 id="G">G</h2>
@@ -287,6 +302,8 @@
 <h2 id="I">I</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="metrics.html#pypianoroll.metrics.in_scale_rate">in_scale_rate() (in module pypianoroll.metrics)</a>
+</li>
       <li><a href="multitrack.html#pypianoroll.Multitrack.is_binarized">is_binarized() (pypianoroll.Multitrack method)</a>
 
       <ul>
@@ -327,6 +344,12 @@
 <h2 id="N">N</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="metrics.html#pypianoroll.metrics.n_pitche_classes_used">n_pitche_classes_used() (in module pypianoroll.metrics)</a>
+</li>
+      <li><a href="metrics.html#pypianoroll.metrics.n_pitches_used">n_pitches_used() (in module pypianoroll.metrics)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="multitrack.html#pypianoroll.Multitrack.name">name (pypianoroll.Multitrack attribute)</a>
 
       <ul>
@@ -363,10 +386,10 @@
       </ul></li>
       <li><a href="parse_write.html#pypianoroll.parse">parse() (in module pypianoroll)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="multitrack.html#pypianoroll.Multitrack.parse_midi">parse_midi() (pypianoroll.Multitrack method)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="multitrack.html#pypianoroll.Multitrack.parse_pretty_midi">parse_pretty_midi() (pypianoroll.Multitrack method)</a>
 </li>
       <li><a href="track.html#pypianoroll.Track.pianoroll">pianoroll (pypianoroll.Track attribute)</a>
@@ -385,7 +408,17 @@
 </li>
       <li><a href="visualization.html#pypianoroll.plot.plot_track">plot_track() (in module pypianoroll.plot)</a>
 </li>
+      <li><a href="metrics.html#pypianoroll.metrics.polyphonic_rate">polyphonic_rate() (in module pypianoroll.metrics)</a>
+</li>
       <li><a href="track.html#pypianoroll.Track.program">program (pypianoroll.Track attribute)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="Q">Q</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="metrics.html#pypianoroll.metrics.qualified_note_rate">qualified_note_rate() (in module pypianoroll.metrics)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -425,10 +458,14 @@
 </li>
       <li><a href="multitrack.html#pypianoroll.Multitrack.to_pretty_midi">to_pretty_midi() (pypianoroll.Multitrack method)</a>
 </li>
+      <li><a href="metrics.html#pypianoroll.metrics.tonal_distance">tonal_distance() (in module pypianoroll.metrics)</a>
+</li>
       <li><a href="track.html#pypianoroll.Track">Track (class in pypianoroll)</a>
 </li>
       <li><a href="multitrack.html#pypianoroll.Multitrack.tracks">tracks (pypianoroll.Multitrack attribute)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="utilities.html#pypianoroll.transpose">transpose() (in module pypianoroll)</a>
 
       <ul>
@@ -437,8 +474,6 @@
         <li><a href="track.html#pypianoroll.Track.transpose">(pypianoroll.Track method)</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="utilities.html#pypianoroll.trim_trailing_silence">trim_trailing_silence() (in module pypianoroll)</a>
 
       <ul>
