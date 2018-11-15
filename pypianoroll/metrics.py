@@ -1,6 +1,7 @@
 """Metrics for evaluating multitrack and single-track pianorolls for automatic
 music generation systems.
 """
+from __future__ import division
 import numpy as np
 
 def _validate_pianoroll(pianoroll):
