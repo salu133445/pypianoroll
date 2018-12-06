@@ -963,7 +963,7 @@ class Multitrack(object):
             The number of semitones to transpose the pianorolls.
 
         """
-        for track in self.tracks():
+        for track in self.tracks:
             if not track.is_drum:
                 track.transpose(semitone)
 
