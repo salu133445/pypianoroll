@@ -89,20 +89,34 @@ def copy(obj):
     copied = deepcopy(obj)
     return copied
 
-def load(filepath):
+def downsample(obj, factor):
+    """
+    Return a copy of the object with piano-roll(s) downsampled by the given
+    factor.
+
+    Parameters
+    ----------
+    factor : int
+        The ratio between the original beat resolution and the desired beat
+        resolution.
+
+    """
+    _check_supported(obj)
+    copied = deepcopy(obj)
+    copied.downsample(factor)
+    return copied
+
+def load(filename):
     """
     Return a :class:`pypianoroll.Multitrack` object loaded from a .npz file.
 
     Parameters
     ----------
-    filepath : str
-        The file path to the .npz file.
+    filename : str
+        The filename of the .npz file.
 
     """
-    if not filepath.endswith('.npz'):
-        raise ValueError("Only .npz files are supported")
-    multitrack = Multitrack(filepath)
-    return multitrack
+    return Multitrack(filename)
 
 def pad(obj, pad_length):
     """
@@ -151,20 +165,18 @@ def pad_to_same(obj):
     copied.pad_to_same()
     return copied
 
-def parse(filepath, beat_resolution=24, name='unknown'):
+def parse(filename, beat_resolution=24, name='unknown'):
     """
     Return a :class:`pypianoroll.Multitrack` object loaded from a MIDI
     (.mid, .midi, .MID, .MIDI) file.
 
     Parameters
     ----------
-    filepath : str
-        The file path to the MIDI file.
+    filename : str
+        The filename of the MIDI file.
 
     """
-    if not filepath.endswith(('.mid', '.midi', '.MID', '.MIDI')):
-        raise ValueError("Only MIDI files are supported")
-    return Multitrack(filepath, beat_resolution=beat_resolution, name=name)
+    return Multitrack(filename, beat_resolution=beat_resolution, name=name)
 
 def plot(obj, **kwargs):
     """
