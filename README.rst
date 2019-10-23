@@ -51,10 +51,10 @@ Hao-Wen Dong, Wen-Yi Hsiao, and Yi-Hsuan Yang,
 "Pypianoroll: Open Source Python Package for Handling Multitrack Pianorolls,"
 in Late-Breaking Demos of the 18th International Society for Music Information
 Retrieval Conference (ISMIR), 2018.
-
-Here are the :download:`paper <pdf/pypianoroll-ismir2018-lbd-paper.pdf>` and the
-:download:`poster <pdf/pypianoroll-ismir2018-lbd-poster.pdf>`.
+[paper_] [poster_]
 
 .. _PYPI: https://pypi.python.org/pypi/pypianoroll
 .. _Github: https://github.com/salu133445/pypianoroll
 .. _here: https://salu133445.github.io/pypianoroll/
+.. _paper: pdf/pypianoroll-ismir2018-lbd-paper.pdf
+.. _poster: pdf/pypianoroll-ismir2018-lbd-poster.pdf
