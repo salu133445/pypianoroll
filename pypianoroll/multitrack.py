@@ -52,10 +52,6 @@ class Multitrack(object):
         filename : str
             The file path to the npz file to be loaded or the MIDI file (.mid,
             .midi, .MID, .MIDI) to be parsed.
-        beat_resolution : int
-            The number of time steps used to represent a beat. Will be assigned
-            to `beat_resolution` when `filename` is not provided. Defaults to
-            24.
         tracks : list of :class:`pypianoroll.Track` objects
             The track object list to be assigned to `tracks` when `filename` is
             not provided.
@@ -70,6 +66,10 @@ class Multitrack(object):
             not given. If a list of indices is provided, it will be viewed as
             the time step indices of the down beats and converted to a numpy
             array. Default is None.
+        beat_resolution : int
+            The number of time steps used to represent a beat. Will be assigned
+            to `beat_resolution` when `filename` is not provided. Defaults to
+            24.
         name : str
             The name of the multitrack pianoroll. Defaults to 'unknown'.
 
@@ -278,6 +278,25 @@ class Multitrack(object):
 
         """
         return deepcopy(self)
+
+    def downsample(self, factor):
+        """"
+        Downsample the pianorolls of all tracks by the given factor.
+
+        Parameters
+        ----------
+        factor : int
+            The ratio between the original beat resolution and the desired beat
+            resolution.
+
+        """
+        if self.beat_resolution % factor == 0:
+            raise ValueError("Downsample factor must be a factor of the beat "
+                             "resolution.")
+        self.beat_resolution = self.beat_resolution // factor
+        for track in self.tracks:
+            track.pianoroll = track.pianoroll[::factor]
+
 
     def get_active_length(self):
         """
