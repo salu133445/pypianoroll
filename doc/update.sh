@@ -10,3 +10,4 @@ rm -r ../docs/*
 rm -r ../docs/.[!.]*
 cp -r ./build/html/* ../docs
 cp -r ./build/html/.[!.]* ../docs
+cp -r ./source/pdf/ ../docs/
