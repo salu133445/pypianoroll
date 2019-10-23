@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>pypianoroll.multitrack &mdash; pypianoroll 0.5.0 documentation</title>
+  <title>pypianoroll.multitrack &mdash; pypianoroll 0.5.1 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="index" title="Index"
               href="../../genindex.html"/>
         <link rel="search" title="Search" href="../../search.html"/>
-    <link rel="top" title="pypianoroll 0.5.0 documentation" href="../../index.html"/>
+    <link rel="top" title="pypianoroll 0.5.1 documentation" href="../../index.html"/>
         <link rel="up" title="Module code" href="../index.html"/> 
 
   
@@ -65,7 +65,7 @@
             
             
               <div class="version">
-                0.5.0
+                0.5.1
               </div>
             
           
@@ -216,10 +216,6 @@
 <span class="sd">        filename : str</span>
 <span class="sd">            The file path to the npz file to be loaded or the MIDI file (.mid,</span>
 <span class="sd">            .midi, .MID, .MIDI) to be parsed.</span>
-<span class="sd">        beat_resolution : int</span>
-<span class="sd">            The number of time steps used to represent a beat. Will be assigned</span>
-<span class="sd">            to `beat_resolution` when `filename` is not provided. Defaults to</span>
-<span class="sd">            24.</span>
 <span class="sd">        tracks : list of :class:`pypianoroll.Track` objects</span>
 <span class="sd">            The track object list to be assigned to `tracks` when `filename` is</span>
 <span class="sd">            not provided.</span>
@@ -234,6 +230,10 @@
 <span class="sd">            not given. If a list of indices is provided, it will be viewed as</span>
 <span class="sd">            the time step indices of the down beats and converted to a numpy</span>
 <span class="sd">            array. Default is None.</span>
+<span class="sd">        beat_resolution : int</span>
+<span class="sd">            The number of time steps used to represent a beat. Will be assigned</span>
+<span class="sd">            to `beat_resolution` when `filename` is not provided. Defaults to</span>
+<span class="sd">            24.</span>
 <span class="sd">        name : str</span>
 <span class="sd">            The name of the multitrack pianoroll. Defaults to &#39;unknown&#39;.</span>
 
@@ -442,6 +442,25 @@
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Multitrack.downsample"><a class="viewcode-back" href="../../multitrack.html#pypianoroll.Multitrack.downsample">[docs]</a>    <span class="k">def</span> <span class="nf">downsample</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">factor</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;&quot;</span>
+<span class="sd">        Downsample the pianorolls of all tracks by the given factor.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        factor : int</span>
+<span class="sd">            The ratio between the original beat resolution and the desired beat</span>
+<span class="sd">            resolution.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">beat_resolution</span> <span class="o">%</span> <span class="n">factor</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Downsample factor must be a factor of the beat &quot;</span>
+                             <span class="s2">&quot;resolution.&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">beat_resolution</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">beat_resolution</span> <span class="o">//</span> <span class="n">factor</span>
+        <span class="k">for</span> <span class="n">track</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">tracks</span><span class="p">:</span>
+            <span class="n">track</span><span class="o">.</span><span class="n">pianoroll</span> <span class="o">=</span> <span class="n">track</span><span class="o">.</span><span class="n">pianoroll</span><span class="p">[::</span><span class="n">factor</span><span class="p">]</span></div>
+
 
 <div class="viewcode-block" id="Multitrack.get_active_length"><a class="viewcode-back" href="../../multitrack.html#pypianoroll.Multitrack.get_active_length">[docs]</a>    <span class="k">def</span> <span class="nf">get_active_length</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -1127,7 +1146,7 @@
 <span class="sd">            The number of semitones to transpose the pianorolls.</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">for</span> <span class="n">track</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">tracks</span><span class="p">():</span>
+        <span class="k">for</span> <span class="n">track</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">tracks</span><span class="p">:</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="n">track</span><span class="o">.</span><span class="n">is_drum</span><span class="p">:</span>
                 <span class="n">track</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="n">semitone</span><span class="p">)</span></div>
 
@@ -1189,7 +1208,7 @@
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'0.5.0',
+            VERSION:'0.5.1',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,

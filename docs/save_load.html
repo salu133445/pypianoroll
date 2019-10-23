@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Save &amp; Load &mdash; pypianoroll 0.5.0 documentation</title>
+  <title>Save &amp; Load &mdash; pypianoroll 0.5.1 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="index" title="Index"
               href="genindex.html"/>
         <link rel="search" title="Search" href="search.html"/>
-    <link rel="top" title="pypianoroll 0.5.0 documentation" href="index.html"/>
+    <link rel="top" title="pypianoroll 0.5.1 documentation" href="index.html"/>
         <link rel="next" title="Parse &amp; Write" href="parse_write.html"/>
         <link rel="prev" title="Getting Started" href="getting_started.html"/> 
 
@@ -66,7 +66,7 @@
             
             
               <div class="version">
-                0.5.0
+                0.5.1
               </div>
             
           
@@ -164,7 +164,7 @@
 <span id="id1"></span><h1>Save &amp; Load<a class="headerlink" href="#save-load" title="Permalink to this headline">¶</a></h1>
 <p>Pypianoroll supports efficient utilities for saving and loading
 <a class="reference internal" href="multitrack.html#pypianoroll.Multitrack" title="pypianoroll.Multitrack"><code class="xref py py-class docutils literal"><span class="pre">pypianoroll.Multitrack</span></code></a> objects. The piano-rolls will be first converted
-to instances of <a class="reference external" href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.sparse.csc_matrix.html#scipy.sparse.csc_matrix" title="(in SciPy v1.1.0)"><code class="xref py py-class docutils literal"><span class="pre">scipy.sparse.csc_matrix</span></code></a> and then stored in a .npz file.</p>
+to instances of <a class="reference external" href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.sparse.csc_matrix.html#scipy.sparse.csc_matrix" title="(in SciPy v1.3.1)"><code class="xref py py-class docutils literal"><span class="pre">scipy.sparse.csc_matrix</span></code></a> and then stored in a .npz file.</p>
 <dl class="function">
 <dt id="pypianoroll.save">
 <code class="descclassname">pypianoroll.</code><code class="descname">save</code><span class="sig-paren">(</span><em>filepath</em>, <em>obj</em>, <em>compressed=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pypianoroll/utilities.html#save"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypianoroll.save" title="Permalink to this definition">¶</a></dt>
@@ -207,13 +207,13 @@ files:</p>
 </div>
 <dl class="function">
 <dt id="pypianoroll.load">
-<code class="descclassname">pypianoroll.</code><code class="descname">load</code><span class="sig-paren">(</span><em>filepath</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pypianoroll/utilities.html#load"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypianoroll.load" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">pypianoroll.</code><code class="descname">load</code><span class="sig-paren">(</span><em>filename</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pypianoroll/utilities.html#load"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypianoroll.load" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a <a class="reference internal" href="multitrack.html#pypianoroll.Multitrack" title="pypianoroll.Multitrack"><code class="xref py py-class docutils literal"><span class="pre">pypianoroll.Multitrack</span></code></a> object loaded from a .npz file.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>filepath</strong> (<em>str</em>) – The file path to the .npz file.</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>filename</strong> (<em>str</em>) – The filename of the .npz file.</td>
 </tr>
 </tbody>
 </table>
@@ -265,7 +265,7 @@ files:</p>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'./',
-            VERSION:'0.5.0',
+            VERSION:'0.5.1',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,
