@@ -168,7 +168,7 @@ def plot_pianoroll(ax, pianoroll, is_drum=False, beat_resolution=None,
         num_beat = pianoroll.shape[0]//beat_resolution
         ax.set_xticks(beat_resolution * np.arange(num_beat) - 0.5)
         ax.set_xticklabels('')
-        ax.set_xticks(beat_resolution * (np.arange(num_beat) 0.5) - 0.5,
+        ax.set_xticks(beat_resolution * (np.arange(num_beat) + 0.5) - 0.5,
                       minor=True)
         ax.set_xticklabels(np.arange(1, num_beat + 1), minor=True)
         ax.tick_params(axis='x', which='minor', width=0)
