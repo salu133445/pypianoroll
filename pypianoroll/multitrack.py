@@ -268,7 +268,7 @@ class Multitrack(object):
             track.clip(lower, upper)
 
     def copy(self):
-        """"
+        """
         Return a copy of the object.
 
         Returns
@@ -280,7 +280,7 @@ class Multitrack(object):
         return deepcopy(self)
 
     def downsample(self, factor):
-        """"
+        """
         Downsample the pianorolls of all tracks by the given factor.
 
         Parameters
@@ -290,13 +290,12 @@ class Multitrack(object):
             resolution.
 
         """
-        if self.beat_resolution % factor == 0:
+        if self.beat_resolution % factor > 0:
             raise ValueError("Downsample factor must be a factor of the beat "
                              "resolution.")
         self.beat_resolution = self.beat_resolution // factor
         for track in self.tracks:
             track.pianoroll = track.pianoroll[::factor]
-
 
     def get_active_length(self):
         """
