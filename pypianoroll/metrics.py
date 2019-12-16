@@ -23,7 +23,7 @@ def _to_chroma(pianoroll):
     _validate_pianoroll(pianoroll)
     reshaped = pianoroll[:, :120].reshape(-1, 12, 10)
     reshaped[..., :8] += pianoroll[:, 120:].reshape(-1, 1, 8)
-    return np.sum(reshaped, 1)
+    return np.sum(reshaped, -1)
 
 def empty_beat_rate(pianoroll, beat_resolution):
     """Return the ratio of empty beats to the total number of beats in a
