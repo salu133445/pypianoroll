@@ -2,10 +2,14 @@
 
 """
 from __future__ import absolute_import, division, print_function
+
 from copy import deepcopy
-from six import string_types
+
 import numpy as np
-from pypianoroll.plot import plot_track
+from six import string_types
+
+from pypianoroll.visualization import plot_track
+
 
 class Track(object):
     """
@@ -25,8 +29,8 @@ class Track(object):
         The name of the track.
 
     """
-    def __init__(self, pianoroll=None, program=0, is_drum=False,
-                 name='unknown'):
+
+    def __init__(self, pianoroll=None, program=0, is_drum=False, name="unknown"):
         """
         Initialize the object by assigning attributes.
 
@@ -64,14 +68,14 @@ class Track(object):
         return Track(self.pianoroll[val], self.program, self.is_drum, self.name)
 
     def __repr__(self):
-        return ("Track(pianoroll={}, program={}, is_drum={}, name={})"
-                .format(repr(self.pianoroll), self.program, self.is_drum,
-                        self.name))
+        return "Track(pianoroll={}, program={}, is_drum={}, name={})".format(
+            repr(self.pianoroll), self.program, self.is_drum, self.name
+        )
 
     def __str__(self):
-        return ("pianoroll :\n{},\nprogram : {},\nis_drum : {},\nname : {}"
-                .format(str(self.pianoroll), self.program, self.is_drum,
-                        self.name))
+        return "pianoroll :\n{},\nprogram : {},\nis_drum : {},\nname : {}".format(
+            str(self.pianoroll), self.program, self.is_drum, self.name
+        )
 
     def assign_constant(self, value, dtype=None):
         """
@@ -109,22 +113,27 @@ class Track(object):
 
         """
         if not self.is_binarized():
-            self.pianoroll = (self.pianoroll > threshold)
+            self.pianoroll = self.pianoroll > threshold
 
     def check_validity(self):
         """"Raise error if any invalid attribute found."""
         # pianoroll
         if not isinstance(self.pianoroll, np.ndarray):
             raise TypeError("`pianoroll` must be a numpy array.")
-        if not (np.issubdtype(self.pianoroll.dtype, np.bool_)
-                or np.issubdtype(self.pianoroll.dtype, np.number)):
-            raise TypeError("The data type of `pianoroll` must be np.bool_ or "
-                            "a subdtype of np.number.")
+        if not (
+            np.issubdtype(self.pianoroll.dtype, np.bool_)
+            or np.issubdtype(self.pianoroll.dtype, np.number)
+        ):
+            raise TypeError(
+                "The data type of `pianoroll` must be np.bool_ or "
+                "a subdtype of np.number."
+            )
         if self.pianoroll.ndim != 2:
             raise ValueError("`pianoroll` must have exactly two dimensions.")
         if self.pianoroll.shape[1] != 128:
-            raise ValueError("The length of the second axis of `pianoroll` "
-                             "must be 128.")
+            raise ValueError(
+                "The length of the second axis of `pianoroll` must be 128."
+            )
         # program
         if not isinstance(self.program, int):
             raise TypeError("`program` must be int.")
@@ -193,8 +202,9 @@ class Track(object):
 
         """
         if self.pianoroll.shape[1] < 1:
-            raise ValueError("Cannot compute the active pitch range for an "
-                             "empty pianoroll")
+            raise ValueError(
+                "Cannot compute the active pitch range for an empty pianoroll"
+            )
         lowest = 0
         highest = 127
         while lowest < highest:
@@ -202,8 +212,9 @@ class Track(object):
                 break
             lowest += 1
         if lowest == highest:
-            raise ValueError("Cannot compute the active pitch range for an "
-                             "empty pianoroll")
+            raise ValueError(
+                "Cannot compute the active pitch range for an empty pianoroll"
+            )
         while not np.any(self.pianoroll[:, highest]):
             highest -= 1
 
@@ -246,8 +257,7 @@ class Track(object):
             The length to pad with zeros along the time axis.
 
         """
-        self.pianoroll = np.pad(
-            self.pianoroll, ((0, pad_length), (0, 0)), 'constant')
+        self.pianoroll = np.pad(self.pianoroll, ((0, pad_length), (0, 0)), "constant")
 
     def pad_to_multiple(self, factor):
         """
@@ -265,7 +275,7 @@ class Track(object):
         remainder = self.pianoroll.shape[0] % factor
         if remainder:
             pad_width = ((0, (factor - remainder)), (0, 0))
-            self.pianoroll = np.pad(self.pianoroll, pad_width, 'constant')
+            self.pianoroll = np.pad(self.pianoroll, pad_width, "constant")
 
     def plot(self, **kwargs):
         """Plot the pianoroll or save a plot of ot. See
@@ -283,12 +293,12 @@ class Track(object):
             The number of semitones to transpose the pianoroll.
 
         """
-        if semitone > 0 and semitone < 128:
-            self.pianoroll[:, semitone:] = self.pianoroll[:, :(128 - semitone)]
+        if 0 < semitone < 128:
+            self.pianoroll[:, semitone:] = self.pianoroll[:, : (128 - semitone)]
             self.pianoroll[:, :semitone] = 0
-        elif semitone < 0 and semitone > -128:
-            self.pianoroll[:, :(128 + semitone)] = self.pianoroll[:, -semitone:]
-            self.pianoroll[:, (128 + semitone):] = 0
+        elif -128 < semitone < 0:
+            self.pianoroll[:, : (128 + semitone)] = self.pianoroll[:, -semitone:]
+            self.pianoroll[:, (128 + semitone) :] = 0
 
     def trim_trailing_silence(self):
         """Trim the trailing silence of the pianoroll."""

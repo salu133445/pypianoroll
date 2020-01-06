@@ -2,10 +2,14 @@
 
 """
 from __future__ import absolute_import, division, print_function
+
 from copy import deepcopy
+
 import numpy as np
-from pypianoroll.track import Track
+
 from pypianoroll.multitrack import Multitrack
+from pypianoroll.track import Track
+
 
 def _check_supported(obj):
     """
@@ -14,8 +18,11 @@ def _check_supported(obj):
 
     """
     if not isinstance(obj, (Multitrack, Track)):
-        raise TypeError("Support only `pypianoroll.Multitrack` and "
-                        "`pypianoroll.Track` class objects")
+        raise TypeError(
+            "Support only `pypianoroll.Multitrack` and "
+            "`pypianoroll.Track` class objects"
+        )
+
 
 def check_pianoroll(arr):
     """
@@ -25,14 +32,14 @@ def check_pianoroll(arr):
     """
     if not isinstance(arr, np.ndarray):
         raise TypeError("`arr` must be of np.ndarray type")
-    if not (np.issubdtype(arr.dtype, np.bool_)
-            or np.issubdtype(arr.dtype, np.number)):
+    if not (np.issubdtype(arr.dtype, np.bool_) or np.issubdtype(arr.dtype, np.number)):
         return False
     if arr.ndim != 2:
         return False
     if arr.shape[1] != 128:
         return False
     return True
+
 
 def assign_constant(obj, value):
     """
@@ -50,6 +57,7 @@ def assign_constant(obj, value):
     _check_supported(obj)
     obj.assign_constant(value)
 
+
 def binarize(obj, threshold=0):
     """
     Return a copy of the object with binarized piano-roll(s).
@@ -64,6 +72,7 @@ def binarize(obj, threshold=0):
     copied = deepcopy(obj)
     copied.binarize(threshold)
     return copied
+
 
 def clip(obj, lower=0, upper=127):
     """
@@ -83,11 +92,13 @@ def clip(obj, lower=0, upper=127):
     copied.clip(lower, upper)
     return copied
 
+
 def copy(obj):
     """Return a copy of the object."""
     _check_supported(obj)
     copied = deepcopy(obj)
     return copied
+
 
 def downsample(obj, factor):
     """
@@ -106,6 +117,7 @@ def downsample(obj, factor):
     copied.downsample(factor)
     return copied
 
+
 def load(filename):
     """
     Return a :class:`pypianoroll.Multitrack` object loaded from a .npz file.
@@ -117,6 +129,7 @@ def load(filename):
 
     """
     return Multitrack(filename)
+
 
 def pad(obj, pad_length):
     """
@@ -133,6 +146,7 @@ def pad(obj, pad_length):
     copied = deepcopy(obj)
     copied.pad(pad_length)
     return copied
+
 
 def pad_to_multiple(obj, factor):
     """
@@ -152,6 +166,7 @@ def pad_to_multiple(obj, factor):
     copied.pad_to_multiple(factor)
     return copied
 
+
 def pad_to_same(obj):
     """
     Return a copy of the object with shorter piano-rolls padded with zeros
@@ -165,7 +180,8 @@ def pad_to_same(obj):
     copied.pad_to_same()
     return copied
 
-def parse(filename, beat_resolution=24, name='unknown'):
+
+def parse(filename, beat_resolution=24, name="unknown"):
     """
     Return a :class:`pypianoroll.Multitrack` object loaded from a MIDI
     (.mid, .midi, .MID, .MIDI) file.
@@ -178,6 +194,7 @@ def parse(filename, beat_resolution=24, name='unknown'):
     """
     return Multitrack(filename, beat_resolution=beat_resolution, name=name)
 
+
 def plot(obj, **kwargs):
     """
     Plot the object. See :func:`pypianoroll.plot.plot_multitrack` and
@@ -186,6 +203,7 @@ def plot(obj, **kwargs):
     """
     _check_supported(obj)
     return obj.plot(**kwargs)
+
 
 def save(filepath, obj, compressed=True):
     """
@@ -203,6 +221,7 @@ def save(filepath, obj, compressed=True):
         raise TypeError("Support only `pypianoroll.Multitrack` class objects")
     obj.save(filepath, compressed)
 
+
 def transpose(obj, semitone):
     """
     Return a copy of the object with piano-roll(s) transposed by `semitones`
@@ -219,6 +238,7 @@ def transpose(obj, semitone):
     copied.transpose(semitone)
     return copied
 
+
 def trim_trailing_silence(obj):
     """
     Return a copy of the object with trimmed trailing silence of the
@@ -230,6 +250,7 @@ def trim_trailing_silence(obj):
     length = copied.get_active_length()
     copied.pianoroll = copied.pianoroll[:length]
     return copied
+
 
 def write(obj, filepath):
     """

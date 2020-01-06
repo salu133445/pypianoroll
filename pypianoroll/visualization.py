@@ -1,7 +1,6 @@
-"""Module for plotting multi-track and single-track pianorolls.
-
-"""
+"""Module for plotting multi-track and single-track pianorolls."""
 from __future__ import absolute_import, division, print_function
+
 import numpy as np
 import pretty_midi
 
@@ -9,6 +8,7 @@ try:
     import matplotlib
     from matplotlib import pyplot as plt
     from matplotlib.patches import Patch
+
     HAS_MATPLOTLIB = True
 except ImportError:
     HAS_MATPLOTLIB = False
@@ -16,15 +16,31 @@ except ImportError:
 try:
     from moviepy.editor import VideoClip
     from moviepy.video.io.bindings import mplfig_to_npimage
+
     HAS_MOVIEPY = True
 except ImportError:
     HAS_MOVIEPY = False
 
-def plot_pianoroll(ax, pianoroll, is_drum=False, beat_resolution=None,
-                   downbeats=None, preset='default', cmap='Blues', xtick='auto',
-                   ytick='octave', xticklabel=True, yticklabel='auto',
-                   tick_loc=None, tick_direction='in', label='both',
-                   grid='both', grid_linestyle=':', grid_linewidth=.5):
+
+def plot_pianoroll(
+    ax,
+    pianoroll,
+    is_drum=False,
+    beat_resolution=None,
+    downbeats=None,
+    preset="default",
+    cmap="Blues",
+    xtick="auto",
+    ytick="octave",
+    xticklabel=True,
+    yticklabel="auto",
+    tick_loc=None,
+    tick_direction="in",
+    label="both",
+    grid="both",
+    grid_linestyle=":",
+    grid_linewidth=0.5,
+):
     """
     Plot a pianoroll given as a numpy array.
 
@@ -97,33 +113,29 @@ def plot_pianoroll(ax, pianoroll, is_drum=False, beat_resolution=None,
 
     """
     if not HAS_MATPLOTLIB:
-        raise ImportError("matplotlib package is required for plotting "
-                          "supports.")
+        raise ImportError("matplotlib package is required for plotting supports.")
 
     if pianoroll.ndim not in (2, 3):
         raise ValueError("`pianoroll` must be a 2D or 3D numpy array")
     if pianoroll.shape[1] != 128:
-        raise ValueError("The length of the second axis of `pianoroll` "
-                         "must be 128.")
-    if xtick not in ('auto', 'beat', 'step', 'off'):
-        raise ValueError("`xtick` must be one of {'auto', 'beat', 'step', "
-                         "'none'}.")
-    if xtick == 'beat' and beat_resolution is None:
-        raise ValueError("`beat_resolution` must be specified when `xtick` "
-                         "is 'beat'.")
-    if ytick not in ('octave', 'pitch', 'off'):
+        raise ValueError("The length of the second axis of `pianoroll` must be 128.")
+    if xtick not in ("auto", "beat", "step", "off"):
+        raise ValueError("`xtick` must be one of {'auto', 'beat', 'step', 'none'}.")
+    if xtick == "beat" and beat_resolution is None:
+        raise ValueError("`beat_resolution` must be specified when `xtick` is 'beat'.")
+    if ytick not in ("octave", "pitch", "off"):
         raise ValueError("`ytick` must be one of {octave', 'pitch', 'off'}.")
     if not isinstance(xticklabel, bool):
         raise TypeError("`xticklabel` must be bool.")
-    if yticklabel not in ('auto', 'name', 'number', 'off'):
-        raise ValueError("`yticklabel` must be one of {'auto', 'name', "
-                         "'number', 'off'}.")
-    if tick_direction not in ('in', 'out', 'inout'):
-        raise ValueError("`tick_direction` must be one of {'in', 'out',"
-                         "'inout'}.")
-    if label not in ('x', 'y', 'both', 'off'):
+    if yticklabel not in ("auto", "name", "number", "off"):
+        raise ValueError(
+            "`yticklabel` must be one of {'auto', 'name', 'number', 'off'}."
+        )
+    if tick_direction not in ("in", "out", "inout"):
+        raise ValueError("`tick_direction` must be one of {'in', 'out', 'inout'}.")
+    if label not in ("x", "y", "both", "off"):
         raise ValueError("`label` must be one of {'x', 'y', 'both', 'off'}.")
-    if grid not in ('x', 'y', 'both', 'off'):
+    if grid not in ("x", "y", "both", "off"):
         raise ValueError("`grid` must be one of {'x', 'y', 'both', 'off'}.")
 
     # plotting
@@ -131,91 +143,135 @@ def plot_pianoroll(ax, pianoroll, is_drum=False, beat_resolution=None,
         to_plot = pianoroll.transpose(1, 0, 2)
     else:
         to_plot = pianoroll.T
-    if (np.issubdtype(pianoroll.dtype, np.bool_)
-            or np.issubdtype(pianoroll.dtype, np.floating)):
-        ax.imshow(to_plot, cmap=cmap, aspect='auto', vmin=0, vmax=1,
-                  origin='lower', interpolation='none')
+    if np.issubdtype(pianoroll.dtype, np.bool_) or np.issubdtype(
+        pianoroll.dtype, np.floating
+    ):
+        ax.imshow(
+            to_plot,
+            cmap=cmap,
+            aspect="auto",
+            vmin=0,
+            vmax=1,
+            origin="lower",
+            interpolation="none",
+        )
     elif np.issubdtype(pianoroll.dtype, np.integer):
-        ax.imshow(to_plot, cmap=cmap, aspect='auto', vmin=0, vmax=127,
-                  origin='lower', interpolation='none')
+        ax.imshow(
+            to_plot,
+            cmap=cmap,
+            aspect="auto",
+            vmin=0,
+            vmax=127,
+            origin="lower",
+            interpolation="none",
+        )
     else:
         raise TypeError("Unsupported data type for `pianoroll`.")
 
     # tick setting
     if tick_loc is None:
-        tick_loc = ('bottom', 'left')
-    if xtick == 'auto':
-        xtick = 'beat' if beat_resolution is not None else 'step'
-    if yticklabel == 'auto':
-        yticklabel = 'name' if ytick == 'octave' else 'number'
+        tick_loc = ("bottom", "left")
+    if xtick == "auto":
+        xtick = "beat" if beat_resolution is not None else "step"
+    if yticklabel == "auto":
+        yticklabel = "name" if ytick == "octave" else "number"
 
-    if preset == 'plain':
-        ax.axis('off')
-    elif preset == 'frame':
-        ax.tick_params(direction=tick_direction, bottom=False, top=False,
-                       left=False, right=False, labelbottom=False,
-                       labeltop=False, labelleft=False, labelright=False)
+    if preset == "plain":
+        ax.axis("off")
+    elif preset == "frame":
+        ax.tick_params(
+            direction=tick_direction,
+            bottom=False,
+            top=False,
+            left=False,
+            right=False,
+            labelbottom=False,
+            labeltop=False,
+            labelleft=False,
+            labelright=False,
+        )
     else:
-        ax.tick_params(direction=tick_direction, bottom=('bottom' in tick_loc),
-                       top=('top' in tick_loc), left=('left' in tick_loc),
-                       right=('right' in tick_loc),
-                       labelbottom=(xticklabel != 'off'),
-                       labelleft=(yticklabel != 'off'),
-                       labeltop=False, labelright=False)
+        ax.tick_params(
+            direction=tick_direction,
+            bottom=("bottom" in tick_loc),
+            top=("top" in tick_loc),
+            left=("left" in tick_loc),
+            right=("right" in tick_loc),
+            labelbottom=(xticklabel != "off"),
+            labelleft=(yticklabel != "off"),
+            labeltop=False,
+            labelright=False,
+        )
 
     # x-axis
-    if xtick == 'beat' and preset != 'frame':
-        num_beat = pianoroll.shape[0]//beat_resolution
+    if xtick == "beat" and preset != "frame":
+        num_beat = pianoroll.shape[0] // beat_resolution
         ax.set_xticks(beat_resolution * np.arange(num_beat) - 0.5)
-        ax.set_xticklabels('')
-        ax.set_xticks(beat_resolution * (np.arange(num_beat) + 0.5) - 0.5,
-                      minor=True)
+        ax.set_xticklabels("")
+        ax.set_xticks(beat_resolution * (np.arange(num_beat) + 0.5) - 0.5, minor=True)
         ax.set_xticklabels(np.arange(1, num_beat + 1), minor=True)
-        ax.tick_params(axis='x', which='minor', width=0)
+        ax.tick_params(axis="x", which="minor", width=0)
 
     # y-axis
-    if ytick == 'octave':
+    if ytick == "octave":
         ax.set_yticks(np.arange(0, 128, 12))
-        if yticklabel == 'name':
-            ax.set_yticklabels(['C{}'.format(i - 2) for i in range(11)])
-    elif ytick == 'step':
+        if yticklabel == "name":
+            ax.set_yticklabels(["C{}".format(i - 2) for i in range(11)])
+    elif ytick == "step":
         ax.set_yticks(np.arange(0, 128))
-        if yticklabel == 'name':
+        if yticklabel == "name":
             if is_drum:
-                ax.set_yticklabels([pretty_midi.note_number_to_drum_name(i)
-                                    for i in range(128)])
+                ax.set_yticklabels(
+                    [pretty_midi.note_number_to_drum_name(i) for i in range(128)]
+                )
             else:
-                ax.set_yticklabels([pretty_midi.note_number_to_name(i)
-                                    for i in range(128)])
+                ax.set_yticklabels(
+                    [pretty_midi.note_number_to_name(i) for i in range(128)]
+                )
 
     # axis labels
-    if label == 'x' or label == 'both':
-        if xtick == 'step' or not xticklabel:
-            ax.set_xlabel('time (step)')
+    if label in ("x", "both"):
+        if xtick == "step" or not xticklabel:
+            ax.set_xlabel("time (step)")
         else:
-            ax.set_xlabel('time (beat)')
+            ax.set_xlabel("time (beat)")
 
-    if label == 'y' or label == 'both':
+    if label in ("y", "both"):
         if is_drum:
-            ax.set_ylabel('key name')
+            ax.set_ylabel("key name")
         else:
-            ax.set_ylabel('pitch')
+            ax.set_ylabel("pitch")
 
     # grid
-    if grid != 'off':
-        ax.grid(axis=grid, color='k', linestyle=grid_linestyle,
-                linewidth=grid_linewidth)
+    if grid != "off":
+        ax.grid(
+            axis=grid, color="k", linestyle=grid_linestyle, linewidth=grid_linewidth
+        )
 
     # downbeat boarder
-    if downbeats is not None and preset != 'plain':
+    if downbeats is not None and preset != "plain":
         for step in downbeats:
-            ax.axvline(x=step, color='k', linewidth=1)
+            ax.axvline(x=step, color="k", linewidth=1)
 
-def plot_track(track, filename=None, beat_resolution=None, downbeats=None,
-               preset='default', cmap='Blues', xtick='auto', ytick='octave',
-               xticklabel=True, yticklabel='auto', tick_loc=None,
-               tick_direction='in', label='both', grid='both',
-               grid_linestyle=':', grid_linewidth=.5):
+
+def plot_track(
+    track,
+    filename=None,
+    beat_resolution=None,
+    downbeats=None,
+    preset="default",
+    cmap="Blues",
+    xtick="auto",
+    ytick="octave",
+    xticklabel=True,
+    yticklabel="auto",
+    tick_loc=None,
+    tick_direction="in",
+    label="both",
+    grid="both",
+    grid_linestyle=":",
+    grid_linewidth=0.5,
+):
     """
     Plot the pianoroll or save a plot of the pianoroll.
 
@@ -284,28 +340,53 @@ def plot_track(track, filename=None, beat_resolution=None, downbeats=None,
 
     """
     if not HAS_MATPLOTLIB:
-        raise ImportError("matplotlib package is required for plotting "
-                          "supports.")
+        raise ImportError("matplotlib package is required for plotting supports.")
 
     fig, ax = plt.subplots()
-    plot_pianoroll(ax, track.pianoroll, track.is_drum, beat_resolution,
-                   downbeats, preset=preset, cmap=cmap, xtick=xtick,
-                   ytick=ytick, xticklabel=xticklabel, yticklabel=yticklabel,
-                   tick_loc=tick_loc, tick_direction=tick_direction,
-                   label=label, grid=grid, grid_linestyle=grid_linestyle,
-                   grid_linewidth=grid_linewidth)
+    plot_pianoroll(
+        ax,
+        track.pianoroll,
+        track.is_drum,
+        beat_resolution,
+        downbeats,
+        preset=preset,
+        cmap=cmap,
+        xtick=xtick,
+        ytick=ytick,
+        xticklabel=xticklabel,
+        yticklabel=yticklabel,
+        tick_loc=tick_loc,
+        tick_direction=tick_direction,
+        label=label,
+        grid=grid,
+        grid_linestyle=grid_linestyle,
+        grid_linewidth=grid_linewidth,
+    )
 
     if filename is not None:
         plt.savefig(filename)
 
     return fig, ax
 
-def plot_multitrack(multitrack, filename=None, mode='separate',
-                    track_label='name', preset='default', cmaps=None,
-                    xtick='auto', ytick='octave', xticklabel=True,
-                    yticklabel='auto', tick_loc=None, tick_direction='in',
-                    label='both', grid='both', grid_linestyle=':',
-                    grid_linewidth=.5):
+
+def plot_multitrack(
+    multitrack,
+    filename=None,
+    mode="separate",
+    track_label="name",
+    preset="default",
+    cmaps=None,
+    xtick="auto",
+    ytick="octave",
+    xticklabel=True,
+    yticklabel="auto",
+    tick_loc=None,
+    tick_direction="in",
+    label="both",
+    grid="both",
+    grid_linestyle=":",
+    grid_linewidth=0.5,
+):
     """
     Plot the pianorolls or save a plot of them.
 
@@ -391,49 +472,44 @@ def plot_multitrack(multitrack, filename=None, mode='separate',
 
     """
     if not HAS_MATPLOTLIB:
-        raise ImportError("matplotlib package is required for plotting "
-                          "supports.")
+        raise ImportError("matplotlib package is required for plotting supports.")
 
     def get_track_label(track_label, track=None):
-        """Convenient function to get track labels"""
-        if track_label == 'name':
+        """Return corresponding track labels."""
+        if track_label == "name":
             return track.name
-        elif track_label == 'program':
+        if track_label == "program":
             return pretty_midi.program_to_instrument_name(track.program)
-        elif track_label == 'family':
+        if track_label == "family":
             return pretty_midi.program_to_instrument_class(track.program)
-        elif track is None:
-            return track_label
+        return track_label
 
     def add_tracklabel(ax, track_label, track=None):
-        """Convenient function for adding track labels"""
+        """Add a track label to an axis."""
         if not ax.get_ylabel():
             return
-        ax.set_ylabel(get_track_label(track_label, track) + '\n\n'
-                      + ax.get_ylabel())
+        ax.set_ylabel(get_track_label(track_label, track) + "\n\n" + ax.get_ylabel())
 
     multitrack.check_validity()
     if not multitrack.tracks:
         raise ValueError("There is no track to plot.")
-    if mode not in ('separate', 'stacked', 'hybrid'):
-        raise ValueError("`mode` must be one of {'separate', 'stacked', "
-                         "'hybrid'}.")
-    if track_label not in ('name', 'program', 'family', 'off'):
-        raise ValueError("`track_label` must be one of {'name', 'program', "
-                         "'family'}.")
+    if mode not in ("separate", "stacked", "hybrid"):
+        raise ValueError("`mode` must be one of {'separate', 'stacked', 'hybrid'}.")
+    if track_label not in ("name", "program", "family", "off"):
+        raise ValueError("`track_label` must be one of {'name', 'program', 'family'}.")
 
     if cmaps is None:
-        if mode == 'separate':
-            cmaps = ('Blues', 'Oranges', 'Greens', 'Reds', 'Purples', 'Greys')
-        elif mode == 'stacked':
-            cmaps = ('hsv')
+        if mode == "separate":
+            cmaps = ("Blues", "Oranges", "Greens", "Reds", "Purples", "Greys")
+        elif mode == "stacked":
+            cmaps = "hsv"
         else:
-            cmaps = ('Blues', 'Greens')
+            cmaps = ("Blues", "Greens")
 
     num_track = len(multitrack.tracks)
     downbeats = multitrack.get_downbeat_steps()
 
-    if mode == 'separate':
+    if mode == "separate":
         if num_track > 1:
             fig, axs = plt.subplots(num_track, sharex=True)
         else:
@@ -442,15 +518,26 @@ def plot_multitrack(multitrack, filename=None, mode='separate',
 
         for idx, track in enumerate(multitrack.tracks):
             now_xticklabel = xticklabel if idx < num_track else False
-            plot_pianoroll(axs[idx], track.pianoroll, False,
-                           multitrack.beat_resolution, downbeats, preset=preset,
-                           cmap=cmaps[idx%len(cmaps)], xtick=xtick, ytick=ytick,
-                           xticklabel=now_xticklabel, yticklabel=yticklabel,
-                           tick_loc=tick_loc, tick_direction=tick_direction,
-                           label=label, grid=grid,
-                           grid_linestyle=grid_linestyle,
-                           grid_linewidth=grid_linewidth)
-            if track_label != 'none':
+            plot_pianoroll(
+                axs[idx],
+                track.pianoroll,
+                False,
+                multitrack.beat_resolution,
+                downbeats,
+                preset=preset,
+                cmap=cmaps[idx % len(cmaps)],
+                xtick=xtick,
+                ytick=ytick,
+                xticklabel=now_xticklabel,
+                yticklabel=yticklabel,
+                tick_loc=tick_loc,
+                tick_direction=tick_direction,
+                label=label,
+                grid=grid,
+                grid_linestyle=grid_linestyle,
+                grid_linewidth=grid_linewidth,
+            )
+            if track_label != "none":
                 add_tracklabel(axs[idx], track_label, track)
 
         if num_track > 1:
@@ -461,7 +548,7 @@ def plot_multitrack(multitrack, filename=None, mode='separate',
 
         return (fig, axs)
 
-    elif mode == 'stacked':
+    if mode == "stacked":
         is_all_drum = True
         for track in multitrack.tracks:
             if not track.is_drum:
@@ -471,21 +558,34 @@ def plot_multitrack(multitrack, filename=None, mode='separate',
         stacked = multitrack.get_stacked_pianorolls()
 
         colormap = matplotlib.cm.get_cmap(cmaps[0])
-        cmatrix = colormap(np.arange(0, 1, 1 / num_track))[:, :3]
-        recolored = np.matmul(stacked.reshape(-1, num_track), cmatrix)
-        stacked = recolored.reshape(stacked.shape[:2] + (3, ))
+        colormatrix = colormap(np.arange(0, 1, 1 / num_track))[:, :3]
+        recolored = np.matmul(stacked.reshape(-1, num_track), colormatrix)
+        stacked = recolored.reshape(stacked.shape[:2] + (3,))
 
-        plot_pianoroll(ax, stacked, is_all_drum, multitrack.beat_resolution,
-                       downbeats, preset=preset, xtick=xtick, ytick=ytick,
-                       xticklabel=xticklabel, yticklabel=yticklabel,
-                       tick_loc=tick_loc, tick_direction=tick_direction,
-                       label=label, grid=grid, grid_linestyle=grid_linestyle,
-                       grid_linewidth=grid_linewidth)
+        plot_pianoroll(
+            ax,
+            stacked,
+            is_all_drum,
+            multitrack.beat_resolution,
+            downbeats,
+            preset=preset,
+            xtick=xtick,
+            ytick=ytick,
+            xticklabel=xticklabel,
+            yticklabel=yticklabel,
+            tick_loc=tick_loc,
+            tick_direction=tick_direction,
+            label=label,
+            grid=grid,
+            grid_linestyle=grid_linestyle,
+            grid_linewidth=grid_linewidth,
+        )
 
-        if track_label != 'none':
-            patches = [Patch(color=cmatrix[idx],
-                             label=get_track_label(track_label, track))
-                       for idx, track in enumerate(multitrack.tracks)]
+        if track_label != "none":
+            patches = [
+                Patch(color=colormatrix[idx], label=get_track_label(track_label, track))
+                for idx, track in enumerate(multitrack.tracks)
+            ]
             plt.legend(handles=patches)
 
         if filename is not None:
@@ -493,44 +593,85 @@ def plot_multitrack(multitrack, filename=None, mode='separate',
 
         return (fig, [ax])
 
-    elif mode == 'hybrid':
-        drums = [i for i, track in enumerate(multitrack.tracks)
-                 if track.is_drum]
+    if mode == "hybrid":
+        drums = [i for i, track in enumerate(multitrack.tracks) if track.is_drum]
         others = [i for i in range(len(multitrack.tracks)) if i not in drums]
         merged_drums = multitrack.get_merged_pianoroll(drums)
         merged_others = multitrack.get_merged_pianoroll(others)
 
         fig, (ax1, ax2) = plt.subplots(2, sharex=True, sharey=True)
-        plot_pianoroll(ax1, merged_drums, True, multitrack.beat_resolution,
-                       downbeats, preset=preset, cmap=cmaps[0], xtick=xtick,
-                       ytick=ytick, xticklabel=xticklabel,
-                       yticklabel=yticklabel, tick_loc=tick_loc,
-                       tick_direction=tick_direction, label=label, grid=grid,
-                       grid_linestyle=grid_linestyle,
-                       grid_linewidth=grid_linewidth)
-        plot_pianoroll(ax2, merged_others, False, multitrack.beat_resolution,
-                       downbeats, preset=preset, cmap=cmaps[1], ytick=ytick,
-                       xticklabel=xticklabel, yticklabel=yticklabel,
-                       tick_loc=tick_loc, tick_direction=tick_direction,
-                       label=label, grid=grid, grid_linestyle=grid_linestyle,
-                       grid_linewidth=grid_linewidth)
+        plot_pianoroll(
+            ax1,
+            merged_drums,
+            True,
+            multitrack.beat_resolution,
+            downbeats,
+            preset=preset,
+            cmap=cmaps[0],
+            xtick=xtick,
+            ytick=ytick,
+            xticklabel=xticklabel,
+            yticklabel=yticklabel,
+            tick_loc=tick_loc,
+            tick_direction=tick_direction,
+            label=label,
+            grid=grid,
+            grid_linestyle=grid_linestyle,
+            grid_linewidth=grid_linewidth,
+        )
+        plot_pianoroll(
+            ax2,
+            merged_others,
+            False,
+            multitrack.beat_resolution,
+            downbeats,
+            preset=preset,
+            cmap=cmaps[1],
+            ytick=ytick,
+            xticklabel=xticklabel,
+            yticklabel=yticklabel,
+            tick_loc=tick_loc,
+            tick_direction=tick_direction,
+            label=label,
+            grid=grid,
+            grid_linestyle=grid_linestyle,
+            grid_linewidth=grid_linewidth,
+        )
         fig.subplots_adjust(hspace=0)
 
-        if track_label != 'none':
-            add_tracklabel(ax1, 'Drums')
-            add_tracklabel(ax2, 'Others')
+        if track_label != "none":
+            add_tracklabel(ax1, "Drums")
+            add_tracklabel(ax2, "Others")
 
         if filename is not None:
             plt.savefig(filename)
 
         return (fig, [ax1, ax2])
 
-def save_animation(filename, pianoroll, window, hop=1, fps=None, is_drum=False,
-                   beat_resolution=None, downbeats=None, preset='default',
-                   cmap='Blues', xtick='auto', ytick='octave', xticklabel=True,
-                   yticklabel='auto', tick_loc=None, tick_direction='in',
-                   label='both', grid='both', grid_linestyle=':',
-                   grid_linewidth=.5, **kwargs):
+
+def save_animation(
+    filename,
+    pianoroll,
+    window,
+    hop=1,
+    fps=None,
+    is_drum=False,
+    beat_resolution=None,
+    downbeats=None,
+    preset="default",
+    cmap="Blues",
+    xtick="auto",
+    ytick="octave",
+    xticklabel=True,
+    yticklabel="auto",
+    tick_loc=None,
+    tick_direction="in",
+    label="both",
+    grid="both",
+    grid_linestyle=":",
+    grid_linewidth=0.5,
+    **kwargs
+):
     """
     Save a pianoroll to an animation in video or GIF format.
 
@@ -620,49 +761,75 @@ def save_animation(filename, pianoroll, window, hop=1, fps=None, is_drum=False,
         end = start + window
         to_plot = transposed[:, start:end]
         extent = (start, end - 1, 0, 127)
-        ax.imshow(to_plot, cmap=cmap, aspect='auto', vmin=vmin, vmax=vmax,
-                  origin='lower', interpolation='none', extent=extent)
+        ax.imshow(
+            to_plot,
+            cmap=cmap,
+            aspect="auto",
+            vmin=vmin,
+            vmax=vmax,
+            origin="lower",
+            interpolation="none",
+            extent=extent,
+        )
 
-        if xtick == 'beat':
+        if xtick == "beat":
             next_major_idx = beat_resolution - start % beat_resolution
-            if start % beat_resolution < beat_resolution//2:
-                next_minor_idx = beat_resolution//2 - start % beat_resolution
+            if start % beat_resolution < beat_resolution // 2:
+                next_minor_idx = beat_resolution // 2 - start % beat_resolution
             else:
-                next_minor_idx = (beat_resolution//2 - start % beat_resolution
-                                  + beat_resolution)
+                next_minor_idx = (
+                    beat_resolution // 2 - start % beat_resolution + beat_resolution
+                )
             xticks_major = np.arange(next_major_idx, window, beat_resolution)
             xticks_minor = np.arange(next_minor_idx, window, beat_resolution)
-            if end % beat_resolution < beat_resolution//2:
-                last_minor_idx = beat_resolution//2 - end % beat_resolution
+            if end % beat_resolution < beat_resolution // 2:
+                last_minor_idx = beat_resolution // 2 - end % beat_resolution
             else:
-                last_minor_idx = (beat_resolution//2 - end % beat_resolution
-                                  + beat_resolution)
-            xtick_labels = np.arange((start + next_minor_idx)//beat_resolution,
-                                     (end + last_minor_idx)//beat_resolution)
+                last_minor_idx = (
+                    beat_resolution // 2 - end % beat_resolution + beat_resolution
+                )
+            xtick_labels = np.arange(
+                (start + next_minor_idx) // beat_resolution,
+                (end + last_minor_idx) // beat_resolution,
+            )
             ax.set_xticks(xticks_major)
-            ax.set_xticklabels('')
+            ax.set_xticklabels("")
             ax.set_xticks(xticks_minor, minor=True)
             ax.set_xticklabels(xtick_labels, minor=True)
-            ax.tick_params(axis='x', which='minor', width=0)
+            ax.tick_params(axis="x", which="minor", width=0)
 
         return mplfig_to_npimage(fig)
 
-    if xtick == 'auto':
-        xtick = 'beat' if beat_resolution is not None else 'step'
+    if xtick == "auto":
+        xtick = "beat" if beat_resolution is not None else "step"
 
-    fig, ax = plt.subplots()
-    plot_pianoroll(ax, pianoroll[:window], is_drum, beat_resolution, downbeats,
-                   preset=preset, cmap=cmap, xtick=xtick, ytick=ytick,
-                   xticklabel=xticklabel, yticklabel=yticklabel,
-                   tick_loc=tick_loc, tick_direction=tick_direction,
-                   label=label, grid=grid, grid_linestyle=grid_linestyle,
-                   grid_linewidth=grid_linewidth)
+    _, ax = plt.subplots()
+    plot_pianoroll(
+        ax,
+        pianoroll[:window],
+        is_drum,
+        beat_resolution,
+        downbeats,
+        preset=preset,
+        cmap=cmap,
+        xtick=xtick,
+        ytick=ytick,
+        xticklabel=xticklabel,
+        yticklabel=yticklabel,
+        tick_loc=tick_loc,
+        tick_direction=tick_direction,
+        label=label,
+        grid=grid,
+        grid_linestyle=grid_linestyle,
+        grid_linewidth=grid_linewidth,
+    )
 
     num_frame = int((pianoroll.shape[0] - window) / hop)
     duration = int(num_frame / fps)
 
-    if (np.issubdtype(pianoroll.dtype, np.bool_)
-            or np.issubdtype(pianoroll.dtype, np.floating)):
+    if np.issubdtype(pianoroll.dtype, np.bool_) or np.issubdtype(
+        pianoroll.dtype, np.floating
+    ):
         vmax = 1
     elif np.issubdtype(pianoroll.dtype, np.integer):
         vmax = 127
@@ -672,7 +839,7 @@ def save_animation(filename, pianoroll, window, hop=1, fps=None, is_drum=False,
 
     transposed = pianoroll.T
     animation = VideoClip(make_frame, duration=duration)
-    if filename.endswith('.gif'):
+    if filename.endswith(".gif"):
         animation.write_gif(filename, fps, **kwargs)
     else:
         animation.write_videofile(filename, fps, **kwargs)
