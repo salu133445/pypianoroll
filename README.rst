@@ -1,7 +1,7 @@
 Pypianoroll
 ===========
 
-A python package for handling multi-track piano-rolls.
+A python package for handling multitrack pianorolls.
 
 .. image:: https://badge.fury.io/py/pypianoroll.svg
    :target: https://badge.fury.io/py/pypianoroll
@@ -15,10 +15,11 @@ A python package for handling multi-track piano-rolls.
 Features
 --------
 
-- handle piano-rolls of multiple tracks with metadata
-- utilities for manipulating piano-rolls
-- save to and load from .npz files using efficient sparse matrix format
-- parse from and write to MIDI files
+- Manipulate multitrack pianorolls intuitively
+- Visualize multitrack pianorolls in a modern DAW like style
+- Save and load multitrack pianorolls in space efficient formats
+- Parse MIDI files into multitrack pianorolls
+- Write multitrack pianorolls into MIDI files
 
 Installation
 ------------
