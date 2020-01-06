@@ -555,7 +555,7 @@ def plot_multitrack(
                 is_all_drum = False
 
         fig, ax = plt.subplots()
-        stacked = multitrack.get_stacked_pianorolls()
+        stacked = multitrack.get_stacked_pianoroll()
 
         colormap = matplotlib.cm.get_cmap(cmaps[0])
         colormatrix = colormap(np.arange(0, 1, 1 / num_track))[:, :3]
