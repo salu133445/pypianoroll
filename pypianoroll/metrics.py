@@ -47,7 +47,7 @@ def n_pitches_used(pianoroll):
     return np.count_nonzero(np.any(pianoroll, 0))
 
 
-def n_pitche_classes_used(pianoroll):
+def n_pitch_classes_used(pianoroll):
     """Return the number of unique pitch classes used in a pianoroll."""
     _validate_pianoroll(pianoroll)
     chroma = _to_chroma(pianoroll)
