@@ -197,8 +197,8 @@ def parse(filename, beat_resolution=24, name="unknown"):
 
 def plot(obj, **kwargs):
     """
-    Plot the object. See :func:`pypianoroll.plot.plot_multitrack` and
-    :func:`pypianoroll.plot.plot_track` for full documentation.
+    Plot the object. See :func:`pypianoroll.visualization.plot_multitrack` and
+    :func:`pypianoroll.visualization.plot_track` for full documentation.
 
     """
     _check_supported(obj)

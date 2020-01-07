@@ -279,7 +279,7 @@ class Track(object):
 
     def plot(self, **kwargs):
         """Plot the pianoroll or save a plot of ot. See
-        :func:`pypianoroll.plot.plot_track` for full documentation."""
+        :func:`pypianoroll.visualization.plot_track` for full documentation."""
         return plot_track(self, **kwargs)
 
     def transpose(self, semitone):
