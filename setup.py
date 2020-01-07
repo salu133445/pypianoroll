@@ -23,7 +23,7 @@ setup(
     author_email="salu.hwdong@gmail.com",
     url="https://github.com/salu133445/pypianoroll",
     download_url=(
-        "https://github.com/salu133445/pypianoroll/archive/"
+        "https://github.com/salu133445/pypianoroll/archive/v"
         + VERSION["__version__"]
         + ".tar.gz"
     ),
