@@ -10,8 +10,8 @@ Note that the MIDI parsing and writing functions are based on the Python package
 `pretty_midi`. If you use them in a published work, please cite `pretty_midi` as
 instructed here_.
 
-Related Functions
------------------
+Functions
+---------
 
 .. autofunction:: pypianoroll.parse
 .. autofunction:: pypianoroll.write

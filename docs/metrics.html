@@ -35,7 +35,7 @@
   <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Single-track Piano-roll" href="track.html" />
+    <link rel="next" title="Single-track Pianoroll" href="track.html" />
     <link rel="prev" title="Utilities" href="utilities.html" /> 
 </head>
 
@@ -91,8 +91,8 @@
 <li class="toctree-l1"><a class="reference internal" href="visualization.html">Visualization</a></li>
 <li class="toctree-l1"><a class="reference internal" href="utilities.html">Utilities</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Metrics</a></li>
-<li class="toctree-l1"><a class="reference internal" href="track.html">Single-track Piano-roll</a></li>
-<li class="toctree-l1"><a class="reference internal" href="multitrack.html">Multi-track Piano-roll</a></li>
+<li class="toctree-l1"><a class="reference internal" href="track.html">Single-track Pianoroll</a></li>
+<li class="toctree-l1"><a class="reference internal" href="multitrack.html">Multitrack Pianoroll</a></li>
 </ul>
 
             
@@ -157,11 +157,14 @@
             
   <div class="section" id="metrics">
 <h1>Metrics<a class="headerlink" href="#metrics" title="Permalink to this headline">¶</a></h1>
+<p>Pypianoroll provides a number of metrics for pianorolls. These can be useful for
+evaluating generative models of music.</p>
+<div class="section" id="functions">
+<h2>Functions<a class="headerlink" href="#functions" title="Permalink to this headline">¶</a></h2>
 <dl class="function">
 <dt id="pypianoroll.metrics.empty_beat_rate">
 <code class="sig-prename descclassname">pypianoroll.metrics.</code><code class="sig-name descname">empty_beat_rate</code><span class="sig-paren">(</span><em class="sig-param">pianoroll</em>, <em class="sig-param">beat_resolution</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pypianoroll/metrics.html#empty_beat_rate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypianoroll.metrics.empty_beat_rate" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the ratio of empty beats to the total number of beats in a
-pianoroll.</p>
+<dd><p>Return the ratio of empty beats to the total number of beats in a pianoroll.</p>
 </dd></dl>
 
 <dl class="function">
@@ -187,15 +190,15 @@ pianoroll.</p>
 <dt id="pypianoroll.metrics.polyphonic_rate">
 <code class="sig-prename descclassname">pypianoroll.metrics.</code><code class="sig-name descname">polyphonic_rate</code><span class="sig-paren">(</span><em class="sig-param">pianoroll</em>, <em class="sig-param">threshold=2</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pypianoroll/metrics.html#polyphonic_rate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypianoroll.metrics.polyphonic_rate" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the ratio of the number of time steps where the number of pitches
-being played is larger than <cite>threshold</cite> to the total number of time steps
-in a pianoroll.</p>
+being played is larger than <cite>threshold</cite> to the total number of time steps in
+a pianoroll.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="pypianoroll.metrics.drum_in_pattern_rate">
 <code class="sig-prename descclassname">pypianoroll.metrics.</code><code class="sig-name descname">drum_in_pattern_rate</code><span class="sig-paren">(</span><em class="sig-param">pianoroll</em>, <em class="sig-param">beat_resolution</em>, <em class="sig-param">tolerance=0.1</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pypianoroll/metrics.html#drum_in_pattern_rate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypianoroll.metrics.drum_in_pattern_rate" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the ratio of the number of drum notes that lie on the drum
-pattern (i.e., at certain time steps) to the total number of drum notes.</p>
+<dd><p>Return the ratio of the number of drum notes that lie on the drum pattern
+(i.e., at certain time steps) to the total number of drum notes.</p>
 </dd></dl>
 
 <dl class="function">
@@ -211,12 +214,13 @@ major scale.</p>
 <code class="sig-prename descclassname">pypianoroll.metrics.</code><code class="sig-name descname">tonal_distance</code><span class="sig-paren">(</span><em class="sig-param">pianoroll_1</em>, <em class="sig-param">pianoroll_2</em>, <em class="sig-param">beat_resolution</em>, <em class="sig-param">r1=1.0</em>, <em class="sig-param">r2=1.0</em>, <em class="sig-param">r3=0.5</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pypianoroll/metrics.html#tonal_distance"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypianoroll.metrics.tonal_distance" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the tonal distance [1] between the two input pianorolls.</p>
 <dl class="simple">
-<dt>[1] Christopher Harte, Mark Sandler, and Martin Gasser. Detecting</dt><dd><p>harmonic change in musical audio. In Proc. ACM Workshop on Audio and
-Music Computing Multimedia, 2006.</p>
+<dt>[1] Christopher Harte, Mark Sandler, and Martin Gasser. Detecting harmonic</dt><dd><p>change in musical audio. In Proc. ACM Workshop on Audio and Music
+Computing Multimedia, 2006.</p>
 </dd>
 </dl>
 </dd></dl>
 
+</div>
 </div>
 
 
@@ -227,7 +231,7 @@ Music Computing Multimedia, 2006.</p>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="track.html" class="btn btn-neutral float-right" title="Single-track Piano-roll" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="track.html" class="btn btn-neutral float-right" title="Single-track Pianoroll" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="utilities.html" class="btn btn-neutral float-left" title="Utilities" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>

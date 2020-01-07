@@ -91,8 +91,8 @@
 <li class="toctree-l1"><a class="reference internal" href="visualization.html">Visualization</a></li>
 <li class="toctree-l1"><a class="reference internal" href="utilities.html">Utilities</a></li>
 <li class="toctree-l1"><a class="reference internal" href="metrics.html">Metrics</a></li>
-<li class="toctree-l1"><a class="reference internal" href="track.html">Single-track Piano-roll</a></li>
-<li class="toctree-l1"><a class="reference internal" href="multitrack.html">Multi-track Piano-roll</a></li>
+<li class="toctree-l1"><a class="reference internal" href="track.html">Single-track Pianoroll</a></li>
+<li class="toctree-l1"><a class="reference internal" href="multitrack.html">Multitrack Pianoroll</a></li>
 </ul>
 
             
@@ -158,8 +158,10 @@
   <div class="section" id="save-load">
 <span id="id1"></span><h1>Save &amp; Load<a class="headerlink" href="#save-load" title="Permalink to this headline">¶</a></h1>
 <p>Pypianoroll supports efficient utilities for saving and loading
-<a class="reference internal" href="multitrack.html#pypianoroll.Multitrack" title="pypianoroll.Multitrack"><code class="xref py py-class docutils literal notranslate"><span class="pre">pypianoroll.Multitrack</span></code></a> objects. The piano-rolls will be first converted
+<a class="reference internal" href="multitrack.html#pypianoroll.Multitrack" title="pypianoroll.Multitrack"><code class="xref py py-class docutils literal notranslate"><span class="pre">pypianoroll.Multitrack</span></code></a> objects. The pianorolls will be first converted
 to instances of <a class="reference external" href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.sparse.csc_matrix.html#scipy.sparse.csc_matrix" title="(in SciPy v1.4.1)"><code class="xref py py-class docutils literal notranslate"><span class="pre">scipy.sparse.csc_matrix</span></code></a> and then stored in a .npz file.</p>
+<div class="section" id="functions">
+<h2>Functions<a class="headerlink" href="#functions" title="Permalink to this headline">¶</a></h2>
 <dl class="function">
 <dt id="pypianoroll.save">
 <code class="sig-prename descclassname">pypianoroll.</code><code class="sig-name descname">save</code><span class="sig-paren">(</span><em class="sig-param">filepath</em>, <em class="sig-param">obj</em>, <em class="sig-param">compressed=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pypianoroll/utilities.html#save"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypianoroll.save" title="Permalink to this definition">¶</a></dt>
@@ -179,7 +181,7 @@ to instances of <a class="reference external" href="https://docs.scipy.org/doc/s
 <p>The saved .npz file is basically a zip archive which contains the following
 files:</p>
 <ul>
-<li><p>component arrays of the piano-rolls in compressed sparse column format:</p>
+<li><p>component arrays of the pianorolls in compressed sparse column format:</p>
 <blockquote>
 <div><ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">pianoroll_[index]_csc_data.npy</span></code></p></li>
@@ -204,6 +206,7 @@ files:</p>
 </dl>
 </dd></dl>
 
+</div>
 </div>
 
 

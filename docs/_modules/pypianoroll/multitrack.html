@@ -89,8 +89,8 @@
 <li class="toctree-l1"><a class="reference internal" href="../../visualization.html">Visualization</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../utilities.html">Utilities</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../metrics.html">Metrics</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../track.html">Single-track Piano-roll</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../multitrack.html">Multi-track Piano-roll</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../track.html">Single-track Pianoroll</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../multitrack.html">Multitrack Pianoroll</a></li>
 </ul>
 
             
@@ -154,9 +154,7 @@
            <div itemprop="articleBody">
             
   <h1>Source code for pypianoroll.multitrack</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;Class for multitrack pianorolls with metadata.</span>
-
-<span class="sd">&quot;&quot;&quot;</span>
+<span></span><span class="sd">&quot;&quot;&quot;Class for multitrack pianorolls with metadata.&quot;&quot;&quot;</span>
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">absolute_import</span><span class="p">,</span> <span class="n">division</span><span class="p">,</span> <span class="n">print_function</span>
 
 <span class="kn">import</span> <span class="nn">json</span>
@@ -174,20 +172,20 @@
 
 <div class="viewcode-block" id="Multitrack"><a class="viewcode-back" href="../../multitrack.html#pypianoroll.Multitrack">[docs]</a><span class="k">class</span> <span class="nc">Multitrack</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    A multitrack pianoroll container that stores additional tempo and</span>
-<span class="sd">    program information along with the pianoroll matrices.</span>
+<span class="sd">    A multitrack pianoroll container that stores additional tempo and program</span>
+<span class="sd">    information along with the pianoroll matrices.</span>
 
 <span class="sd">    Attributes</span>
 <span class="sd">    ----------</span>
 <span class="sd">    tracks : list of :class:`pypianoroll.Track` objects</span>
 <span class="sd">        The track object list.</span>
 <span class="sd">    tempo : np.ndarray, shape=(n_time_steps,), dtype=float</span>
-<span class="sd">        An array that indicates the tempo value (in bpm) at each time step.</span>
-<span class="sd">        The length is the total number of time steps.</span>
+<span class="sd">        An array that indicates the tempo value (in bpm) at each time step. The</span>
+<span class="sd">        length is the total number of time steps.</span>
 <span class="sd">    downbeat : np.ndarray, shape=(n_time_steps,), dtype=bool</span>
-<span class="sd">        An array that indicates whether the time step contains a downbeat</span>
-<span class="sd">        (i.e., the first time step of a bar). The length is the total number</span>
-<span class="sd">        of time steps.</span>
+<span class="sd">        An array that indicates whether the time step contains a downbeat (i.e.,</span>
+<span class="sd">        the first time step of a bar). The length is the total number of time</span>
+<span class="sd">        steps.</span>
 <span class="sd">    beat_resolution : int</span>
 <span class="sd">        The number of time steps used to represent a beat.</span>
 <span class="sd">    name : str</span>
@@ -562,8 +560,8 @@
 
 <div class="viewcode-block" id="Multitrack.get_max_length"><a class="viewcode-back" href="../../multitrack.html#pypianoroll.Multitrack.get_max_length">[docs]</a>    <span class="k">def</span> <span class="nf">get_max_length</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Return the maximum length of the pianorolls along the time axis (in</span>
-<span class="sd">        time step).</span>
+<span class="sd">        Return the maximum length of the pianorolls along the time axis (in time</span>
+<span class="sd">        step).</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
@@ -617,8 +615,11 @@
         <span class="k">return</span> <span class="n">merged</span></div>
 
 <div class="viewcode-block" id="Multitrack.count_downbeat"><a class="viewcode-back" href="../../multitrack.html#pypianoroll.Multitrack.count_downbeat">[docs]</a>    <span class="k">def</span> <span class="nf">count_downbeat</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Return the number of down beats. The return value is calculated based</span>
-<span class="sd">        solely on `downbeat`.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Return the number of down beats. The return value is calculated based</span>
+<span class="sd">        solely on `downbeat`.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">nonzero</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">downbeat</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span></div>
 
 <div class="viewcode-block" id="Multitrack.get_stacked_pianoroll"><a class="viewcode-back" href="../../multitrack.html#pypianoroll.Multitrack.get_stacked_pianoroll">[docs]</a>    <span class="k">def</span> <span class="nf">get_stacked_pianoroll</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -638,8 +639,11 @@
         <span class="k">return</span> <span class="n">stacked</span></div>
 
 <div class="viewcode-block" id="Multitrack.is_binarized"><a class="viewcode-back" href="../../multitrack.html#pypianoroll.Multitrack.is_binarized">[docs]</a>    <span class="k">def</span> <span class="nf">is_binarized</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Return True if the pianorolls of all tracks are already binarized.</span>
-<span class="sd">        Otherwise, return False.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Return True if the pianorolls of all tracks are already binarized.</span>
+<span class="sd">        Otherwise, return False.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">for</span> <span class="n">track</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">tracks</span><span class="p">:</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="n">track</span><span class="o">.</span><span class="n">is_binarized</span><span class="p">():</span>
                 <span class="k">return</span> <span class="kc">False</span>
@@ -803,9 +807,12 @@
             <span class="n">track</span><span class="o">.</span><span class="n">pad_to_multiple</span><span class="p">(</span><span class="n">factor</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Multitrack.pad_to_same"><a class="viewcode-back" href="../../multitrack.html#pypianoroll.Multitrack.pad_to_same">[docs]</a>    <span class="k">def</span> <span class="nf">pad_to_same</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Pad shorter pianorolls with zeros at the end along the time axis to</span>
-<span class="sd">        make the resulting pianoroll lengths the same as the maximum pianoroll</span>
-<span class="sd">        length among all the tracks.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Pad shorter pianorolls with zeros at the end along the time axis to make</span>
+<span class="sd">        the resulting pianoroll lengths the same as the maximum pianoroll length</span>
+<span class="sd">        among all the tracks.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">max_length</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_max_length</span><span class="p">()</span>
         <span class="k">for</span> <span class="n">track</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">tracks</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">track</span><span class="o">.</span><span class="n">pianoroll</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">max_length</span><span class="p">:</span>
@@ -920,9 +927,8 @@
         <span class="k">elif</span> <span class="n">algorithm</span> <span class="o">==</span> <span class="s2">&quot;strict&quot;</span><span class="p">:</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="n">pm</span><span class="o">.</span><span class="n">time_signature_changes</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                    <span class="s2">&quot;No time signature change event found. Unable &quot;</span>
-                    <span class="s2">&quot;to set beat start time using &#39;strict&#39; &quot;</span>
-                    <span class="s2">&quot;algorithm.&quot;</span>
+                    <span class="s2">&quot;No time signature change event found. Unable to set beat start &quot;</span>
+                    <span class="s2">&quot;time using &#39;strict&#39; algorithm.&quot;</span>
                 <span class="p">)</span>
             <span class="n">pm</span><span class="o">.</span><span class="n">time_signature_changes</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">time</span><span class="p">)</span>
             <span class="n">first_beat_time</span> <span class="o">=</span> <span class="n">pm</span><span class="o">.</span><span class="n">time_signature_changes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">time</span>
@@ -1058,9 +1064,12 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">check_validity</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="Multitrack.plot"><a class="viewcode-back" href="../../multitrack.html#pypianoroll.Multitrack.plot">[docs]</a>    <span class="k">def</span> <span class="nf">plot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Plot the pianorolls or save a plot of them. See</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Plot the pianorolls or save a plot of them. See</span>
 <span class="sd">        :func:`pypianoroll.visualization.plot_multitrack` for full</span>
-<span class="sd">        documentation.&quot;&quot;&quot;</span>
+<span class="sd">        documentation.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">plot_multitrack</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Multitrack.remove_empty_tracks"><a class="viewcode-back" href="../../multitrack.html#pypianoroll.Multitrack.remove_empty_tracks">[docs]</a>    <span class="k">def</span> <span class="nf">remove_empty_tracks</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -1105,9 +1114,12 @@
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">def</span> <span class="nf">update_sparse</span><span class="p">(</span><span class="n">target_dict</span><span class="p">,</span> <span class="n">sparse_matrix</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
-            <span class="sd">&quot;&quot;&quot;Turn `sparse_matrix` into a scipy.sparse.csc_matrix and update</span>
+            <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Turn `sparse_matrix` into a scipy.sparse.csc_matrix and update</span>
 <span class="sd">            its component arrays to the `target_dict` with key as `name`</span>
-<span class="sd">            suffixed with its component type string.&quot;&quot;&quot;</span>
+<span class="sd">            suffixed with its component type string.</span>
+
+<span class="sd">            &quot;&quot;&quot;</span>
             <span class="n">csc</span> <span class="o">=</span> <span class="n">csc_matrix</span><span class="p">(</span><span class="n">sparse_matrix</span><span class="p">)</span>
             <span class="n">target_dict</span><span class="p">[</span><span class="n">name</span> <span class="o">+</span> <span class="s2">&quot;_csc_data&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">csc</span><span class="o">.</span><span class="n">data</span>
             <span class="n">target_dict</span><span class="p">[</span><span class="n">name</span> <span class="o">+</span> <span class="s2">&quot;_csc_indices&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">csc</span><span class="o">.</span><span class="n">indices</span>
@@ -1229,8 +1241,11 @@
                 <span class="n">track</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="n">semitone</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Multitrack.trim_trailing_silence"><a class="viewcode-back" href="../../multitrack.html#pypianoroll.Multitrack.trim_trailing_silence">[docs]</a>    <span class="k">def</span> <span class="nf">trim_trailing_silence</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Trim the trailing silences of the pianorolls of all tracks. Trailing</span>
-<span class="sd">        silences are considered globally.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Trim the trailing silences of the pianorolls of all tracks. Trailing</span>
+<span class="sd">        silences are considered globally.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">active_length</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_active_length</span><span class="p">()</span>
         <span class="k">for</span> <span class="n">track</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">tracks</span><span class="p">:</span>
             <span class="n">track</span><span class="o">.</span><span class="n">pianoroll</span> <span class="o">=</span> <span class="n">track</span><span class="o">.</span><span class="n">pianoroll</span><span class="p">[:</span><span class="n">active_length</span><span class="p">]</span></div>

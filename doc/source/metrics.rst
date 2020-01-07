@@ -3,6 +3,12 @@
 Metrics
 =======
 
+Pypianoroll provides a number of metrics for pianorolls. These can be useful for
+evaluating generative models of music.
+
+Functions
+---------
+
 .. autofunction:: pypianoroll.metrics.empty_beat_rate
 .. autofunction:: pypianoroll.metrics.n_pitches_used
 .. autofunction:: pypianoroll.metrics.n_pitch_classes_used

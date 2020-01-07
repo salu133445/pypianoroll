@@ -91,8 +91,8 @@
 <li class="toctree-l1"><a class="reference internal" href="visualization.html">Visualization</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Utilities</a></li>
 <li class="toctree-l1"><a class="reference internal" href="metrics.html">Metrics</a></li>
-<li class="toctree-l1"><a class="reference internal" href="track.html">Single-track Piano-roll</a></li>
-<li class="toctree-l1"><a class="reference internal" href="multitrack.html">Multi-track Piano-roll</a></li>
+<li class="toctree-l1"><a class="reference internal" href="track.html">Single-track Pianoroll</a></li>
+<li class="toctree-l1"><a class="reference internal" href="multitrack.html">Multitrack Pianoroll</a></li>
 </ul>
 
             
@@ -160,23 +160,26 @@
 <p>In general, functions listed below will not modify the input objects and return
 a copy instead, while methods for <a class="reference internal" href="track.html#pypianoroll.Track" title="pypianoroll.Track"><code class="xref py py-class docutils literal notranslate"><span class="pre">pypianoroll.Track</span></code></a> and
 <a class="reference internal" href="multitrack.html#pypianoroll.Multitrack" title="pypianoroll.Multitrack"><code class="xref py py-class docutils literal notranslate"><span class="pre">pypianoroll.Multitrack</span></code></a> may modify the input objects.</p>
+<div class="section" id="functions">
+<h2>Functions<a class="headerlink" href="#functions" title="Permalink to this headline">¶</a></h2>
 <dl class="function">
 <dt id="pypianoroll.check_pianoroll">
 <code class="sig-prename descclassname">pypianoroll.</code><code class="sig-name descname">check_pianoroll</code><span class="sig-paren">(</span><em class="sig-param">arr</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pypianoroll/utilities.html#check_pianoroll"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypianoroll.check_pianoroll" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return True if the array is a standard piano-roll matrix. Otherwise,
-return False. Raise TypeError if the input object is not a numpy array.</p>
+<dd><p>Check if the array is a standard pianoroll matrix. Return True if it is.
+Otherwise, return False. Raise TypeError if the input object is not a numpy
+array.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="pypianoroll.assign_constant">
 <code class="sig-prename descclassname">pypianoroll.</code><code class="sig-name descname">assign_constant</code><span class="sig-paren">(</span><em class="sig-param">obj</em>, <em class="sig-param">value</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pypianoroll/utilities.html#assign_constant"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypianoroll.assign_constant" title="Permalink to this definition">¶</a></dt>
-<dd><p>Assign a constant value to the nonzeros in the piano-roll(s). If a
-piano-roll is not binarized, its data type will be preserved. If a
-piano-roll is binarized, it will be casted to the type of <cite>value</cite>.</p>
+<dd><p>Assign a constant value to the nonzeros in the pianoroll(s). If a pianoroll
+is not binarized, its data type will be preserved. If a pianoroll is
+binarized, it will be casted to the type of <cite>value</cite>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>value</strong> (<em>int</em><em> or </em><em>float</em>) – The constant value to be assigned to the nonzeros of the
-piano-roll(s).</p>
+pianoroll(s).</p>
 </dd>
 </dl>
 </dd></dl>
@@ -184,10 +187,10 @@ piano-roll(s).</p>
 <dl class="function">
 <dt id="pypianoroll.binarize">
 <code class="sig-prename descclassname">pypianoroll.</code><code class="sig-name descname">binarize</code><span class="sig-paren">(</span><em class="sig-param">obj</em>, <em class="sig-param">threshold=0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pypianoroll/utilities.html#binarize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypianoroll.binarize" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return a copy of the object with binarized piano-roll(s).</p>
+<dd><p>Return a copy of the object with binarized pianoroll(s).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>threshold</strong> (<em>int</em><em> or </em><em>float</em>) – Threshold to binarize the piano-roll(s). Default to zero.</p>
+<dd class="field-odd"><p><strong>threshold</strong> (<em>int</em><em> or </em><em>float</em>) – Threshold to binarize the pianoroll(s). Default to zero.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -195,13 +198,13 @@ piano-roll(s).</p>
 <dl class="function">
 <dt id="pypianoroll.clip">
 <code class="sig-prename descclassname">pypianoroll.</code><code class="sig-name descname">clip</code><span class="sig-paren">(</span><em class="sig-param">obj</em>, <em class="sig-param">lower=0</em>, <em class="sig-param">upper=127</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pypianoroll/utilities.html#clip"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypianoroll.clip" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return a copy of the object with piano-roll(s) clipped by a lower bound
-and an upper bound specified by <cite>lower</cite> and <cite>upper</cite>, respectively.</p>
+<dd><p>Return a copy of the object with pianoroll(s) clipped by a lower bound and
+an upper bound specified by <cite>lower</cite> and <cite>upper</cite>, respectively.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>lower</strong> (<em>int</em><em> or </em><em>float</em>) – The lower bound to clip the piano-roll. Default to 0.</p></li>
-<li><p><strong>upper</strong> (<em>int</em><em> or </em><em>float</em>) – The upper bound to clip the piano-roll. Default to 127.</p></li>
+<li><p><strong>lower</strong> (<em>int</em><em> or </em><em>float</em>) – The lower bound to clip the pianoroll. Default to 0.</p></li>
+<li><p><strong>upper</strong> (<em>int</em><em> or </em><em>float</em>) – The upper bound to clip the pianoroll. Default to 127.</p></li>
 </ul>
 </dd>
 </dl>
@@ -216,7 +219,7 @@ and an upper bound specified by <cite>lower</cite> and <cite>upper</cite>, respe
 <dl class="function">
 <dt id="pypianoroll.pad">
 <code class="sig-prename descclassname">pypianoroll.</code><code class="sig-name descname">pad</code><span class="sig-paren">(</span><em class="sig-param">obj</em>, <em class="sig-param">pad_length</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pypianoroll/utilities.html#pad"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypianoroll.pad" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return a copy of the object with piano-roll padded with zeros at the end
+<dd><p>Return a copy of the object with pianoroll padded with zeros at the end
 along the time axis.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -228,13 +231,13 @@ along the time axis.</p>
 <dl class="function">
 <dt id="pypianoroll.pad_to_multiple">
 <code class="sig-prename descclassname">pypianoroll.</code><code class="sig-name descname">pad_to_multiple</code><span class="sig-paren">(</span><em class="sig-param">obj</em>, <em class="sig-param">factor</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pypianoroll/utilities.html#pad_to_multiple"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypianoroll.pad_to_multiple" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return a copy of the object with its piano-roll padded with zeros at the
-end along the time axis with the minimal length that make the length of
-the resulting piano-roll a multiple of <cite>factor</cite>.</p>
+<dd><p>Return a copy of the object with its pianoroll padded with zeros at the end
+along the time axis with the minimal length that make the length of the
+resulting pianoroll a multiple of <cite>factor</cite>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>factor</strong> (<em>int</em>) – The value which the length of the resulting piano-roll will be
-a multiple of.</p>
+<dd class="field-odd"><p><strong>factor</strong> (<em>int</em>) – The value which the length of the resulting pianoroll will be a multiple
+of.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -242,19 +245,19 @@ a multiple of.</p>
 <dl class="function">
 <dt id="pypianoroll.pad_to_same">
 <code class="sig-prename descclassname">pypianoroll.</code><code class="sig-name descname">pad_to_same</code><span class="sig-paren">(</span><em class="sig-param">obj</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pypianoroll/utilities.html#pad_to_same"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypianoroll.pad_to_same" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return a copy of the object with shorter piano-rolls padded with zeros
-at the end along the time axis to the length of the piano-roll with the
-maximal length.</p>
+<dd><p>Return a copy of the object with shorter pianorolls padded with zeros at the
+end along the time axis to the length of the pianoroll with the maximal
+length.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="pypianoroll.transpose">
 <code class="sig-prename descclassname">pypianoroll.</code><code class="sig-name descname">transpose</code><span class="sig-paren">(</span><em class="sig-param">obj</em>, <em class="sig-param">semitone</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pypianoroll/utilities.html#transpose"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypianoroll.transpose" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return a copy of the object with piano-roll(s) transposed by <cite>semitones</cite>
+<dd><p>Return a copy of the object with pianoroll(s) transposed by <cite>semitones</cite>
 semitones.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>semitone</strong> (<em>int</em>) – Number of semitones to transpose the piano-roll(s).</p>
+<dd class="field-odd"><p><strong>semitone</strong> (<em>int</em>) – Number of semitones to transpose the pianoroll(s).</p>
 </dd>
 </dl>
 </dd></dl>
@@ -263,9 +266,10 @@ semitones.</p>
 <dt id="pypianoroll.trim_trailing_silence">
 <code class="sig-prename descclassname">pypianoroll.</code><code class="sig-name descname">trim_trailing_silence</code><span class="sig-paren">(</span><em class="sig-param">obj</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pypianoroll/utilities.html#trim_trailing_silence"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypianoroll.trim_trailing_silence" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a copy of the object with trimmed trailing silence of the
-piano-roll(s).</p>
+pianoroll(s).</p>
 </dd></dl>
 
+</div>
 </div>
 
 

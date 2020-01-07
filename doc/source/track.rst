@@ -1,6 +1,9 @@
 .. _track:
 
-Single-track Piano-roll
-=======================
+Single-track Pianoroll
+======================
+
+Pypianoroll provides the `pypianoroll.Track` class for handling single-track
+pianorolls.
 
 .. autoclass:: pypianoroll.Track

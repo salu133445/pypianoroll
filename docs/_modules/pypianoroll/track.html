@@ -89,8 +89,8 @@
 <li class="toctree-l1"><a class="reference internal" href="../../visualization.html">Visualization</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../utilities.html">Utilities</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../metrics.html">Metrics</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../track.html">Single-track Piano-roll</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../multitrack.html">Multi-track Piano-roll</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../track.html">Single-track Pianoroll</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../multitrack.html">Multitrack Pianoroll</a></li>
 </ul>
 
             
@@ -154,9 +154,7 @@
            <div itemprop="articleBody">
             
   <h1>Source code for pypianoroll.track</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;Class for single-track pianorolls with metadata.</span>
-
-<span class="sd">&quot;&quot;&quot;</span>
+<span></span><span class="sd">&quot;&quot;&quot;Class for single-track pianorolls with metadata.&quot;&quot;&quot;</span>
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">absolute_import</span><span class="p">,</span> <span class="n">division</span><span class="p">,</span> <span class="n">print_function</span>
 
 <span class="kn">from</span> <span class="nn">copy</span> <span class="kn">import</span> <span class="n">deepcopy</span>
@@ -281,8 +279,8 @@
             <span class="ow">or</span> <span class="n">np</span><span class="o">.</span><span class="n">issubdtype</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pianoroll</span><span class="o">.</span><span class="n">dtype</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">number</span><span class="p">)</span>
         <span class="p">):</span>
             <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
-                <span class="s2">&quot;The data type of `pianoroll` must be np.bool_ or &quot;</span>
-                <span class="s2">&quot;a subdtype of np.number.&quot;</span>
+                <span class="s2">&quot;The data type of `pianoroll` must be np.bool_ or a subdtype of &quot;</span>
+                <span class="s2">&quot;np.number.&quot;</span>
             <span class="p">)</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">pianoroll</span><span class="o">.</span><span class="n">ndim</span> <span class="o">!=</span> <span class="mi">2</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;`pianoroll` must have exactly two dimensions.&quot;</span><span class="p">)</span>
@@ -434,8 +432,11 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">pianoroll</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">pad</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pianoroll</span><span class="p">,</span> <span class="n">pad_width</span><span class="p">,</span> <span class="s2">&quot;constant&quot;</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Track.plot"><a class="viewcode-back" href="../../track.html#pypianoroll.Track.plot">[docs]</a>    <span class="k">def</span> <span class="nf">plot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Plot the pianoroll or save a plot of ot. See</span>
-<span class="sd">        :func:`pypianoroll.visualization.plot_track` for full documentation.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Plot the pianoroll or save a plot of ot. See</span>
+<span class="sd">        :func:`pypianoroll.visualization.plot_track` for full documentation.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">plot_track</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Track.transpose"><a class="viewcode-back" href="../../track.html#pypianoroll.Track.transpose">[docs]</a>    <span class="k">def</span> <span class="nf">transpose</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">semitone</span><span class="p">):</span>

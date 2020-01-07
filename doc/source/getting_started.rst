@@ -9,11 +9,11 @@ Objects
 The main objects in Pypianoroll are :class:`pypianoroll.Multitrack` and
 :class:`pypianoroll.Track` objects.
 
-A :class:`pypianoroll.Track` object is composed of a piano-roll matrix and
+A :class:`pypianoroll.Track` object is composed of a pianoroll matrix and
 additional track information (program number, drum indicator and its name).
 
 A :class:`pypianoroll.Multitrack` object consists of a list of
-:class:`pypianoroll.Track` objects and additional and multi-track information
+:class:`pypianoroll.Track` objects and additional and multitrack information
 (tempo and down beat information and its name).
 
 For more details, see :ref:`multitrack` and :ref:`track`.
@@ -29,8 +29,8 @@ Example
     from pypianoroll import Multitrack, Track
     from matplotlib import pyplot as plt
 
-    # Create a piano-roll matrix, where the first and second axes represent time
-    # and pitch, respectively, and assign a C major chord to the piano-roll
+    # Create a pianoroll matrix, where the first and second axes represent time
+    # and pitch, respectively, and assign a C major chord to the pianoroll
     pianoroll = np.zeros((96, 128))
     C_maj = [60, 64, 67, 72, 76, 79, 84]
     pianoroll[0:95, C_maj] = 100
@@ -39,7 +39,7 @@ Example
     track = Track(pianoroll=pianoroll, program=0, is_drum=False,
                   name='my awesome piano')
 
-    # Plot the piano-roll
+    # Plot the pianoroll
     fig, ax = track.plot()
     plt.show()
 
@@ -50,7 +50,7 @@ Here's what the output should look like.
 
 .. code-block:: python
 
-    # Extend the piano-roll to demonstrate the usage of down beat array
+    # Extend the pianoroll to demonstrate the usage of down beat array
     track.pianoroll = np.tile(track.pianoroll, (4, 1))
     downbeats = [0, 96, 192, 288]
 
@@ -63,7 +63,7 @@ Here's what the output should look like.
     multitrack = Multitrack(tracks=[track, another_track], tempo=120.0,
                             downbeat=[0, 96, 192, 288], beat_resolution=24)
 
-    # Plot the multi-track piano-roll
+    # Plot the multitrack pianoroll
     fig, axs = multitrack.plot()
     plt.show()
 

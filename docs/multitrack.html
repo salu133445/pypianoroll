@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Multi-track Piano-roll &mdash; pypianoroll 0.5.3 documentation</title>
+  <title>Multitrack Pianoroll &mdash; pypianoroll 0.5.3 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
   <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="prev" title="Single-track Piano-roll" href="track.html" /> 
+    <link rel="prev" title="Single-track Pianoroll" href="track.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -90,8 +90,8 @@
 <li class="toctree-l1"><a class="reference internal" href="visualization.html">Visualization</a></li>
 <li class="toctree-l1"><a class="reference internal" href="utilities.html">Utilities</a></li>
 <li class="toctree-l1"><a class="reference internal" href="metrics.html">Metrics</a></li>
-<li class="toctree-l1"><a class="reference internal" href="track.html">Single-track Piano-roll</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Multi-track Piano-roll</a></li>
+<li class="toctree-l1"><a class="reference internal" href="track.html">Single-track Pianoroll</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Multitrack Pianoroll</a></li>
 </ul>
 
             
@@ -137,7 +137,7 @@
     
       <li><a href="index.html">Docs</a> &raquo;</li>
         
-      <li>Multi-track Piano-roll</li>
+      <li>Multitrack Pianoroll</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -154,13 +154,15 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="multi-track-piano-roll">
-<span id="multitrack"></span><h1>Multi-track Piano-roll<a class="headerlink" href="#multi-track-piano-roll" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="multitrack-pianoroll">
+<span id="multitrack"></span><h1>Multitrack Pianoroll<a class="headerlink" href="#multitrack-pianoroll" title="Permalink to this headline">¶</a></h1>
+<p>Pypianoroll provides the <cite>pypianoroll.Multitrack</cite> class for handling multitrack
+pianorolls.</p>
 <dl class="class">
 <dt id="pypianoroll.Multitrack">
 <em class="property">class </em><code class="sig-prename descclassname">pypianoroll.</code><code class="sig-name descname">Multitrack</code><span class="sig-paren">(</span><em class="sig-param">filename=None</em>, <em class="sig-param">tracks=None</em>, <em class="sig-param">tempo=120.0</em>, <em class="sig-param">downbeat=None</em>, <em class="sig-param">beat_resolution=24</em>, <em class="sig-param">name='unknown'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pypianoroll/multitrack.html#Multitrack"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypianoroll.Multitrack" title="Permalink to this definition">¶</a></dt>
-<dd><p>A multitrack pianoroll container that stores additional tempo and
-program information along with the pianoroll matrices.</p>
+<dd><p>A multitrack pianoroll container that stores additional tempo and program
+information along with the pianoroll matrices.</p>
 <dl class="attribute">
 <dt id="pypianoroll.Multitrack.tracks">
 <code class="sig-name descname">tracks</code><a class="headerlink" href="#pypianoroll.Multitrack.tracks" title="Permalink to this definition">¶</a></dt>
@@ -175,8 +177,8 @@ program information along with the pianoroll matrices.</p>
 <dl class="attribute">
 <dt id="pypianoroll.Multitrack.tempo">
 <code class="sig-name descname">tempo</code><a class="headerlink" href="#pypianoroll.Multitrack.tempo" title="Permalink to this definition">¶</a></dt>
-<dd><p>An array that indicates the tempo value (in bpm) at each time step.
-The length is the total number of time steps.</p>
+<dd><p>An array that indicates the tempo value (in bpm) at each time step. The
+length is the total number of time steps.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
 <dd class="field-odd"><p>np.ndarray, shape=(n_time_steps,), dtype=float</p>
@@ -187,9 +189,9 @@ The length is the total number of time steps.</p>
 <dl class="attribute">
 <dt id="pypianoroll.Multitrack.downbeat">
 <code class="sig-name descname">downbeat</code><a class="headerlink" href="#pypianoroll.Multitrack.downbeat" title="Permalink to this definition">¶</a></dt>
-<dd><p>An array that indicates whether the time step contains a downbeat
-(i.e., the first time step of a bar). The length is the total number
-of time steps.</p>
+<dd><p>An array that indicates whether the time step contains a downbeat (i.e.,
+the first time step of a bar). The length is the total number of time
+steps.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
 <dd class="field-odd"><p>np.ndarray, shape=(n_time_steps,), dtype=bool</p>
@@ -424,8 +426,8 @@ pianorolls of all tracks. The unit is time step.</p>
 <dl class="method">
 <dt id="pypianoroll.Multitrack.get_max_length">
 <code class="sig-name descname">get_max_length</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pypianoroll/multitrack.html#Multitrack.get_max_length"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypianoroll.Multitrack.get_max_length" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the maximum length of the pianorolls along the time axis (in
-time step).</p>
+<dd><p>Return the maximum length of the pianorolls along the time axis (in time
+step).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p><strong>max_length</strong> – The maximum length of the pianorolls along the time axis (in time
@@ -577,9 +579,9 @@ multiple of.</p>
 <dl class="method">
 <dt id="pypianoroll.Multitrack.pad_to_same">
 <code class="sig-name descname">pad_to_same</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pypianoroll/multitrack.html#Multitrack.pad_to_same"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypianoroll.Multitrack.pad_to_same" title="Permalink to this definition">¶</a></dt>
-<dd><p>Pad shorter pianorolls with zeros at the end along the time axis to
-make the resulting pianoroll lengths the same as the maximum pianoroll
-length among all the tracks.</p>
+<dd><p>Pad shorter pianorolls with zeros at the end along the time axis to make
+the resulting pianoroll lengths the same as the maximum pianoroll length
+among all the tracks.</p>
 </dd></dl>
 
 <dl class="method">
@@ -768,7 +770,7 @@ written.</p>
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
       
-        <a href="track.html" class="btn btn-neutral float-left" title="Single-track Piano-roll" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="track.html" class="btn btn-neutral float-left" title="Single-track Pianoroll" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

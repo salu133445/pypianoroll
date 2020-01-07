@@ -89,8 +89,8 @@
 <li class="toctree-l1"><a class="reference internal" href="../../visualization.html">Visualization</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../utilities.html">Utilities</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../metrics.html">Metrics</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../track.html">Single-track Piano-roll</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../multitrack.html">Multi-track Piano-roll</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../track.html">Single-track Pianoroll</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../multitrack.html">Multitrack Pianoroll</a></li>
 </ul>
 
             
@@ -154,7 +154,7 @@
            <div itemprop="articleBody">
             
   <h1>Source code for pypianoroll.visualization</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;Module for plotting multi-track and single-track pianorolls.&quot;&quot;&quot;</span>
+<span></span><span class="sd">&quot;&quot;&quot;Module for visualizing multitrack pianorolls.&quot;&quot;&quot;</span>
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">absolute_import</span><span class="p">,</span> <span class="n">division</span><span class="p">,</span> <span class="n">print_function</span>
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
@@ -206,22 +206,23 @@
 <span class="sd">        A :class:`matplotlib.axes.Axes` object where the pianoroll will be</span>
 <span class="sd">        plotted on.</span>
 <span class="sd">    pianoroll : np.ndarray</span>
-<span class="sd">        A pianoroll to be plotted. The values should be in [0, 1] when data</span>
-<span class="sd">        type is float, and in [0, 127] when data type is integer.</span>
+<span class="sd">        A pianoroll to be plotted. The values should be in [0, 1] when data type</span>
+<span class="sd">        is float, and in [0, 127] when data type is integer.</span>
 
 <span class="sd">        - For a 2D array, shape=(num_time_step, num_pitch).</span>
-<span class="sd">        - For a 3D array, shape=(num_time_step, num_pitch, num_channel),</span>
-<span class="sd">          where channels can be either RGB or RGBA.</span>
+<span class="sd">        - For a 3D array, shape=(num_time_step, num_pitch, num_channel), where</span>
+<span class="sd">          channels can be either RGB or RGBA.</span>
 
 <span class="sd">    is_drum : bool</span>
 <span class="sd">        A boolean number that indicates whether it is a percussion track.</span>
-<span class="sd">            Defaults to False.</span>
+<span class="sd">        Defaults to False.</span>
 <span class="sd">    beat_resolution : int</span>
 <span class="sd">        The number of time steps used to represent a beat. Required and only</span>
 <span class="sd">        effective when `xtick` is &#39;beat&#39;.</span>
 <span class="sd">    downbeats : list</span>
-<span class="sd">        An array that indicates whether the time step contains a downbeat</span>
-<span class="sd">        (i.e., the first time step of a bar).</span>
+<span class="sd">        An array that indicates whether the time step contains a downbeat (i.e.,</span>
+<span class="sd">        the first time step of a bar).</span>
+
 <span class="sd">    preset : {&#39;default&#39;, &#39;plain&#39;, &#39;frame&#39;}</span>
 <span class="sd">        A string that indicates the preset theme to use.</span>
 
@@ -233,33 +234,33 @@
 <span class="sd">        The colormap to use in :func:`matplotlib.pyplot.imshow`. Defaults to</span>
 <span class="sd">        &#39;Blues&#39;. Only effective when `pianoroll` is 2D.</span>
 <span class="sd">    xtick : {&#39;auto&#39;, &#39;beat&#39;, &#39;step&#39;, &#39;off&#39;}</span>
-<span class="sd">        A string that indicates what to use as ticks along the x-axis. If</span>
-<span class="sd">        &#39;auto&#39; is given, automatically set to &#39;beat&#39; if `beat_resolution` is</span>
-<span class="sd">        also given and set to &#39;step&#39;, otherwise. Defaults to &#39;auto&#39;.</span>
+<span class="sd">        A string that indicates what to use as ticks along the x-axis. If &#39;auto&#39;</span>
+<span class="sd">        is given, automatically set to &#39;beat&#39; if `beat_resolution` is also given</span>
+<span class="sd">        and set to &#39;step&#39;, otherwise. Defaults to &#39;auto&#39;.</span>
 <span class="sd">    ytick : {&#39;octave&#39;, &#39;pitch&#39;, &#39;off&#39;}</span>
 <span class="sd">        A string that indicates what to use as ticks along the y-axis.</span>
 <span class="sd">        Defaults to &#39;octave&#39;.</span>
 <span class="sd">    xticklabel : bool</span>
-<span class="sd">        Whether to add tick labels along the x-axis. Only effective when</span>
-<span class="sd">        `xtick` is not &#39;off&#39;.</span>
+<span class="sd">        Whether to add tick labels along the x-axis. Only effective when `xtick`</span>
+<span class="sd">        is not &#39;off&#39;.</span>
 <span class="sd">    yticklabel : {&#39;auto&#39;, &#39;name&#39;, &#39;number&#39;, &#39;off&#39;}</span>
-<span class="sd">        If &#39;name&#39;, use octave name and pitch name (key name when `is_drum`</span>
-<span class="sd">        is True) as tick labels along the y-axis. If &#39;number&#39;, use pitch</span>
-<span class="sd">        number. If &#39;auto&#39;, set to &#39;name&#39; when `ytick` is &#39;octave&#39; and</span>
-<span class="sd">        &#39;number&#39; when `ytick` is &#39;pitch&#39;. Defaults to &#39;auto&#39;. Only effective</span>
-<span class="sd">        when `ytick` is not &#39;off&#39;.</span>
+<span class="sd">        If &#39;name&#39;, use octave name and pitch name (key name when `is_drum` is</span>
+<span class="sd">        True) as tick labels along the y-axis. If &#39;number&#39;, use pitch number. If</span>
+<span class="sd">        &#39;auto&#39;, set to &#39;name&#39; when `ytick` is &#39;octave&#39; and &#39;number&#39; when `ytick`</span>
+<span class="sd">        is &#39;pitch&#39;. Defaults to &#39;auto&#39;. Only effective when `ytick` is not</span>
+<span class="sd">        &#39;off&#39;.</span>
 <span class="sd">    tick_loc : tuple or list</span>
-<span class="sd">        The locations to put the ticks. Availables elements are &#39;bottom&#39;,</span>
-<span class="sd">        &#39;top&#39;, &#39;left&#39; and &#39;right&#39;. Defaults to (&#39;bottom&#39;, &#39;left&#39;).</span>
+<span class="sd">        The locations to put the ticks. Availables elements are &#39;bottom&#39;, &#39;top&#39;,</span>
+<span class="sd">        &#39;left&#39; and &#39;right&#39;. Defaults to (&#39;bottom&#39;, &#39;left&#39;).</span>
 <span class="sd">    tick_direction : {&#39;in&#39;, &#39;out&#39;, &#39;inout&#39;}</span>
-<span class="sd">        A string that indicates where to put the ticks. Defaults to &#39;in&#39;.</span>
-<span class="sd">        Only effective when one of `xtick` and `ytick` is on.</span>
+<span class="sd">        A string that indicates where to put the ticks. Defaults to &#39;in&#39;. Only</span>
+<span class="sd">        effective when one of `xtick` and `ytick` is on.</span>
 <span class="sd">    label : {&#39;x&#39;, &#39;y&#39;, &#39;both&#39;, &#39;off&#39;}</span>
-<span class="sd">        A string that indicates whether to add labels to the x-axis and</span>
-<span class="sd">        y-axis. Defaults to &#39;both&#39;.</span>
+<span class="sd">        A string that indicates whether to add labels to the x-axis and y-axis.</span>
+<span class="sd">        Defaults to &#39;both&#39;.</span>
 <span class="sd">    grid : {&#39;x&#39;, &#39;y&#39;, &#39;both&#39;, &#39;off&#39;}</span>
-<span class="sd">        A string that indicates whether to add grids to the x-axis, y-axis,</span>
-<span class="sd">        both or neither. Defaults to &#39;both&#39;.</span>
+<span class="sd">        A string that indicates whether to add grids to the x-axis, y-axis, both</span>
+<span class="sd">        or neither. Defaults to &#39;both&#39;.</span>
 <span class="sd">    grid_linestyle : str</span>
 <span class="sd">        Will be passed to :meth:`matplotlib.axes.Axes.grid` as &#39;linestyle&#39;</span>
 <span class="sd">        argument.</span>
@@ -439,8 +440,8 @@
 <span class="sd">        The number of time steps used to represent a beat. Required and only</span>
 <span class="sd">        effective when `xtick` is &#39;beat&#39;.</span>
 <span class="sd">    downbeats : list</span>
-<span class="sd">        An array that indicates whether the time step contains a downbeat</span>
-<span class="sd">        (i.e., the first time step of a bar).</span>
+<span class="sd">        An array that indicates whether the time step contains a downbeat (i.e.,</span>
+<span class="sd">        the first time step of a bar).</span>
 
 <span class="sd">    preset : {&#39;default&#39;, &#39;plain&#39;, &#39;frame&#39;}</span>
 <span class="sd">        A string that indicates the preset theme to use.</span>
@@ -453,33 +454,33 @@
 <span class="sd">        The colormap to use in :func:`matplotlib.pyplot.imshow`. Defaults to</span>
 <span class="sd">        &#39;Blues&#39;. Only effective when `pianoroll` is 2D.</span>
 <span class="sd">    xtick : {&#39;auto&#39;, &#39;beat&#39;, &#39;step&#39;, &#39;off&#39;}</span>
-<span class="sd">        A string that indicates what to use as ticks along the x-axis. If</span>
-<span class="sd">        &#39;auto&#39; is given, automatically set to &#39;beat&#39; if `beat_resolution` is</span>
-<span class="sd">        also given and set to &#39;step&#39;, otherwise. Defaults to &#39;auto&#39;.</span>
+<span class="sd">        A string that indicates what to use as ticks along the x-axis. If &#39;auto&#39;</span>
+<span class="sd">        is given, automatically set to &#39;beat&#39; if `beat_resolution` is also given</span>
+<span class="sd">        and set to &#39;step&#39;, otherwise. Defaults to &#39;auto&#39;.</span>
 <span class="sd">    ytick : {&#39;octave&#39;, &#39;pitch&#39;, &#39;off&#39;}</span>
-<span class="sd">        A string that indicates what to use as ticks along the y-axis.</span>
-<span class="sd">        Defaults to &#39;octave&#39;.</span>
+<span class="sd">        A string that indicates what to use as ticks along the y-axis. Defaults</span>
+<span class="sd">        to &#39;octave&#39;.</span>
 <span class="sd">    xticklabel : bool</span>
-<span class="sd">        Whether to add tick labels along the x-axis. Only effective when</span>
-<span class="sd">        `xtick` is not &#39;off&#39;.</span>
+<span class="sd">        Whether to add tick labels along the x-axis. Only effective when `xtick`</span>
+<span class="sd">        is not &#39;off&#39;.</span>
 <span class="sd">    yticklabel : {&#39;auto&#39;, &#39;name&#39;, &#39;number&#39;, &#39;off&#39;}</span>
-<span class="sd">        If &#39;name&#39;, use octave name and pitch name (key name when `is_drum`</span>
-<span class="sd">        is True) as tick labels along the y-axis. If &#39;number&#39;, use pitch</span>
-<span class="sd">        number. If &#39;auto&#39;, set to &#39;name&#39; when `ytick` is &#39;octave&#39; and</span>
-<span class="sd">        &#39;number&#39; when `ytick` is &#39;pitch&#39;. Defaults to &#39;auto&#39;. Only effective</span>
-<span class="sd">        when `ytick` is not &#39;off&#39;.</span>
+<span class="sd">        If &#39;name&#39;, use octave name and pitch name (key name when `is_drum` is</span>
+<span class="sd">        True) as tick labels along the y-axis. If &#39;number&#39;, use pitch number. If</span>
+<span class="sd">        &#39;auto&#39;, set to &#39;name&#39; when `ytick` is &#39;octave&#39; and &#39;number&#39; when `ytick`</span>
+<span class="sd">        is &#39;pitch&#39;. Defaults to &#39;auto&#39;. Only effective when `ytick` is not</span>
+<span class="sd">        &#39;off&#39;.</span>
 <span class="sd">    tick_loc : tuple or list</span>
-<span class="sd">        The locations to put the ticks. Availables elements are &#39;bottom&#39;,</span>
-<span class="sd">        &#39;top&#39;, &#39;left&#39; and &#39;right&#39;. Defaults to (&#39;bottom&#39;, &#39;left&#39;).</span>
+<span class="sd">        The locations to put the ticks. Availables elements are &#39;bottom&#39;, &#39;top&#39;,</span>
+<span class="sd">        &#39;left&#39; and &#39;right&#39;. Defaults to (&#39;bottom&#39;, &#39;left&#39;).</span>
 <span class="sd">    tick_direction : {&#39;in&#39;, &#39;out&#39;, &#39;inout&#39;}</span>
-<span class="sd">        A string that indicates where to put the ticks. Defaults to &#39;in&#39;.</span>
-<span class="sd">        Only effective when one of `xtick` and `ytick` is on.</span>
+<span class="sd">        A string that indicates where to put the ticks. Defaults to &#39;in&#39;. Only</span>
+<span class="sd">        effective when one of `xtick` and `ytick` is on.</span>
 <span class="sd">    label : {&#39;x&#39;, &#39;y&#39;, &#39;both&#39;, &#39;off&#39;}</span>
-<span class="sd">        A string that indicates whether to add labels to the x-axis and</span>
-<span class="sd">        y-axis. Defaults to &#39;both&#39;.</span>
+<span class="sd">        A string that indicates whether to add labels to the x-axis and y-axis.</span>
+<span class="sd">        Defaults to &#39;both&#39;.</span>
 <span class="sd">    grid : {&#39;x&#39;, &#39;y&#39;, &#39;both&#39;, &#39;off&#39;}</span>
-<span class="sd">        A string that indicates whether to add grids to the x-axis, y-axis,</span>
-<span class="sd">        both or neither. Defaults to &#39;both&#39;.</span>
+<span class="sd">        A string that indicates whether to add grids to the x-axis, y-axis, both</span>
+<span class="sd">        or neither. Defaults to &#39;both&#39;.</span>
 <span class="sd">    grid_linestyle : str</span>
 <span class="sd">        Will be passed to :meth:`matplotlib.axes.Axes.grid` as &#39;linestyle&#39;</span>
 <span class="sd">        argument.</span>
@@ -551,21 +552,20 @@
 <span class="sd">    filename : str</span>
 <span class="sd">        The filename to which the plot is saved. If None, save nothing.</span>
 <span class="sd">    mode : {&#39;separate&#39;, &#39;stacked&#39;, &#39;hybrid&#39;}</span>
-<span class="sd">        A string that indicate the plotting mode to use. Defaults to</span>
-<span class="sd">        &#39;separate&#39;.</span>
+<span class="sd">        A string that indicate the plotting mode to use. Defaults to &#39;separate&#39;.</span>
 
 <span class="sd">        - In &#39;separate&#39; mode, all the tracks are plotted separately.</span>
 <span class="sd">        - In &#39;stacked&#39; mode, a color is assigned based on `cmaps` to the</span>
-<span class="sd">            pianoroll of each track and the pianorolls are stacked and</span>
-<span class="sd">            plotted as a colored image with RGB channels.</span>
+<span class="sd">          pianoroll of each track and the pianorolls are stacked and plotted as</span>
+<span class="sd">          a colored image with RGB channels.</span>
 <span class="sd">        - In &#39;hybrid&#39; mode, the drum tracks are merged into a &#39;Drums&#39; track,</span>
-<span class="sd">            while the other tracks are merged into an &#39;Others&#39; track, and the</span>
-<span class="sd">            two merged tracks are then plotted separately.</span>
+<span class="sd">          while the other tracks are merged into an &#39;Others&#39; track, and the two</span>
+<span class="sd">          merged tracks are then plotted separately.</span>
 
 <span class="sd">    track_label : {&#39;name&#39;, &#39;program&#39;, &#39;family&#39;, &#39;off&#39;}</span>
-<span class="sd">        A sting that indicates what to use as labels to the track. When</span>
-<span class="sd">        `mode` is &#39;hybrid&#39;, all options other than &#39;off&#39; will label the two</span>
-<span class="sd">        track with &#39;Drums&#39; and &#39;Others&#39;.</span>
+<span class="sd">        A sting that indicates what to use as labels to the track. When `mode`</span>
+<span class="sd">        is &#39;hybrid&#39;, all options other than &#39;off&#39; will label the two track with</span>
+<span class="sd">        &#39;Drums&#39; and &#39;Others&#39;.</span>
 <span class="sd">    preset : {&#39;default&#39;, &#39;plain&#39;, &#39;frame&#39;}</span>
 <span class="sd">        A string that indicates the preset theme to use.</span>
 
@@ -576,42 +576,42 @@
 <span class="sd">    cmaps :  tuple or list</span>
 <span class="sd">        The `matplotlib.colors.Colormap` instances or colormap codes to use.</span>
 
-<span class="sd">        - When `mode` is &#39;separate&#39;, each element will be passed to each</span>
-<span class="sd">            call of :func:`matplotlib.pyplot.imshow`. Defaults to (&#39;Blues&#39;,</span>
-<span class="sd">            &#39;Oranges&#39;, &#39;Greens&#39;, &#39;Reds&#39;, &#39;Purples&#39;, &#39;Greys&#39;).</span>
-<span class="sd">        - When `mode` is stacked, a color is assigned based on `cmaps` to</span>
-<span class="sd">            the pianoroll of each track. Defaults to (&#39;hsv&#39;).</span>
+<span class="sd">        - When `mode` is &#39;separate&#39;, each element will be passed to each call of</span>
+<span class="sd">          :func:`matplotlib.pyplot.imshow`. Defaults to (&#39;Blues&#39;, &#39;Oranges&#39;,</span>
+<span class="sd">          &#39;Greens&#39;, &#39;Reds&#39;, &#39;Purples&#39;, &#39;Greys&#39;).</span>
+<span class="sd">        - When `mode` is stacked, a color is assigned based on `cmaps` to the</span>
+<span class="sd">          pianoroll of each track. Defaults to (&#39;hsv&#39;).</span>
 <span class="sd">        - When `mode` is &#39;hybrid&#39;, the first (second) element is used in the</span>
-<span class="sd">            &#39;Drums&#39; (&#39;Others&#39;) track. Defaults to (&#39;Blues&#39;, &#39;Greens&#39;).</span>
+<span class="sd">          &#39;Drums&#39; (&#39;Others&#39;) track. Defaults to (&#39;Blues&#39;, &#39;Greens&#39;).</span>
 
 <span class="sd">    xtick : {&#39;auto&#39;, &#39;beat&#39;, &#39;step&#39;, &#39;off&#39;}</span>
-<span class="sd">        A string that indicates what to use as ticks along the x-axis. If</span>
-<span class="sd">        &#39;auto&#39; is given, automatically set to &#39;beat&#39; if `beat_resolution` is</span>
-<span class="sd">        also given and set to &#39;step&#39;, otherwise. Defaults to &#39;auto&#39;.</span>
+<span class="sd">        A string that indicates what to use as ticks along the x-axis. If &#39;auto&#39;</span>
+<span class="sd">        is given, automatically set to &#39;beat&#39; if `beat_resolution` is also given</span>
+<span class="sd">        and set to &#39;step&#39;, otherwise. Defaults to &#39;auto&#39;.</span>
 <span class="sd">    ytick : {&#39;octave&#39;, &#39;pitch&#39;, &#39;off&#39;}</span>
-<span class="sd">        A string that indicates what to use as ticks along the y-axis.</span>
-<span class="sd">        Defaults to &#39;octave&#39;.</span>
+<span class="sd">        A string that indicates what to use as ticks along the y-axis. Defaults</span>
+<span class="sd">        to &#39;octave&#39;.</span>
 <span class="sd">    xticklabel : bool</span>
-<span class="sd">        Whether to add tick labels along the x-axis. Only effective when</span>
-<span class="sd">        `xtick` is not &#39;off&#39;.</span>
+<span class="sd">        Whether to add tick labels along the x-axis. Only effective when `xtick`</span>
+<span class="sd">        is not &#39;off&#39;.</span>
 <span class="sd">    yticklabel : {&#39;auto&#39;, &#39;name&#39;, &#39;number&#39;, &#39;off&#39;}</span>
-<span class="sd">        If &#39;name&#39;, use octave name and pitch name (key name when `is_drum`</span>
-<span class="sd">        is True) as tick labels along the y-axis. If &#39;number&#39;, use pitch</span>
-<span class="sd">        number. If &#39;auto&#39;, set to &#39;name&#39; when `ytick` is &#39;octave&#39; and</span>
-<span class="sd">        &#39;number&#39; when `ytick` is &#39;pitch&#39;. Defaults to &#39;auto&#39;. Only effective</span>
-<span class="sd">        when `ytick` is not &#39;off&#39;.</span>
+<span class="sd">        If &#39;name&#39;, use octave name and pitch name (key name when `is_drum` is</span>
+<span class="sd">        True) as tick labels along the y-axis. If &#39;number&#39;, use pitch number. If</span>
+<span class="sd">        &#39;auto&#39;, set to &#39;name&#39; when `ytick` is &#39;octave&#39; and &#39;number&#39; when `ytick`</span>
+<span class="sd">        is &#39;pitch&#39;. Defaults to &#39;auto&#39;. Only effective when `ytick` is not</span>
+<span class="sd">        &#39;off&#39;.</span>
 <span class="sd">    tick_loc : tuple or list</span>
-<span class="sd">        The locations to put the ticks. Availables elements are &#39;bottom&#39;,</span>
-<span class="sd">        &#39;top&#39;, &#39;left&#39; and &#39;right&#39;. Defaults to (&#39;bottom&#39;, &#39;left&#39;).</span>
+<span class="sd">        The locations to put the ticks. Availables elements are &#39;bottom&#39;, &#39;top&#39;,</span>
+<span class="sd">        &#39;left&#39; and &#39;right&#39;. Defaults to (&#39;bottom&#39;, &#39;left&#39;).</span>
 <span class="sd">    tick_direction : {&#39;in&#39;, &#39;out&#39;, &#39;inout&#39;}</span>
-<span class="sd">        A string that indicates where to put the ticks. Defaults to &#39;in&#39;.</span>
-<span class="sd">        Only effective when one of `xtick` and `ytick` is on.</span>
+<span class="sd">        A string that indicates where to put the ticks. Defaults to &#39;in&#39;. Only</span>
+<span class="sd">        effective when one of `xtick` and `ytick` is on.</span>
 <span class="sd">    label : {&#39;x&#39;, &#39;y&#39;, &#39;both&#39;, &#39;off&#39;}</span>
-<span class="sd">        A string that indicates whether to add labels to the x-axis and</span>
-<span class="sd">        y-axis. Defaults to &#39;both&#39;.</span>
+<span class="sd">        A string that indicates whether to add labels to the x-axis and y-axis.</span>
+<span class="sd">        Defaults to &#39;both&#39;.</span>
 <span class="sd">    grid : {&#39;x&#39;, &#39;y&#39;, &#39;both&#39;, &#39;off&#39;}</span>
-<span class="sd">        A string that indicates whether to add grids to the x-axis, y-axis,</span>
-<span class="sd">        both or neither. Defaults to &#39;both&#39;.</span>
+<span class="sd">        A string that indicates whether to add grids to the x-axis, y-axis, both</span>
+<span class="sd">        or neither. Defaults to &#39;both&#39;.</span>
 <span class="sd">    grid_linestyle : str</span>
 <span class="sd">        Will be passed to :meth:`matplotlib.axes.Axes.grid` as &#39;linestyle&#39;</span>
 <span class="sd">        argument.</span>
@@ -836,8 +836,8 @@
 <span class="sd">    filename : str</span>
 <span class="sd">        The filename to which the animation is saved.</span>
 <span class="sd">    pianoroll : np.ndarray</span>
-<span class="sd">        A pianoroll to be plotted. The values should be in [0, 1] when data</span>
-<span class="sd">        type is float, and in [0, 127] when data type is integer.</span>
+<span class="sd">        A pianoroll to be plotted. The values should be in [0, 1] when data type</span>
+<span class="sd">        is float, and in [0, 127] when data type is integer.</span>
 
 <span class="sd">        - For a 2D array, shape=(num_time_step, num_pitch).</span>
 <span class="sd">        - For a 3D array, shape=(num_time_step, num_pitch, num_channel),</span>
@@ -856,8 +856,8 @@
 <span class="sd">        The number of time steps used to represent a beat. Required and only</span>
 <span class="sd">        effective when `xtick` is &#39;beat&#39;.</span>
 <span class="sd">    downbeats : list</span>
-<span class="sd">        An array that indicates whether the time step contains a downbeat</span>
-<span class="sd">        (i.e., the first time step of a bar).</span>
+<span class="sd">        An array that indicates whether the time step contains a downbeat (i.e.,</span>
+<span class="sd">        the first time step of a bar).</span>
 
 <span class="sd">    preset : {&#39;default&#39;, &#39;plain&#39;, &#39;frame&#39;}</span>
 <span class="sd">        A string that indicates the preset theme to use.</span>
@@ -870,33 +870,33 @@
 <span class="sd">        The colormap to use in :func:`matplotlib.pyplot.imshow`. Defaults to</span>
 <span class="sd">        &#39;Blues&#39;. Only effective when `pianoroll` is 2D.</span>
 <span class="sd">    xtick : {&#39;auto&#39;, &#39;beat&#39;, &#39;step&#39;, &#39;off&#39;}</span>
-<span class="sd">        A string that indicates what to use as ticks along the x-axis. If</span>
-<span class="sd">        &#39;auto&#39; is given, automatically set to &#39;beat&#39; if `beat_resolution` is</span>
-<span class="sd">        also given and set to &#39;step&#39;, otherwise. Defaults to &#39;auto&#39;.</span>
+<span class="sd">        A string that indicates what to use as ticks along the x-axis. If &#39;auto&#39;</span>
+<span class="sd">        is given, automatically set to &#39;beat&#39; if `beat_resolution` is also given</span>
+<span class="sd">        and set to &#39;step&#39;, otherwise. Defaults to &#39;auto&#39;.</span>
 <span class="sd">    ytick : {&#39;octave&#39;, &#39;pitch&#39;, &#39;off&#39;}</span>
 <span class="sd">        A string that indicates what to use as ticks along the y-axis.</span>
 <span class="sd">        Defaults to &#39;octave&#39;.</span>
 <span class="sd">    xticklabel : bool</span>
-<span class="sd">        Whether to add tick labels along the x-axis. Only effective when</span>
-<span class="sd">        `xtick` is not &#39;off&#39;.</span>
+<span class="sd">        Whether to add tick labels along the x-axis. Only effective when `xtick`</span>
+<span class="sd">        is not &#39;off&#39;.</span>
 <span class="sd">    yticklabel : {&#39;auto&#39;, &#39;name&#39;, &#39;number&#39;, &#39;off&#39;}</span>
-<span class="sd">        If &#39;name&#39;, use octave name and pitch name (key name when `is_drum`</span>
-<span class="sd">        is True) as tick labels along the y-axis. If &#39;number&#39;, use pitch</span>
-<span class="sd">        number. If &#39;auto&#39;, set to &#39;name&#39; when `ytick` is &#39;octave&#39; and</span>
-<span class="sd">        &#39;number&#39; when `ytick` is &#39;pitch&#39;. Defaults to &#39;auto&#39;. Only effective</span>
-<span class="sd">        when `ytick` is not &#39;off&#39;.</span>
+<span class="sd">        If &#39;name&#39;, use octave name and pitch name (key name when `is_drum` is</span>
+<span class="sd">        True) as tick labels along the y-axis. If &#39;number&#39;, use pitch number. If</span>
+<span class="sd">        &#39;auto&#39;, set to &#39;name&#39; when `ytick` is &#39;octave&#39; and &#39;number&#39; when `ytick`</span>
+<span class="sd">        is &#39;pitch&#39;. Defaults to &#39;auto&#39;. Only effective when `ytick` is not</span>
+<span class="sd">        &#39;off&#39;.</span>
 <span class="sd">    tick_loc : tuple or list</span>
-<span class="sd">        The locations to put the ticks. Availables elements are &#39;bottom&#39;,</span>
-<span class="sd">        &#39;top&#39;, &#39;left&#39; and &#39;right&#39;. Defaults to (&#39;bottom&#39;, &#39;left&#39;).</span>
+<span class="sd">        The locations to put the ticks. Availables elements are &#39;bottom&#39;, &#39;top&#39;,</span>
+<span class="sd">        &#39;left&#39; and &#39;right&#39;. Defaults to (&#39;bottom&#39;, &#39;left&#39;).</span>
 <span class="sd">    tick_direction : {&#39;in&#39;, &#39;out&#39;, &#39;inout&#39;}</span>
-<span class="sd">        A string that indicates where to put the ticks. Defaults to &#39;in&#39;.</span>
-<span class="sd">        Only effective when one of `xtick` and `ytick` is on.</span>
+<span class="sd">        A string that indicates where to put the ticks. Defaults to &#39;in&#39;. Only</span>
+<span class="sd">        effective when one of `xtick` and `ytick` is on.</span>
 <span class="sd">    label : {&#39;x&#39;, &#39;y&#39;, &#39;both&#39;, &#39;off&#39;}</span>
-<span class="sd">        A string that indicates whether to add labels to the x-axis and</span>
-<span class="sd">        y-axis. Defaults to &#39;both&#39;.</span>
+<span class="sd">        A string that indicates whether to add labels to the x-axis and y-axis.</span>
+<span class="sd">        Defaults to &#39;both&#39;.</span>
 <span class="sd">    grid : {&#39;x&#39;, &#39;y&#39;, &#39;both&#39;, &#39;off&#39;}</span>
-<span class="sd">        A string that indicates whether to add grids to the x-axis, y-axis,</span>
-<span class="sd">        both or neither. Defaults to &#39;both&#39;.</span>
+<span class="sd">        A string that indicates whether to add grids to the x-axis, y-axis, both</span>
+<span class="sd">        or neither. Defaults to &#39;both&#39;.</span>
 <span class="sd">    grid_linestyle : str</span>
 <span class="sd">        Will be passed to :meth:`matplotlib.axes.Axes.grid` as &#39;linestyle&#39;</span>
 <span class="sd">        argument.</span>

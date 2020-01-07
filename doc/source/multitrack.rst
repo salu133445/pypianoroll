@@ -1,6 +1,9 @@
 .. _multitrack:
 
-Multi-track Piano-roll
-======================
+Multitrack Pianoroll
+====================
+
+Pypianoroll provides the `pypianoroll.Multitrack` class for handling multitrack
+pianorolls.
 
 .. autoclass:: pypianoroll.Multitrack
