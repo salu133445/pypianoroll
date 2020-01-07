@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Metrics &mdash; pypianoroll 0.5.2 documentation</title>
+  <title>Metrics &mdash; pypianoroll 0.5.3 documentation</title>
   
 
   
@@ -17,42 +17,36 @@
   
 
   
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script type="text/javascript" src="_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
 
-  
-  
     
 
   
-
-  
-  
-    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
-  
-
-  
-
-  
-        <link rel="index" title="Index"
-              href="genindex.html"/>
-        <link rel="search" title="Search" href="search.html"/>
-    <link rel="top" title="pypianoroll 0.5.2 documentation" href="index.html"/>
-        <link rel="next" title="Single-track Piano-roll" href="track.html"/>
-        <link rel="prev" title="Utilities" href="utilities.html"/> 
-
-  
-  <script src="_static/js/modernizr.min.js"></script>
-
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Single-track Piano-roll" href="track.html" />
+    <link rel="prev" title="Utilities" href="utilities.html" /> 
 </head>
 
-<body class="wy-body-for-nav" role="document">
+<body class="wy-body-for-nav">
 
    
   <div class="wy-grid-for-nav">
-
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
-        <div class="wy-side-nav-search">
+        <div class="wy-side-nav-search" >
           
 
           
@@ -66,7 +60,7 @@
             
             
               <div class="version">
-                0.5.2
+                0.5.3
               </div>
             
           
@@ -110,7 +104,7 @@
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
 
       
-      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+      <nav class="wy-nav-top" aria-label="top navigation">
         
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="index.html">pypianoroll</a>
@@ -118,9 +112,10 @@
       </nav>
 
 
-      
       <div class="wy-nav-content">
+        
         <div class="rst-content">
+        
           
 
 
@@ -164,33 +159,33 @@
 <h1>Metrics<a class="headerlink" href="#metrics" title="Permalink to this headline">¶</a></h1>
 <dl class="function">
 <dt id="pypianoroll.metrics.empty_beat_rate">
-<code class="descclassname">pypianoroll.metrics.</code><code class="descname">empty_beat_rate</code><span class="sig-paren">(</span><em>pianoroll</em>, <em>beat_resolution</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pypianoroll/metrics.html#empty_beat_rate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypianoroll.metrics.empty_beat_rate" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">pypianoroll.metrics.</code><code class="sig-name descname">empty_beat_rate</code><span class="sig-paren">(</span><em class="sig-param">pianoroll</em>, <em class="sig-param">beat_resolution</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pypianoroll/metrics.html#empty_beat_rate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypianoroll.metrics.empty_beat_rate" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the ratio of empty beats to the total number of beats in a
 pianoroll.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="pypianoroll.metrics.n_pitches_used">
-<code class="descclassname">pypianoroll.metrics.</code><code class="descname">n_pitches_used</code><span class="sig-paren">(</span><em>pianoroll</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pypianoroll/metrics.html#n_pitches_used"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypianoroll.metrics.n_pitches_used" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">pypianoroll.metrics.</code><code class="sig-name descname">n_pitches_used</code><span class="sig-paren">(</span><em class="sig-param">pianoroll</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pypianoroll/metrics.html#n_pitches_used"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypianoroll.metrics.n_pitches_used" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the number of unique pitches used in a pianoroll.</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="pypianoroll.metrics.n_pitche_classes_used">
-<code class="descclassname">pypianoroll.metrics.</code><code class="descname">n_pitche_classes_used</code><span class="sig-paren">(</span><em>pianoroll</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pypianoroll/metrics.html#n_pitche_classes_used"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypianoroll.metrics.n_pitche_classes_used" title="Permalink to this definition">¶</a></dt>
+<dt id="pypianoroll.metrics.n_pitch_classes_used">
+<code class="sig-prename descclassname">pypianoroll.metrics.</code><code class="sig-name descname">n_pitch_classes_used</code><span class="sig-paren">(</span><em class="sig-param">pianoroll</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pypianoroll/metrics.html#n_pitch_classes_used"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypianoroll.metrics.n_pitch_classes_used" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the number of unique pitch classes used in a pianoroll.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="pypianoroll.metrics.qualified_note_rate">
-<code class="descclassname">pypianoroll.metrics.</code><code class="descname">qualified_note_rate</code><span class="sig-paren">(</span><em>pianoroll</em>, <em>threshold=2</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pypianoroll/metrics.html#qualified_note_rate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypianoroll.metrics.qualified_note_rate" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">pypianoroll.metrics.</code><code class="sig-name descname">qualified_note_rate</code><span class="sig-paren">(</span><em class="sig-param">pianoroll</em>, <em class="sig-param">threshold=2</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pypianoroll/metrics.html#qualified_note_rate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypianoroll.metrics.qualified_note_rate" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the ratio of the number of the qualified notes (notes longer than
 <cite>threshold</cite> (in time step)) to the total number of notes in a pianoroll.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="pypianoroll.metrics.polyphonic_rate">
-<code class="descclassname">pypianoroll.metrics.</code><code class="descname">polyphonic_rate</code><span class="sig-paren">(</span><em>pianoroll</em>, <em>threshold=2</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pypianoroll/metrics.html#polyphonic_rate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypianoroll.metrics.polyphonic_rate" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">pypianoroll.metrics.</code><code class="sig-name descname">polyphonic_rate</code><span class="sig-paren">(</span><em class="sig-param">pianoroll</em>, <em class="sig-param">threshold=2</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pypianoroll/metrics.html#polyphonic_rate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypianoroll.metrics.polyphonic_rate" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the ratio of the number of time steps where the number of pitches
 being played is larger than <cite>threshold</cite> to the total number of time steps
 in a pianoroll.</p>
@@ -198,14 +193,14 @@ in a pianoroll.</p>
 
 <dl class="function">
 <dt id="pypianoroll.metrics.drum_in_pattern_rate">
-<code class="descclassname">pypianoroll.metrics.</code><code class="descname">drum_in_pattern_rate</code><span class="sig-paren">(</span><em>pianoroll</em>, <em>beat_resolution</em>, <em>tolerance=0.1</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pypianoroll/metrics.html#drum_in_pattern_rate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypianoroll.metrics.drum_in_pattern_rate" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">pypianoroll.metrics.</code><code class="sig-name descname">drum_in_pattern_rate</code><span class="sig-paren">(</span><em class="sig-param">pianoroll</em>, <em class="sig-param">beat_resolution</em>, <em class="sig-param">tolerance=0.1</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pypianoroll/metrics.html#drum_in_pattern_rate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypianoroll.metrics.drum_in_pattern_rate" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the ratio of the number of drum notes that lie on the drum
 pattern (i.e., at certain time steps) to the total number of drum notes.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="pypianoroll.metrics.in_scale_rate">
-<code class="descclassname">pypianoroll.metrics.</code><code class="descname">in_scale_rate</code><span class="sig-paren">(</span><em>pianoroll</em>, <em>key=3</em>, <em>kind='major'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pypianoroll/metrics.html#in_scale_rate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypianoroll.metrics.in_scale_rate" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">pypianoroll.metrics.</code><code class="sig-name descname">in_scale_rate</code><span class="sig-paren">(</span><em class="sig-param">pianoroll</em>, <em class="sig-param">key=3</em>, <em class="sig-param">kind='major'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pypianoroll/metrics.html#in_scale_rate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypianoroll.metrics.in_scale_rate" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the ratio of the number of nonzero entries that lie in a specific
 scale to the total number of nonzero entries in a pianoroll. Default to C
 major scale.</p>
@@ -213,12 +208,12 @@ major scale.</p>
 
 <dl class="function">
 <dt id="pypianoroll.metrics.tonal_distance">
-<code class="descclassname">pypianoroll.metrics.</code><code class="descname">tonal_distance</code><span class="sig-paren">(</span><em>pianoroll_1</em>, <em>pianoroll_2</em>, <em>beat_resolution</em>, <em>r1=1.0</em>, <em>r2=1.0</em>, <em>r3=0.5</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pypianoroll/metrics.html#tonal_distance"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypianoroll.metrics.tonal_distance" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">pypianoroll.metrics.</code><code class="sig-name descname">tonal_distance</code><span class="sig-paren">(</span><em class="sig-param">pianoroll_1</em>, <em class="sig-param">pianoroll_2</em>, <em class="sig-param">beat_resolution</em>, <em class="sig-param">r1=1.0</em>, <em class="sig-param">r2=1.0</em>, <em class="sig-param">r3=0.5</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pypianoroll/metrics.html#tonal_distance"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypianoroll.metrics.tonal_distance" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the tonal distance [1] between the two input pianorolls.</p>
-<dl class="docutils">
-<dt>[1] Christopher Harte, Mark Sandler, and Martin Gasser. Detecting</dt>
-<dd>harmonic change in musical audio. In Proc. ACM Workshop on Audio and
-Music Computing Multimedia, 2006.</dd>
+<dl class="simple">
+<dt>[1] Christopher Harte, Mark Sandler, and Martin Gasser. Detecting</dt><dd><p>harmonic change in musical audio. In Proc. ACM Workshop on Audio and
+Music Computing Multimedia, 2006.</p>
+</dd>
 </dl>
 </dd></dl>
 
@@ -226,9 +221,7 @@ Music Computing Multimedia, 2006.</dd>
 
 
            </div>
-           <div class="articleComments">
-            
-           </div>
+           
           </div>
           <footer>
   
@@ -237,7 +230,7 @@ Music Computing Multimedia, 2006.</dd>
         <a href="track.html" class="btn btn-neutral float-right" title="Single-track Piano-roll" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="utilities.html" class="btn btn-neutral" title="Utilities" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="utilities.html" class="btn btn-neutral float-left" title="Utilities" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
@@ -246,11 +239,11 @@ Music Computing Multimedia, 2006.</dd>
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2018, Hao-Wen Dong.
+        &copy; Copyright 2018, Hao-Wen Dong
 
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
 
@@ -263,36 +256,15 @@ Music Computing Multimedia, 2006.</dd>
   
 
 
-  
-
-    <script type="text/javascript">
-        var DOCUMENTATION_OPTIONS = {
-            URL_ROOT:'./',
-            VERSION:'0.5.2',
-            COLLAPSE_INDEX:false,
-            FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true,
-            SOURCELINK_SUFFIX: '.txt'
-        };
-    </script>
-      <script type="text/javascript" src="_static/jquery.js"></script>
-      <script type="text/javascript" src="_static/underscore.js"></script>
-      <script type="text/javascript" src="_static/doctools.js"></script>
-
-  
-
-  
-  
-    <script type="text/javascript" src="_static/js/theme.js"></script>
-  
-
-  
-  
   <script type="text/javascript">
       jQuery(function () {
-          SphinxRtdTheme.StickyNav.enable();
+          SphinxRtdTheme.Navigation.enable(true);
       });
   </script>
+
+  
+  
+    
    
 
 </body>

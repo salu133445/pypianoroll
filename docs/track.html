@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Single-track Piano-roll &mdash; pypianoroll 0.5.2 documentation</title>
+  <title>Single-track Piano-roll &mdash; pypianoroll 0.5.3 documentation</title>
   
 
   
@@ -17,42 +17,36 @@
   
 
   
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script type="text/javascript" src="_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
 
-  
-  
     
 
   
-
-  
-  
-    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
-  
-
-  
-
-  
-        <link rel="index" title="Index"
-              href="genindex.html"/>
-        <link rel="search" title="Search" href="search.html"/>
-    <link rel="top" title="pypianoroll 0.5.2 documentation" href="index.html"/>
-        <link rel="next" title="Multi-track Piano-roll" href="multitrack.html"/>
-        <link rel="prev" title="Metrics" href="metrics.html"/> 
-
-  
-  <script src="_static/js/modernizr.min.js"></script>
-
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Multi-track Piano-roll" href="multitrack.html" />
+    <link rel="prev" title="Metrics" href="metrics.html" /> 
 </head>
 
-<body class="wy-body-for-nav" role="document">
+<body class="wy-body-for-nav">
 
    
   <div class="wy-grid-for-nav">
-
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
-        <div class="wy-side-nav-search">
+        <div class="wy-side-nav-search" >
           
 
           
@@ -66,7 +60,7 @@
             
             
               <div class="version">
-                0.5.2
+                0.5.3
               </div>
             
           
@@ -110,7 +104,7 @@
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
 
       
-      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+      <nav class="wy-nav-top" aria-label="top navigation">
         
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="index.html">pypianoroll</a>
@@ -118,9 +112,10 @@
       </nav>
 
 
-      
       <div class="wy-nav-content">
+        
         <div class="rst-content">
+        
           
 
 
@@ -164,250 +159,236 @@
 <span id="track"></span><h1>Single-track Piano-roll<a class="headerlink" href="#single-track-piano-roll" title="Permalink to this headline">¶</a></h1>
 <dl class="class">
 <dt id="pypianoroll.Track">
-<em class="property">class </em><code class="descclassname">pypianoroll.</code><code class="descname">Track</code><span class="sig-paren">(</span><em>pianoroll=None</em>, <em>program=0</em>, <em>is_drum=False</em>, <em>name='unknown'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pypianoroll/track.html#Track"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypianoroll.Track" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">pypianoroll.</code><code class="sig-name descname">Track</code><span class="sig-paren">(</span><em class="sig-param">pianoroll=None</em>, <em class="sig-param">program=0</em>, <em class="sig-param">is_drum=False</em>, <em class="sig-param">name='unknown'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pypianoroll/track.html#Track"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypianoroll.Track" title="Permalink to this definition">¶</a></dt>
 <dd><p>A single-track pianoroll container.</p>
 <dl class="attribute">
 <dt id="pypianoroll.Track.pianoroll">
-<code class="descname">pianoroll</code><a class="headerlink" href="#pypianoroll.Track.pianoroll" title="Permalink to this definition">¶</a></dt>
-<dd><p><em>np.ndarray, shape=(num_time_step, 128)</em> – The pianoroll matrix. The first and second dimension represents time
+<code class="sig-name descname">pianoroll</code><a class="headerlink" href="#pypianoroll.Track.pianoroll" title="Permalink to this definition">¶</a></dt>
+<dd><p>The pianoroll matrix. The first and second dimension represents time
 and pitch, respectively. Available data types are bool, int and float.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>np.ndarray, shape=(num_time_step, 128)</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="pypianoroll.Track.program">
-<code class="descname">program</code><a class="headerlink" href="#pypianoroll.Track.program" title="Permalink to this definition">¶</a></dt>
-<dd><p><em>int</em> – The program number according to General MIDI specification. Available
+<code class="sig-name descname">program</code><a class="headerlink" href="#pypianoroll.Track.program" title="Permalink to this definition">¶</a></dt>
+<dd><p>The program number according to General MIDI specification. Available
 values are 0 to 127.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="pypianoroll.Track.is_drum">
-<code class="descname">is_drum</code><a class="headerlink" href="#pypianoroll.Track.is_drum" title="Permalink to this definition">¶</a></dt>
-<dd><p><em>bool</em> – The boolean indicator that indicates whether it is a percussion track.</p>
+<code class="sig-name descname">is_drum</code><a class="headerlink" href="#pypianoroll.Track.is_drum" title="Permalink to this definition">¶</a></dt>
+<dd><p>The boolean indicator that indicates whether it is a percussion track.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="pypianoroll.Track.name">
-<code class="descname">name</code><a class="headerlink" href="#pypianoroll.Track.name" title="Permalink to this definition">¶</a></dt>
-<dd><p><em>str</em> – The name of the track.</p>
+<code class="sig-name descname">name</code><a class="headerlink" href="#pypianoroll.Track.name" title="Permalink to this definition">¶</a></dt>
+<dd><p>The name of the track.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
 </dd></dl>
 
 <p>Initialize the object by assigning attributes.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>pianoroll</strong> (<em>np.ndarray</em><em>, </em><em>shape=</em><em>(</em><em>num_time_step</em><em>, </em><em>128</em><em>)</em>) – A pianoroll matrix. The first and second dimension represents time
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>pianoroll</strong> (<em>np.ndarray</em><em>, </em><em>shape=</em><em>(</em><em>num_time_step</em><em>, </em><em>128</em><em>)</em>) – A pianoroll matrix. The first and second dimension represents time
 and pitch, respectively. Available datatypes are bool, int and
-float. Only effective when <cite>track</cite> is None.</li>
-<li><strong>program</strong> (<em>int</em>) – A program number according to General MIDI specification [1].
-Available values are 0 to 127. Defaults to 0 (Acoustic Grand Piano).</li>
-<li><strong>is_drum</strong> (<em>bool</em>) – A boolean number that indicates whether it is a percussion track.
-Defaults to False.</li>
-<li><strong>name</strong> (<em>str</em>) – The name of the track. Defaults to ‘unknown’.</li>
+float. Only effective when <cite>track</cite> is None.</p></li>
+<li><p><strong>program</strong> (<em>int</em>) – A program number according to General MIDI specification [1].
+Available values are 0 to 127. Defaults to 0 (Acoustic Grand Piano).</p></li>
+<li><p><strong>is_drum</strong> (<em>bool</em>) – A boolean number that indicates whether it is a percussion track.
+Defaults to False.</p></li>
+<li><p><strong>name</strong> (<em>str</em>) – The name of the track. Defaults to ‘unknown’.</p></li>
 </ul>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 <p class="rubric">References</p>
 <p>[1] <a class="reference external" href="https://www.midi.org/specifications/item/gm-level-1-sound-set">https://www.midi.org/specifications/item/gm-level-1-sound-set</a></p>
 <dl class="method">
 <dt id="pypianoroll.Track.assign_constant">
-<code class="descname">assign_constant</code><span class="sig-paren">(</span><em>value</em>, <em>dtype=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pypianoroll/track.html#Track.assign_constant"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypianoroll.Track.assign_constant" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">assign_constant</code><span class="sig-paren">(</span><em class="sig-param">value</em>, <em class="sig-param">dtype=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pypianoroll/track.html#Track.assign_constant"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypianoroll.Track.assign_constant" title="Permalink to this definition">¶</a></dt>
 <dd><p>Assign a constant value to all nonzeros in the pianoroll. If the
 pianoroll is not binarized, its data type will be preserved. If the
 pianoroll is binarized, it will be casted to the type of <cite>value</cite>.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>value</strong> (<em>int</em><em> or </em><em>float</em>) – The constant value to be assigned to all the nonzeros in the
-pianoroll.</td>
-</tr>
-</tbody>
-</table>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>value</strong> (<em>int</em><em> or </em><em>float</em>) – The constant value to be assigned to all the nonzeros in the
+pianoroll.</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
 <dt id="pypianoroll.Track.binarize">
-<code class="descname">binarize</code><span class="sig-paren">(</span><em>threshold=0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pypianoroll/track.html#Track.binarize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypianoroll.Track.binarize" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">binarize</code><span class="sig-paren">(</span><em class="sig-param">threshold=0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pypianoroll/track.html#Track.binarize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypianoroll.Track.binarize" title="Permalink to this definition">¶</a></dt>
 <dd><p>Binarize the pianoroll.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>threshold</strong> (<em>int</em><em> or </em><em>float</em>) – A threshold used to binarize the pianorolls. Defaults to zero.</td>
-</tr>
-</tbody>
-</table>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>threshold</strong> (<em>int</em><em> or </em><em>float</em>) – A threshold used to binarize the pianorolls. Defaults to zero.</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
 <dt id="pypianoroll.Track.check_validity">
-<code class="descname">check_validity</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pypianoroll/track.html#Track.check_validity"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypianoroll.Track.check_validity" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">check_validity</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pypianoroll/track.html#Track.check_validity"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypianoroll.Track.check_validity" title="Permalink to this definition">¶</a></dt>
 <dd><p>“Raise error if any invalid attribute found.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="pypianoroll.Track.clip">
-<code class="descname">clip</code><span class="sig-paren">(</span><em>lower=0</em>, <em>upper=127</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pypianoroll/track.html#Track.clip"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypianoroll.Track.clip" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">clip</code><span class="sig-paren">(</span><em class="sig-param">lower=0</em>, <em class="sig-param">upper=127</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pypianoroll/track.html#Track.clip"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypianoroll.Track.clip" title="Permalink to this definition">¶</a></dt>
 <dd><p>Clip the pianoroll by the given lower and upper bounds.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>lower</strong> (<em>int</em><em> or </em><em>float</em>) – The lower bound to clip the pianoroll. Defaults to 0.</li>
-<li><strong>upper</strong> (<em>int</em><em> or </em><em>float</em>) – The upper bound to clip the pianoroll. Defaults to 127.</li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>lower</strong> (<em>int</em><em> or </em><em>float</em>) – The lower bound to clip the pianoroll. Defaults to 0.</p></li>
+<li><p><strong>upper</strong> (<em>int</em><em> or </em><em>float</em>) – The upper bound to clip the pianoroll. Defaults to 127.</p></li>
 </ul>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
 <dt id="pypianoroll.Track.copy">
-<code class="descname">copy</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pypianoroll/track.html#Track.copy"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypianoroll.Track.copy" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">copy</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pypianoroll/track.html#Track.copy"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypianoroll.Track.copy" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a copy of the object.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><strong>copied</strong> – A copy of the object.</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><cite>pypianoroll.Track</cite> object</td>
-</tr>
-</tbody>
-</table>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><strong>copied</strong> – A copy of the object.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><cite>pypianoroll.Track</cite> object</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
 <dt id="pypianoroll.Track.get_active_length">
-<code class="descname">get_active_length</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pypianoroll/track.html#Track.get_active_length"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypianoroll.Track.get_active_length" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">get_active_length</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pypianoroll/track.html#Track.get_active_length"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypianoroll.Track.get_active_length" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the active length (i.e., without trailing silence) of the
 pianoroll. The unit is time step.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><strong>active_length</strong> – The active length (i.e., without trailing silence) of the pianoroll.</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">int</td>
-</tr>
-</tbody>
-</table>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><strong>active_length</strong> – The active length (i.e., without trailing silence) of the pianoroll.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>int</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
 <dt id="pypianoroll.Track.get_active_pitch_range">
-<code class="descname">get_active_pitch_range</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pypianoroll/track.html#Track.get_active_pitch_range"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypianoroll.Track.get_active_pitch_range" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">get_active_pitch_range</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pypianoroll/track.html#Track.get_active_pitch_range"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypianoroll.Track.get_active_pitch_range" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the active pitch range as a tuple (lowest, highest).</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><ul class="simple">
-<li><strong>lowest</strong> (<em>int</em>) – The lowest active pitch in the pianoroll.</li>
-<li><strong>highest</strong> (<em>int</em>) – The highest active pitch in the pianoroll.</li>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><ul class="simple">
+<li><p><strong>lowest</strong> (<em>int</em>) – The lowest active pitch in the pianoroll.</p></li>
+<li><p><strong>highest</strong> (<em>int</em>) – The highest active pitch in the pianoroll.</p></li>
 </ul>
-</td>
-</tr>
-</tbody>
-</table>
+</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
 <dt id="pypianoroll.Track.get_pianoroll_copy">
-<code class="descname">get_pianoroll_copy</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pypianoroll/track.html#Track.get_pianoroll_copy"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypianoroll.Track.get_pianoroll_copy" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">get_pianoroll_copy</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pypianoroll/track.html#Track.get_pianoroll_copy"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypianoroll.Track.get_pianoroll_copy" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a copy of the pianoroll matrix.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><strong>copied</strong> – A copy of the pianoroll matrix.</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">np.ndarray</td>
-</tr>
-</tbody>
-</table>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><strong>copied</strong> – A copy of the pianoroll matrix.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>np.ndarray</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
 <dt id="pypianoroll.Track.is_binarized">
-<code class="descname">is_binarized</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pypianoroll/track.html#Track.is_binarized"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypianoroll.Track.is_binarized" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">is_binarized</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pypianoroll/track.html#Track.is_binarized"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypianoroll.Track.is_binarized" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return True if the pianoroll is already binarized. Otherwise, return
 False.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><strong>is_binarized</strong> – True if the pianoroll is already binarized; otherwise, False.</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">bool</td>
-</tr>
-</tbody>
-</table>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><strong>is_binarized</strong> – True if the pianoroll is already binarized; otherwise, False.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
 <dt id="pypianoroll.Track.pad">
-<code class="descname">pad</code><span class="sig-paren">(</span><em>pad_length</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pypianoroll/track.html#Track.pad"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypianoroll.Track.pad" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">pad</code><span class="sig-paren">(</span><em class="sig-param">pad_length</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pypianoroll/track.html#Track.pad"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypianoroll.Track.pad" title="Permalink to this definition">¶</a></dt>
 <dd><p>Pad the pianoroll with zeros at the end along the time axis.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>pad_length</strong> (<em>int</em>) – The length to pad with zeros along the time axis.</td>
-</tr>
-</tbody>
-</table>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>pad_length</strong> (<em>int</em>) – The length to pad with zeros along the time axis.</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
 <dt id="pypianoroll.Track.pad_to_multiple">
-<code class="descname">pad_to_multiple</code><span class="sig-paren">(</span><em>factor</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pypianoroll/track.html#Track.pad_to_multiple"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypianoroll.Track.pad_to_multiple" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">pad_to_multiple</code><span class="sig-paren">(</span><em class="sig-param">factor</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pypianoroll/track.html#Track.pad_to_multiple"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypianoroll.Track.pad_to_multiple" title="Permalink to this definition">¶</a></dt>
 <dd><p>Pad the pianoroll with zeros at the end along the time axis with the
 minimum length that makes the resulting pianoroll length a multiple of
 <cite>factor</cite>.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>factor</strong> (<em>int</em>) – The value which the length of the resulting pianoroll will be
-a multiple of.</td>
-</tr>
-</tbody>
-</table>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>factor</strong> (<em>int</em>) – The value which the length of the resulting pianoroll will be
+a multiple of.</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
 <dt id="pypianoroll.Track.plot">
-<code class="descname">plot</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pypianoroll/track.html#Track.plot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypianoroll.Track.plot" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">plot</code><span class="sig-paren">(</span><em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pypianoroll/track.html#Track.plot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypianoroll.Track.plot" title="Permalink to this definition">¶</a></dt>
 <dd><p>Plot the pianoroll or save a plot of ot. See
-<a class="reference internal" href="visualization.html#pypianoroll.plot.plot_track" title="pypianoroll.plot.plot_track"><code class="xref py py-func docutils literal"><span class="pre">pypianoroll.plot.plot_track()</span></code></a> for full documentation.</p>
+<code class="xref py py-func docutils literal notranslate"><span class="pre">pypianoroll.plot.plot_track()</span></code> for full documentation.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="pypianoroll.Track.transpose">
-<code class="descname">transpose</code><span class="sig-paren">(</span><em>semitone</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pypianoroll/track.html#Track.transpose"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypianoroll.Track.transpose" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">transpose</code><span class="sig-paren">(</span><em class="sig-param">semitone</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pypianoroll/track.html#Track.transpose"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypianoroll.Track.transpose" title="Permalink to this definition">¶</a></dt>
 <dd><p>Transpose the pianoroll by a number of semitones, where positive
 values are for higher key, while negative values are for lower key.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>semitone</strong> (<em>int</em>) – The number of semitones to transpose the pianoroll.</td>
-</tr>
-</tbody>
-</table>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>semitone</strong> (<em>int</em>) – The number of semitones to transpose the pianoroll.</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
 <dt id="pypianoroll.Track.trim_trailing_silence">
-<code class="descname">trim_trailing_silence</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pypianoroll/track.html#Track.trim_trailing_silence"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypianoroll.Track.trim_trailing_silence" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">trim_trailing_silence</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pypianoroll/track.html#Track.trim_trailing_silence"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypianoroll.Track.trim_trailing_silence" title="Permalink to this definition">¶</a></dt>
 <dd><p>Trim the trailing silence of the pianoroll.</p>
 </dd></dl>
 
@@ -417,9 +398,7 @@ values are for higher key, while negative values are for lower key.</p>
 
 
            </div>
-           <div class="articleComments">
-            
-           </div>
+           
           </div>
           <footer>
   
@@ -428,7 +407,7 @@ values are for higher key, while negative values are for lower key.</p>
         <a href="multitrack.html" class="btn btn-neutral float-right" title="Multi-track Piano-roll" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="metrics.html" class="btn btn-neutral" title="Metrics" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="metrics.html" class="btn btn-neutral float-left" title="Metrics" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
@@ -437,11 +416,11 @@ values are for higher key, while negative values are for lower key.</p>
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2018, Hao-Wen Dong.
+        &copy; Copyright 2018, Hao-Wen Dong
 
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
 
@@ -454,36 +433,15 @@ values are for higher key, while negative values are for lower key.</p>
   
 
 
-  
-
-    <script type="text/javascript">
-        var DOCUMENTATION_OPTIONS = {
-            URL_ROOT:'./',
-            VERSION:'0.5.2',
-            COLLAPSE_INDEX:false,
-            FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true,
-            SOURCELINK_SUFFIX: '.txt'
-        };
-    </script>
-      <script type="text/javascript" src="_static/jquery.js"></script>
-      <script type="text/javascript" src="_static/underscore.js"></script>
-      <script type="text/javascript" src="_static/doctools.js"></script>
-
-  
-
-  
-  
-    <script type="text/javascript" src="_static/js/theme.js"></script>
-  
-
-  
-  
   <script type="text/javascript">
       jQuery(function () {
-          SphinxRtdTheme.StickyNav.enable();
+          SphinxRtdTheme.Navigation.enable(true);
       });
   </script>
+
+  
+  
+    
    
 
 </body>

@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Save &amp; Load &mdash; pypianoroll 0.5.2 documentation</title>
+  <title>Save &amp; Load &mdash; pypianoroll 0.5.3 documentation</title>
   
 
   
@@ -17,42 +17,36 @@
   
 
   
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script type="text/javascript" src="_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
 
-  
-  
     
 
   
-
-  
-  
-    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
-  
-
-  
-
-  
-        <link rel="index" title="Index"
-              href="genindex.html"/>
-        <link rel="search" title="Search" href="search.html"/>
-    <link rel="top" title="pypianoroll 0.5.2 documentation" href="index.html"/>
-        <link rel="next" title="Parse &amp; Write" href="parse_write.html"/>
-        <link rel="prev" title="Getting Started" href="getting_started.html"/> 
-
-  
-  <script src="_static/js/modernizr.min.js"></script>
-
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Parse &amp; Write" href="parse_write.html" />
+    <link rel="prev" title="Getting Started" href="getting_started.html" /> 
 </head>
 
-<body class="wy-body-for-nav" role="document">
+<body class="wy-body-for-nav">
 
    
   <div class="wy-grid-for-nav">
-
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
-        <div class="wy-side-nav-search">
+        <div class="wy-side-nav-search" >
           
 
           
@@ -66,7 +60,7 @@
             
             
               <div class="version">
-                0.5.2
+                0.5.3
               </div>
             
           
@@ -110,7 +104,7 @@
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
 
       
-      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+      <nav class="wy-nav-top" aria-label="top navigation">
         
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="index.html">pypianoroll</a>
@@ -118,9 +112,10 @@
       </nav>
 
 
-      
       <div class="wy-nav-content">
+        
         <div class="rst-content">
+        
           
 
 
@@ -163,69 +158,57 @@
   <div class="section" id="save-load">
 <span id="id1"></span><h1>Save &amp; Load<a class="headerlink" href="#save-load" title="Permalink to this headline">¶</a></h1>
 <p>Pypianoroll supports efficient utilities for saving and loading
-<a class="reference internal" href="multitrack.html#pypianoroll.Multitrack" title="pypianoroll.Multitrack"><code class="xref py py-class docutils literal"><span class="pre">pypianoroll.Multitrack</span></code></a> objects. The piano-rolls will be first converted
-to instances of <a class="reference external" href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.sparse.csc_matrix.html#scipy.sparse.csc_matrix" title="(in SciPy v1.3.1)"><code class="xref py py-class docutils literal"><span class="pre">scipy.sparse.csc_matrix</span></code></a> and then stored in a .npz file.</p>
+<a class="reference internal" href="multitrack.html#pypianoroll.Multitrack" title="pypianoroll.Multitrack"><code class="xref py py-class docutils literal notranslate"><span class="pre">pypianoroll.Multitrack</span></code></a> objects. The piano-rolls will be first converted
+to instances of <a class="reference external" href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.sparse.csc_matrix.html#scipy.sparse.csc_matrix" title="(in SciPy v1.4.1)"><code class="xref py py-class docutils literal notranslate"><span class="pre">scipy.sparse.csc_matrix</span></code></a> and then stored in a .npz file.</p>
 <dl class="function">
 <dt id="pypianoroll.save">
-<code class="descclassname">pypianoroll.</code><code class="descname">save</code><span class="sig-paren">(</span><em>filepath</em>, <em>obj</em>, <em>compressed=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pypianoroll/utilities.html#save"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypianoroll.save" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">pypianoroll.</code><code class="sig-name descname">save</code><span class="sig-paren">(</span><em class="sig-param">filepath</em>, <em class="sig-param">obj</em>, <em class="sig-param">compressed=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pypianoroll/utilities.html#save"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypianoroll.save" title="Permalink to this definition">¶</a></dt>
 <dd><p>Save the object to a .npz file.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>filepath</strong> (<em>str</em>) – The path to save the file.</li>
-<li><strong>obj</strong> (<cite>pypianoroll.Multitrack</cite> objects) – The object to be saved.</li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>filepath</strong> (<em>str</em>) – The path to save the file.</p></li>
+<li><p><strong>obj</strong> (<cite>pypianoroll.Multitrack</cite> objects) – The object to be saved.</p></li>
 </ul>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 </dd></dl>
 
 <div class="admonition note">
-<p class="first admonition-title">Note</p>
+<p class="admonition-title">Note</p>
 <p>The saved .npz file is basically a zip archive which contains the following
 files:</p>
-<ul class="last">
-<li><p class="first">component arrays of the piano-rolls in compressed sparse column format:</p>
+<ul>
+<li><p>component arrays of the piano-rolls in compressed sparse column format:</p>
 <blockquote>
 <div><ul class="simple">
-<li><code class="docutils literal"><span class="pre">pianoroll_[index]_csc_data.npy</span></code></li>
-<li><code class="docutils literal"><span class="pre">pianoroll_[index]_csc_indices.npy</span></code></li>
-<li><code class="docutils literal"><span class="pre">pianoroll_[index]_csc_indptr.npy</span></code></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">pianoroll_[index]_csc_data.npy</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">pianoroll_[index]_csc_indices.npy</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">pianoroll_[index]_csc_indptr.npy</span></code></p></li>
 </ul>
 </div></blockquote>
 </li>
-<li><p class="first"><code class="docutils literal"><span class="pre">tempo.npy</span></code>: the tempo array</p>
-</li>
-<li><p class="first"><code class="docutils literal"><span class="pre">downbeat.npy</span></code>: the down beat array</p>
-</li>
-<li><p class="first"><code class="docutils literal"><span class="pre">info.json</span></code>: a JSON file that contains meta data and track information</p>
-</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">tempo.npy</span></code>: the tempo array</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">downbeat.npy</span></code>: the down beat array</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">info.json</span></code>: a JSON file that contains meta data and track information</p></li>
 </ul>
 </div>
 <dl class="function">
 <dt id="pypianoroll.load">
-<code class="descclassname">pypianoroll.</code><code class="descname">load</code><span class="sig-paren">(</span><em>filename</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pypianoroll/utilities.html#load"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypianoroll.load" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return a <a class="reference internal" href="multitrack.html#pypianoroll.Multitrack" title="pypianoroll.Multitrack"><code class="xref py py-class docutils literal"><span class="pre">pypianoroll.Multitrack</span></code></a> object loaded from a .npz file.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>filename</strong> (<em>str</em>) – The filename of the .npz file.</td>
-</tr>
-</tbody>
-</table>
+<code class="sig-prename descclassname">pypianoroll.</code><code class="sig-name descname">load</code><span class="sig-paren">(</span><em class="sig-param">filename</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pypianoroll/utilities.html#load"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypianoroll.load" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a <a class="reference internal" href="multitrack.html#pypianoroll.Multitrack" title="pypianoroll.Multitrack"><code class="xref py py-class docutils literal notranslate"><span class="pre">pypianoroll.Multitrack</span></code></a> object loaded from a .npz file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>filename</strong> (<em>str</em>) – The filename of the .npz file.</p>
+</dd>
+</dl>
 </dd></dl>
 
 </div>
 
 
            </div>
-           <div class="articleComments">
-            
-           </div>
+           
           </div>
           <footer>
   
@@ -234,7 +217,7 @@ files:</p>
         <a href="parse_write.html" class="btn btn-neutral float-right" title="Parse &amp; Write" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="getting_started.html" class="btn btn-neutral" title="Getting Started" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="getting_started.html" class="btn btn-neutral float-left" title="Getting Started" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
@@ -243,11 +226,11 @@ files:</p>
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2018, Hao-Wen Dong.
+        &copy; Copyright 2018, Hao-Wen Dong
 
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
 
@@ -260,36 +243,15 @@ files:</p>
   
 
 
-  
-
-    <script type="text/javascript">
-        var DOCUMENTATION_OPTIONS = {
-            URL_ROOT:'./',
-            VERSION:'0.5.2',
-            COLLAPSE_INDEX:false,
-            FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true,
-            SOURCELINK_SUFFIX: '.txt'
-        };
-    </script>
-      <script type="text/javascript" src="_static/jquery.js"></script>
-      <script type="text/javascript" src="_static/underscore.js"></script>
-      <script type="text/javascript" src="_static/doctools.js"></script>
-
-  
-
-  
-  
-    <script type="text/javascript" src="_static/js/theme.js"></script>
-  
-
-  
-  
   <script type="text/javascript">
       jQuery(function () {
-          SphinxRtdTheme.StickyNav.enable();
+          SphinxRtdTheme.Navigation.enable(true);
       });
   </script>
+
+  
+  
+    
    
 
 </body>

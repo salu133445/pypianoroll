@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>pypianoroll.metrics &mdash; pypianoroll 0.5.2 documentation</title>
+  <title>pypianoroll.metrics &mdash; pypianoroll 0.5.3 documentation</title>
   
 
   
@@ -17,41 +17,34 @@
   
 
   
+  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
 
-  
-  
     
 
   
-
-  
-  
-    <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
-  
-
-  
-
-  
-        <link rel="index" title="Index"
-              href="../../genindex.html"/>
-        <link rel="search" title="Search" href="../../search.html"/>
-    <link rel="top" title="pypianoroll 0.5.2 documentation" href="../../index.html"/>
-        <link rel="up" title="Module code" href="../index.html"/> 
-
-  
-  <script src="../../_static/js/modernizr.min.js"></script>
-
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
 </head>
 
-<body class="wy-body-for-nav" role="document">
+<body class="wy-body-for-nav">
 
    
   <div class="wy-grid-for-nav">
-
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
-        <div class="wy-side-nav-search">
+        <div class="wy-side-nav-search" >
           
 
           
@@ -65,7 +58,7 @@
             
             
               <div class="version">
-                0.5.2
+                0.5.3
               </div>
             
           
@@ -109,7 +102,7 @@
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
 
       
-      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+      <nav class="wy-nav-top" aria-label="top navigation">
         
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="../../index.html">pypianoroll</a>
@@ -117,9 +110,10 @@
       </nav>
 
 
-      
       <div class="wy-nav-content">
+        
         <div class="rst-content">
+        
           
 
 
@@ -149,8 +143,6 @@
     
       <li class="wy-breadcrumbs-aside">
         
-            
-        
       </li>
     
   </ul>
@@ -165,29 +157,36 @@
 <span></span><span class="sd">&quot;&quot;&quot;Metrics for evaluating multitrack and single-track pianorolls for automatic</span>
 <span class="sd">music generation systems.</span>
 <span class="sd">&quot;&quot;&quot;</span>
-<span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">division</span>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">division</span>
+
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
 
 <span class="k">def</span> <span class="nf">_validate_pianoroll</span><span class="p">(</span><span class="n">pianoroll</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Raise an error if the input array is not a standard pianoroll.&quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">pianoroll</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
         <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;`pianoroll` must be of np.ndarray type.&quot;</span><span class="p">)</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">issubdtype</span><span class="p">(</span><span class="n">pianoroll</span><span class="o">.</span><span class="n">dtype</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">bool_</span><span class="p">)</span>
-            <span class="ow">or</span> <span class="n">np</span><span class="o">.</span><span class="n">issubdtype</span><span class="p">(</span><span class="n">pianoroll</span><span class="o">.</span><span class="n">dtype</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">number</span><span class="p">)):</span>
-        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;The data type of `pianoroll` must be np.bool_ or a &quot;</span>
-                        <span class="s2">&quot;subdtype of  np.number.&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">issubdtype</span><span class="p">(</span><span class="n">pianoroll</span><span class="o">.</span><span class="n">dtype</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">bool_</span><span class="p">)</span>
+        <span class="ow">or</span> <span class="n">np</span><span class="o">.</span><span class="n">issubdtype</span><span class="p">(</span><span class="n">pianoroll</span><span class="o">.</span><span class="n">dtype</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">number</span><span class="p">)</span>
+    <span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
+            <span class="s2">&quot;The data type of `pianoroll` must be np.bool_ or a &quot;</span>
+            <span class="s2">&quot;subdtype of  np.number.&quot;</span>
+        <span class="p">)</span>
     <span class="k">if</span> <span class="n">pianoroll</span><span class="o">.</span><span class="n">ndim</span> <span class="o">!=</span> <span class="mi">2</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;`pianoroll` must have exactly two dimensions.&quot;</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">pianoroll</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">!=</span> <span class="mi">128</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;The length of the second axis of `pianoroll` must be &quot;</span>
-                         <span class="s2">&quot;128.&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;The length of the second axis of `pianoroll` must be 128.&quot;</span><span class="p">)</span>
+
 
 <span class="k">def</span> <span class="nf">_to_chroma</span><span class="p">(</span><span class="n">pianoroll</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Return the unnormalized chroma features of a pianoroll.&quot;&quot;&quot;</span>
     <span class="n">_validate_pianoroll</span><span class="p">(</span><span class="n">pianoroll</span><span class="p">)</span>
     <span class="n">reshaped</span> <span class="o">=</span> <span class="n">pianoroll</span><span class="p">[:,</span> <span class="p">:</span><span class="mi">120</span><span class="p">]</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
     <span class="n">reshaped</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="p">:</span><span class="mi">8</span><span class="p">]</span> <span class="o">+=</span> <span class="n">pianoroll</span><span class="p">[:,</span> <span class="mi">120</span><span class="p">:]</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">8</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">reshaped</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">reshaped</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+
 
 <div class="viewcode-block" id="empty_beat_rate"><a class="viewcode-back" href="../../metrics.html#pypianoroll.metrics.empty_beat_rate">[docs]</a><span class="k">def</span> <span class="nf">empty_beat_rate</span><span class="p">(</span><span class="n">pianoroll</span><span class="p">,</span> <span class="n">beat_resolution</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Return the ratio of empty beats to the total number of beats in a</span>
@@ -197,16 +196,19 @@
     <span class="n">n_empty_beats</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">count_nonzero</span><span class="p">(</span><span class="n">reshaped</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
     <span class="k">return</span> <span class="n">n_empty_beats</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">reshaped</span><span class="p">)</span></div>
 
+
 <div class="viewcode-block" id="n_pitches_used"><a class="viewcode-back" href="../../metrics.html#pypianoroll.metrics.n_pitches_used">[docs]</a><span class="k">def</span> <span class="nf">n_pitches_used</span><span class="p">(</span><span class="n">pianoroll</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Return the number of unique pitches used in a pianoroll.&quot;&quot;&quot;</span>
     <span class="n">_validate_pianoroll</span><span class="p">(</span><span class="n">pianoroll</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">count_nonzero</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">pianoroll</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span></div>
 
-<div class="viewcode-block" id="n_pitche_classes_used"><a class="viewcode-back" href="../../metrics.html#pypianoroll.metrics.n_pitche_classes_used">[docs]</a><span class="k">def</span> <span class="nf">n_pitche_classes_used</span><span class="p">(</span><span class="n">pianoroll</span><span class="p">):</span>
+
+<div class="viewcode-block" id="n_pitch_classes_used"><a class="viewcode-back" href="../../metrics.html#pypianoroll.metrics.n_pitch_classes_used">[docs]</a><span class="k">def</span> <span class="nf">n_pitch_classes_used</span><span class="p">(</span><span class="n">pianoroll</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Return the number of unique pitch classes used in a pianoroll.&quot;&quot;&quot;</span>
     <span class="n">_validate_pianoroll</span><span class="p">(</span><span class="n">pianoroll</span><span class="p">)</span>
     <span class="n">chroma</span> <span class="o">=</span> <span class="n">_to_chroma</span><span class="p">(</span><span class="n">pianoroll</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">count_nonzero</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">chroma</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span></div>
+
 
 <div class="viewcode-block" id="qualified_note_rate"><a class="viewcode-back" href="../../metrics.html#pypianoroll.metrics.qualified_note_rate">[docs]</a><span class="k">def</span> <span class="nf">qualified_note_rate</span><span class="p">(</span><span class="n">pianoroll</span><span class="p">,</span> <span class="n">threshold</span><span class="o">=</span><span class="mi">2</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Return the ratio of the number of the qualified notes (notes longer than</span>
@@ -214,12 +216,13 @@
     <span class="n">_validate_pianoroll</span><span class="p">(</span><span class="n">pianoroll</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">issubdtype</span><span class="p">(</span><span class="n">pianoroll</span><span class="o">.</span><span class="n">dtype</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">bool_</span><span class="p">):</span>
         <span class="n">pianoroll</span> <span class="o">=</span> <span class="n">pianoroll</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">uint8</span><span class="p">)</span>
-    <span class="n">padded</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">pad</span><span class="p">(</span><span class="n">pianoroll</span><span class="p">,</span> <span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)),</span> <span class="s1">&#39;constant&#39;</span><span class="p">)</span>
+    <span class="n">padded</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">pad</span><span class="p">(</span><span class="n">pianoroll</span><span class="p">,</span> <span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)),</span> <span class="s2">&quot;constant&quot;</span><span class="p">)</span>
     <span class="n">diff</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="n">padded</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
     <span class="n">onsets</span> <span class="o">=</span> <span class="p">(</span><span class="n">diff</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">nonzero</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>
     <span class="n">offsets</span> <span class="o">=</span> <span class="p">(</span><span class="n">diff</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">nonzero</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>
     <span class="n">n_qualified_notes</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">count_nonzero</span><span class="p">(</span><span class="n">offsets</span> <span class="o">-</span> <span class="n">onsets</span> <span class="o">&gt;=</span> <span class="n">threshold</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">n_qualified_notes</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">onsets</span><span class="p">)</span></div>
+
 
 <div class="viewcode-block" id="polyphonic_rate"><a class="viewcode-back" href="../../metrics.html#pypianoroll.metrics.polyphonic_rate">[docs]</a><span class="k">def</span> <span class="nf">polyphonic_rate</span><span class="p">(</span><span class="n">pianoroll</span><span class="p">,</span> <span class="n">threshold</span><span class="o">=</span><span class="mi">2</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Return the ratio of the number of time steps where the number of pitches</span>
@@ -229,39 +232,43 @@
     <span class="n">n_poly</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">count_nonzero</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">count_nonzero</span><span class="p">(</span><span class="n">pianoroll</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">threshold</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">n_poly</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">pianoroll</span><span class="p">)</span></div>
 
+
 <div class="viewcode-block" id="drum_in_pattern_rate"><a class="viewcode-back" href="../../metrics.html#pypianoroll.metrics.drum_in_pattern_rate">[docs]</a><span class="k">def</span> <span class="nf">drum_in_pattern_rate</span><span class="p">(</span><span class="n">pianoroll</span><span class="p">,</span> <span class="n">beat_resolution</span><span class="p">,</span> <span class="n">tolerance</span><span class="o">=</span><span class="mf">0.1</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Return the ratio of the number of drum notes that lie on the drum</span>
 <span class="sd">    pattern (i.e., at certain time steps) to the total number of drum notes.&quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">beat_resolution</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="mi">16</span><span class="p">,</span> <span class="mi">18</span><span class="p">,</span> <span class="mi">24</span><span class="p">):</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Unsupported beat resolution. Only 4, 6, 8 ,9, 12, &quot;</span>
-                         <span class="s2">&quot;16, 18, 42 are supported.&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="s2">&quot;Unsupported beat resolution. Only 4, 6, 8 ,9, 12, &quot;</span>
+            <span class="s2">&quot;16, 18, 42 are supported.&quot;</span>
+        <span class="p">)</span>
     <span class="n">_validate_pianoroll</span><span class="p">(</span><span class="n">pianoroll</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_drum_pattern_mask</span><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="n">tol</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Return a drum pattern mask with the given tolerance.&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">res</span> <span class="o">==</span> <span class="mi">24</span><span class="p">:</span>
-            <span class="n">drum_pattern_mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">tile</span><span class="p">([</span><span class="mf">1.</span><span class="p">,</span> <span class="n">tol</span><span class="p">,</span> <span class="mf">0.</span><span class="p">,</span> <span class="mf">0.</span><span class="p">,</span> <span class="mf">0.</span><span class="p">,</span> <span class="n">tol</span><span class="p">],</span> <span class="mi">4</span><span class="p">)</span>
+            <span class="n">drum_pattern_mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">tile</span><span class="p">([</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">tol</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">tol</span><span class="p">],</span> <span class="mi">4</span><span class="p">)</span>
         <span class="k">elif</span> <span class="n">res</span> <span class="o">==</span> <span class="mi">12</span><span class="p">:</span>
-            <span class="n">drum_pattern_mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">tile</span><span class="p">([</span><span class="mf">1.</span><span class="p">,</span> <span class="n">tol</span><span class="p">,</span> <span class="n">tol</span><span class="p">],</span> <span class="mi">4</span><span class="p">)</span>
+            <span class="n">drum_pattern_mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">tile</span><span class="p">([</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">tol</span><span class="p">,</span> <span class="n">tol</span><span class="p">],</span> <span class="mi">4</span><span class="p">)</span>
         <span class="k">elif</span> <span class="n">res</span> <span class="o">==</span> <span class="mi">6</span><span class="p">:</span>
-            <span class="n">drum_pattern_mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">tile</span><span class="p">([</span><span class="mf">1.</span><span class="p">,</span> <span class="n">tol</span><span class="p">,</span> <span class="n">tol</span><span class="p">],</span> <span class="mi">2</span><span class="p">)</span>
+            <span class="n">drum_pattern_mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">tile</span><span class="p">([</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">tol</span><span class="p">,</span> <span class="n">tol</span><span class="p">],</span> <span class="mi">2</span><span class="p">)</span>
         <span class="k">elif</span> <span class="n">res</span> <span class="o">==</span> <span class="mi">18</span><span class="p">:</span>
-            <span class="n">drum_pattern_mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">tile</span><span class="p">([</span><span class="mf">1.</span><span class="p">,</span> <span class="n">tol</span><span class="p">,</span> <span class="mf">0.</span><span class="p">,</span> <span class="mf">0.</span><span class="p">,</span> <span class="mf">0.</span><span class="p">,</span> <span class="n">tol</span><span class="p">],</span> <span class="mi">3</span><span class="p">)</span>
+            <span class="n">drum_pattern_mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">tile</span><span class="p">([</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">tol</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">tol</span><span class="p">],</span> <span class="mi">3</span><span class="p">)</span>
         <span class="k">elif</span> <span class="n">res</span> <span class="o">==</span> <span class="mi">9</span><span class="p">:</span>
-            <span class="n">drum_pattern_mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">tile</span><span class="p">([</span><span class="mf">1.</span><span class="p">,</span> <span class="n">tol</span><span class="p">,</span> <span class="n">tol</span><span class="p">],</span> <span class="mi">3</span><span class="p">)</span>
+            <span class="n">drum_pattern_mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">tile</span><span class="p">([</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">tol</span><span class="p">,</span> <span class="n">tol</span><span class="p">],</span> <span class="mi">3</span><span class="p">)</span>
         <span class="k">elif</span> <span class="n">res</span> <span class="o">==</span> <span class="mi">16</span><span class="p">:</span>
-            <span class="n">drum_pattern_mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">tile</span><span class="p">([</span><span class="mf">1.</span><span class="p">,</span> <span class="n">tol</span><span class="p">,</span> <span class="mf">0.</span><span class="p">,</span> <span class="n">tol</span><span class="p">],</span> <span class="mi">4</span><span class="p">)</span>
+            <span class="n">drum_pattern_mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">tile</span><span class="p">([</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">tol</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">tol</span><span class="p">],</span> <span class="mi">4</span><span class="p">)</span>
         <span class="k">elif</span> <span class="n">res</span> <span class="o">==</span> <span class="mi">8</span><span class="p">:</span>
-            <span class="n">drum_pattern_mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">tile</span><span class="p">([</span><span class="mf">1.</span><span class="p">,</span> <span class="n">tol</span><span class="p">],</span> <span class="mi">4</span><span class="p">)</span>
+            <span class="n">drum_pattern_mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">tile</span><span class="p">([</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">tol</span><span class="p">],</span> <span class="mi">4</span><span class="p">)</span>
         <span class="k">elif</span> <span class="n">res</span> <span class="o">==</span> <span class="mi">4</span><span class="p">:</span>
-            <span class="n">drum_pattern_mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">tile</span><span class="p">([</span><span class="mf">1.</span><span class="p">,</span> <span class="n">tol</span><span class="p">],</span> <span class="mi">2</span><span class="p">)</span>
+            <span class="n">drum_pattern_mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">tile</span><span class="p">([</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">tol</span><span class="p">],</span> <span class="mi">2</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">drum_pattern_mask</span>
 
     <span class="n">drum_pattern_mask</span> <span class="o">=</span> <span class="n">_drum_pattern_mask</span><span class="p">(</span><span class="n">beat_resolution</span><span class="p">,</span> <span class="n">tolerance</span><span class="p">)</span>
     <span class="n">n_in_pattern</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">drum_pattern_mask</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">count_nonzero</span><span class="p">(</span><span class="n">pianoroll</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
     <span class="k">return</span> <span class="n">n_in_pattern</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">count_nonzero</span><span class="p">(</span><span class="n">pianoroll</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="in_scale_rate"><a class="viewcode-back" href="../../metrics.html#pypianoroll.metrics.in_scale_rate">[docs]</a><span class="k">def</span> <span class="nf">in_scale_rate</span><span class="p">(</span><span class="n">pianoroll</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">kind</span><span class="o">=</span><span class="s1">&#39;major&#39;</span><span class="p">):</span>
+
+<div class="viewcode-block" id="in_scale_rate"><a class="viewcode-back" href="../../metrics.html#pypianoroll.metrics.in_scale_rate">[docs]</a><span class="k">def</span> <span class="nf">in_scale_rate</span><span class="p">(</span><span class="n">pianoroll</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">kind</span><span class="o">=</span><span class="s2">&quot;major&quot;</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Return the ratio of the number of nonzero entries that lie in a specific</span>
 <span class="sd">    scale to the total number of nonzero entries in a pianoroll. Default to C</span>
 <span class="sd">    major scale.&quot;&quot;&quot;</span>
@@ -269,13 +276,13 @@
         <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;`key` must an integer.&quot;</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">key</span> <span class="o">&gt;</span> <span class="mi">11</span> <span class="ow">or</span> <span class="n">key</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;`key` must be in an integer in between 0 and 11.&quot;</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">kind</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">&#39;major&#39;</span><span class="p">,</span> <span class="s1">&#39;minor&#39;</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">kind</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;major&quot;</span><span class="p">,</span> <span class="s2">&quot;minor&quot;</span><span class="p">):</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;`kind` must be one of &#39;major&#39; or &#39;minor&#39;.&quot;</span><span class="p">)</span>
     <span class="n">_validate_pianoroll</span><span class="p">(</span><span class="n">pianoroll</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_scale_mask</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">kind</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Return a scale mask for the given key. Default to C major scale.&quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="n">kind</span> <span class="o">==</span> <span class="s1">&#39;major&#39;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">kind</span> <span class="o">==</span> <span class="s2">&quot;major&quot;</span><span class="p">:</span>
             <span class="n">a_scale_mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="nb">bool</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">a_scale_mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="nb">bool</span><span class="p">)</span>
@@ -286,8 +293,8 @@
     <span class="n">n_in_scale</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">scale_mask</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">12</span><span class="p">)</span> <span class="o">*</span> <span class="n">chroma</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">n_in_scale</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">count_nonzero</span><span class="p">(</span><span class="n">pianoroll</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="tonal_distance"><a class="viewcode-back" href="../../metrics.html#pypianoroll.metrics.tonal_distance">[docs]</a><span class="k">def</span> <span class="nf">tonal_distance</span><span class="p">(</span><span class="n">pianoroll_1</span><span class="p">,</span> <span class="n">pianoroll_2</span><span class="p">,</span> <span class="n">beat_resolution</span><span class="p">,</span> <span class="n">r1</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">r2</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>
-                   <span class="n">r3</span><span class="o">=</span><span class="mf">0.5</span><span class="p">):</span>
+
+<div class="viewcode-block" id="tonal_distance"><a class="viewcode-back" href="../../metrics.html#pypianoroll.metrics.tonal_distance">[docs]</a><span class="k">def</span> <span class="nf">tonal_distance</span><span class="p">(</span><span class="n">pianoroll_1</span><span class="p">,</span> <span class="n">pianoroll_2</span><span class="p">,</span> <span class="n">beat_resolution</span><span class="p">,</span> <span class="n">r1</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">r2</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">r3</span><span class="o">=</span><span class="mf">0.5</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Return the tonal distance [1] between the two input pianorolls.</span>
 
 <span class="sd">    [1] Christopher Harte, Mark Sandler, and Martin Gasser. Detecting</span>
@@ -297,18 +304,19 @@
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">_validate_pianoroll</span><span class="p">(</span><span class="n">pianoroll_1</span><span class="p">)</span>
     <span class="n">_validate_pianoroll</span><span class="p">(</span><span class="n">pianoroll_2</span><span class="p">)</span>
-    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">pianoroll_1</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">pianoroll_2</span><span class="p">),</span> <span class="p">(</span>
-        <span class="s2">&quot;Input pianorolls must have the same length.&quot;</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">pianoroll_1</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span>
+        <span class="n">pianoroll_2</span>
+    <span class="p">),</span> <span class="s2">&quot;Input pianorolls must have the same length.&quot;</span>
 
     <span class="k">def</span> <span class="nf">_tonal_matrix</span><span class="p">(</span><span class="n">r1</span><span class="p">,</span> <span class="n">r2</span><span class="p">,</span> <span class="n">r3</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Return a tonal matrix for computing the tonal distance.&quot;&quot;&quot;</span>
         <span class="n">tonal_matrix</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">((</span><span class="mi">6</span><span class="p">,</span> <span class="mi">12</span><span class="p">))</span>
-        <span class="n">tonal_matrix</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">r1</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">12</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="mf">7.</span> <span class="o">/</span> <span class="mf">6.</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span>
-        <span class="n">tonal_matrix</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">r1</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">12</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="mf">7.</span> <span class="o">/</span> <span class="mf">6.</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span>
-        <span class="n">tonal_matrix</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">r2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">12</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="mf">3.</span> <span class="o">/</span> <span class="mf">2.</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span>
-        <span class="n">tonal_matrix</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="n">r2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">12</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="mf">3.</span> <span class="o">/</span> <span class="mf">2.</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span>
-        <span class="n">tonal_matrix</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span> <span class="o">=</span> <span class="n">r3</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">12</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="mf">2.</span> <span class="o">/</span> <span class="mf">3.</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span>
-        <span class="n">tonal_matrix</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span> <span class="o">=</span> <span class="n">r3</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">12</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="mf">2.</span> <span class="o">/</span> <span class="mf">3.</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span>
+        <span class="n">tonal_matrix</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">r1</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">12</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="mf">7.0</span> <span class="o">/</span> <span class="mf">6.0</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span>
+        <span class="n">tonal_matrix</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">r1</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">12</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="mf">7.0</span> <span class="o">/</span> <span class="mf">6.0</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span>
+        <span class="n">tonal_matrix</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">r2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">12</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="mf">3.0</span> <span class="o">/</span> <span class="mf">2.0</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span>
+        <span class="n">tonal_matrix</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="n">r2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">12</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="mf">3.0</span> <span class="o">/</span> <span class="mf">2.0</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span>
+        <span class="n">tonal_matrix</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span> <span class="o">=</span> <span class="n">r3</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">12</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="mf">2.0</span> <span class="o">/</span> <span class="mf">3.0</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span>
+        <span class="n">tonal_matrix</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span> <span class="o">=</span> <span class="n">r3</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">12</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="mf">2.0</span> <span class="o">/</span> <span class="mf">3.0</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">tonal_matrix</span>
 
     <span class="k">def</span> <span class="nf">_to_tonal_space</span><span class="p">(</span><span class="n">pianoroll</span><span class="p">,</span> <span class="n">tonal_matrix</span><span class="p">):</span>
@@ -325,9 +333,7 @@
 </pre></div>
 
            </div>
-           <div class="articleComments">
-            
-           </div>
+           
           </div>
           <footer>
   
@@ -336,11 +342,11 @@
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2018, Hao-Wen Dong.
+        &copy; Copyright 2018, Hao-Wen Dong
 
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
 
@@ -353,36 +359,15 @@
   
 
 
-  
-
-    <script type="text/javascript">
-        var DOCUMENTATION_OPTIONS = {
-            URL_ROOT:'../../',
-            VERSION:'0.5.2',
-            COLLAPSE_INDEX:false,
-            FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true,
-            SOURCELINK_SUFFIX: '.txt'
-        };
-    </script>
-      <script type="text/javascript" src="../../_static/jquery.js"></script>
-      <script type="text/javascript" src="../../_static/underscore.js"></script>
-      <script type="text/javascript" src="../../_static/doctools.js"></script>
-
-  
-
-  
-  
-    <script type="text/javascript" src="../../_static/js/theme.js"></script>
-  
-
-  
-  
   <script type="text/javascript">
       jQuery(function () {
-          SphinxRtdTheme.StickyNav.enable();
+          SphinxRtdTheme.Navigation.enable(true);
       });
   </script>
+
+  
+  
+    
    
 
 </body>

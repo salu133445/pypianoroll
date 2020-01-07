@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Getting Started &mdash; pypianoroll 0.5.2 documentation</title>
+  <title>Getting Started &mdash; pypianoroll 0.5.3 documentation</title>
   
 
   
@@ -17,42 +17,36 @@
   
 
   
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script type="text/javascript" src="_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
 
-  
-  
     
 
   
-
-  
-  
-    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
-  
-
-  
-
-  
-        <link rel="index" title="Index"
-              href="genindex.html"/>
-        <link rel="search" title="Search" href="search.html"/>
-    <link rel="top" title="pypianoroll 0.5.2 documentation" href="index.html"/>
-        <link rel="next" title="Save &amp; Load" href="save_load.html"/>
-        <link rel="prev" title="Pypianoroll" href="index.html"/> 
-
-  
-  <script src="_static/js/modernizr.min.js"></script>
-
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Save &amp; Load" href="save_load.html" />
+    <link rel="prev" title="Pypianoroll" href="index.html" /> 
 </head>
 
-<body class="wy-body-for-nav" role="document">
+<body class="wy-body-for-nav">
 
    
   <div class="wy-grid-for-nav">
-
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
-        <div class="wy-side-nav-search">
+        <div class="wy-side-nav-search" >
           
 
           
@@ -66,7 +60,7 @@
             
             
               <div class="version">
-                0.5.2
+                0.5.3
               </div>
             
           
@@ -110,7 +104,7 @@
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
 
       
-      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+      <nav class="wy-nav-top" aria-label="top navigation">
         
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="index.html">pypianoroll</a>
@@ -118,9 +112,10 @@
       </nav>
 
 
-      
       <div class="wy-nav-content">
+        
         <div class="rst-content">
+        
           
 
 
@@ -164,19 +159,19 @@
 <span id="id1"></span><h1>Getting Started<a class="headerlink" href="#getting-started" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="objects">
 <h2>Objects<a class="headerlink" href="#objects" title="Permalink to this headline">¶</a></h2>
-<p>The main objects in Pypianoroll are <a class="reference internal" href="multitrack.html#pypianoroll.Multitrack" title="pypianoroll.Multitrack"><code class="xref py py-class docutils literal"><span class="pre">pypianoroll.Multitrack</span></code></a> and
-<a class="reference internal" href="track.html#pypianoroll.Track" title="pypianoroll.Track"><code class="xref py py-class docutils literal"><span class="pre">pypianoroll.Track</span></code></a> objects.</p>
-<p>A <a class="reference internal" href="track.html#pypianoroll.Track" title="pypianoroll.Track"><code class="xref py py-class docutils literal"><span class="pre">pypianoroll.Track</span></code></a> object is composed of a piano-roll matrix and
+<p>The main objects in Pypianoroll are <a class="reference internal" href="multitrack.html#pypianoroll.Multitrack" title="pypianoroll.Multitrack"><code class="xref py py-class docutils literal notranslate"><span class="pre">pypianoroll.Multitrack</span></code></a> and
+<a class="reference internal" href="track.html#pypianoroll.Track" title="pypianoroll.Track"><code class="xref py py-class docutils literal notranslate"><span class="pre">pypianoroll.Track</span></code></a> objects.</p>
+<p>A <a class="reference internal" href="track.html#pypianoroll.Track" title="pypianoroll.Track"><code class="xref py py-class docutils literal notranslate"><span class="pre">pypianoroll.Track</span></code></a> object is composed of a piano-roll matrix and
 additional track information (program number, drum indicator and its name).</p>
-<p>A <a class="reference internal" href="multitrack.html#pypianoroll.Multitrack" title="pypianoroll.Multitrack"><code class="xref py py-class docutils literal"><span class="pre">pypianoroll.Multitrack</span></code></a> object consists of a list of
-<a class="reference internal" href="track.html#pypianoroll.Track" title="pypianoroll.Track"><code class="xref py py-class docutils literal"><span class="pre">pypianoroll.Track</span></code></a> objects and additional and multi-track information
+<p>A <a class="reference internal" href="multitrack.html#pypianoroll.Multitrack" title="pypianoroll.Multitrack"><code class="xref py py-class docutils literal notranslate"><span class="pre">pypianoroll.Multitrack</span></code></a> object consists of a list of
+<a class="reference internal" href="track.html#pypianoroll.Track" title="pypianoroll.Track"><code class="xref py py-class docutils literal notranslate"><span class="pre">pypianoroll.Track</span></code></a> objects and additional and multi-track information
 (tempo and down beat information and its name).</p>
 <p>For more details, see <a class="reference internal" href="multitrack.html#multitrack"><span class="std std-ref">Multi-track Piano-roll</span></a> and <a class="reference internal" href="track.html#track"><span class="std std-ref">Single-track Piano-roll</span></a>.</p>
 </div>
 <div class="section" id="example">
 <h2>Example<a class="headerlink" href="#example" title="Permalink to this headline">¶</a></h2>
 <p>(The following example is also available as a Jupyter <a class="reference external" href="http://nbviewer.jupyter.org/github/salu133445/pypianoroll/blob/master/examples/example.ipynb">notebook</a>.)</p>
-<div class="highlight-python"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">from</span> <span class="nn">pypianoroll</span> <span class="kn">import</span> <span class="n">Multitrack</span><span class="p">,</span> <span class="n">Track</span>
 <span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">pyplot</span> <span class="k">as</span> <span class="n">plt</span>
 
@@ -187,7 +182,7 @@ additional track information (program number, drum indicator and its name).</p>
 <span class="n">pianoroll</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">95</span><span class="p">,</span> <span class="n">C_maj</span><span class="p">]</span> <span class="o">=</span> <span class="mi">100</span>
 
 <span class="c1"># Create a `pypianoroll.Track` instance</span>
-<span class="n">track</span> <span class="o">=</span> <span class="n">Track</span><span class="p">(</span><span class="n">pianoroll</span><span class="o">=</span><span class="n">pianoroll</span><span class="p">,</span> <span class="n">program</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">is_drum</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span>
+<span class="n">track</span> <span class="o">=</span> <span class="n">Track</span><span class="p">(</span><span class="n">pianoroll</span><span class="o">=</span><span class="n">pianoroll</span><span class="p">,</span> <span class="n">program</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">is_drum</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
               <span class="n">name</span><span class="o">=</span><span class="s1">&#39;my awesome piano&#39;</span><span class="p">)</span>
 
 <span class="c1"># Plot the piano-roll</span>
@@ -197,7 +192,7 @@ additional track information (program number, drum indicator and its name).</p>
 </div>
 <p>Here’s what the output should look like.</p>
 <img alt="_images/example_track_plot.png" class="align-center" src="_images/example_track_plot.png" />
-<div class="highlight-python"><div class="highlight"><pre><span></span><span class="c1"># Extend the piano-roll to demonstrate the usage of down beat array</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Extend the piano-roll to demonstrate the usage of down beat array</span>
 <span class="n">track</span><span class="o">.</span><span class="n">pianoroll</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">tile</span><span class="p">(</span><span class="n">track</span><span class="o">.</span><span class="n">pianoroll</span><span class="p">,</span> <span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
 <span class="n">downbeats</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">96</span><span class="p">,</span> <span class="mi">192</span><span class="p">,</span> <span class="mi">288</span><span class="p">]</span>
 
@@ -218,7 +213,7 @@ additional track information (program number, drum indicator and its name).</p>
 <p>Here’s what the output should look like.</p>
 <img alt="_images/example_multitrack_plot.png" class="align-center" src="_images/example_multitrack_plot.png" />
 <p>Here is how saving and loading works. (For more details, see <a class="reference internal" href="save_load.html#save-load"><span class="std std-ref">Save &amp; Load</span></a>)</p>
-<div class="highlight-python"><div class="highlight"><pre><span></span><span class="c1"># Save the `pypianoroll.Multitrack` instance to a .npz file</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Save the `pypianoroll.Multitrack` instance to a .npz file</span>
 <span class="n">multitrack</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s1">&#39;./test.npz&#39;</span><span class="p">)</span>
 
 <span class="c1"># Load the .npz file to a `pypianoroll.Multitrack` instance</span>
@@ -227,7 +222,7 @@ additional track information (program number, drum indicator and its name).</p>
 </div>
 <p>And here is how to parse and write MIDI files. Pypianoroll currently supports
 only MIDI files. (For more details, see <a class="reference internal" href="parse_write.html#parse-write"><span class="std std-ref">Parse &amp; Write</span></a>)</p>
-<div class="highlight-python"><div class="highlight"><pre><span></span><span class="c1"># Parse a MIDI file to a `pypianoroll.Multitrack` instance</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Parse a MIDI file to a `pypianoroll.Multitrack` instance</span>
 <span class="n">another_multitrack</span> <span class="o">=</span> <span class="n">Multitrack</span><span class="p">(</span><span class="s1">&#39;./test.mid&#39;</span><span class="p">)</span>
 
 <span class="c1"># Write the `pypianoroll.Multitrack` instance to a MIDI file</span>
@@ -239,9 +234,7 @@ only MIDI files. (For more details, see <a class="reference internal" href="pars
 
 
            </div>
-           <div class="articleComments">
-            
-           </div>
+           
           </div>
           <footer>
   
@@ -250,7 +243,7 @@ only MIDI files. (For more details, see <a class="reference internal" href="pars
         <a href="save_load.html" class="btn btn-neutral float-right" title="Save &amp; Load" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="index.html" class="btn btn-neutral" title="Pypianoroll" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="index.html" class="btn btn-neutral float-left" title="Pypianoroll" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
@@ -259,11 +252,11 @@ only MIDI files. (For more details, see <a class="reference internal" href="pars
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2018, Hao-Wen Dong.
+        &copy; Copyright 2018, Hao-Wen Dong
 
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
 
@@ -276,36 +269,15 @@ only MIDI files. (For more details, see <a class="reference internal" href="pars
   
 
 
-  
-
-    <script type="text/javascript">
-        var DOCUMENTATION_OPTIONS = {
-            URL_ROOT:'./',
-            VERSION:'0.5.2',
-            COLLAPSE_INDEX:false,
-            FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true,
-            SOURCELINK_SUFFIX: '.txt'
-        };
-    </script>
-      <script type="text/javascript" src="_static/jquery.js"></script>
-      <script type="text/javascript" src="_static/underscore.js"></script>
-      <script type="text/javascript" src="_static/doctools.js"></script>
-
-  
-
-  
-  
-    <script type="text/javascript" src="_static/js/theme.js"></script>
-  
-
-  
-  
   <script type="text/javascript">
       jQuery(function () {
-          SphinxRtdTheme.StickyNav.enable();
+          SphinxRtdTheme.Navigation.enable(true);
       });
   </script>
+
+  
+  
+    
    
 
 </body>
