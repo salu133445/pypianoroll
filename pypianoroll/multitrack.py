@@ -910,8 +910,7 @@ class Multitrack(object):
     def plot(self, **kwargs):
         """
         Plot the pianorolls or save a plot of them. See
-        :func:`pypianoroll.visualization.plot_multitrack` for full
-        documentation.
+        :func:`pypianoroll.plot_multitrack` for full documentation.
 
         """
         return plot_multitrack(self, **kwargs)
