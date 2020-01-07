@@ -1,6 +1,4 @@
-"""Utilities for manipulating multi-track and single-track piano-rolls.
-
-"""
+"""Utilities for manipulating multitrack pianorolls."""
 from __future__ import absolute_import, division, print_function
 
 from copy import deepcopy
@@ -13,21 +11,21 @@ from pypianoroll.track import Track
 
 def _check_supported(obj):
     """
-    Raise TypeError if the object is not a :class:`pypianoroll.Multitrack`
-    or :class:`pypianoroll.Track` object. Otherwise, pass.
+    Raise TypeError if the object is not a :class:`pypianoroll.Multitrack` or
+    :class:`pypianoroll.Track` object.
 
     """
     if not isinstance(obj, (Multitrack, Track)):
         raise TypeError(
-            "Support only `pypianoroll.Multitrack` and "
-            "`pypianoroll.Track` class objects"
+            "Support only `pypianoroll.Multitrack` and `pypianoroll.Track` objects"
         )
 
 
 def check_pianoroll(arr):
     """
-    Return True if the array is a standard piano-roll matrix. Otherwise,
-    return False. Raise TypeError if the input object is not a numpy array.
+    Check if the array is a standard pianoroll matrix. Return True if it is.
+    Otherwise, return False. Raise TypeError if the input object is not a numpy
+    array.
 
     """
     if not isinstance(arr, np.ndarray):
@@ -43,15 +41,15 @@ def check_pianoroll(arr):
 
 def assign_constant(obj, value):
     """
-    Assign a constant value to the nonzeros in the piano-roll(s). If a
-    piano-roll is not binarized, its data type will be preserved. If a
-    piano-roll is binarized, it will be casted to the type of `value`.
+    Assign a constant value to the nonzeros in the pianoroll(s). If a pianoroll
+    is not binarized, its data type will be preserved. If a pianoroll is
+    binarized, it will be casted to the type of `value`.
 
     Arguments
     ---------
     value : int or float
         The constant value to be assigned to the nonzeros of the
-        piano-roll(s).
+        pianoroll(s).
 
     """
     _check_supported(obj)
@@ -60,12 +58,12 @@ def assign_constant(obj, value):
 
 def binarize(obj, threshold=0):
     """
-    Return a copy of the object with binarized piano-roll(s).
+    Return a copy of the object with binarized pianoroll(s).
 
     Parameters
     ----------
     threshold : int or float
-        Threshold to binarize the piano-roll(s). Default to zero.
+        Threshold to binarize the pianoroll(s). Default to zero.
 
     """
     _check_supported(obj)
@@ -76,15 +74,15 @@ def binarize(obj, threshold=0):
 
 def clip(obj, lower=0, upper=127):
     """
-    Return a copy of the object with piano-roll(s) clipped by a lower bound
-    and an upper bound specified by `lower` and `upper`, respectively.
+    Return a copy of the object with pianoroll(s) clipped by a lower bound and
+    an upper bound specified by `lower` and `upper`, respectively.
 
     Parameters
     ----------
     lower : int or float
-        The lower bound to clip the piano-roll. Default to 0.
+        The lower bound to clip the pianoroll. Default to 0.
     upper : int or float
-        The upper bound to clip the piano-roll. Default to 127.
+        The upper bound to clip the pianoroll. Default to 127.
 
     """
     _check_supported(obj)
@@ -102,7 +100,7 @@ def copy(obj):
 
 def downsample(obj, factor):
     """
-    Return a copy of the object with piano-roll(s) downsampled by the given
+    Return a copy of the object with pianoroll(s) downsampled by the given
     factor.
 
     Parameters
@@ -133,7 +131,7 @@ def load(filename):
 
 def pad(obj, pad_length):
     """
-    Return a copy of the object with piano-roll padded with zeros at the end
+    Return a copy of the object with pianoroll padded with zeros at the end
     along the time axis.
 
     Parameters
@@ -150,15 +148,15 @@ def pad(obj, pad_length):
 
 def pad_to_multiple(obj, factor):
     """
-    Return a copy of the object with its piano-roll padded with zeros at the
-    end along the time axis with the minimal length that make the length of
-    the resulting piano-roll a multiple of `factor`.
+    Return a copy of the object with its pianoroll padded with zeros at the end
+    along the time axis with the minimal length that make the length of the
+    resulting pianoroll a multiple of `factor`.
 
     Parameters
     ----------
     factor : int
-        The value which the length of the resulting piano-roll will be
-        a multiple of.
+        The value which the length of the resulting pianoroll will be a multiple
+        of.
 
     """
     _check_supported(obj)
@@ -169,9 +167,9 @@ def pad_to_multiple(obj, factor):
 
 def pad_to_same(obj):
     """
-    Return a copy of the object with shorter piano-rolls padded with zeros
-    at the end along the time axis to the length of the piano-roll with the
-    maximal length.
+    Return a copy of the object with shorter pianorolls padded with zeros at the
+    end along the time axis to the length of the pianoroll with the maximal
+    length.
 
     """
     if not isinstance(obj, Multitrack):
@@ -183,8 +181,8 @@ def pad_to_same(obj):
 
 def parse(filename, beat_resolution=24, name="unknown"):
     """
-    Return a :class:`pypianoroll.Multitrack` object loaded from a MIDI
-    (.mid, .midi, .MID, .MIDI) file.
+    Return a :class:`pypianoroll.Multitrack` object loaded from a MIDI (.mid,
+    .midi, .MID, .MIDI) file.
 
     Parameters
     ----------
@@ -224,13 +222,13 @@ def save(filepath, obj, compressed=True):
 
 def transpose(obj, semitone):
     """
-    Return a copy of the object with piano-roll(s) transposed by `semitones`
+    Return a copy of the object with pianoroll(s) transposed by `semitones`
     semitones.
 
     Parameters
     ----------
     semitone : int
-        Number of semitones to transpose the piano-roll(s).
+        Number of semitones to transpose the pianoroll(s).
 
     """
     _check_supported(obj)
@@ -242,7 +240,7 @@ def transpose(obj, semitone):
 def trim_trailing_silence(obj):
     """
     Return a copy of the object with trimmed trailing silence of the
-    piano-roll(s).
+    pianoroll(s).
 
     """
     _check_supported(obj)

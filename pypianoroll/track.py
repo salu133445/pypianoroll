@@ -1,6 +1,4 @@
-"""Class for single-track pianorolls with metadata.
-
-"""
+"""Class for single-track pianorolls with metadata."""
 from __future__ import absolute_import, division, print_function
 
 from copy import deepcopy
@@ -125,8 +123,8 @@ class Track(object):
             or np.issubdtype(self.pianoroll.dtype, np.number)
         ):
             raise TypeError(
-                "The data type of `pianoroll` must be np.bool_ or "
-                "a subdtype of np.number."
+                "The data type of `pianoroll` must be np.bool_ or a subdtype of "
+                "np.number."
             )
         if self.pianoroll.ndim != 2:
             raise ValueError("`pianoroll` must have exactly two dimensions.")
@@ -278,8 +276,11 @@ class Track(object):
             self.pianoroll = np.pad(self.pianoroll, pad_width, "constant")
 
     def plot(self, **kwargs):
-        """Plot the pianoroll or save a plot of ot. See
-        :func:`pypianoroll.visualization.plot_track` for full documentation."""
+        """
+        Plot the pianoroll or save a plot of ot. See
+        :func:`pypianoroll.visualization.plot_track` for full documentation.
+
+        """
         return plot_track(self, **kwargs)
 
     def transpose(self, semitone):

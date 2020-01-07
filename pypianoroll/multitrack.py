@@ -1,6 +1,4 @@
-"""Class for multitrack pianorolls with metadata.
-
-"""
+"""Class for multitrack pianorolls with metadata."""
 from __future__ import absolute_import, division, print_function
 
 import json
@@ -18,20 +16,20 @@ from pypianoroll.visualization import plot_multitrack
 
 class Multitrack(object):
     """
-    A multitrack pianoroll container that stores additional tempo and
-    program information along with the pianoroll matrices.
+    A multitrack pianoroll container that stores additional tempo and program
+    information along with the pianoroll matrices.
 
     Attributes
     ----------
     tracks : list of :class:`pypianoroll.Track` objects
         The track object list.
     tempo : np.ndarray, shape=(n_time_steps,), dtype=float
-        An array that indicates the tempo value (in bpm) at each time step.
-        The length is the total number of time steps.
+        An array that indicates the tempo value (in bpm) at each time step. The
+        length is the total number of time steps.
     downbeat : np.ndarray, shape=(n_time_steps,), dtype=bool
-        An array that indicates whether the time step contains a downbeat
-        (i.e., the first time step of a bar). The length is the total number
-        of time steps.
+        An array that indicates whether the time step contains a downbeat (i.e.,
+        the first time step of a bar). The length is the total number of time
+        steps.
     beat_resolution : int
         The number of time steps used to represent a beat.
     name : str
@@ -406,8 +404,8 @@ class Multitrack(object):
 
     def get_max_length(self):
         """
-        Return the maximum length of the pianorolls along the time axis (in
-        time step).
+        Return the maximum length of the pianorolls along the time axis (in time
+        step).
 
         Returns
         -------
@@ -461,8 +459,11 @@ class Multitrack(object):
         return merged
 
     def count_downbeat(self):
-        """Return the number of down beats. The return value is calculated based
-        solely on `downbeat`."""
+        """
+        Return the number of down beats. The return value is calculated based
+        solely on `downbeat`.
+
+        """
         return len(np.nonzero(self.downbeat)[0])
 
     def get_stacked_pianoroll(self):
@@ -482,8 +483,11 @@ class Multitrack(object):
         return stacked
 
     def is_binarized(self):
-        """Return True if the pianorolls of all tracks are already binarized.
-        Otherwise, return False."""
+        """
+        Return True if the pianorolls of all tracks are already binarized.
+        Otherwise, return False.
+
+        """
         for track in self.tracks:
             if not track.is_binarized():
                 return False
@@ -647,9 +651,12 @@ class Multitrack(object):
             track.pad_to_multiple(factor)
 
     def pad_to_same(self):
-        """Pad shorter pianorolls with zeros at the end along the time axis to
-        make the resulting pianoroll lengths the same as the maximum pianoroll
-        length among all the tracks."""
+        """
+        Pad shorter pianorolls with zeros at the end along the time axis to make
+        the resulting pianoroll lengths the same as the maximum pianoroll length
+        among all the tracks.
+
+        """
         max_length = self.get_max_length()
         for track in self.tracks:
             if track.pianoroll.shape[0] < max_length:
@@ -764,9 +771,8 @@ class Multitrack(object):
         elif algorithm == "strict":
             if not pm.time_signature_changes:
                 raise ValueError(
-                    "No time signature change event found. Unable "
-                    "to set beat start time using 'strict' "
-                    "algorithm."
+                    "No time signature change event found. Unable to set beat start "
+                    "time using 'strict' algorithm."
                 )
             pm.time_signature_changes.sort(key=lambda x: x.time)
             first_beat_time = pm.time_signature_changes[0].time
@@ -902,9 +908,12 @@ class Multitrack(object):
         self.check_validity()
 
     def plot(self, **kwargs):
-        """Plot the pianorolls or save a plot of them. See
+        """
+        Plot the pianorolls or save a plot of them. See
         :func:`pypianoroll.visualization.plot_multitrack` for full
-        documentation."""
+        documentation.
+
+        """
         return plot_multitrack(self, **kwargs)
 
     def remove_empty_tracks(self):
@@ -949,9 +958,12 @@ class Multitrack(object):
         """
 
         def update_sparse(target_dict, sparse_matrix, name):
-            """Turn `sparse_matrix` into a scipy.sparse.csc_matrix and update
+            """
+            Turn `sparse_matrix` into a scipy.sparse.csc_matrix and update
             its component arrays to the `target_dict` with key as `name`
-            suffixed with its component type string."""
+            suffixed with its component type string.
+
+            """
             csc = csc_matrix(sparse_matrix)
             target_dict[name + "_csc_data"] = csc.data
             target_dict[name + "_csc_indices"] = csc.indices
@@ -1073,8 +1085,11 @@ class Multitrack(object):
                 track.transpose(semitone)
 
     def trim_trailing_silence(self):
-        """Trim the trailing silences of the pianorolls of all tracks. Trailing
-        silences are considered globally."""
+        """
+        Trim the trailing silences of the pianorolls of all tracks. Trailing
+        silences are considered globally.
+
+        """
         active_length = self.get_active_length()
         for track in self.tracks:
             track.pianoroll = track.pianoroll[:active_length]

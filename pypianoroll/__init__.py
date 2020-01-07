@@ -1,7 +1,7 @@
 """
 Pypianoroll
 ===========
-A python package for handling multi-track pianorolls.
+A python package for handling multitrack pianorolls.
 
 Features
 --------
