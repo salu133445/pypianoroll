@@ -17,7 +17,7 @@ setup(
     name="pypianoroll",
     packages=["pypianoroll"],
     version=VERSION["__version__"],
-    description="A python package for handling multi-track piano-rolls.",
+    description="A python package for handling multitrack pianorolls.",
     long_description=LONG_DESCRIPTION,
     author="Hao-Wen Dong",
     author_email="salu.hwdong@gmail.com",
