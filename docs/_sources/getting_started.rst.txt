@@ -21,8 +21,6 @@ For more details, see :ref:`multitrack` and :ref:`track`.
 Example
 -------
 
-(The following example is also available as a Jupyter notebook_.)
-
 .. code-block:: python
 
     import numpy as np
@@ -92,5 +90,3 @@ only MIDI files. (For more details, see :ref:`parse_write`)
 
     # Write the `pypianoroll.Multitrack` instance to a MIDI file
     another_multitrack.write('./test.mid')
-
-.. _notebook: http://nbviewer.jupyter.org/github/salu133445/pypianoroll/blob/master/examples/example.ipynb

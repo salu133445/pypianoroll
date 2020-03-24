@@ -21,10 +21,10 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
-        <script type="text/javascript" src="_static/jquery.js"></script>
-        <script type="text/javascript" src="_static/underscore.js"></script>
-        <script type="text/javascript" src="_static/doctools.js"></script>
-        <script type="text/javascript" src="_static/language_data.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/language_data.js"></script>
     
     <script type="text/javascript" src="_static/js/theme.js"></script>
 
@@ -207,7 +207,7 @@ is ‘hybrid’, all options other than ‘off’ will label the two track with
 <li><p><strong>cmaps</strong> (<em>tuple</em><em> or </em><em>list</em>) – <p>The <cite>matplotlib.colors.Colormap</cite> instances or colormap codes to use.</p>
 <ul>
 <li><p>When <cite>mode</cite> is ‘separate’, each element will be passed to each call of
-<a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.pyplot.imshow.html#matplotlib.pyplot.imshow" title="(in Matplotlib v3.1.2)"><code class="xref py py-func docutils literal notranslate"><span class="pre">matplotlib.pyplot.imshow()</span></code></a>. Defaults to (‘Blues’, ‘Oranges’,
+<a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.pyplot.imshow.html#matplotlib.pyplot.imshow" title="(in Matplotlib v3.2.1)"><code class="xref py py-func docutils literal notranslate"><span class="pre">matplotlib.pyplot.imshow()</span></code></a>. Defaults to (‘Blues’, ‘Oranges’,
 ‘Greens’, ‘Reds’, ‘Purples’, ‘Greys’).</p></li>
 <li><p>When <cite>mode</cite> is stacked, a color is assigned based on <cite>cmaps</cite> to the
 pianoroll of each track. Defaults to (‘hsv’).</p></li>
@@ -235,16 +235,16 @@ effective when one of <cite>xtick</cite> and <cite>ytick</cite> is on.</p></li>
 Defaults to ‘both’.</p></li>
 <li><p><strong>grid</strong> (<em>{'x'</em><em>, </em><em>'y'</em><em>, </em><em>'both'</em><em>, </em><em>'off'}</em>) – A string that indicates whether to add grids to the x-axis, y-axis, both
 or neither. Defaults to ‘both’.</p></li>
-<li><p><strong>grid_linestyle</strong> (<em>str</em>) – Will be passed to <a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.axes.Axes.grid.html#matplotlib.axes.Axes.grid" title="(in Matplotlib v3.1.2)"><code class="xref py py-meth docutils literal notranslate"><span class="pre">matplotlib.axes.Axes.grid()</span></code></a> as ‘linestyle’
+<li><p><strong>grid_linestyle</strong> (<em>str</em>) – Will be passed to <a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.axes.Axes.grid.html#matplotlib.axes.Axes.grid" title="(in Matplotlib v3.2.1)"><code class="xref py py-meth docutils literal notranslate"><span class="pre">matplotlib.axes.Axes.grid()</span></code></a> as ‘linestyle’
 argument.</p></li>
-<li><p><strong>grid_linewidth</strong> (<em>float</em>) – Will be passed to <a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.axes.Axes.grid.html#matplotlib.axes.Axes.grid" title="(in Matplotlib v3.1.2)"><code class="xref py py-meth docutils literal notranslate"><span class="pre">matplotlib.axes.Axes.grid()</span></code></a> as ‘linewidth’
+<li><p><strong>grid_linewidth</strong> (<em>float</em>) – Will be passed to <a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.axes.Axes.grid.html#matplotlib.axes.Axes.grid" title="(in Matplotlib v3.2.1)"><code class="xref py py-meth docutils literal notranslate"><span class="pre">matplotlib.axes.Axes.grid()</span></code></a> as ‘linewidth’
 argument.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p><ul class="simple">
-<li><p><strong>fig</strong> (<cite>matplotlib.figure.Figure</cite> object) – A <a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.figure.Figure.html#matplotlib.figure.Figure" title="(in Matplotlib v3.1.2)"><code class="xref py py-class docutils literal notranslate"><span class="pre">matplotlib.figure.Figure</span></code></a> object.</p></li>
-<li><p><strong>axs</strong> (<em>list</em>) – List of <a class="reference external" href="https://matplotlib.org/api/axes_api.html#matplotlib.axes.Axes" title="(in Matplotlib v3.1.2)"><code class="xref py py-class docutils literal notranslate"><span class="pre">matplotlib.axes.Axes</span></code></a> object.</p></li>
+<li><p><strong>fig</strong> (<cite>matplotlib.figure.Figure</cite> object) – A <a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.figure.Figure.html#matplotlib.figure.Figure" title="(in Matplotlib v3.2.1)"><code class="xref py py-class docutils literal notranslate"><span class="pre">matplotlib.figure.Figure</span></code></a> object.</p></li>
+<li><p><strong>axs</strong> (<em>list</em>) – List of <a class="reference external" href="https://matplotlib.org/api/axes_api.html#matplotlib.axes.Axes" title="(in Matplotlib v3.2.1)"><code class="xref py py-class docutils literal notranslate"><span class="pre">matplotlib.axes.Axes</span></code></a> object.</p></li>
 </ul>
 </p>
 </dd>
@@ -270,7 +270,7 @@ the first time step of a bar).</p></li>
 <li><p>In ‘plain’ preset, the x- and y-axis are both off.</p></li>
 </ul>
 </p></li>
-<li><p><strong>cmap</strong> (<cite>matplotlib.colors.Colormap</cite>) – The colormap to use in <a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.pyplot.imshow.html#matplotlib.pyplot.imshow" title="(in Matplotlib v3.1.2)"><code class="xref py py-func docutils literal notranslate"><span class="pre">matplotlib.pyplot.imshow()</span></code></a>. Defaults to
+<li><p><strong>cmap</strong> (<cite>matplotlib.colors.Colormap</cite>) – The colormap to use in <a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.pyplot.imshow.html#matplotlib.pyplot.imshow" title="(in Matplotlib v3.2.1)"><code class="xref py py-func docutils literal notranslate"><span class="pre">matplotlib.pyplot.imshow()</span></code></a>. Defaults to
 ‘Blues’. Only effective when <cite>pianoroll</cite> is 2D.</p></li>
 <li><p><strong>xtick</strong> (<em>{'auto'</em><em>, </em><em>'beat'</em><em>, </em><em>'step'</em><em>, </em><em>'off'}</em>) – A string that indicates what to use as ticks along the x-axis. If ‘auto’
 is given, automatically set to ‘beat’ if <cite>beat_resolution</cite> is also given
@@ -292,16 +292,16 @@ effective when one of <cite>xtick</cite> and <cite>ytick</cite> is on.</p></li>
 Defaults to ‘both’.</p></li>
 <li><p><strong>grid</strong> (<em>{'x'</em><em>, </em><em>'y'</em><em>, </em><em>'both'</em><em>, </em><em>'off'}</em>) – A string that indicates whether to add grids to the x-axis, y-axis, both
 or neither. Defaults to ‘both’.</p></li>
-<li><p><strong>grid_linestyle</strong> (<em>str</em>) – Will be passed to <a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.axes.Axes.grid.html#matplotlib.axes.Axes.grid" title="(in Matplotlib v3.1.2)"><code class="xref py py-meth docutils literal notranslate"><span class="pre">matplotlib.axes.Axes.grid()</span></code></a> as ‘linestyle’
+<li><p><strong>grid_linestyle</strong> (<em>str</em>) – Will be passed to <a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.axes.Axes.grid.html#matplotlib.axes.Axes.grid" title="(in Matplotlib v3.2.1)"><code class="xref py py-meth docutils literal notranslate"><span class="pre">matplotlib.axes.Axes.grid()</span></code></a> as ‘linestyle’
 argument.</p></li>
-<li><p><strong>grid_linewidth</strong> (<em>float</em>) – Will be passed to <a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.axes.Axes.grid.html#matplotlib.axes.Axes.grid" title="(in Matplotlib v3.1.2)"><code class="xref py py-meth docutils literal notranslate"><span class="pre">matplotlib.axes.Axes.grid()</span></code></a> as ‘linewidth’
+<li><p><strong>grid_linewidth</strong> (<em>float</em>) – Will be passed to <a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.axes.Axes.grid.html#matplotlib.axes.Axes.grid" title="(in Matplotlib v3.2.1)"><code class="xref py py-meth docutils literal notranslate"><span class="pre">matplotlib.axes.Axes.grid()</span></code></a> as ‘linewidth’
 argument.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p><ul class="simple">
-<li><p><strong>fig</strong> (<cite>matplotlib.figure.Figure</cite> object) – A <a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.figure.Figure.html#matplotlib.figure.Figure" title="(in Matplotlib v3.1.2)"><code class="xref py py-class docutils literal notranslate"><span class="pre">matplotlib.figure.Figure</span></code></a> object.</p></li>
-<li><p><strong>ax</strong> (<cite>matplotlib.axes.Axes</cite> object) – A <a class="reference external" href="https://matplotlib.org/api/axes_api.html#matplotlib.axes.Axes" title="(in Matplotlib v3.1.2)"><code class="xref py py-class docutils literal notranslate"><span class="pre">matplotlib.axes.Axes</span></code></a> object.</p></li>
+<li><p><strong>fig</strong> (<cite>matplotlib.figure.Figure</cite> object) – A <a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.figure.Figure.html#matplotlib.figure.Figure" title="(in Matplotlib v3.2.1)"><code class="xref py py-class docutils literal notranslate"><span class="pre">matplotlib.figure.Figure</span></code></a> object.</p></li>
+<li><p><strong>ax</strong> (<cite>matplotlib.axes.Axes</cite> object) – A <a class="reference external" href="https://matplotlib.org/api/axes_api.html#matplotlib.axes.Axes" title="(in Matplotlib v3.2.1)"><code class="xref py py-class docutils literal notranslate"><span class="pre">matplotlib.axes.Axes</span></code></a> object.</p></li>
 </ul>
 </p>
 </dd>
@@ -315,7 +315,7 @@ argument.</p></li>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>ax</strong> (<em>matplotlib.axes.Axes object</em>) – A <a class="reference external" href="https://matplotlib.org/api/axes_api.html#matplotlib.axes.Axes" title="(in Matplotlib v3.1.2)"><code class="xref py py-class docutils literal notranslate"><span class="pre">matplotlib.axes.Axes</span></code></a> object where the pianoroll will be
+<li><p><strong>ax</strong> (<em>matplotlib.axes.Axes object</em>) – A <a class="reference external" href="https://matplotlib.org/api/axes_api.html#matplotlib.axes.Axes" title="(in Matplotlib v3.2.1)"><code class="xref py py-class docutils literal notranslate"><span class="pre">matplotlib.axes.Axes</span></code></a> object where the pianoroll will be
 plotted on.</p></li>
 <li><p><strong>pianoroll</strong> (<em>np.ndarray</em>) – <p>A pianoroll to be plotted. The values should be in [0, 1] when data type
 is float, and in [0, 127] when data type is integer.</p>
@@ -338,7 +338,7 @@ the first time step of a bar).</p></li>
 <li><p>In ‘plain’ preset, the x- and y-axis are both off.</p></li>
 </ul>
 </p></li>
-<li><p><strong>cmap</strong> (<cite>matplotlib.colors.Colormap</cite>) – The colormap to use in <a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.pyplot.imshow.html#matplotlib.pyplot.imshow" title="(in Matplotlib v3.1.2)"><code class="xref py py-func docutils literal notranslate"><span class="pre">matplotlib.pyplot.imshow()</span></code></a>. Defaults to
+<li><p><strong>cmap</strong> (<cite>matplotlib.colors.Colormap</cite>) – The colormap to use in <a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.pyplot.imshow.html#matplotlib.pyplot.imshow" title="(in Matplotlib v3.2.1)"><code class="xref py py-func docutils literal notranslate"><span class="pre">matplotlib.pyplot.imshow()</span></code></a>. Defaults to
 ‘Blues’. Only effective when <cite>pianoroll</cite> is 2D.</p></li>
 <li><p><strong>xtick</strong> (<em>{'auto'</em><em>, </em><em>'beat'</em><em>, </em><em>'step'</em><em>, </em><em>'off'}</em>) – A string that indicates what to use as ticks along the x-axis. If ‘auto’
 is given, automatically set to ‘beat’ if <cite>beat_resolution</cite> is also given
@@ -360,9 +360,9 @@ effective when one of <cite>xtick</cite> and <cite>ytick</cite> is on.</p></li>
 Defaults to ‘both’.</p></li>
 <li><p><strong>grid</strong> (<em>{'x'</em><em>, </em><em>'y'</em><em>, </em><em>'both'</em><em>, </em><em>'off'}</em>) – A string that indicates whether to add grids to the x-axis, y-axis, both
 or neither. Defaults to ‘both’.</p></li>
-<li><p><strong>grid_linestyle</strong> (<em>str</em>) – Will be passed to <a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.axes.Axes.grid.html#matplotlib.axes.Axes.grid" title="(in Matplotlib v3.1.2)"><code class="xref py py-meth docutils literal notranslate"><span class="pre">matplotlib.axes.Axes.grid()</span></code></a> as ‘linestyle’
+<li><p><strong>grid_linestyle</strong> (<em>str</em>) – Will be passed to <a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.axes.Axes.grid.html#matplotlib.axes.Axes.grid" title="(in Matplotlib v3.2.1)"><code class="xref py py-meth docutils literal notranslate"><span class="pre">matplotlib.axes.Axes.grid()</span></code></a> as ‘linestyle’
 argument.</p></li>
-<li><p><strong>grid_linewidth</strong> (<em>float</em>) – Will be passed to <a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.axes.Axes.grid.html#matplotlib.axes.Axes.grid" title="(in Matplotlib v3.1.2)"><code class="xref py py-meth docutils literal notranslate"><span class="pre">matplotlib.axes.Axes.grid()</span></code></a> as ‘linewidth’
+<li><p><strong>grid_linewidth</strong> (<em>float</em>) – Will be passed to <a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.axes.Axes.grid.html#matplotlib.axes.Axes.grid" title="(in Matplotlib v3.2.1)"><code class="xref py py-meth docutils literal notranslate"><span class="pre">matplotlib.axes.Axes.grid()</span></code></a> as ‘linewidth’
 argument.</p></li>
 </ul>
 </dd>
@@ -401,7 +401,7 @@ the first time step of a bar).</p></li>
 <li><p>In ‘plain’ preset, the x- and y-axis are both off.</p></li>
 </ul>
 </p></li>
-<li><p><strong>cmap</strong> (<cite>matplotlib.colors.Colormap</cite>) – The colormap to use in <a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.pyplot.imshow.html#matplotlib.pyplot.imshow" title="(in Matplotlib v3.1.2)"><code class="xref py py-func docutils literal notranslate"><span class="pre">matplotlib.pyplot.imshow()</span></code></a>. Defaults to
+<li><p><strong>cmap</strong> (<cite>matplotlib.colors.Colormap</cite>) – The colormap to use in <a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.pyplot.imshow.html#matplotlib.pyplot.imshow" title="(in Matplotlib v3.2.1)"><code class="xref py py-func docutils literal notranslate"><span class="pre">matplotlib.pyplot.imshow()</span></code></a>. Defaults to
 ‘Blues’. Only effective when <cite>pianoroll</cite> is 2D.</p></li>
 <li><p><strong>xtick</strong> (<em>{'auto'</em><em>, </em><em>'beat'</em><em>, </em><em>'step'</em><em>, </em><em>'off'}</em>) – A string that indicates what to use as ticks along the x-axis. If ‘auto’
 is given, automatically set to ‘beat’ if <cite>beat_resolution</cite> is also given
@@ -423,9 +423,9 @@ effective when one of <cite>xtick</cite> and <cite>ytick</cite> is on.</p></li>
 Defaults to ‘both’.</p></li>
 <li><p><strong>grid</strong> (<em>{'x'</em><em>, </em><em>'y'</em><em>, </em><em>'both'</em><em>, </em><em>'off'}</em>) – A string that indicates whether to add grids to the x-axis, y-axis, both
 or neither. Defaults to ‘both’.</p></li>
-<li><p><strong>grid_linestyle</strong> (<em>str</em>) – Will be passed to <a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.axes.Axes.grid.html#matplotlib.axes.Axes.grid" title="(in Matplotlib v3.1.2)"><code class="xref py py-meth docutils literal notranslate"><span class="pre">matplotlib.axes.Axes.grid()</span></code></a> as ‘linestyle’
+<li><p><strong>grid_linestyle</strong> (<em>str</em>) – Will be passed to <a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.axes.Axes.grid.html#matplotlib.axes.Axes.grid" title="(in Matplotlib v3.2.1)"><code class="xref py py-meth docutils literal notranslate"><span class="pre">matplotlib.axes.Axes.grid()</span></code></a> as ‘linestyle’
 argument.</p></li>
-<li><p><strong>grid_linewidth</strong> (<em>float</em>) – Will be passed to <a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.axes.Axes.grid.html#matplotlib.axes.Axes.grid" title="(in Matplotlib v3.1.2)"><code class="xref py py-meth docutils literal notranslate"><span class="pre">matplotlib.axes.Axes.grid()</span></code></a> as ‘linewidth’
+<li><p><strong>grid_linewidth</strong> (<em>float</em>) – Will be passed to <a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.axes.Axes.grid.html#matplotlib.axes.Axes.grid" title="(in Matplotlib v3.2.1)"><code class="xref py py-meth docutils literal notranslate"><span class="pre">matplotlib.axes.Axes.grid()</span></code></a> as ‘linewidth’
 argument.</p></li>
 </ul>
 </dd>
