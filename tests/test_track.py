@@ -3,12 +3,14 @@ import unittest
 import numpy as np
 from pypianoroll import Track
 
+
 class TrackTestCase(unittest.TestCase):
     """Test case for class `Track`."""
+
     def setUp(self):
         pianoroll = np.zeros((96, 128), np.uint8)
         pianoroll[:95, [60, 64, 67, 72, 76, 79, 84]] = 100
-        self.track = Track(pianoroll, 0, False, 'test')
+        self.track = Track(pianoroll, 0, False, "test")
 
     def tearDown(self):
         self.track = None
@@ -74,25 +76,28 @@ class TrackTestCase(unittest.TestCase):
         self.track.trim_trailing_silence()
         self.assertEqual(self.track.pianoroll[0], 95)
 
+
 class BinaryTrackTestCase(unittest.TestCase):
     """Test case for for class `Track` with a binary-valued piano-roll."""
+
     def setUp(self):
         pianoroll = np.zeros((96, 128), bool)
         pianoroll[:95, [60, 64, 67, 72]] = True
-        self.track = Track(pianoroll, 0, False, 'test')
+        self.track = Track(pianoroll, 0, False, "test")
 
     def tearDown(self):
         self.track = None
 
     def test_assign_constant(self):
         """Test method `Track.assign_constant()`."""
-        self.track.assign_constant(50.)
+        self.track.assign_constant(50.0)
         self.assertTrue(np.issubdtype(self.track.pianoroll.dtype, np.floating))
-        self.assertEqual(self.track.pianoroll[0, 60], 50.)
+        self.assertEqual(self.track.pianoroll[0, 60], 50.0)
 
     def test_is_binarized(self):
         """Test method `Track.is_binarized()`."""
         self.assertTrue(self.track.is_binarized())
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     unittest.main()
