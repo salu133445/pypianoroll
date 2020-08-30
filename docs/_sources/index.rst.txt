@@ -5,7 +5,7 @@ Pypianoroll
 .. image:: https://img.shields.io/travis/com/salu133445/pypianoroll
     :target: https://travis-ci.com/salu133445/pypianoroll
     :alt: Travis
-.. image:: https://img.shields.io/codecov/c/github/salu133445/muspy
+.. image:: https://img.shields.io/codecov/c/github/salu133445/pypianoroll
     :target: https://codecov.io/gh/salu133445/pypianoroll
     :alt: Codecov
 .. image:: https://img.shields.io/github/license/salu133445/pypianoroll
