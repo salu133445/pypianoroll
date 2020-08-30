@@ -41,7 +41,7 @@ setup(
     ],
     extras_require={
         "animation": ["moviepy>=0.2.3.2"],
-        "test": ["pytest>=5.0", "pytest-cov>=2.0"],
+        "test": ["pytest>=4.0", "pytest-cov>=2.0"],
     },
     classifiers=[
         "Development Status :: 4 - Beta",
