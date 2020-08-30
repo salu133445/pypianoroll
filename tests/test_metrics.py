@@ -11,16 +11,16 @@ class MetricTestCase(unittest.TestCase):
         self.pianoroll = np.zeros((96, 128), np.uint8)
         self.pianoroll[:24, [60, 64, 67, 72]] = 100
         self.pianoroll[73:96, [72, 76, 79, 84]] = 80
-        self.beat_resolution = 24
+        self.resolution = 24
 
     def tearDown(self):
         self.pianoroll = None
-        self.beat_resolution = None
+        self.resolution = None
 
     def test_empty_beat_rate(self):
         """Test the empty_beat_rate metric."""
         empty_beat_rate = metrics.empty_beat_rate(
-            self.pianoroll, self.beat_resolution
+            self.pianoroll, self.resolution
         )
         self.assertEqual(empty_beat_rate, 0.5)
 

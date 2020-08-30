@@ -1,0 +1,531 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>pypianoroll.inputs &mdash; Pypianoroll  documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/language_data.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html">
+          
+
+          
+            
+            <img src="../../_static/logo.svg" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../getting_started.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../save_load.html">Save &amp; Load</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../read_write.html">Read &amp; Write</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../visualization.html">Visualization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../metrics.html">Metrics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../track.html">Track Class</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../multitrack.html">Multitrack Class</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../doc.html">Technical Documentation</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Pypianoroll</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+        
+      <li>pypianoroll.inputs</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for pypianoroll.inputs</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;MIDI I/O interface.&quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">json</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="kn">from</span> <span class="nn">pretty_midi</span> <span class="kn">import</span> <span class="n">PrettyMIDI</span>
+
+<span class="kn">from</span> <span class="nn">.track</span> <span class="kn">import</span> <span class="n">Track</span>
+<span class="kn">from</span> <span class="nn">.multitrack</span> <span class="kn">import</span> <span class="n">DEFAULT_RESOLUTION</span><span class="p">,</span> <span class="n">Multitrack</span><span class="p">,</span> <span class="n">reconstruct_sparse</span>
+
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;load&quot;</span><span class="p">,</span> <span class="s2">&quot;from_pretty_midi&quot;</span><span class="p">,</span> <span class="s2">&quot;read&quot;</span><span class="p">]</span>
+
+
+<div class="viewcode-block" id="load"><a class="viewcode-back" href="../../save_load.html#pypianoroll.load">[docs]</a><span class="k">def</span> <span class="nf">load</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Load a NPZ file into a Multitrack object.</span>
+
+<span class="sd">    Supports only files previously saved by :func:`pypianoroll.save`.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    path : str</span>
+<span class="sd">        Path to the NPZ file to load.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">with</span> <span class="n">np</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">path</span><span class="p">)</span> <span class="k">as</span> <span class="n">loaded</span><span class="p">:</span>
+        <span class="k">if</span> <span class="s2">&quot;info.json&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">loaded</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Cannot find &#39;info.json&#39; in the npz file.&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Load the info dictionary</span>
+        <span class="n">info_dict</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">loaded</span><span class="p">[</span><span class="s2">&quot;info.json&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">))</span>
+
+        <span class="c1"># Get the name and resolution</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="n">info_dict</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]</span>
+        <span class="n">resolution</span> <span class="o">=</span> <span class="n">info_dict</span><span class="p">[</span><span class="s2">&quot;resolution&quot;</span><span class="p">]</span>
+
+        <span class="c1"># Load the tempo and downbeat array</span>
+        <span class="n">tempo</span> <span class="o">=</span> <span class="n">loaded</span><span class="p">[</span><span class="s2">&quot;tempo&quot;</span><span class="p">]</span> <span class="k">if</span> <span class="s2">&quot;tempo&quot;</span> <span class="ow">in</span> <span class="n">loaded</span><span class="o">.</span><span class="n">files</span> <span class="k">else</span> <span class="kc">None</span>
+        <span class="n">downbeat</span> <span class="o">=</span> <span class="n">loaded</span><span class="p">[</span><span class="s2">&quot;downbeat&quot;</span><span class="p">]</span> <span class="k">if</span> <span class="s2">&quot;downbeat&quot;</span> <span class="ow">in</span> <span class="n">loaded</span><span class="o">.</span><span class="n">files</span> <span class="k">else</span> <span class="kc">None</span>
+
+        <span class="c1"># Load the tracks</span>
+        <span class="n">idx</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">tracks</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">while</span> <span class="nb">str</span><span class="p">(</span><span class="n">idx</span><span class="p">)</span> <span class="ow">in</span> <span class="n">info_dict</span><span class="p">:</span>
+            <span class="n">pianoroll</span> <span class="o">=</span> <span class="n">reconstruct_sparse</span><span class="p">(</span><span class="n">loaded</span><span class="p">,</span> <span class="s2">&quot;pianoroll_&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">idx</span><span class="p">))</span>
+            <span class="n">track</span> <span class="o">=</span> <span class="n">Track</span><span class="p">(</span>
+                <span class="n">program</span><span class="o">=</span><span class="n">info_dict</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">idx</span><span class="p">)][</span><span class="s2">&quot;program&quot;</span><span class="p">],</span>
+                <span class="n">is_drum</span><span class="o">=</span><span class="n">info_dict</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">idx</span><span class="p">)][</span><span class="s2">&quot;is_drum&quot;</span><span class="p">],</span>
+                <span class="n">name</span><span class="o">=</span><span class="n">info_dict</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">idx</span><span class="p">)][</span><span class="s2">&quot;name&quot;</span><span class="p">],</span>
+                <span class="n">pianoroll</span><span class="o">=</span><span class="n">pianoroll</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="n">tracks</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">track</span><span class="p">)</span>
+            <span class="n">idx</span> <span class="o">+=</span> <span class="mi">1</span>
+
+    <span class="k">return</span> <span class="n">Multitrack</span><span class="p">(</span>
+        <span class="n">resolution</span><span class="o">=</span><span class="n">resolution</span><span class="p">,</span>
+        <span class="n">tempo</span><span class="o">=</span><span class="n">tempo</span><span class="p">,</span>
+        <span class="n">downbeat</span><span class="o">=</span><span class="n">downbeat</span><span class="p">,</span>
+        <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span>
+        <span class="n">tracks</span><span class="o">=</span><span class="n">tracks</span><span class="p">,</span>
+    <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="from_pretty_midi"><a class="viewcode-back" href="../../doc.html#pypianoroll.from_pretty_midi">[docs]</a><span class="k">def</span> <span class="nf">from_pretty_midi</span><span class="p">(</span>
+    <span class="n">pm</span><span class="p">,</span>
+    <span class="n">resolution</span><span class="o">=</span><span class="n">DEFAULT_RESOLUTION</span><span class="p">,</span>
+    <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;max&quot;</span><span class="p">,</span>
+    <span class="n">algorithm</span><span class="o">=</span><span class="s2">&quot;normal&quot;</span><span class="p">,</span>
+    <span class="n">binarized</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="n">skip_empty_tracks</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">collect_onsets_only</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="n">threshold</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+    <span class="n">first_beat_time</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+<span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Return a Multitrack object converted from a PrettyMIDI object.</span>
+
+<span class="sd">    Parse a :class:`pretty_midi.PrettyMIDI` object. The data type of the</span>
+<span class="sd">    resulting piano rolls is automatically determined (int if &#39;mode&#39; is</span>
+<span class="sd">    &#39;sum&#39;, np.uint8 if `mode` is &#39;max&#39; and `binarized` is False, bool if</span>
+<span class="sd">    `mode` is &#39;max&#39; and `binarized` is True).</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    pm : `pretty_midi.PrettyMIDI` object</span>
+<span class="sd">        A :class:`pretty_midi.PrettyMIDI` object to be parsed.</span>
+<span class="sd">    mode : {&#39;max&#39;, &#39;sum&#39;}</span>
+<span class="sd">        A string that indicates the merging strategy to apply to duplicate</span>
+<span class="sd">        notes. Default to &#39;max&#39;.</span>
+<span class="sd">    algorithm : {&#39;normal&#39;, &#39;strict&#39;, &#39;custom&#39;}</span>
+<span class="sd">        A string that indicates the method used to get the location of the</span>
+<span class="sd">        first beat. Notes before it will be dropped unless an incomplete</span>
+<span class="sd">        beat before it is found (see Notes for more information). Defaults</span>
+<span class="sd">        to &#39;normal&#39;.</span>
+
+<span class="sd">        - The &#39;normal&#39; algorithm estimates the location of the first beat by</span>
+<span class="sd">            :meth:`pretty_midi.PrettyMIDI.estimate_beat_start`.</span>
+<span class="sd">        - The &#39;strict&#39; algorithm sets the first beat at the event time of</span>
+<span class="sd">            the first time signature change. Raise a ValueError if no time</span>
+<span class="sd">            signature change event is found.</span>
+<span class="sd">        - The &#39;custom&#39; algorithm takes argument `first_beat_time` as the</span>
+<span class="sd">            location of the first beat.</span>
+
+<span class="sd">    binarized : bool</span>
+<span class="sd">        True to binarize the parsed piano rolls before merging duplicate</span>
+<span class="sd">        notes. False to use the original parsed pianorolls. Defaults to</span>
+<span class="sd">        False.</span>
+<span class="sd">    skip_empty_tracks : bool</span>
+<span class="sd">        True to remove tracks with empty piano rolls and compress the pitch</span>
+<span class="sd">        range of the parsed piano rolls. False to retain the empty tracks</span>
+<span class="sd">        and use the original parsed piano rolls. Deafault to True.</span>
+<span class="sd">    collect_onsets_only : bool</span>
+<span class="sd">        True to collect only the onset of the notes (i.e. note on events) in</span>
+<span class="sd">        all tracks, where the note off and duration information are dropped.</span>
+<span class="sd">        False to parse regular piano rolls.</span>
+<span class="sd">    threshold : int or float</span>
+<span class="sd">        A threshold used to binarize the parsed piano rolls. Only effective</span>
+<span class="sd">        when `binarized` is True. Defaults to zero.</span>
+<span class="sd">    first_beat_time : float</span>
+<span class="sd">        The location (in sec) of the first beat. Required and only effective</span>
+<span class="sd">        when using &#39;custom&#39; algorithm.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    If an incomplete beat before the first beat is found, an additional beat</span>
+<span class="sd">    will be added before the (estimated) beat starting time. However, notes</span>
+<span class="sd">    before the (estimated) beat starting time for more than one beat are</span>
+<span class="sd">    dropped.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    :class:`pypianoroll.Multitrack`</span>
+<span class="sd">        Converted multitrack.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">mode</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;max&quot;</span><span class="p">,</span> <span class="s2">&quot;sum&quot;</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;`mode` must be one of {&#39;max&#39;, &#39;sum&#39;}.&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">algorithm</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;strict&quot;</span><span class="p">,</span> <span class="s2">&quot;normal&quot;</span><span class="p">,</span> <span class="s2">&quot;custom&quot;</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="s2">&quot;`algorithm` must be one of {&#39;normal&#39;, &#39;strict&#39;, &#39;custom&#39;}.&quot;</span>
+        <span class="p">)</span>
+    <span class="k">if</span> <span class="n">algorithm</span> <span class="o">==</span> <span class="s2">&quot;custom&quot;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">first_beat_time</span><span class="p">,</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">)):</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
+                <span class="s2">&quot;`first_beat_time` must be int or float when &quot;</span>
+                <span class="s2">&quot;using &#39;custom&#39; algorithm.&quot;</span>
+            <span class="p">)</span>
+        <span class="k">if</span> <span class="n">first_beat_time</span> <span class="o">&lt;</span> <span class="mf">0.0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s2">&quot;`first_beat_time` must be a positive number &quot;</span>
+                <span class="s2">&quot;when using &#39;custom&#39; algorithm.&quot;</span>
+            <span class="p">)</span>
+
+    <span class="c1"># Set first_beat_time for &#39;normal&#39; and &#39;strict&#39; modes</span>
+    <span class="k">if</span> <span class="n">algorithm</span> <span class="o">==</span> <span class="s2">&quot;normal&quot;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">pm</span><span class="o">.</span><span class="n">time_signature_changes</span><span class="p">:</span>
+            <span class="n">pm</span><span class="o">.</span><span class="n">time_signature_changes</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">time</span><span class="p">)</span>
+            <span class="n">first_beat_time</span> <span class="o">=</span> <span class="n">pm</span><span class="o">.</span><span class="n">time_signature_changes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">time</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">first_beat_time</span> <span class="o">=</span> <span class="n">pm</span><span class="o">.</span><span class="n">estimate_beat_start</span><span class="p">()</span>
+    <span class="k">elif</span> <span class="n">algorithm</span> <span class="o">==</span> <span class="s2">&quot;strict&quot;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">pm</span><span class="o">.</span><span class="n">time_signature_changes</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s2">&quot;No time signature change event found. Unable to set beat &quot;</span>
+                <span class="s2">&quot;start time using &#39;strict&#39; algorithm.&quot;</span>
+            <span class="p">)</span>
+        <span class="n">pm</span><span class="o">.</span><span class="n">time_signature_changes</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">time</span><span class="p">)</span>
+        <span class="n">first_beat_time</span> <span class="o">=</span> <span class="n">pm</span><span class="o">.</span><span class="n">time_signature_changes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">time</span>
+
+    <span class="c1"># get tempo change event times and contents</span>
+    <span class="n">tc_times</span><span class="p">,</span> <span class="n">tempi</span> <span class="o">=</span> <span class="n">pm</span><span class="o">.</span><span class="n">get_tempo_changes</span><span class="p">()</span>
+    <span class="n">arg_sorted</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">tc_times</span><span class="p">)</span>
+    <span class="n">tc_times</span> <span class="o">=</span> <span class="n">tc_times</span><span class="p">[</span><span class="n">arg_sorted</span><span class="p">]</span>
+    <span class="n">tempi</span> <span class="o">=</span> <span class="n">tempi</span><span class="p">[</span><span class="n">arg_sorted</span><span class="p">]</span>
+
+    <span class="n">beat_times</span> <span class="o">=</span> <span class="n">pm</span><span class="o">.</span><span class="n">get_beats</span><span class="p">(</span><span class="n">first_beat_time</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">beat_times</span><span class="o">.</span><span class="n">size</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Cannot get beat timings to quantize the piano roll.&quot;</span><span class="p">)</span>
+    <span class="n">beat_times</span><span class="o">.</span><span class="n">sort</span><span class="p">()</span>
+
+    <span class="n">n_beats</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">beat_times</span><span class="p">)</span>
+    <span class="n">n_time_steps</span> <span class="o">=</span> <span class="n">resolution</span> <span class="o">*</span> <span class="n">n_beats</span>
+
+    <span class="c1"># Parse downbeat array</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">pm</span><span class="o">.</span><span class="n">time_signature_changes</span><span class="p">:</span>
+        <span class="n">downbeat</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">downbeat</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">n_time_steps</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="nb">bool</span><span class="p">)</span>
+        <span class="n">downbeat</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="n">start</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">end</span> <span class="o">=</span> <span class="n">start</span>
+        <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">tsc</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">pm</span><span class="o">.</span><span class="n">time_signature_changes</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]):</span>
+            <span class="n">end</span> <span class="o">+=</span> <span class="n">np</span><span class="o">.</span><span class="n">searchsorted</span><span class="p">(</span>
+                <span class="n">beat_times</span><span class="p">[</span><span class="n">end</span><span class="p">:],</span> <span class="n">pm</span><span class="o">.</span><span class="n">time_signature_changes</span><span class="p">[</span><span class="n">idx</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">time</span>
+            <span class="p">)</span>
+            <span class="n">start_idx</span> <span class="o">=</span> <span class="n">start</span> <span class="o">*</span> <span class="n">resolution</span>
+            <span class="n">end_idx</span> <span class="o">=</span> <span class="n">end</span> <span class="o">*</span> <span class="n">resolution</span>
+            <span class="n">stride</span> <span class="o">=</span> <span class="n">tsc</span><span class="o">.</span><span class="n">numerator</span> <span class="o">*</span> <span class="n">resolution</span>
+            <span class="n">downbeat</span><span class="p">[</span><span class="n">start_idx</span><span class="p">:</span><span class="n">end_idx</span><span class="p">:</span><span class="n">stride</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="n">start</span> <span class="o">=</span> <span class="n">end</span>
+
+    <span class="c1"># Build tempo array</span>
+    <span class="n">one_more_beat</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">beat_times</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">beat_times</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span>
+    <span class="n">beat_times_one_more</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">beat_times</span><span class="p">,</span> <span class="n">one_more_beat</span><span class="p">)</span>
+    <span class="n">bpm</span> <span class="o">=</span> <span class="mf">60.0</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="n">beat_times_one_more</span><span class="p">)</span>
+    <span class="n">tempo</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">tile</span><span class="p">(</span><span class="n">bpm</span><span class="p">,</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">24</span><span class="p">))</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+
+    <span class="c1"># Parse the tracks</span>
+    <span class="n">tracks</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">instrument</span> <span class="ow">in</span> <span class="n">pm</span><span class="o">.</span><span class="n">instruments</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">binarized</span><span class="p">:</span>
+            <span class="n">pianoroll</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">n_time_steps</span><span class="p">,</span> <span class="mi">128</span><span class="p">),</span> <span class="nb">bool</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">mode</span> <span class="o">==</span> <span class="s2">&quot;max&quot;</span><span class="p">:</span>
+            <span class="n">pianoroll</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">n_time_steps</span><span class="p">,</span> <span class="mi">128</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">uint8</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">pianoroll</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">n_time_steps</span><span class="p">,</span> <span class="mi">128</span><span class="p">),</span> <span class="nb">int</span><span class="p">)</span>
+
+        <span class="n">pitches</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+            <span class="p">[</span>
+                <span class="n">note</span><span class="o">.</span><span class="n">pitch</span>
+                <span class="k">for</span> <span class="n">note</span> <span class="ow">in</span> <span class="n">instrument</span><span class="o">.</span><span class="n">notes</span>
+                <span class="k">if</span> <span class="n">note</span><span class="o">.</span><span class="n">end</span> <span class="o">&gt;</span> <span class="n">first_beat_time</span>
+            <span class="p">]</span>
+        <span class="p">)</span>
+        <span class="n">note_on_times</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+            <span class="p">[</span>
+                <span class="n">note</span><span class="o">.</span><span class="n">start</span>
+                <span class="k">for</span> <span class="n">note</span> <span class="ow">in</span> <span class="n">instrument</span><span class="o">.</span><span class="n">notes</span>
+                <span class="k">if</span> <span class="n">note</span><span class="o">.</span><span class="n">end</span> <span class="o">&gt;</span> <span class="n">first_beat_time</span>
+            <span class="p">]</span>
+        <span class="p">)</span>
+        <span class="n">beat_indices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">searchsorted</span><span class="p">(</span><span class="n">beat_times</span><span class="p">,</span> <span class="n">note_on_times</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span>
+        <span class="n">remained</span> <span class="o">=</span> <span class="n">note_on_times</span> <span class="o">-</span> <span class="n">beat_times</span><span class="p">[</span><span class="n">beat_indices</span><span class="p">]</span>
+        <span class="n">ratios</span> <span class="o">=</span> <span class="n">remained</span> <span class="o">/</span> <span class="p">(</span>
+            <span class="n">beat_times_one_more</span><span class="p">[</span><span class="n">beat_indices</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">beat_times</span><span class="p">[</span><span class="n">beat_indices</span><span class="p">]</span>
+        <span class="p">)</span>
+        <span class="n">rounded</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">((</span><span class="n">beat_indices</span> <span class="o">+</span> <span class="n">ratios</span><span class="p">)</span> <span class="o">*</span> <span class="n">resolution</span><span class="p">)</span>
+        <span class="n">note_ons</span> <span class="o">=</span> <span class="n">rounded</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">collect_onsets_only</span><span class="p">:</span>
+            <span class="n">pianoroll</span><span class="p">[</span><span class="n">note_ons</span><span class="p">,</span> <span class="n">pitches</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">elif</span> <span class="n">instrument</span><span class="o">.</span><span class="n">is_drum</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">binarized</span><span class="p">:</span>
+                <span class="n">pianoroll</span><span class="p">[</span><span class="n">note_ons</span><span class="p">,</span> <span class="n">pitches</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">velocities</span> <span class="o">=</span> <span class="p">[</span>
+                    <span class="n">note</span><span class="o">.</span><span class="n">velocity</span>
+                    <span class="k">for</span> <span class="n">note</span> <span class="ow">in</span> <span class="n">instrument</span><span class="o">.</span><span class="n">notes</span>
+                    <span class="k">if</span> <span class="n">note</span><span class="o">.</span><span class="n">end</span> <span class="o">&gt;</span> <span class="n">first_beat_time</span>
+                <span class="p">]</span>
+                <span class="n">pianoroll</span><span class="p">[</span><span class="n">note_ons</span><span class="p">,</span> <span class="n">pitches</span><span class="p">]</span> <span class="o">=</span> <span class="n">velocities</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">note_off_times</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+                <span class="p">[</span>
+                    <span class="n">note</span><span class="o">.</span><span class="n">end</span>
+                    <span class="k">for</span> <span class="n">note</span> <span class="ow">in</span> <span class="n">instrument</span><span class="o">.</span><span class="n">notes</span>
+                    <span class="k">if</span> <span class="n">note</span><span class="o">.</span><span class="n">end</span> <span class="o">&gt;</span> <span class="n">first_beat_time</span>
+                <span class="p">]</span>
+            <span class="p">)</span>
+            <span class="n">beat_indices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">searchsorted</span><span class="p">(</span><span class="n">beat_times</span><span class="p">,</span> <span class="n">note_off_times</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span>
+            <span class="n">remained</span> <span class="o">=</span> <span class="n">note_off_times</span> <span class="o">-</span> <span class="n">beat_times</span><span class="p">[</span><span class="n">beat_indices</span><span class="p">]</span>
+            <span class="n">ratios</span> <span class="o">=</span> <span class="n">remained</span> <span class="o">/</span> <span class="p">(</span>
+                <span class="n">beat_times_one_more</span><span class="p">[</span><span class="n">beat_indices</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span>
+                <span class="o">-</span> <span class="n">beat_times</span><span class="p">[</span><span class="n">beat_indices</span><span class="p">]</span>
+            <span class="p">)</span>
+            <span class="n">note_offs</span> <span class="o">=</span> <span class="p">((</span><span class="n">beat_indices</span> <span class="o">+</span> <span class="n">ratios</span><span class="p">)</span> <span class="o">*</span> <span class="n">resolution</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+
+            <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">start</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">note_ons</span><span class="p">):</span>
+                <span class="n">end</span> <span class="o">=</span> <span class="n">note_offs</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span>
+                <span class="n">velocity</span> <span class="o">=</span> <span class="n">instrument</span><span class="o">.</span><span class="n">notes</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span><span class="o">.</span><span class="n">velocity</span>
+
+                <span class="k">if</span> <span class="n">velocity</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">:</span>
+                    <span class="k">continue</span>
+                <span class="k">if</span> <span class="n">binarized</span> <span class="ow">and</span> <span class="n">velocity</span> <span class="o">&lt;=</span> <span class="n">threshold</span><span class="p">:</span>
+                    <span class="k">continue</span>
+
+                <span class="k">if</span> <span class="mi">0</span> <span class="o">&lt;</span> <span class="n">start</span> <span class="o">&lt;</span> <span class="n">n_time_steps</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">pianoroll</span><span class="p">[</span><span class="n">start</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">pitches</span><span class="p">[</span><span class="n">idx</span><span class="p">]]:</span>
+                        <span class="n">pianoroll</span><span class="p">[</span><span class="n">start</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">pitches</span><span class="p">[</span><span class="n">idx</span><span class="p">]]</span> <span class="o">=</span> <span class="mi">0</span>
+                <span class="k">if</span> <span class="n">end</span> <span class="o">&lt;</span> <span class="n">n_time_steps</span> <span class="o">-</span> <span class="mi">1</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">pianoroll</span><span class="p">[</span><span class="n">end</span><span class="p">,</span> <span class="n">pitches</span><span class="p">[</span><span class="n">idx</span><span class="p">]]:</span>
+                        <span class="n">end</span> <span class="o">-=</span> <span class="mi">1</span>
+
+                <span class="k">if</span> <span class="n">binarized</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">mode</span> <span class="o">==</span> <span class="s2">&quot;sum&quot;</span><span class="p">:</span>
+                        <span class="n">pianoroll</span><span class="p">[</span><span class="n">start</span><span class="p">:</span><span class="n">end</span><span class="p">,</span> <span class="n">pitches</span><span class="p">[</span><span class="n">idx</span><span class="p">]]</span> <span class="o">+=</span> <span class="mi">1</span>
+                    <span class="k">elif</span> <span class="n">mode</span> <span class="o">==</span> <span class="s2">&quot;max&quot;</span><span class="p">:</span>
+                        <span class="n">pianoroll</span><span class="p">[</span><span class="n">start</span><span class="p">:</span><span class="n">end</span><span class="p">,</span> <span class="n">pitches</span><span class="p">[</span><span class="n">idx</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">True</span>
+                <span class="k">elif</span> <span class="n">mode</span> <span class="o">==</span> <span class="s2">&quot;sum&quot;</span><span class="p">:</span>
+                    <span class="n">pianoroll</span><span class="p">[</span><span class="n">start</span><span class="p">:</span><span class="n">end</span><span class="p">,</span> <span class="n">pitches</span><span class="p">[</span><span class="n">idx</span><span class="p">]]</span> <span class="o">+=</span> <span class="n">velocity</span>
+                <span class="k">elif</span> <span class="n">mode</span> <span class="o">==</span> <span class="s2">&quot;max&quot;</span><span class="p">:</span>
+                    <span class="n">maximum</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">maximum</span><span class="p">(</span>
+                        <span class="n">pianoroll</span><span class="p">[</span><span class="n">start</span><span class="p">:</span><span class="n">end</span><span class="p">,</span> <span class="n">pitches</span><span class="p">[</span><span class="n">idx</span><span class="p">]],</span> <span class="n">velocity</span>
+                    <span class="p">)</span>
+                    <span class="n">pianoroll</span><span class="p">[</span><span class="n">start</span><span class="p">:</span><span class="n">end</span><span class="p">,</span> <span class="n">pitches</span><span class="p">[</span><span class="n">idx</span><span class="p">]]</span> <span class="o">=</span> <span class="n">maximum</span>
+
+        <span class="k">if</span> <span class="n">skip_empty_tracks</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">pianoroll</span><span class="p">):</span>
+            <span class="k">continue</span>
+
+        <span class="n">track</span> <span class="o">=</span> <span class="n">Track</span><span class="p">(</span>
+            <span class="n">program</span><span class="o">=</span><span class="n">instrument</span><span class="o">.</span><span class="n">program</span><span class="p">,</span>
+            <span class="n">is_drum</span><span class="o">=</span><span class="n">instrument</span><span class="o">.</span><span class="n">is_drum</span><span class="p">,</span>
+            <span class="n">name</span><span class="o">=</span><span class="n">instrument</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+            <span class="n">pianoroll</span><span class="o">=</span><span class="n">pianoroll</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">tracks</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">track</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">Multitrack</span><span class="p">(</span>
+        <span class="n">resolution</span><span class="o">=</span><span class="n">resolution</span><span class="p">,</span> <span class="n">tempo</span><span class="o">=</span><span class="n">tempo</span><span class="p">,</span> <span class="n">downbeat</span><span class="o">=</span><span class="n">downbeat</span><span class="p">,</span> <span class="n">tracks</span><span class="o">=</span><span class="n">tracks</span>
+    <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="read"><a class="viewcode-back" href="../../read_write.html#pypianoroll.read">[docs]</a><span class="k">def</span> <span class="nf">read</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Read a MIDI file into a Multitrack object.</span>
+
+<span class="sd">    See :meth:`pypianoroll.from_pretty_midi` for full documentation.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    path : str</span>
+<span class="sd">        Path to the MIDI file to read.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">pm</span> <span class="o">=</span> <span class="n">PrettyMIDI</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">from_pretty_midi</span><span class="p">(</span><span class="n">pm</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2020, Hao-Wen Dong
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

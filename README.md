@@ -1,0 +1,47 @@
+Pypianoroll
+===========
+
+[![Travis](https://img.shields.io/travis/com/salu133445/pypianoroll)](https://travis-ci.com/salu133445/pypianoroll)
+[![Codecov](https://img.shields.io/codecov/c/github/salu133445/muspy)](https://codecov.io/gh/salu133445/pypianoroll)
+[![GitHub license](https://img.shields.io/github/license/salu133445/pypianoroll)](https://github.com/salu133445/musegan/blob/master/LICENSE)
+![GitHub release](https://img.shields.io/github/v/release/salu133445/pypianoroll)
+
+
+Pypianoroll is an open source Python library for working with piano rolls. It provides essential tools for handling multitrack
+piano rolls, including efficient I/O as well as manipulation, visualization
+and evaluation tools.
+
+
+Features
+--------
+
+- Manipulate multitrack piano rolls intuitively
+- Visualize multitrack piano rolls beautifully
+- Save and load multitrack piano rolls in a space-efficient format
+- Parse MIDI files into multitrack piano rolls
+- Write multitrack piano rolls into MIDI files
+
+
+Installation
+------------
+
+To install Pypianoroll, please run `pip install pypianoroll`. To build Pypianoroll from source, please download the [source](https://github.com/salu133445/pypianoroll/releases) and run `python setup.py install`.
+
+
+Documentation
+-------------
+
+Documentation is available [here](https://salu133445.github.io/pypianoroll) and as docstrings with the code.
+
+
+Citing
+------
+
+Please cite the following paper if you use Pypianoroll in a published work:
+
+Hao-Wen Dong, Wen-Yi Hsiao, and Yi-Hsuan Yang,
+"Pypianoroll: Open Source Python Package for Handling Multitrack Pianorolls,"
+in Late-Breaking Demos of the 19th International Society for Music Information
+Retrieval Conference (ISMIR), 2018.
+[[paper](https://salu133445.github.io/pypianoroll/pdf/pypianoroll-ismir2018-lbd-paper.pdf)]
+[[poster](https://salu133445.github.io/pypianoroll/pdf/pypianoroll-ismir2018-lbd-poster.pdf)]

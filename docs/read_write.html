@@ -1,15 +1,18 @@
 
 
 <!DOCTYPE html>
-<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8">
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Parse &amp; Write &mdash; pypianoroll 0.5.3 documentation</title>
+  <title>Read &amp; Write &mdash; Pypianoroll  documentation</title>
   
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
 
   
   
@@ -17,7 +20,9 @@
   
 
   
-  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
@@ -25,14 +30,11 @@
         <script src="_static/underscore.js"></script>
         <script src="_static/doctools.js"></script>
         <script src="_static/language_data.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     
     <script type="text/javascript" src="_static/js/theme.js"></script>
 
     
-
-  
-  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Visualization" href="visualization.html" />
@@ -50,18 +52,17 @@
           
 
           
-            <a href="index.html" class="icon icon-home"> pypianoroll
+            <a href="index.html">
           
 
+          
+            
+            <img src="_static/logo.svg" class="logo" alt="Logo"/>
           
           </a>
 
           
             
-            
-              <div class="version">
-                0.5.3
-              </div>
             
           
 
@@ -77,6 +78,7 @@
           
         </div>
 
+        
         <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
           
             
@@ -87,17 +89,18 @@
               <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="getting_started.html">Getting Started</a></li>
 <li class="toctree-l1"><a class="reference internal" href="save_load.html">Save &amp; Load</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Parse &amp; Write</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Read &amp; Write</a></li>
 <li class="toctree-l1"><a class="reference internal" href="visualization.html">Visualization</a></li>
-<li class="toctree-l1"><a class="reference internal" href="utilities.html">Utilities</a></li>
 <li class="toctree-l1"><a class="reference internal" href="metrics.html">Metrics</a></li>
-<li class="toctree-l1"><a class="reference internal" href="track.html">Single-track Pianoroll</a></li>
-<li class="toctree-l1"><a class="reference internal" href="multitrack.html">Multitrack Pianoroll</a></li>
+<li class="toctree-l1"><a class="reference internal" href="track.html">Track Class</a></li>
+<li class="toctree-l1"><a class="reference internal" href="multitrack.html">Multitrack Class</a></li>
+<li class="toctree-l1"><a class="reference internal" href="doc.html">Technical Documentation</a></li>
 </ul>
 
             
           
         </div>
+        
       </div>
     </nav>
 
@@ -107,7 +110,7 @@
       <nav class="wy-nav-top" aria-label="top navigation">
         
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="index.html">pypianoroll</a>
+          <a href="index.html">Pypianoroll</a>
         
       </nav>
 
@@ -136,14 +139,16 @@
 
   <ul class="wy-breadcrumbs">
     
-      <li><a href="index.html">Docs</a> &raquo;</li>
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
         
-      <li>Parse &amp; Write</li>
+      <li>Read &amp; Write</li>
     
     
       <li class="wy-breadcrumbs-aside">
         
             
+            <a href="_sources/read_write.rst.txt" rel="nofollow"> View page source</a>
+          
         
       </li>
     
@@ -155,41 +160,41 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="parse-write">
-<span id="id1"></span><h1>Parse &amp; Write<a class="headerlink" href="#parse-write" title="Permalink to this headline">¶</a></h1>
-<p>Pypianoroll currently supports parsing from and writing to MIDI files. Supports
-for MusicXML and ABC format are in the plan.</p>
-<p>Note that the MIDI parsing and writing functions are based on the Python package
-<cite>pretty_midi</cite>. If you use them in a published work, please cite <cite>pretty_midi</cite> as
-instructed <a class="reference external" href="http://craffel.github.io/pretty-midi/">here</a>.</p>
+  <div class="section" id="read-write">
+<h1>Read &amp; Write<a class="headerlink" href="#read-write" title="Permalink to this headline">¶</a></h1>
+<p>Pypianoroll currently supports reading from and writing to MIDI files. Supports for MusicXML and ABC format are in the plan.</p>
+<p>Note that the MIDI reading and writing functions are based on the Python package pretty_midi. If you use them in a published work, please cite pretty_midi as instructed <a class="reference external" href="http://craffel.github.io/pretty-midi/">here</a>.</p>
 <div class="section" id="functions">
 <h2>Functions<a class="headerlink" href="#functions" title="Permalink to this headline">¶</a></h2>
-<dl class="function">
-<dt id="pypianoroll.parse">
-<code class="sig-prename descclassname">pypianoroll.</code><code class="sig-name descname">parse</code><span class="sig-paren">(</span><em class="sig-param">filename</em>, <em class="sig-param">beat_resolution=24</em>, <em class="sig-param">name='unknown'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pypianoroll/utilities.html#parse"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypianoroll.parse" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return a <a class="reference internal" href="multitrack.html#pypianoroll.Multitrack" title="pypianoroll.Multitrack"><code class="xref py py-class docutils literal notranslate"><span class="pre">pypianoroll.Multitrack</span></code></a> object loaded from a MIDI (.mid,
-.midi, .MID, .MIDI) file.</p>
+<dl class="py function">
+<dt>
+<code class="sig-prename descclassname">pypianoroll.</code><code class="sig-name descname">read</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">path</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pypianoroll/inputs.html#read"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Read a MIDI file into a Multitrack object.</p>
+<p>See <a class="reference internal" href="doc.html#pypianoroll.from_pretty_midi" title="pypianoroll.from_pretty_midi"><code class="xref py py-meth docutils literal notranslate"><span class="pre">pypianoroll.from_pretty_midi()</span></code></a> for full documentation.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>filename</strong> (<em>str</em>) – The filename of the MIDI file.</p>
+<dd class="field-odd"><p><strong>path</strong> (<em>str</em>) – Path to the MIDI file to read.</p>
 </dd>
 </dl>
 </dd></dl>
 
-<dl class="function">
-<dt id="pypianoroll.write">
-<code class="sig-prename descclassname">pypianoroll.</code><code class="sig-name descname">write</code><span class="sig-paren">(</span><em class="sig-param">obj</em>, <em class="sig-param">filepath</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pypianoroll/utilities.html#write"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypianoroll.write" title="Permalink to this definition">¶</a></dt>
+<dl class="py function">
+<dt>
+<code class="sig-prename descclassname">pypianoroll.</code><code class="sig-name descname">write</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">obj</span></em>, <em class="sig-param"><span class="n">path</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pypianoroll/core.html#write"><span class="viewcode-link">[source]</span></a></dt>
 <dd><p>Write the object to a MIDI file.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>filepath</strong> (<em>str</em>) – The path to write the MIDI file.</p>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>obj</strong> (<a class="reference internal" href="doc.html#pypianoroll.Multitrack" title="pypianoroll.Multitrack"><code class="xref py py-class docutils literal notranslate"><span class="pre">pypianoroll.Multitrack</span></code></a> object) – Object to write.</p></li>
+<li><p><strong>path</strong> (<em>str</em>) – Path to the MIDI file to write.</p></li>
+</ul>
 </dd>
 </dl>
 </dd></dl>
 
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>Writing the tempo array and down beat array to tempo change and time
+<p>Writing the tempo array and downbeat array to tempo change and time
 signature change events are not supported yet.</p>
 </div>
 </div>
@@ -215,11 +220,19 @@ signature change events are not supported yet.</p>
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2018, Hao-Wen Dong
+        
+        &copy; Copyright 2020, Hao-Wen Dong
 
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
 
@@ -230,7 +243,6 @@ signature change events are not supported yet.</p>
 
   </div>
   
-
 
   <script type="text/javascript">
       jQuery(function () {

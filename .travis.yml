@@ -7,11 +7,10 @@ python:
   - 3.7
   - 3.8
 install:
-  - pip install -e .
-  - pip install -e .[pytest]
+  - pip install -e .[test]
 script:
-  - python setup.py pytest --addopts "--cov pypianoroll"
+  - pytest --cov="pypianoroll/" tests/
 after_success:
-  - coveralls
+  - bash <(curl -s https://codecov.io/bash)
 notifications:
   email: false

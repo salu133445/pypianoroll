@@ -10,7 +10,9 @@ class TrackTestCase(unittest.TestCase):
     def setUp(self):
         pianoroll = np.zeros((96, 128), np.uint8)
         pianoroll[:95, [60, 64, 67, 72, 76, 79, 84]] = 100
-        self.track = Track(pianoroll, 0, False, "test")
+        self.track = Track(
+            program=0, is_drum=False, name="test", pianoroll=pianoroll
+        )
 
     def tearDown(self):
         self.track = None
@@ -20,11 +22,6 @@ class TrackTestCase(unittest.TestCase):
         sliced = self.track[20:40]
         self.assertIsInstance(sliced, Track)
         self.assertEqual(sliced.pianoroll.shape, (20, 128))
-
-    def test_slice_along_time_axis(self):
-        """Test slicing method along time axis."""
-        with self.assertRaises(ValueError):
-            sliced = self.track[:, 10:20]
 
     def test_assign_constant(self):
         """Test method `Track.slice()`."""
@@ -83,7 +80,9 @@ class BinaryTrackTestCase(unittest.TestCase):
     def setUp(self):
         pianoroll = np.zeros((96, 128), bool)
         pianoroll[:95, [60, 64, 67, 72]] = True
-        self.track = Track(pianoroll, 0, False, "test")
+        self.track = Track(
+            program=0, is_drum=False, name="test", pianoroll=pianoroll
+        )
 
     def tearDown(self):
         self.track = None

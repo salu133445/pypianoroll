@@ -1,19 +1,54 @@
-.. include:: ../../README.rst
+===========
+Pypianoroll
+===========
+
+.. image:: https://img.shields.io/travis/com/salu133445/pypianoroll
+    :target: https://travis-ci.com/salu133445/pypianoroll
+    :alt: Travis
+.. image:: https://img.shields.io/codecov/c/github/salu133445/muspy
+    :target: https://codecov.io/gh/salu133445/pypianoroll
+    :alt: Codecov
+.. image:: https://img.shields.io/github/license/salu133445/pypianoroll
+    :target: https://github.com/salu133445/musegan/blob/master/LICENSE
+    :alt: GitHub license
+.. image:: https://img.shields.io/github/v/release/salu133445/pypianoroll
+    :target: https://github.com/salu133445/pypianoroll/releases
+    :alt: GitHub release
+
+Pypianoroll is an open source Python library for working with piano rolls. It provides essential tools for handling multitrack piano rolls, including efficient I/O as well as manipulation, visualization and evaluation tools.
+
+
+Features
+========
+
+- Manipulate multitrack piano rolls intuitively
+- Visualize multitrack piano rolls beautifully
+- Save and load multitrack piano rolls in a space-efficient format
+- Parse MIDI files into multitrack piano rolls
+- Write multitrack piano rolls into MIDI files
+
+
+Installation
+============
+
+To install Pypianoroll, please run ``pip install pypianoroll``. To build Pypianoroll from source, please download the `source <https://github.com/salu133445/pypianoroll/releases>`_ and run ``python setup.py install``.
+
 
 Documentation
 =============
 
-.. toctree::
-    :titlesonly:
+Documentation is available `here <https://salu133445.github.io/pypianoroll>`_ and as docstrings with the code.
 
-    getting_started
-    save_load
-    parse_write
-    visualization
-    utilities
-    metrics
-    track
-    multitrack
+
+Citing
+======
+
+Please cite the following paper if you use Pypianoroll in a published work:
+
+Hao-Wen Dong, Wen-Yi Hsiao, and Yi-Hsuan Yang, "Pypianoroll: Open Source Python Package for Handling Multitrack Pianorolls," in Late-Breaking Demos of the 19th International Society for Music Information Retrieval Conference (ISMIR), 2018.
+[`paper <https://salu133445.github.io/pypianoroll/pdf/pypianoroll-ismir2018-lbd-paper.pdf>`_]
+[`poster <https://salu133445.github.io/pypianoroll/pdf/pypianoroll-ismir2018-lbd-poster.pdf>`_]
+
 
 Why Pypianoroll
 ===============
@@ -24,12 +59,26 @@ Pypianoroll is also designed to provide efficient I/O for pianorolls, since
 pianorolls have long been considered an inefficient way to store music data due
 to the sparse nature.
 
+
 Lakh Pianoroll Dataset
 ======================
 
-`Lakh Pianoroll Dataset`_ (LPD) is a new multitrack pianoroll dataset using
+`Lakh Pianoroll Dataset <https://salu133445.github.io/musegan/dataset>`_ (LPD) is a new multitrack pianoroll dataset using
 Pypianoroll for efficient data I/O and to save space, which is used as the
-training dataset in our MuseGAN_ project.
+training dataset in our `MuseGAN <https://salu133445.github.io/musegan>`_ project.
 
-.. _Lakh Pianoroll Dataset: https://salu133445.github.io/musegan/dataset
-.. _MuseGAN: https://salu133445.github.io/musegan
+
+Contents
+========
+
+.. toctree::
+    :titlesonly:
+
+    getting_started
+    save_load
+    read_write
+    visualization
+    metrics
+    track
+    multitrack
+    doc

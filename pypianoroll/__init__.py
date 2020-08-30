@@ -1,43 +1,36 @@
-"""
-Pypianoroll
-===========
-A python package for handling multitrack pianorolls.
+"""A Python library for handling multitrack pianorolls.
+
+Pypianoroll is an open source Python library for working with multitrack
+pianorolls. It provides essential tools for handling multitrack
+pianorolls, including efficient I/O as well as manipulation, visualization
+and evaluation tools.
 
 Features
 --------
-- Manipulate multitrack pianorolls intuitively
-- Visualize multitrack pianorolls in a modern DAW like style
-- Save and load multitrack pianorolls in space efficient formats
-- Parse MIDI files into multitrack pianorolls
-- Write multitrack pianorolls into MIDI files
+
+- Manipulate multitrack piano rolls intuitively
+- Visualize multitrack piano rolls beautifully
+- Save and load multitrack piano rolls in a space-efficient format
+- Parse MIDI files into multitrack piano rolls
+- Write multitrack piano rolls into MIDI files
 
 """
 from __future__ import absolute_import, division, print_function
 
-import pypianoroll.metrics
-from pypianoroll.multitrack import Multitrack
-from pypianoroll.track import Track
-from pypianoroll.utilities import (
-    assign_constant,
-    binarize,
-    check_pianoroll,
-    clip,
-    copy,
-    load,
-    pad,
-    pad_to_multiple,
-    pad_to_same,
-    parse,
-    plot,
-    save,
-    transpose,
-    trim_trailing_silence,
-    write,
-)
-from pypianoroll.version import __version__
-from pypianoroll.visualization import (
-    plot_multitrack,
-    plot_pianoroll,
-    plot_track,
-    save_animation,
-)
+from . import core, inputs, metrics, multitrack, track, visualization
+
+from .core import *  # noqa: F401,F403
+from .inputs import *  # noqa: F401,F403
+from .metrics import *  # noqa: F401,F403
+from .multitrack import *  # noqa: F401,F403
+from .track import *  # noqa: F401,F403
+from .version import __version__
+from .visualization import *  # noqa: F401,F403
+
+__all__ = ["__version__"]
+__all__.extend(core.__all__)
+__all__.extend(inputs.__all__)
+__all__.extend(metrics.__all__)
+__all__.extend(multitrack.__all__)
+__all__.extend(track.__all__)
+__all__.extend(visualization.__all__)

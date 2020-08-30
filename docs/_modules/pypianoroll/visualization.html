@@ -1,15 +1,18 @@
 
 
 <!DOCTYPE html>
-<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8">
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>pypianoroll.visualization &mdash; pypianoroll 0.5.3 documentation</title>
+  <title>pypianoroll.visualization &mdash; Pypianoroll  documentation</title>
   
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
 
   
   
@@ -17,7 +20,9 @@
   
 
   
-  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
@@ -25,14 +30,11 @@
         <script src="../../_static/underscore.js"></script>
         <script src="../../_static/doctools.js"></script>
         <script src="../../_static/language_data.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     
     <script type="text/javascript" src="../../_static/js/theme.js"></script>
 
     
-
-  
-  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" /> 
 </head>
@@ -48,18 +50,17 @@
           
 
           
-            <a href="../../index.html" class="icon icon-home"> pypianoroll
+            <a href="../../index.html">
           
 
+          
+            
+            <img src="../../_static/logo.svg" class="logo" alt="Logo"/>
           
           </a>
 
           
             
-            
-              <div class="version">
-                0.5.3
-              </div>
             
           
 
@@ -75,6 +76,7 @@
           
         </div>
 
+        
         <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
           
             
@@ -85,17 +87,18 @@
               <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../getting_started.html">Getting Started</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../save_load.html">Save &amp; Load</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../parse_write.html">Parse &amp; Write</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../read_write.html">Read &amp; Write</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../visualization.html">Visualization</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../utilities.html">Utilities</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../metrics.html">Metrics</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../track.html">Single-track Pianoroll</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../multitrack.html">Multitrack Pianoroll</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../track.html">Track Class</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../multitrack.html">Multitrack Class</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../doc.html">Technical Documentation</a></li>
 </ul>
 
             
           
         </div>
+        
       </div>
     </nav>
 
@@ -105,7 +108,7 @@
       <nav class="wy-nav-top" aria-label="top navigation">
         
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../index.html">pypianoroll</a>
+          <a href="../../index.html">Pypianoroll</a>
         
       </nav>
 
@@ -134,7 +137,7 @@
 
   <ul class="wy-breadcrumbs">
     
-      <li><a href="../../index.html">Docs</a> &raquo;</li>
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
         
           <li><a href="../index.html">Module code</a> &raquo;</li>
         
@@ -157,17 +160,11 @@
 <span></span><span class="sd">&quot;&quot;&quot;Module for visualizing multitrack pianorolls.&quot;&quot;&quot;</span>
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">absolute_import</span><span class="p">,</span> <span class="n">division</span><span class="p">,</span> <span class="n">print_function</span>
 
+<span class="kn">import</span> <span class="nn">matplotlib</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">pretty_midi</span>
-
-<span class="k">try</span><span class="p">:</span>
-    <span class="kn">import</span> <span class="nn">matplotlib</span>
-    <span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">pyplot</span> <span class="k">as</span> <span class="n">plt</span>
-    <span class="kn">from</span> <span class="nn">matplotlib.patches</span> <span class="kn">import</span> <span class="n">Patch</span>
-
-    <span class="n">HAS_MATPLOTLIB</span> <span class="o">=</span> <span class="kc">True</span>
-<span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
-    <span class="n">HAS_MATPLOTLIB</span> <span class="o">=</span> <span class="kc">False</span>
+<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+<span class="kn">from</span> <span class="nn">matplotlib.patches</span> <span class="kn">import</span> <span class="n">Patch</span>
 
 <span class="k">try</span><span class="p">:</span>
     <span class="kn">from</span> <span class="nn">moviepy.editor</span> <span class="kn">import</span> <span class="n">VideoClip</span>
@@ -177,12 +174,19 @@
 <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
     <span class="n">HAS_MOVIEPY</span> <span class="o">=</span> <span class="kc">False</span>
 
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s2">&quot;plot_multitrack&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;plot_pianoroll&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;plot_track&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;save_animation&quot;</span><span class="p">,</span>
+<span class="p">]</span>
+
 
 <div class="viewcode-block" id="plot_pianoroll"><a class="viewcode-back" href="../../visualization.html#pypianoroll.plot_pianoroll">[docs]</a><span class="k">def</span> <span class="nf">plot_pianoroll</span><span class="p">(</span>
     <span class="n">ax</span><span class="p">,</span>
     <span class="n">pianoroll</span><span class="p">,</span>
     <span class="n">is_drum</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-    <span class="n">beat_resolution</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">resolution</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
     <span class="n">downbeats</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
     <span class="n">preset</span><span class="o">=</span><span class="s2">&quot;default&quot;</span><span class="p">,</span>
     <span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;Blues&quot;</span><span class="p">,</span>
@@ -216,7 +220,7 @@
 <span class="sd">    is_drum : bool</span>
 <span class="sd">        A boolean number that indicates whether it is a percussion track.</span>
 <span class="sd">        Defaults to False.</span>
-<span class="sd">    beat_resolution : int</span>
+<span class="sd">    resolution : int</span>
 <span class="sd">        The number of time steps used to represent a beat. Required and only</span>
 <span class="sd">        effective when `xtick` is &#39;beat&#39;.</span>
 <span class="sd">    downbeats : list</span>
@@ -235,7 +239,7 @@
 <span class="sd">        &#39;Blues&#39;. Only effective when `pianoroll` is 2D.</span>
 <span class="sd">    xtick : {&#39;auto&#39;, &#39;beat&#39;, &#39;step&#39;, &#39;off&#39;}</span>
 <span class="sd">        A string that indicates what to use as ticks along the x-axis. If &#39;auto&#39;</span>
-<span class="sd">        is given, automatically set to &#39;beat&#39; if `beat_resolution` is also given</span>
+<span class="sd">        is given, automatically set to &#39;beat&#39; if `resolution` is also given</span>
 <span class="sd">        and set to &#39;step&#39;, otherwise. Defaults to &#39;auto&#39;.</span>
 <span class="sd">    ytick : {&#39;octave&#39;, &#39;pitch&#39;, &#39;off&#39;}</span>
 <span class="sd">        A string that indicates what to use as ticks along the y-axis.</span>
@@ -269,17 +273,20 @@
 <span class="sd">        argument.</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">HAS_MATPLOTLIB</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ImportError</span><span class="p">(</span><span class="s2">&quot;matplotlib package is required for plotting supports.&quot;</span><span class="p">)</span>
-
     <span class="k">if</span> <span class="n">pianoroll</span><span class="o">.</span><span class="n">ndim</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">):</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;`pianoroll` must be a 2D or 3D numpy array&quot;</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">pianoroll</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">!=</span> <span class="mi">128</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;The length of the second axis of `pianoroll` must be 128.&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="s2">&quot;The length of the second axis of `pianoroll` must be 128.&quot;</span>
+        <span class="p">)</span>
     <span class="k">if</span> <span class="n">xtick</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;auto&quot;</span><span class="p">,</span> <span class="s2">&quot;beat&quot;</span><span class="p">,</span> <span class="s2">&quot;step&quot;</span><span class="p">,</span> <span class="s2">&quot;off&quot;</span><span class="p">):</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;`xtick` must be one of {&#39;auto&#39;, &#39;beat&#39;, &#39;step&#39;, &#39;none&#39;}.&quot;</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">xtick</span> <span class="o">==</span> <span class="s2">&quot;beat&quot;</span> <span class="ow">and</span> <span class="n">beat_resolution</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;`beat_resolution` must be specified when `xtick` is &#39;beat&#39;.&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="s2">&quot;`xtick` must be one of {&#39;auto&#39;, &#39;beat&#39;, &#39;step&#39;, &#39;none&#39;}.&quot;</span>
+        <span class="p">)</span>
+    <span class="k">if</span> <span class="n">xtick</span> <span class="o">==</span> <span class="s2">&quot;beat&quot;</span> <span class="ow">and</span> <span class="n">resolution</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="s2">&quot;`resolution` must be specified when `xtick` is &#39;beat&#39;.&quot;</span>
+        <span class="p">)</span>
     <span class="k">if</span> <span class="n">ytick</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;octave&quot;</span><span class="p">,</span> <span class="s2">&quot;pitch&quot;</span><span class="p">,</span> <span class="s2">&quot;off&quot;</span><span class="p">):</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;`ytick` must be one of {octave&#39;, &#39;pitch&#39;, &#39;off&#39;}.&quot;</span><span class="p">)</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">xticklabel</span><span class="p">,</span> <span class="nb">bool</span><span class="p">):</span>
@@ -289,7 +296,9 @@
             <span class="s2">&quot;`yticklabel` must be one of {&#39;auto&#39;, &#39;name&#39;, &#39;number&#39;, &#39;off&#39;}.&quot;</span>
         <span class="p">)</span>
     <span class="k">if</span> <span class="n">tick_direction</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;in&quot;</span><span class="p">,</span> <span class="s2">&quot;out&quot;</span><span class="p">,</span> <span class="s2">&quot;inout&quot;</span><span class="p">):</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;`tick_direction` must be one of {&#39;in&#39;, &#39;out&#39;, &#39;inout&#39;}.&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="s2">&quot;`tick_direction` must be one of {&#39;in&#39;, &#39;out&#39;, &#39;inout&#39;}.&quot;</span>
+        <span class="p">)</span>
     <span class="k">if</span> <span class="n">label</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;x&quot;</span><span class="p">,</span> <span class="s2">&quot;y&quot;</span><span class="p">,</span> <span class="s2">&quot;both&quot;</span><span class="p">,</span> <span class="s2">&quot;off&quot;</span><span class="p">):</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;`label` must be one of {&#39;x&#39;, &#39;y&#39;, &#39;both&#39;, &#39;off&#39;}.&quot;</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">grid</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;x&quot;</span><span class="p">,</span> <span class="s2">&quot;y&quot;</span><span class="p">,</span> <span class="s2">&quot;both&quot;</span><span class="p">,</span> <span class="s2">&quot;off&quot;</span><span class="p">):</span>
@@ -329,7 +338,7 @@
     <span class="k">if</span> <span class="n">tick_loc</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">tick_loc</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;bottom&quot;</span><span class="p">,</span> <span class="s2">&quot;left&quot;</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">xtick</span> <span class="o">==</span> <span class="s2">&quot;auto&quot;</span><span class="p">:</span>
-        <span class="n">xtick</span> <span class="o">=</span> <span class="s2">&quot;beat&quot;</span> <span class="k">if</span> <span class="n">beat_resolution</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="s2">&quot;step&quot;</span>
+        <span class="n">xtick</span> <span class="o">=</span> <span class="s2">&quot;beat&quot;</span> <span class="k">if</span> <span class="n">resolution</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="s2">&quot;step&quot;</span>
     <span class="k">if</span> <span class="n">yticklabel</span> <span class="o">==</span> <span class="s2">&quot;auto&quot;</span><span class="p">:</span>
         <span class="n">yticklabel</span> <span class="o">=</span> <span class="s2">&quot;name&quot;</span> <span class="k">if</span> <span class="n">ytick</span> <span class="o">==</span> <span class="s2">&quot;octave&quot;</span> <span class="k">else</span> <span class="s2">&quot;number&quot;</span>
 
@@ -362,10 +371,12 @@
 
     <span class="c1"># x-axis</span>
     <span class="k">if</span> <span class="n">xtick</span> <span class="o">==</span> <span class="s2">&quot;beat&quot;</span> <span class="ow">and</span> <span class="n">preset</span> <span class="o">!=</span> <span class="s2">&quot;frame&quot;</span><span class="p">:</span>
-        <span class="n">num_beat</span> <span class="o">=</span> <span class="n">pianoroll</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">//</span> <span class="n">beat_resolution</span>
-        <span class="n">ax</span><span class="o">.</span><span class="n">set_xticks</span><span class="p">(</span><span class="n">beat_resolution</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">num_beat</span><span class="p">)</span> <span class="o">-</span> <span class="mf">0.5</span><span class="p">)</span>
+        <span class="n">num_beat</span> <span class="o">=</span> <span class="n">pianoroll</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">//</span> <span class="n">resolution</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_xticks</span><span class="p">(</span><span class="n">resolution</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">num_beat</span><span class="p">)</span> <span class="o">-</span> <span class="mf">0.5</span><span class="p">)</span>
         <span class="n">ax</span><span class="o">.</span><span class="n">set_xticklabels</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
-        <span class="n">ax</span><span class="o">.</span><span class="n">set_xticks</span><span class="p">(</span><span class="n">beat_resolution</span> <span class="o">*</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">num_beat</span><span class="p">)</span> <span class="o">+</span> <span class="mf">0.5</span><span class="p">)</span> <span class="o">-</span> <span class="mf">0.5</span><span class="p">,</span> <span class="n">minor</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_xticks</span><span class="p">(</span>
+            <span class="n">resolution</span> <span class="o">*</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">num_beat</span><span class="p">)</span> <span class="o">+</span> <span class="mf">0.5</span><span class="p">)</span> <span class="o">-</span> <span class="mf">0.5</span><span class="p">,</span> <span class="n">minor</span><span class="o">=</span><span class="kc">True</span>
+        <span class="p">)</span>
         <span class="n">ax</span><span class="o">.</span><span class="n">set_xticklabels</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">num_beat</span> <span class="o">+</span> <span class="mi">1</span><span class="p">),</span> <span class="n">minor</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
         <span class="n">ax</span><span class="o">.</span><span class="n">tick_params</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="s2">&quot;x&quot;</span><span class="p">,</span> <span class="n">which</span><span class="o">=</span><span class="s2">&quot;minor&quot;</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 
@@ -379,7 +390,10 @@
         <span class="k">if</span> <span class="n">yticklabel</span> <span class="o">==</span> <span class="s2">&quot;name&quot;</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">is_drum</span><span class="p">:</span>
                 <span class="n">ax</span><span class="o">.</span><span class="n">set_yticklabels</span><span class="p">(</span>
-                    <span class="p">[</span><span class="n">pretty_midi</span><span class="o">.</span><span class="n">note_number_to_drum_name</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">128</span><span class="p">)]</span>
+                    <span class="p">[</span>
+                        <span class="n">pretty_midi</span><span class="o">.</span><span class="n">note_number_to_drum_name</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+                        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">128</span><span class="p">)</span>
+                    <span class="p">]</span>
                 <span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">ax</span><span class="o">.</span><span class="n">set_yticklabels</span><span class="p">(</span>
@@ -402,7 +416,10 @@
     <span class="c1"># grid</span>
     <span class="k">if</span> <span class="n">grid</span> <span class="o">!=</span> <span class="s2">&quot;off&quot;</span><span class="p">:</span>
         <span class="n">ax</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span>
-            <span class="n">axis</span><span class="o">=</span><span class="n">grid</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;k&quot;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="n">grid_linestyle</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="n">grid_linewidth</span>
+            <span class="n">axis</span><span class="o">=</span><span class="n">grid</span><span class="p">,</span>
+            <span class="n">color</span><span class="o">=</span><span class="s2">&quot;k&quot;</span><span class="p">,</span>
+            <span class="n">linestyle</span><span class="o">=</span><span class="n">grid_linestyle</span><span class="p">,</span>
+            <span class="n">linewidth</span><span class="o">=</span><span class="n">grid_linewidth</span><span class="p">,</span>
         <span class="p">)</span>
 
     <span class="c1"># downbeat boarder</span>
@@ -414,7 +431,7 @@
 <div class="viewcode-block" id="plot_track"><a class="viewcode-back" href="../../visualization.html#pypianoroll.plot_track">[docs]</a><span class="k">def</span> <span class="nf">plot_track</span><span class="p">(</span>
     <span class="n">track</span><span class="p">,</span>
     <span class="n">filename</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-    <span class="n">beat_resolution</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">resolution</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
     <span class="n">downbeats</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
     <span class="n">preset</span><span class="o">=</span><span class="s2">&quot;default&quot;</span><span class="p">,</span>
     <span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;Blues&quot;</span><span class="p">,</span>
@@ -436,7 +453,7 @@
 <span class="sd">    ----------</span>
 <span class="sd">    filename :</span>
 <span class="sd">        The filename to which the plot is saved. If None, save nothing.</span>
-<span class="sd">    beat_resolution : int</span>
+<span class="sd">    resolution : int</span>
 <span class="sd">        The number of time steps used to represent a beat. Required and only</span>
 <span class="sd">        effective when `xtick` is &#39;beat&#39;.</span>
 <span class="sd">    downbeats : list</span>
@@ -455,7 +472,7 @@
 <span class="sd">        &#39;Blues&#39;. Only effective when `pianoroll` is 2D.</span>
 <span class="sd">    xtick : {&#39;auto&#39;, &#39;beat&#39;, &#39;step&#39;, &#39;off&#39;}</span>
 <span class="sd">        A string that indicates what to use as ticks along the x-axis. If &#39;auto&#39;</span>
-<span class="sd">        is given, automatically set to &#39;beat&#39; if `beat_resolution` is also given</span>
+<span class="sd">        is given, automatically set to &#39;beat&#39; if `resolution` is also given</span>
 <span class="sd">        and set to &#39;step&#39;, otherwise. Defaults to &#39;auto&#39;.</span>
 <span class="sd">    ytick : {&#39;octave&#39;, &#39;pitch&#39;, &#39;off&#39;}</span>
 <span class="sd">        A string that indicates what to use as ticks along the y-axis. Defaults</span>
@@ -496,15 +513,12 @@
 <span class="sd">        A :class:`matplotlib.axes.Axes` object.</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">HAS_MATPLOTLIB</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ImportError</span><span class="p">(</span><span class="s2">&quot;matplotlib package is required for plotting supports.&quot;</span><span class="p">)</span>
-
     <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
     <span class="n">plot_pianoroll</span><span class="p">(</span>
         <span class="n">ax</span><span class="p">,</span>
         <span class="n">track</span><span class="o">.</span><span class="n">pianoroll</span><span class="p">,</span>
         <span class="n">track</span><span class="o">.</span><span class="n">is_drum</span><span class="p">,</span>
-        <span class="n">beat_resolution</span><span class="p">,</span>
+        <span class="n">resolution</span><span class="p">,</span>
         <span class="n">downbeats</span><span class="p">,</span>
         <span class="n">preset</span><span class="o">=</span><span class="n">preset</span><span class="p">,</span>
         <span class="n">cmap</span><span class="o">=</span><span class="n">cmap</span><span class="p">,</span>
@@ -586,7 +600,7 @@
 
 <span class="sd">    xtick : {&#39;auto&#39;, &#39;beat&#39;, &#39;step&#39;, &#39;off&#39;}</span>
 <span class="sd">        A string that indicates what to use as ticks along the x-axis. If &#39;auto&#39;</span>
-<span class="sd">        is given, automatically set to &#39;beat&#39; if `beat_resolution` is also given</span>
+<span class="sd">        is given, automatically set to &#39;beat&#39; if `resolution` is also given</span>
 <span class="sd">        and set to &#39;step&#39;, otherwise. Defaults to &#39;auto&#39;.</span>
 <span class="sd">    ytick : {&#39;octave&#39;, &#39;pitch&#39;, &#39;off&#39;}</span>
 <span class="sd">        A string that indicates what to use as ticks along the y-axis. Defaults</span>
@@ -627,8 +641,6 @@
 <span class="sd">        List of :class:`matplotlib.axes.Axes` object.</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">HAS_MATPLOTLIB</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ImportError</span><span class="p">(</span><span class="s2">&quot;matplotlib package is required for plotting supports.&quot;</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">get_track_label</span><span class="p">(</span><span class="n">track_label</span><span class="p">,</span> <span class="n">track</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Return corresponding track labels.&quot;&quot;&quot;</span>
@@ -644,15 +656,21 @@
         <span class="sd">&quot;&quot;&quot;Add a track label to an axis.&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">ax</span><span class="o">.</span><span class="n">get_ylabel</span><span class="p">():</span>
             <span class="k">return</span>
-        <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="n">get_track_label</span><span class="p">(</span><span class="n">track_label</span><span class="p">,</span> <span class="n">track</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="n">ax</span><span class="o">.</span><span class="n">get_ylabel</span><span class="p">())</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span>
+            <span class="n">get_track_label</span><span class="p">(</span><span class="n">track_label</span><span class="p">,</span> <span class="n">track</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="n">ax</span><span class="o">.</span><span class="n">get_ylabel</span><span class="p">()</span>
+        <span class="p">)</span>
 
-    <span class="n">multitrack</span><span class="o">.</span><span class="n">check_validity</span><span class="p">()</span>
+    <span class="n">multitrack</span><span class="o">.</span><span class="n">validate</span><span class="p">()</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">multitrack</span><span class="o">.</span><span class="n">tracks</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;There is no track to plot.&quot;</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">mode</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;separate&quot;</span><span class="p">,</span> <span class="s2">&quot;stacked&quot;</span><span class="p">,</span> <span class="s2">&quot;hybrid&quot;</span><span class="p">):</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;`mode` must be one of {&#39;separate&#39;, &#39;stacked&#39;, &#39;hybrid&#39;}.&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="s2">&quot;`mode` must be one of {&#39;separate&#39;, &#39;stacked&#39;, &#39;hybrid&#39;}.&quot;</span>
+        <span class="p">)</span>
     <span class="k">if</span> <span class="n">track_label</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="s2">&quot;program&quot;</span><span class="p">,</span> <span class="s2">&quot;family&quot;</span><span class="p">,</span> <span class="s2">&quot;off&quot;</span><span class="p">):</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;`track_label` must be one of {&#39;name&#39;, &#39;program&#39;, &#39;family&#39;}.&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="s2">&quot;`track_label` must be one of {&#39;name&#39;, &#39;program&#39;, &#39;family&#39;}.&quot;</span>
+        <span class="p">)</span>
 
     <span class="k">if</span> <span class="n">cmaps</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">mode</span> <span class="o">==</span> <span class="s2">&quot;separate&quot;</span><span class="p">:</span>
@@ -678,7 +696,7 @@
                 <span class="n">axs</span><span class="p">[</span><span class="n">idx</span><span class="p">],</span>
                 <span class="n">track</span><span class="o">.</span><span class="n">pianoroll</span><span class="p">,</span>
                 <span class="kc">False</span><span class="p">,</span>
-                <span class="n">multitrack</span><span class="o">.</span><span class="n">beat_resolution</span><span class="p">,</span>
+                <span class="n">multitrack</span><span class="o">.</span><span class="n">resolution</span><span class="p">,</span>
                 <span class="n">downbeats</span><span class="p">,</span>
                 <span class="n">preset</span><span class="o">=</span><span class="n">preset</span><span class="p">,</span>
                 <span class="n">cmap</span><span class="o">=</span><span class="n">cmaps</span><span class="p">[</span><span class="n">idx</span> <span class="o">%</span> <span class="nb">len</span><span class="p">(</span><span class="n">cmaps</span><span class="p">)],</span>
@@ -722,7 +740,7 @@
             <span class="n">ax</span><span class="p">,</span>
             <span class="n">stacked</span><span class="p">,</span>
             <span class="n">is_all_drum</span><span class="p">,</span>
-            <span class="n">multitrack</span><span class="o">.</span><span class="n">beat_resolution</span><span class="p">,</span>
+            <span class="n">multitrack</span><span class="o">.</span><span class="n">resolution</span><span class="p">,</span>
             <span class="n">downbeats</span><span class="p">,</span>
             <span class="n">preset</span><span class="o">=</span><span class="n">preset</span><span class="p">,</span>
             <span class="n">xtick</span><span class="o">=</span><span class="n">xtick</span><span class="p">,</span>
@@ -739,7 +757,10 @@
 
         <span class="k">if</span> <span class="n">track_label</span> <span class="o">!=</span> <span class="s2">&quot;none&quot;</span><span class="p">:</span>
             <span class="n">patches</span> <span class="o">=</span> <span class="p">[</span>
-                <span class="n">Patch</span><span class="p">(</span><span class="n">color</span><span class="o">=</span><span class="n">colormatrix</span><span class="p">[</span><span class="n">idx</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="n">get_track_label</span><span class="p">(</span><span class="n">track_label</span><span class="p">,</span> <span class="n">track</span><span class="p">))</span>
+                <span class="n">Patch</span><span class="p">(</span>
+                    <span class="n">color</span><span class="o">=</span><span class="n">colormatrix</span><span class="p">[</span><span class="n">idx</span><span class="p">],</span>
+                    <span class="n">label</span><span class="o">=</span><span class="n">get_track_label</span><span class="p">(</span><span class="n">track_label</span><span class="p">,</span> <span class="n">track</span><span class="p">),</span>
+                <span class="p">)</span>
                 <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">track</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">multitrack</span><span class="o">.</span><span class="n">tracks</span><span class="p">)</span>
             <span class="p">]</span>
             <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">handles</span><span class="o">=</span><span class="n">patches</span><span class="p">)</span>
@@ -750,7 +771,9 @@
         <span class="k">return</span> <span class="p">(</span><span class="n">fig</span><span class="p">,</span> <span class="p">[</span><span class="n">ax</span><span class="p">])</span>
 
     <span class="k">if</span> <span class="n">mode</span> <span class="o">==</span> <span class="s2">&quot;hybrid&quot;</span><span class="p">:</span>
-        <span class="n">drums</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">track</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">multitrack</span><span class="o">.</span><span class="n">tracks</span><span class="p">)</span> <span class="k">if</span> <span class="n">track</span><span class="o">.</span><span class="n">is_drum</span><span class="p">]</span>
+        <span class="n">drums</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">i</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">track</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">multitrack</span><span class="o">.</span><span class="n">tracks</span><span class="p">)</span> <span class="k">if</span> <span class="n">track</span><span class="o">.</span><span class="n">is_drum</span>
+        <span class="p">]</span>
         <span class="n">others</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">multitrack</span><span class="o">.</span><span class="n">tracks</span><span class="p">))</span> <span class="k">if</span> <span class="n">i</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">drums</span><span class="p">]</span>
         <span class="n">merged_drums</span> <span class="o">=</span> <span class="n">multitrack</span><span class="o">.</span><span class="n">get_merged_pianoroll</span><span class="p">(</span><span class="n">drums</span><span class="p">)</span>
         <span class="n">merged_others</span> <span class="o">=</span> <span class="n">multitrack</span><span class="o">.</span><span class="n">get_merged_pianoroll</span><span class="p">(</span><span class="n">others</span><span class="p">)</span>
@@ -760,7 +783,7 @@
             <span class="n">ax1</span><span class="p">,</span>
             <span class="n">merged_drums</span><span class="p">,</span>
             <span class="kc">True</span><span class="p">,</span>
-            <span class="n">multitrack</span><span class="o">.</span><span class="n">beat_resolution</span><span class="p">,</span>
+            <span class="n">multitrack</span><span class="o">.</span><span class="n">resolution</span><span class="p">,</span>
             <span class="n">downbeats</span><span class="p">,</span>
             <span class="n">preset</span><span class="o">=</span><span class="n">preset</span><span class="p">,</span>
             <span class="n">cmap</span><span class="o">=</span><span class="n">cmaps</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
@@ -779,7 +802,7 @@
             <span class="n">ax2</span><span class="p">,</span>
             <span class="n">merged_others</span><span class="p">,</span>
             <span class="kc">False</span><span class="p">,</span>
-            <span class="n">multitrack</span><span class="o">.</span><span class="n">beat_resolution</span><span class="p">,</span>
+            <span class="n">multitrack</span><span class="o">.</span><span class="n">resolution</span><span class="p">,</span>
             <span class="n">downbeats</span><span class="p">,</span>
             <span class="n">preset</span><span class="o">=</span><span class="n">preset</span><span class="p">,</span>
             <span class="n">cmap</span><span class="o">=</span><span class="n">cmaps</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
@@ -812,7 +835,7 @@
     <span class="n">hop</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
     <span class="n">fps</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
     <span class="n">is_drum</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-    <span class="n">beat_resolution</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">resolution</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
     <span class="n">downbeats</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
     <span class="n">preset</span><span class="o">=</span><span class="s2">&quot;default&quot;</span><span class="p">,</span>
     <span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;Blues&quot;</span><span class="p">,</span>
@@ -852,7 +875,7 @@
 <span class="sd">    is_drum : bool</span>
 <span class="sd">        A boolean number that indicates whether it is a percussion track.</span>
 <span class="sd">        Defaults to False.</span>
-<span class="sd">    beat_resolution : int</span>
+<span class="sd">    resolution : int</span>
 <span class="sd">        The number of time steps used to represent a beat. Required and only</span>
 <span class="sd">        effective when `xtick` is &#39;beat&#39;.</span>
 <span class="sd">    downbeats : list</span>
@@ -871,7 +894,7 @@
 <span class="sd">        &#39;Blues&#39;. Only effective when `pianoroll` is 2D.</span>
 <span class="sd">    xtick : {&#39;auto&#39;, &#39;beat&#39;, &#39;step&#39;, &#39;off&#39;}</span>
 <span class="sd">        A string that indicates what to use as ticks along the x-axis. If &#39;auto&#39;</span>
-<span class="sd">        is given, automatically set to &#39;beat&#39; if `beat_resolution` is also given</span>
+<span class="sd">        is given, automatically set to &#39;beat&#39; if `resolution` is also given</span>
 <span class="sd">        and set to &#39;step&#39;, otherwise. Defaults to &#39;auto&#39;.</span>
 <span class="sd">    ytick : {&#39;octave&#39;, &#39;pitch&#39;, &#39;off&#39;}</span>
 <span class="sd">        A string that indicates what to use as ticks along the y-axis.</span>
@@ -906,7 +929,9 @@
 
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">HAS_MOVIEPY</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ImportError</span><span class="p">(</span><span class="s2">&quot;moviepy package is required for animation supports.&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ImportError</span><span class="p">(</span>
+            <span class="s2">&quot;moviepy package is required for animation supports.&quot;</span>
+        <span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">make_frame</span><span class="p">(</span><span class="n">t</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Return an image of the frame for time t.&quot;&quot;&quot;</span>
@@ -929,24 +954,24 @@
         <span class="p">)</span>
 
         <span class="k">if</span> <span class="n">xtick</span> <span class="o">==</span> <span class="s2">&quot;beat&quot;</span><span class="p">:</span>
-            <span class="n">next_major_idx</span> <span class="o">=</span> <span class="n">beat_resolution</span> <span class="o">-</span> <span class="n">start</span> <span class="o">%</span> <span class="n">beat_resolution</span>
-            <span class="k">if</span> <span class="n">start</span> <span class="o">%</span> <span class="n">beat_resolution</span> <span class="o">&lt;</span> <span class="n">beat_resolution</span> <span class="o">//</span> <span class="mi">2</span><span class="p">:</span>
-                <span class="n">next_minor_idx</span> <span class="o">=</span> <span class="n">beat_resolution</span> <span class="o">//</span> <span class="mi">2</span> <span class="o">-</span> <span class="n">start</span> <span class="o">%</span> <span class="n">beat_resolution</span>
+            <span class="n">next_major_idx</span> <span class="o">=</span> <span class="n">resolution</span> <span class="o">-</span> <span class="n">start</span> <span class="o">%</span> <span class="n">resolution</span>
+            <span class="k">if</span> <span class="n">start</span> <span class="o">%</span> <span class="n">resolution</span> <span class="o">&lt;</span> <span class="n">resolution</span> <span class="o">//</span> <span class="mi">2</span><span class="p">:</span>
+                <span class="n">next_minor_idx</span> <span class="o">=</span> <span class="n">resolution</span> <span class="o">//</span> <span class="mi">2</span> <span class="o">-</span> <span class="n">start</span> <span class="o">%</span> <span class="n">resolution</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">next_minor_idx</span> <span class="o">=</span> <span class="p">(</span>
-                    <span class="n">beat_resolution</span> <span class="o">//</span> <span class="mi">2</span> <span class="o">-</span> <span class="n">start</span> <span class="o">%</span> <span class="n">beat_resolution</span> <span class="o">+</span> <span class="n">beat_resolution</span>
+                    <span class="n">resolution</span> <span class="o">//</span> <span class="mi">2</span> <span class="o">-</span> <span class="n">start</span> <span class="o">%</span> <span class="n">resolution</span> <span class="o">+</span> <span class="n">resolution</span>
                 <span class="p">)</span>
-            <span class="n">xticks_major</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">next_major_idx</span><span class="p">,</span> <span class="n">window</span><span class="p">,</span> <span class="n">beat_resolution</span><span class="p">)</span>
-            <span class="n">xticks_minor</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">next_minor_idx</span><span class="p">,</span> <span class="n">window</span><span class="p">,</span> <span class="n">beat_resolution</span><span class="p">)</span>
-            <span class="k">if</span> <span class="n">end</span> <span class="o">%</span> <span class="n">beat_resolution</span> <span class="o">&lt;</span> <span class="n">beat_resolution</span> <span class="o">//</span> <span class="mi">2</span><span class="p">:</span>
-                <span class="n">last_minor_idx</span> <span class="o">=</span> <span class="n">beat_resolution</span> <span class="o">//</span> <span class="mi">2</span> <span class="o">-</span> <span class="n">end</span> <span class="o">%</span> <span class="n">beat_resolution</span>
+            <span class="n">xticks_major</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">next_major_idx</span><span class="p">,</span> <span class="n">window</span><span class="p">,</span> <span class="n">resolution</span><span class="p">)</span>
+            <span class="n">xticks_minor</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">next_minor_idx</span><span class="p">,</span> <span class="n">window</span><span class="p">,</span> <span class="n">resolution</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">end</span> <span class="o">%</span> <span class="n">resolution</span> <span class="o">&lt;</span> <span class="n">resolution</span> <span class="o">//</span> <span class="mi">2</span><span class="p">:</span>
+                <span class="n">last_minor_idx</span> <span class="o">=</span> <span class="n">resolution</span> <span class="o">//</span> <span class="mi">2</span> <span class="o">-</span> <span class="n">end</span> <span class="o">%</span> <span class="n">resolution</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">last_minor_idx</span> <span class="o">=</span> <span class="p">(</span>
-                    <span class="n">beat_resolution</span> <span class="o">//</span> <span class="mi">2</span> <span class="o">-</span> <span class="n">end</span> <span class="o">%</span> <span class="n">beat_resolution</span> <span class="o">+</span> <span class="n">beat_resolution</span>
+                    <span class="n">resolution</span> <span class="o">//</span> <span class="mi">2</span> <span class="o">-</span> <span class="n">end</span> <span class="o">%</span> <span class="n">resolution</span> <span class="o">+</span> <span class="n">resolution</span>
                 <span class="p">)</span>
             <span class="n">xtick_labels</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span>
-                <span class="p">(</span><span class="n">start</span> <span class="o">+</span> <span class="n">next_minor_idx</span><span class="p">)</span> <span class="o">//</span> <span class="n">beat_resolution</span><span class="p">,</span>
-                <span class="p">(</span><span class="n">end</span> <span class="o">+</span> <span class="n">last_minor_idx</span><span class="p">)</span> <span class="o">//</span> <span class="n">beat_resolution</span><span class="p">,</span>
+                <span class="p">(</span><span class="n">start</span> <span class="o">+</span> <span class="n">next_minor_idx</span><span class="p">)</span> <span class="o">//</span> <span class="n">resolution</span><span class="p">,</span>
+                <span class="p">(</span><span class="n">end</span> <span class="o">+</span> <span class="n">last_minor_idx</span><span class="p">)</span> <span class="o">//</span> <span class="n">resolution</span><span class="p">,</span>
             <span class="p">)</span>
             <span class="n">ax</span><span class="o">.</span><span class="n">set_xticks</span><span class="p">(</span><span class="n">xticks_major</span><span class="p">)</span>
             <span class="n">ax</span><span class="o">.</span><span class="n">set_xticklabels</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
@@ -957,14 +982,14 @@
         <span class="k">return</span> <span class="n">mplfig_to_npimage</span><span class="p">(</span><span class="n">fig</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">xtick</span> <span class="o">==</span> <span class="s2">&quot;auto&quot;</span><span class="p">:</span>
-        <span class="n">xtick</span> <span class="o">=</span> <span class="s2">&quot;beat&quot;</span> <span class="k">if</span> <span class="n">beat_resolution</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="s2">&quot;step&quot;</span>
+        <span class="n">xtick</span> <span class="o">=</span> <span class="s2">&quot;beat&quot;</span> <span class="k">if</span> <span class="n">resolution</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="s2">&quot;step&quot;</span>
 
     <span class="n">_</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
     <span class="n">plot_pianoroll</span><span class="p">(</span>
         <span class="n">ax</span><span class="p">,</span>
         <span class="n">pianoroll</span><span class="p">[:</span><span class="n">window</span><span class="p">],</span>
         <span class="n">is_drum</span><span class="p">,</span>
-        <span class="n">beat_resolution</span><span class="p">,</span>
+        <span class="n">resolution</span><span class="p">,</span>
         <span class="n">downbeats</span><span class="p">,</span>
         <span class="n">preset</span><span class="o">=</span><span class="n">preset</span><span class="p">,</span>
         <span class="n">cmap</span><span class="o">=</span><span class="n">cmap</span><span class="p">,</span>
@@ -1012,11 +1037,19 @@
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2018, Hao-Wen Dong
+        
+        &copy; Copyright 2020, Hao-Wen Dong
 
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
 
@@ -1027,7 +1060,6 @@
 
   </div>
   
-
 
   <script type="text/javascript">
       jQuery(function () {

@@ -1,15 +1,18 @@
 
 
 <!DOCTYPE html>
-<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8">
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Save &amp; Load &mdash; pypianoroll 0.5.3 documentation</title>
+  <title>Save &amp; Load &mdash; Pypianoroll  documentation</title>
   
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
 
   
   
@@ -17,7 +20,9 @@
   
 
   
-  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
@@ -25,17 +30,14 @@
         <script src="_static/underscore.js"></script>
         <script src="_static/doctools.js"></script>
         <script src="_static/language_data.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     
     <script type="text/javascript" src="_static/js/theme.js"></script>
 
     
-
-  
-  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Parse &amp; Write" href="parse_write.html" />
+    <link rel="next" title="Read &amp; Write" href="read_write.html" />
     <link rel="prev" title="Getting Started" href="getting_started.html" /> 
 </head>
 
@@ -50,18 +52,17 @@
           
 
           
-            <a href="index.html" class="icon icon-home"> pypianoroll
+            <a href="index.html">
           
 
+          
+            
+            <img src="_static/logo.svg" class="logo" alt="Logo"/>
           
           </a>
 
           
             
-            
-              <div class="version">
-                0.5.3
-              </div>
             
           
 
@@ -77,6 +78,7 @@
           
         </div>
 
+        
         <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
           
             
@@ -87,17 +89,18 @@
               <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="getting_started.html">Getting Started</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Save &amp; Load</a></li>
-<li class="toctree-l1"><a class="reference internal" href="parse_write.html">Parse &amp; Write</a></li>
+<li class="toctree-l1"><a class="reference internal" href="read_write.html">Read &amp; Write</a></li>
 <li class="toctree-l1"><a class="reference internal" href="visualization.html">Visualization</a></li>
-<li class="toctree-l1"><a class="reference internal" href="utilities.html">Utilities</a></li>
 <li class="toctree-l1"><a class="reference internal" href="metrics.html">Metrics</a></li>
-<li class="toctree-l1"><a class="reference internal" href="track.html">Single-track Pianoroll</a></li>
-<li class="toctree-l1"><a class="reference internal" href="multitrack.html">Multitrack Pianoroll</a></li>
+<li class="toctree-l1"><a class="reference internal" href="track.html">Track Class</a></li>
+<li class="toctree-l1"><a class="reference internal" href="multitrack.html">Multitrack Class</a></li>
+<li class="toctree-l1"><a class="reference internal" href="doc.html">Technical Documentation</a></li>
 </ul>
 
             
           
         </div>
+        
       </div>
     </nav>
 
@@ -107,7 +110,7 @@
       <nav class="wy-nav-top" aria-label="top navigation">
         
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="index.html">pypianoroll</a>
+          <a href="index.html">Pypianoroll</a>
         
       </nav>
 
@@ -136,7 +139,7 @@
 
   <ul class="wy-breadcrumbs">
     
-      <li><a href="index.html">Docs</a> &raquo;</li>
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
         
       <li>Save &amp; Load</li>
     
@@ -144,6 +147,8 @@
       <li class="wy-breadcrumbs-aside">
         
             
+            <a href="_sources/save_load.rst.txt" rel="nofollow"> View page source</a>
+          
         
       </li>
     
@@ -156,24 +161,28 @@
            <div itemprop="articleBody">
             
   <div class="section" id="save-load">
-<span id="id1"></span><h1>Save &amp; Load<a class="headerlink" href="#save-load" title="Permalink to this headline">¶</a></h1>
-<p>Pypianoroll supports efficient utilities for saving and loading
-<a class="reference internal" href="multitrack.html#pypianoroll.Multitrack" title="pypianoroll.Multitrack"><code class="xref py py-class docutils literal notranslate"><span class="pre">pypianoroll.Multitrack</span></code></a> objects. The pianorolls will be first converted
-to instances of <a class="reference external" href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.sparse.csc_matrix.html#scipy.sparse.csc_matrix" title="(in SciPy v1.4.1)"><code class="xref py py-class docutils literal notranslate"><span class="pre">scipy.sparse.csc_matrix</span></code></a> and then stored in a .npz file.</p>
+<h1>Save &amp; Load<a class="headerlink" href="#save-load" title="Permalink to this headline">¶</a></h1>
+<p>Pypianoroll supports efficient I/O for <a class="reference internal" href="doc.html#pypianoroll.Multitrack" title="pypianoroll.Multitrack"><code class="xref py py-class docutils literal notranslate"><span class="pre">pypianoroll.Multitrack</span></code></a> objects. The piano rolls will be first converted to sparse matrices (specifically, instances of <a class="reference external" href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.sparse.csc_matrix.html#scipy.sparse.csc_matrix" title="(in SciPy v1.5.2)"><code class="xref py py-class docutils literal notranslate"><span class="pre">scipy.sparse.csc_matrix</span></code></a>) and then stored in a NPZ file.</p>
 <div class="section" id="functions">
 <h2>Functions<a class="headerlink" href="#functions" title="Permalink to this headline">¶</a></h2>
-<dl class="function">
-<dt id="pypianoroll.save">
-<code class="sig-prename descclassname">pypianoroll.</code><code class="sig-name descname">save</code><span class="sig-paren">(</span><em class="sig-param">filepath</em>, <em class="sig-param">obj</em>, <em class="sig-param">compressed=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pypianoroll/utilities.html#save"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypianoroll.save" title="Permalink to this definition">¶</a></dt>
-<dd><p>Save the object to a .npz file.</p>
+<dl class="py function">
+<dt>
+<code class="sig-prename descclassname">pypianoroll.</code><code class="sig-name descname">save</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">path</span></em>, <em class="sig-param"><span class="n">obj</span></em>, <em class="sig-param"><span class="n">compressed</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pypianoroll/core.html#save"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Save the object to a (compressed) NPZ file.</p>
+<p>This could be later loaded by <a class="reference internal" href="doc.html#pypianoroll.load" title="pypianoroll.load"><code class="xref py py-func docutils literal notranslate"><span class="pre">pypianoroll.load()</span></code></a>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>filepath</strong> (<em>str</em>) – The path to save the file.</p></li>
-<li><p><strong>obj</strong> (<cite>pypianoroll.Multitrack</cite> objects) – The object to be saved.</p></li>
+<li><p><strong>path</strong> (<em>str</em>) – Path to the NPZ file to save.</p></li>
+<li><p><strong>obj</strong> (<a class="reference internal" href="doc.html#pypianoroll.Multitrack" title="pypianoroll.Multitrack"><code class="xref py py-class docutils literal notranslate"><span class="pre">pypianoroll.Multitrack</span></code></a> object) – Object to save.</p></li>
+<li><p><strong>compressed</strong> (<em>bool</em>) – Whether to save to a compressed NPZ file. Defaults to True.</p></li>
 </ul>
 </dd>
 </dl>
+<p class="rubric">Notes</p>
+<p>To reduce the file size, the piano rolls are first converted to
+instances of <a class="reference external" href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.sparse.csc_matrix.html#scipy.sparse.csc_matrix" title="(in SciPy v1.5.2)"><code class="xref py py-class docutils literal notranslate"><span class="pre">scipy.sparse.csc_matrix</span></code></a>. The component arrays
+are then collected and saved to a npz file.</p>
 </dd></dl>
 
 <div class="admonition note">
@@ -195,13 +204,14 @@ files:</p>
 <li><p><code class="docutils literal notranslate"><span class="pre">info.json</span></code>: a JSON file that contains meta data and track information</p></li>
 </ul>
 </div>
-<dl class="function">
-<dt id="pypianoroll.load">
-<code class="sig-prename descclassname">pypianoroll.</code><code class="sig-name descname">load</code><span class="sig-paren">(</span><em class="sig-param">filename</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pypianoroll/utilities.html#load"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypianoroll.load" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return a <a class="reference internal" href="multitrack.html#pypianoroll.Multitrack" title="pypianoroll.Multitrack"><code class="xref py py-class docutils literal notranslate"><span class="pre">pypianoroll.Multitrack</span></code></a> object loaded from a .npz file.</p>
+<dl class="py function">
+<dt>
+<code class="sig-prename descclassname">pypianoroll.</code><code class="sig-name descname">load</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">path</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pypianoroll/inputs.html#load"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Load a NPZ file into a Multitrack object.</p>
+<p>Supports only files previously saved by <a class="reference internal" href="doc.html#pypianoroll.save" title="pypianoroll.save"><code class="xref py py-func docutils literal notranslate"><span class="pre">pypianoroll.save()</span></code></a>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>filename</strong> (<em>str</em>) – The filename of the .npz file.</p>
+<dd class="field-odd"><p><strong>path</strong> (<em>str</em>) – Path to the NPZ file to load.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -217,7 +227,7 @@ files:</p>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="parse_write.html" class="btn btn-neutral float-right" title="Parse &amp; Write" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="read_write.html" class="btn btn-neutral float-right" title="Read &amp; Write" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="getting_started.html" class="btn btn-neutral float-left" title="Getting Started" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
@@ -229,11 +239,19 @@ files:</p>
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2018, Hao-Wen Dong
+        
+        &copy; Copyright 2020, Hao-Wen Dong
 
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
 
@@ -244,7 +262,6 @@ files:</p>
 
   </div>
   
-
 
   <script type="text/javascript">
       jQuery(function () {

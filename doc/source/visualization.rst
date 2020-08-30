@@ -1,28 +1,39 @@
-.. _visualization:
-
+=============
 Visualization
 =============
 
-Pypianoroll provides utilities for visualizing pianorolls and creating pianoroll
+Pypianoroll supports visualizing piano rolls and creating piano-roll
 animations.
-
-Note that, by default we assume the pianoroll is using symbolic timing, you may
-visualize traditional pianoroll, which use real timing, by setting up x-axis
-properties in the plotting functions as well.
 
 Here are some examples.
 
-.. image:: figs/visualization_track.png
+.. image:: images/visualization_track.png
+    :alt: Track visualization
 
-.. image:: figs/visualization_multitrack.png
+.. image:: images/visualization_multitrack.png
+    :alt: Multitrack visualization
 
-.. image:: figs/visualization_multitrack_closeup.png
+.. image:: images/visualization_multitrack_closeup.png
+    :alt: Multitrack visualization closeup
+
+.. note::
+    We assume the piano roll is in symbolic timing. You may visualize traditional piano rolls in absolute timing by setting up x-axis properties in the plotting function.
+
 
 Functions
----------
+=========
 
 .. autofunction :: pypianoroll.plot
+    :noindex:
+
 .. autofunction :: pypianoroll.plot_multitrack
+    :noindex:
+
 .. autofunction :: pypianoroll.plot_track
+    :noindex:
+
 .. autofunction :: pypianoroll.plot_pianoroll
+    :noindex:
+
 .. autofunction :: pypianoroll.save_animation
+    :noindex:

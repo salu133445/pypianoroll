@@ -3,7 +3,10 @@ import unittest
 import os
 import shutil
 import tempfile
+
 import numpy as np
+
+import pypianoroll
 from pypianoroll import Multitrack, Track
 
 
@@ -13,12 +16,16 @@ class MultitrackTestCase(unittest.TestCase):
     def setUp(self):
         pianoroll_1 = np.zeros((192, 128), np.uint8)
         pianoroll_1[:191, [60, 64, 67, 72]] = 100
-        track_1 = Track(pianoroll_1, 0, False, "track_1")
+        track_1 = Track(
+            program=0, is_drum=False, name="track_1", pianoroll=pianoroll_1
+        )
         pianoroll_2 = np.zeros((192, 128), np.bool)
         pianoroll_2[:191:16, 36] = True
-        track_2 = Track(pianoroll_2, 0, True, "track_2")
+        track_2 = Track(
+            program=0, is_drum=True, name="track_2", pianoroll=pianoroll_2
+        )
         self.multitrack = Multitrack(
-            tracks=[track_1, track_2], downbeat=[0, 96], beat_resolution=24
+            resolution=24, downbeat=[0, 96], tracks=[track_1, track_2],
         )
 
     def tearDown(self):
@@ -31,18 +38,12 @@ class MultitrackTestCase(unittest.TestCase):
         self.assertEqual(len(sliced.tracks), 1)
         self.assertEqual(sliced.tracks[0].pianoroll.shape, (20, 128))
 
-    def test_append_empty_track(self):
-        """Test method `Multitrack.append_track()`."""
-        self.multitrack.append_track(name="track_3")
-        self.assertEqual(len(self.multitrack.tracks), 3)
-        self.assertEqual(self.multitrack.tracks[2].name, "track_3")
-
     def test_append_track(self):
         """Test method `Multitrack.append_track()`."""
         pianoroll = np.zeros((192, 128), np.bool_)
         pianoroll[:191:16, 41] = True
-        track_to_append = Track(pianoroll, name="track_3")
-        self.multitrack.append_track(track_to_append)
+        track_to_append = Track(name="track_3", pianoroll=pianoroll)
+        self.multitrack.append(track_to_append)
         self.assertEqual(len(self.multitrack.tracks), 3)
         self.assertEqual(self.multitrack.tracks[2].name, "track_3")
 
@@ -90,12 +91,16 @@ class MultitrackPadTestCase(unittest.TestCase):
         """Test method `Multitrack.pad_to_same()`."""
         pianoroll_1 = np.zeros((192, 128), np.uint8)
         pianoroll_1[0:191, [60, 64, 67, 72]] = 100
-        track_1 = Track(pianoroll_1, 0, False, "track_1")
+        track_1 = Track(
+            program=0, is_drum=False, name="track_1", pianoroll=pianoroll_1
+        )
         pianoroll_2 = np.zeros((96, 128), np.bool)
         pianoroll_2[0:95:16, 36] = True
-        track_2 = Track(pianoroll_2, 0, True, "track_2")
+        track_2 = Track(
+            program=0, is_drum=True, name="track_2", pianoroll=pianoroll_2
+        )
         multitrack = Multitrack(
-            tracks=[track_1, track_2], downbeat=[0, 96], beat_resolution=24
+            resolution=24, downbeat=[0, 96], tracks=[track_1, track_2]
         )
         multitrack.pad_to_same()
         self.assertEqual(multitrack.tracks[0].pianoroll.shape[0], 192)
@@ -108,12 +113,16 @@ class MultitrackMergeTestCase(unittest.TestCase):
     def setUp(self):
         pianoroll_1 = np.zeros((192, 128), np.uint8)
         pianoroll_1[:191, [60, 64, 67, 72]] = 100
-        track_1 = Track(pianoroll_1, 0, False, "track_1")
+        track_1 = Track(
+            program=0, is_drum=False, name="track_1", pianoroll=pianoroll_1
+        )
         pianoroll_2 = np.zeros((192, 128), np.uint8)
         pianoroll_2[:191, [60, 64, 67, 72]] = 100
-        track_2 = Track(pianoroll_2, 0, True, "track_2")
+        track_2 = Track(
+            program=0, is_drum=True, name="track_2", pianoroll=pianoroll_2
+        )
         self.multitrack = Multitrack(
-            tracks=[track_1, track_2], downbeat=[0, 96], beat_resolution=24
+            resolution=24, downbeat=[0, 96], tracks=[track_1, track_2]
         )
 
     def tearDown(self):
@@ -142,7 +151,7 @@ class MultitrackMergeTestCase(unittest.TestCase):
 
     def test_merge_tracks(self):
         """Test method `Multitrack.test_merge_tracks()`."""
-        self.multitrack.merge_tracks([0, 1], "sum", remove_merged=True)
+        self.multitrack.merge_tracks([0, 1], "sum", remove_source=True)
         self.assertEqual(len(self.multitrack.tracks), 1)
 
 
@@ -153,11 +162,15 @@ class MultitrackEmptyTrackTestCase(unittest.TestCase):
         """Test method `Multitrack.get_empty_tracks()`."""
         pianoroll_1 = np.zeros((192, 128), np.uint8)
         pianoroll_1[0:191, [60, 64, 67, 72]] = 100
-        track_1 = Track(pianoroll_1, 0, False, "track_1")
+        track_1 = Track(
+            program=0, is_drum=False, name="track_1", pianoroll=pianoroll_1
+        )
         pianoroll_2 = np.zeros((96, 128), np.bool)
-        track_2 = Track(pianoroll_2, 0, True, "track_2")
+        track_2 = Track(
+            program=0, is_drum=True, name="track_2", pianoroll=pianoroll_2
+        )
         multitrack = Multitrack(
-            tracks=[track_1, track_2], downbeat=[0, 96], beat_resolution=24
+            resolution=24, downbeat=[0, 96], tracks=[track_1, track_2]
         )
         self.assertEqual(multitrack.get_empty_tracks(), [1])
 
@@ -168,12 +181,16 @@ class MultitrackIOTestCase(unittest.TestCase):
     def setUp(self):
         pianoroll_1 = np.zeros((192, 128), np.uint8)
         pianoroll_1[:191, [60, 64, 67, 72]] = 100
-        track_1 = Track(pianoroll_1, 0, False, "track_1")
+        track_1 = Track(
+            program=0, is_drum=False, name="track_1", pianoroll=pianoroll_1
+        )
         pianoroll_2 = np.zeros((192, 128), np.bool)
         pianoroll_2[:191:16, 36] = True
-        track_2 = Track(pianoroll_2, 0, True, "track_2")
+        track_2 = Track(
+            program=0, is_drum=True, name="track_2", pianoroll=pianoroll_2
+        )
         self.multitrack = Multitrack(
-            tracks=[track_1, track_2], downbeat=[0, 96], beat_resolution=24
+            resolution=24, downbeat=[0, 96], tracks=[track_1, track_2]
         )
         self.test_dir = tempfile.mkdtemp()
 
@@ -185,12 +202,9 @@ class MultitrackIOTestCase(unittest.TestCase):
         """Test methods `Multitrack.save()` and `Multitrack.load()`."""
         filepath = os.path.join(self.test_dir, "test.npz")
         self.multitrack.save(filepath)
-        loaded = Multitrack(filepath)
-        self.assertTrue(np.allclose(loaded.tempo, self.multitrack.tempo))
+        loaded = pypianoroll.load(filepath)
         self.assertTrue(np.allclose(loaded.downbeat, self.multitrack.downbeat))
-        self.assertEqual(
-            loaded.beat_resolution, self.multitrack.beat_resolution
-        )
+        self.assertEqual(loaded.resolution, self.multitrack.resolution)
         self.assertEqual(loaded.name, self.multitrack.name)
         self.assertTrue(
             np.allclose(
@@ -209,12 +223,11 @@ class MultitrackIOTestCase(unittest.TestCase):
         self.assertEqual(loaded.tracks[1].is_drum, True)
         self.assertEqual(loaded.tracks[1].name, "track_2")
 
-    def test_write_parse(self):
-        """Test methods `Multitrack.write()` and `Multitrack.parse_midi()`."""
+    def test_write_read(self):
+        """Test methods `Multitrack.write()` and `Multitrack.read()`."""
         filepath = os.path.join(self.test_dir, "test.mid")
         self.multitrack.write(filepath)
-        loaded = Multitrack(filepath)
-        self.assertTrue(np.allclose(loaded.tempo, self.multitrack.tempo))
+        loaded = pypianoroll.read(filepath)
         self.assertEqual(loaded.name, self.multitrack.name)
         self.assertTrue(
             np.allclose(

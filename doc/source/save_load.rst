@@ -1,16 +1,15 @@
-.. _save_load:
-
+===========
 Save & Load
 ===========
 
-Pypianoroll supports efficient utilities for saving and loading
-:class:`pypianoroll.Multitrack` objects. The pianorolls will be first converted
-to instances of :class:`scipy.sparse.csc_matrix` and then stored in a .npz file.
+Pypianoroll supports efficient I/O for :class:`pypianoroll.Multitrack` objects. The piano rolls will be first converted to sparse matrices (specifically, instances of :class:`scipy.sparse.csc_matrix`) and then stored in a NPZ file.
+
 
 Functions
----------
+=========
 
 .. autofunction:: pypianoroll.save
+    :noindex:
 
 .. note::
     The saved .npz file is basically a zip archive which contains the following
@@ -27,3 +26,4 @@ Functions
     - ``info.json``: a JSON file that contains meta data and track information
 
 .. autofunction:: pypianoroll.load
+    :noindex:
