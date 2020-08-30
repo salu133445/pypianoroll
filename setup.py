@@ -5,7 +5,7 @@ from codecs import open
 from setuptools import setup
 
 with open(
-    os.path.join(os.path.abspath(os.path.dirname(__file__)), "README.rst"),
+    os.path.join(os.path.abspath(os.path.dirname(__file__)), "README.md"),
     encoding="utf-8",
 ) as f:
     LONG_DESCRIPTION = f.read()
