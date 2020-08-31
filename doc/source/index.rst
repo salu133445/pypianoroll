@@ -9,7 +9,7 @@ Pypianoroll
     :target: https://codecov.io/gh/salu133445/pypianoroll
     :alt: Codecov
 .. image:: https://img.shields.io/github/license/salu133445/pypianoroll
-    :target: https://github.com/salu133445/musegan/blob/master/LICENSE
+    :target: https://github.com/salu133445/pypianoroll/blob/master/LICENSE
     :alt: GitHub license
 .. image:: https://img.shields.io/github/v/release/salu133445/pypianoroll
     :target: https://github.com/salu133445/pypianoroll/releases
