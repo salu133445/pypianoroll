@@ -14,8 +14,10 @@ Functions
 
 """
 import math
+from typing import Sequence
 
 import numpy as np
+from numpy import ndarray
 
 __all__ = [
     "drum_in_pattern_rate",
@@ -29,14 +31,14 @@ __all__ = [
 ]
 
 
-def _to_chroma(pianoroll):
+def _to_chroma(pianoroll: ndarray):
     """Return the unnormalized chroma features."""
     reshaped = pianoroll[:, :120].reshape(-1, 12, 10)
     reshaped[..., :8] += pianoroll[:, 120:].reshape(-1, 1, 8)
     return np.sum(reshaped, -1)
 
 
-def empty_beat_rate(pianoroll, resolution):
+def empty_beat_rate(pianoroll: ndarray, resolution: int):
     r"""Return the ratio of empty beats.
 
     The empty-beat rate is defined as the ratio of the number of empty beats
@@ -63,7 +65,7 @@ def empty_beat_rate(pianoroll, resolution):
     return n_empty_beats / len(reshaped)
 
 
-def n_pitches_used(pianoroll):
+def n_pitches_used(pianoroll: ndarray):
     """Return the number of unique pitches used.
 
     Parameters
@@ -85,7 +87,7 @@ def n_pitches_used(pianoroll):
     return np.count_nonzero(np.any(pianoroll, 0))
 
 
-def n_pitch_classes_used(pianoroll):
+def n_pitch_classes_used(pianoroll: ndarray):
     """Return the number of unique pitch classes used.
 
     Parameters
@@ -108,7 +110,7 @@ def n_pitch_classes_used(pianoroll):
     return np.count_nonzero(np.any(chroma, 0))
 
 
-def qualified_note_rate(pianoroll, threshold=2):
+def qualified_note_rate(pianoroll: ndarray, threshold: float = 2):
     r"""Return the ratio of the number of the qualified notes.
 
     The polyphony rate is defined as the ratio of the number of qualified
@@ -154,7 +156,7 @@ def qualified_note_rate(pianoroll, threshold=2):
     return n_qualified_notes / len(onsets)
 
 
-def polyphonic_rate(pianoroll, threshold=2):
+def polyphonic_rate(pianoroll: ndarray, threshold: float = 2):
     r"""Return the ratio of time steps where multiple pitches are on.
 
     The polyphony rate is defined as the ratio of the number of time steps
@@ -195,7 +197,9 @@ def polyphonic_rate(pianoroll, threshold=2):
     return n_poly / len(pianoroll)
 
 
-def drum_in_pattern_rate(pianoroll, resolution, tolerance=0.1):
+def drum_in_pattern_rate(
+    pianoroll: ndarray, resolution: int, tolerance: float = 0.1
+):
     r"""Return the ratio of drum notes in a certain drum pattern.
 
     The drum-in-pattern rate is defined as the ratio of the number of
@@ -268,7 +272,7 @@ def _get_scale(root, mode):
     return np.roll(a_scale_mask, root)
 
 
-def in_scale_rate(pianoroll, root=3, mode="major"):
+def in_scale_rate(pianoroll: ndarray, root: int = 3, mode: str = "major"):
     r"""Return the ratio of pitches in a certain musical scale.
 
     The pitch-in-scale rate is defined as the ratio of the number of notes
@@ -330,7 +334,10 @@ def _to_tonal_space(pianoroll, resolution, tonal_matrix):
 
 
 def tonal_distance(
-    pianoroll_1, pianoroll_2, resolution, radii=(1.0, 1.0, 0.5)
+    pianoroll_1: ndarray,
+    pianoroll_2: ndarray,
+    resolution: int,
+    radii: Sequence[float] = (1.0, 1.0, 0.5),
 ):
     """Return the tonal distance [1] between the two input pianorolls.
 

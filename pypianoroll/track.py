@@ -1,5 +1,6 @@
 """Class for single-track piano rolls."""
 from copy import deepcopy
+from typing import Any, Optional
 
 import numpy as np
 from numpy import ndarray
@@ -34,12 +35,16 @@ class Track:
     """
 
     def __init__(
-        self, program=0, is_drum=False, name=None, pianoroll=None,
+        self,
+        program: int = 0,
+        is_drum: bool = False,
+        name: Optional[str] = None,
+        pianoroll: Optional[ndarray] = None,
     ):
         self.program = program
         self.is_drum = is_drum
         self.name = name
-        self.pianoroll = pianoroll
+        self.pianoroll = np.array([]) if pianoroll is None else pianoroll
 
     def __getitem__(self, val):
         return Track(
@@ -104,7 +109,7 @@ class Track:
             return False
         return True
 
-    def assign_constant(self, value, dtype=None):
+    def assign_constant(self, value: float, dtype: Any = None):
         """Assign a constant value to all nonzeros entries of the piano roll.
 
         If the piano roll is not binarized, its data type will be preserved. If
@@ -128,7 +133,7 @@ class Track:
         self.pianoroll = np.zeros(self.pianoroll.shape, dtype)
         self.pianoroll[nonzero] = value
 
-    def binarize(self, threshold=0):
+    def binarize(self, threshold: float = 0):
         """
         Binarize the piano roll.
 
@@ -141,7 +146,7 @@ class Track:
         if not self.is_binarized():
             self.pianoroll = self.pianoroll > threshold
 
-    def clip(self, lower=0, upper=127):
+    def clip(self, lower: float = 0, upper: float = 127):
         """Clip the piano roll by a lower bound and an upper bound.
 
         Parameters
@@ -237,7 +242,7 @@ class Track:
         """
         return np.issubdtype(self.pianoroll.dtype, np.bool_)
 
-    def pad(self, pad_length):
+    def pad(self, pad_length: int):
         """Pad the piano roll with zeros at the end along the time axis.
 
         Parameters
@@ -250,7 +255,7 @@ class Track:
             self.pianoroll, ((0, pad_length), (0, 0)), "constant"
         )
 
-    def pad_to_multiple(self, factor):
+    def pad_to_multiple(self, factor: int):
         """Pad the piano roll along the time axis to a multiple of `factor`.
 
         Pad the piano roll with zeros at the end along the time axis of the
@@ -277,7 +282,7 @@ class Track:
         """
         return plot_track(self, **kwargs)
 
-    def transpose(self, semitone):
+    def transpose(self, semitone: int):
         """Transpose the piano roll by a number of semitones.
 
         Positive values are for a higher key, while negative values are for

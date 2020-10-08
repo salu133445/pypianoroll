@@ -1,17 +1,17 @@
 """MIDI I/O interface."""
 import json
+from typing import Optional
 
 import numpy as np
-
 from pretty_midi import PrettyMIDI
 
-from .track import Track
 from .multitrack import DEFAULT_RESOLUTION, Multitrack, reconstruct_sparse
+from .track import Track
 
 __all__ = ["load", "from_pretty_midi", "read"]
 
 
-def load(path):
+def load(path: str):
     """Load a NPZ file into a Multitrack object.
 
     Supports only files previously saved by :func:`pypianoroll.save`.
@@ -61,15 +61,15 @@ def load(path):
 
 
 def from_pretty_midi(
-    pm,
-    resolution=DEFAULT_RESOLUTION,
-    mode="max",
-    algorithm="normal",
-    binarized=False,
-    skip_empty_tracks=True,
-    collect_onsets_only=False,
-    threshold=0,
-    first_beat_time=None,
+    pm: PrettyMIDI,
+    resolution: int = DEFAULT_RESOLUTION,
+    mode: str = "max",
+    algorithm: str = "normal",
+    binarized: bool = False,
+    skip_empty_tracks: bool = True,
+    collect_onsets_only: bool = False,
+    threshold: float = 0,
+    first_beat_time: Optional[float] = None,
 ):
     """Return a Multitrack object converted from a PrettyMIDI object.
 
@@ -308,7 +308,7 @@ def from_pretty_midi(
     )
 
 
-def read(path, **kwargs):
+def read(path: str, **kwargs):
     """Read a MIDI file into a Multitrack object.
 
     See :meth:`pypianoroll.from_pretty_midi` for full documentation.

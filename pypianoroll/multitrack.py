@@ -7,9 +7,11 @@ class, a container for multitrack piano rolls.
 import json
 import zipfile
 from copy import deepcopy
+from typing import Dict, List, Optional
 
 import numpy as np
 import pretty_midi
+from numpy import ndarray
 from scipy.sparse import csc_matrix
 
 from .track import Track
@@ -76,16 +78,15 @@ class Multitrack:
 
     def __init__(
         self,
-        resolution=None,
-        tempo=None,
-        downbeat=None,
-        name=None,
-        tracks=None,
+        resolution: Optional[int] = None,
+        tempo: Optional[ndarray] = None,
+        downbeat: Optional[ndarray] = None,
+        name: Optional[str] = None,
+        tracks: Optional[List[Track]] = None,
     ):
-        if resolution is None:
-            self.resolution = DEFAULT_RESOLUTION
-        else:
-            self.resolution = resolution
+        self.resolution = (
+            resolution if resolution is not None else DEFAULT_RESOLUTION
+        )
 
         self.tempo = np.asarray(tempo) if tempo is not None else None
 
@@ -290,7 +291,7 @@ class Multitrack:
                 max_length = track.pianoroll.shape[0]
         return max_length
 
-    def get_merged_pianoroll(self, mode="sum"):
+    def get_merged_pianoroll(self, mode: str = "sum"):
         """Return the merged piano roll.
 
         Parameters
@@ -345,7 +346,7 @@ class Multitrack:
         )
         return stacked
 
-    def append(self, track):
+    def append(self, track: Track):
         """Append a :class:`multitrack.Track` object to the track list.
 
         Parameters
@@ -357,7 +358,7 @@ class Multitrack:
         self.tracks.append(track)
         return self
 
-    def assign_constant(self, value):
+    def assign_constant(self, value: float):
         """Assign a constant value to all nonzeros entries of the piano rolls.
 
         If a piano roll is not binarized, its data type will be preserved. If a
@@ -372,7 +373,7 @@ class Multitrack:
         for track in self.tracks:
             track.assign_constant(value)
 
-    def binarize(self, threshold=0):
+    def binarize(self, threshold: float = 0):
         """Binarize the piano rolls.
 
         Parameters
@@ -385,7 +386,7 @@ class Multitrack:
             track.binarize(threshold)
         return self
 
-    def clip(self, lower=0, upper=127):
+    def clip(self, lower: float = 0, upper: float = 127):
         """Clip the piano rolls by a lower bound and an upper bound.
 
         Parameters
@@ -400,7 +401,7 @@ class Multitrack:
             track.clip(lower, upper)
         return self
 
-    def downsample(self, factor):
+    def downsample(self, factor: int):
         """Downsample the piano rolls by the given factor.
 
         Attribute `resolution` will be updated accordingly as well.
@@ -435,12 +436,12 @@ class Multitrack:
 
     def merge_tracks(
         self,
-        track_indices=None,
-        mode="sum",
-        program=0,
-        is_drum=False,
-        name="merged",
-        remove_source=False,
+        track_indices: Optional[List[int]] = None,
+        mode: str = "sum",
+        program: int = 0,
+        is_drum: bool = False,
+        name: str = "merged",
+        remove_source: bool = False,
     ):
         """Merge certain tracks into a single track.
 
@@ -486,11 +487,16 @@ class Multitrack:
 
         merged = self[track_indices].get_merged_pianoroll(mode)
 
-        merged_track = Track(merged, program, is_drum, name)
-        self.append(merged_track)
+        merged_track = Track(
+            program=program, is_drum=is_drum, name=name, pianoroll=merged
+        )
+        self.tracks.append(merged_track)
 
         if remove_source:
-            self.remove_tracks(track_indices)
+            if track_indices is None:
+                self.remove_tracks(list(range(len(self.tracks) - 1)))
+            else:
+                self.remove_tracks(track_indices)
 
         return self
 
@@ -512,7 +518,7 @@ class Multitrack:
             track.pad(pad_length)
         return self
 
-    def pad_to_multiple(self, factor):
+    def pad_to_multiple(self, factor: int):
         """Pad the piano rolls along the time axis to a multiple of `factor`.
 
         Pad the piano rolls with zeros at the end along the time axis of the
@@ -552,7 +558,7 @@ class Multitrack:
         """Remove tracks with empty pianorolls."""
         self.remove_tracks(self.get_empty_tracks())
 
-    def remove_tracks(self, track_indices):
+    def remove_tracks(self, track_indices: List[int]):
         """Remove certain tracks.
 
         Parameters
@@ -570,7 +576,7 @@ class Multitrack:
         ]
         return self
 
-    def transpose(self, semitone):
+    def transpose(self, semitone: int):
         """Transpose the piano rolls by a number of semitones.
 
         Positive values are for a higher key, while negative values are for
@@ -597,7 +603,7 @@ class Multitrack:
             track.pianoroll = track.pianoroll[:active_length]
         return self
 
-    def save(self, path, compressed=True):
+    def save(self, path: str, compressed: bool = True):
         """Save to a (compressed) NPZ file.
 
         This could be later loaded by :func:`pypianoroll.load`.
@@ -616,7 +622,7 @@ class Multitrack:
         are then collected and saved to a npz file.
 
         """
-        info_dict = {
+        info_dict: Dict = {
             "resolution": self.resolution,
             "name": self.name,
         }
@@ -650,7 +656,9 @@ class Multitrack:
         with zipfile.ZipFile(path, "a") as zip_file:
             zip_file.writestr("info.json", json.dumps(info_dict), compression)
 
-    def to_pretty_midi(self, default_tempo=None, default_velocity=64):
+    def to_pretty_midi(
+        self, default_tempo: Optional[float] = None, default_velocity: int = 64
+    ):
         """Convert to a :class:`pretty_midi.PrettyMIDI` object.
 
         Notes
@@ -726,7 +734,7 @@ class Multitrack:
 
         return pm
 
-    def write(self, path):
+    def write(self, path: str):
         """Write to a MIDI file.
 
         Parameters

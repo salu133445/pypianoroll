@@ -1,9 +1,12 @@
 """Module for visualizing multitrack pianorolls."""
+from typing import Optional, Sequence
+
 import matplotlib
 import numpy as np
 import pretty_midi
 from matplotlib import pyplot as plt
 from matplotlib.patches import Patch
+from numpy import ndarray
 
 try:
     from moviepy.editor import VideoClip
@@ -13,32 +16,27 @@ try:
 except ImportError:
     HAS_MOVIEPY = False
 
-__all__ = [
-    "plot_multitrack",
-    "plot_pianoroll",
-    "plot_track",
-    "save_animation",
-]
+__all__ = ["plot_multitrack", "plot_pianoroll", "plot_track", "save_animation"]
 
 
 def plot_pianoroll(
     ax,
-    pianoroll,
-    is_drum=False,
-    resolution=None,
-    downbeats=None,
-    preset="default",
-    cmap="Blues",
-    xtick="auto",
-    ytick="octave",
-    xticklabel=True,
-    yticklabel="auto",
-    tick_loc=None,
-    tick_direction="in",
-    label="both",
-    grid="both",
-    grid_linestyle=":",
-    grid_linewidth=0.5,
+    pianoroll: ndarray,
+    is_drum: bool = False,
+    resolution: Optional[int] = None,
+    downbeats: Optional[Sequence[int]] = None,
+    preset: str = "default",
+    cmap: str = "Blues",
+    xtick: str = "auto",
+    ytick: str = "octave",
+    xticklabel: bool = True,
+    yticklabel: str = "auto",
+    tick_loc: Optional[Sequence[str]] = None,
+    tick_direction: str = "in",
+    label: str = "both",
+    grid: str = "both",
+    grid_linestyle: str = ":",
+    grid_linewidth: float = 0.5,
 ):
     """
     Plot a pianoroll given as a numpy array.
@@ -269,21 +267,21 @@ def plot_pianoroll(
 
 def plot_track(
     track,
-    filename=None,
-    resolution=None,
-    downbeats=None,
-    preset="default",
-    cmap="Blues",
-    xtick="auto",
-    ytick="octave",
+    filename: Optional[str] = None,
+    resolution: Optional[int] = None,
+    downbeats: Optional[Sequence[int]] = None,
+    preset: str = "default",
+    cmap: str = "Blues",
+    xtick: str = "auto",
+    ytick: str = "octave",
     xticklabel=True,
-    yticklabel="auto",
-    tick_loc=None,
-    tick_direction="in",
-    label="both",
-    grid="both",
-    grid_linestyle=":",
-    grid_linewidth=0.5,
+    yticklabel: str = "auto",
+    tick_loc: Optional[Sequence[str]] = None,
+    tick_direction: str = "in",
+    label: str = "both",
+    grid: str = "both",
+    grid_linestyle: str = ":",
+    grid_linewidth: float = 0.5,
 ):
     """
     Plot the pianoroll or save a plot of the pianoroll.
@@ -381,21 +379,21 @@ def plot_track(
 
 def plot_multitrack(
     multitrack,
-    filename=None,
-    mode="separate",
-    track_label="name",
-    preset="default",
-    cmaps=None,
-    xtick="auto",
-    ytick="octave",
-    xticklabel=True,
-    yticklabel="auto",
-    tick_loc=None,
-    tick_direction="in",
-    label="both",
-    grid="both",
-    grid_linestyle=":",
-    grid_linewidth=0.5,
+    filename: Optional[str] = None,
+    mode: str = "separate",
+    track_label: str = "name",
+    preset: str = "default",
+    cmaps: Optional[Sequence[str]] = None,
+    xtick: str = "auto",
+    ytick: str = "octave",
+    xticklabel: bool = True,
+    yticklabel: str = "auto",
+    tick_loc: Optional[Sequence[str]] = None,
+    tick_direction: str = "in",
+    label: str = "both",
+    grid: str = "both",
+    grid_linestyle: str = ":",
+    grid_linewidth: float = 0.5,
 ):
     """
     Plot the pianorolls or save a plot of them.
@@ -670,26 +668,26 @@ def plot_multitrack(
 
 
 def save_animation(
-    filename,
-    pianoroll,
-    window,
-    hop=1,
-    fps=None,
-    is_drum=False,
-    resolution=None,
-    downbeats=None,
-    preset="default",
-    cmap="Blues",
-    xtick="auto",
-    ytick="octave",
-    xticklabel=True,
-    yticklabel="auto",
-    tick_loc=None,
-    tick_direction="in",
-    label="both",
-    grid="both",
-    grid_linestyle=":",
-    grid_linewidth=0.5,
+    filename: str,
+    pianoroll: ndarray,
+    fps: int,
+    window: int,
+    hop: int = 1,
+    is_drum: bool = False,
+    resolution: Optional[int] = None,
+    downbeats: Optional[Sequence[int]] = None,
+    preset: str = "default",
+    cmap: str = "Blues",
+    xtick: str = "auto",
+    ytick: str = "octave",
+    xticklabel: bool = True,
+    yticklabel: str = "auto",
+    tick_loc: Optional[Sequence[str]] = None,
+    tick_direction: str = "in",
+    label: str = "both",
+    grid: str = "both",
+    grid_linestyle: str = ":",
+    grid_linewidth: float = 0.5,
     **kwargs
 ):
     """
@@ -707,12 +705,12 @@ def save_animation(
         - For a 3D array, shape=(num_time_step, num_pitch, num_channel),
           where channels can be either RGB or RGBA.
 
+    fps : int
+        The number of frames per second in the resulting video or GIF file.
     window : int
         The window size to be applied to `pianoroll` for the animation.
     hop : int
         The hop size to be applied to `pianoroll` for the animation.
-    fps : int
-        The number of frames per second in the resulting video or GIF file.
     is_drum : bool
         A boolean number that indicates whether it is a percussion track.
         Defaults to False.

@@ -1,4 +1,9 @@
 """Utilities for manipulating multitrack pianorolls."""
+from typing import Union
+
+from .multitrack import Multitrack
+from .track import Track
+
 __all__ = [
     "assign_constant",
     "binarize",
@@ -14,7 +19,7 @@ __all__ = [
 ]
 
 
-def assign_constant(obj, value):
+def assign_constant(obj: Union[Multitrack, Track], value: float):
     """Assign a constant value to all nonzeros entries of the piano roll(s).
 
     If a piano roll is not binarized, its data type will be preserved. If a
@@ -31,7 +36,7 @@ def assign_constant(obj, value):
     return obj.assign_constant(value=value)
 
 
-def binarize(obj, threshold=0):
+def binarize(obj: Union[Multitrack, Track], threshold: float = 0):
     """Binarize the piano roll(s).
 
     Parameters
@@ -45,7 +50,7 @@ def binarize(obj, threshold=0):
     return obj.binarize(threshold=threshold)
 
 
-def clip(obj, lower=0, upper=127):
+def clip(obj: Union[Multitrack, Track], lower: float = 0, upper: float = 127):
     """Clip the piano roll(s) by a lower bound and an upper bound.
 
     Parameters
@@ -61,7 +66,7 @@ def clip(obj, lower=0, upper=127):
     return obj.clip(lower=lower, upper=upper)
 
 
-def downsample(obj, factor):
+def downsample(obj: Multitrack, factor: int):
     """Downsample the piano rolls by the given factor.
 
     Attribute `resolution` will be updated accordingly as well.
@@ -77,7 +82,7 @@ def downsample(obj, factor):
     return obj.downsample(factor=factor)
 
 
-def pad(obj, pad_length):
+def pad(obj: Union[Multitrack, Track], pad_length: int):
     """Pad the piano roll(s) with zeros at the end along the time axis.
 
     Notes
@@ -96,7 +101,7 @@ def pad(obj, pad_length):
     return obj.pad(pad_length=pad_length)
 
 
-def pad_to_multiple(obj, factor):
+def pad_to_multiple(obj: Union[Multitrack, Track], factor: int):
     """Pad the piano rolls along the time axis to a multiple of `factor`.
 
     Pad the piano rolls with zeros at the end along the time axis of the
@@ -120,7 +125,7 @@ def pad_to_multiple(obj, factor):
     return obj.pad_to_multiple(factor=factor)
 
 
-def pad_to_same(obj):
+def pad_to_same(obj: Union[Multitrack]):
     """Pad piano rolls along the time axis to have the same length.
 
     Pad shorter piano rolls with zeros at the end along the time axis so
@@ -135,7 +140,7 @@ def pad_to_same(obj):
     return obj.pad_to_same()
 
 
-def transpose(obj, semitone):
+def transpose(obj: Union[Multitrack, Track], semitone: int):
     """Transpose the piano roll(s) by a number of semitones.
 
     Positive values are for a higher key, while negative values are for
@@ -152,7 +157,7 @@ def transpose(obj, semitone):
     return obj.transpose(semitone)
 
 
-def trim_trailing_silence(obj):
+def trim_trailing_silence(obj: Union[Multitrack, Track]):
     """Trim the trailing silences of the piano roll(s).
 
     All the piano rolls will have the same length after the trimming.
@@ -161,7 +166,7 @@ def trim_trailing_silence(obj):
     return obj.trim_trailing_silence()
 
 
-def save(path, obj, compressed=True):
+def save(path: str, obj: Multitrack, compressed: bool = True):
     """Save the object to a (compressed) NPZ file.
 
     This could be later loaded by :func:`pypianoroll.load`.
@@ -185,7 +190,7 @@ def save(path, obj, compressed=True):
     obj.save(path, compressed=compressed)
 
 
-def write(obj, path):
+def write(obj: Multitrack, path: str):
     """Write the object to a MIDI file.
 
     Parameters
@@ -199,7 +204,7 @@ def write(obj, path):
     obj.write(path)
 
 
-def plot(obj, **kwargs):
+def plot(obj: Union[Multitrack, Track], **kwargs):
     """Plot the object.
 
     See :func:`pypianoroll.plot_multitrack` and
