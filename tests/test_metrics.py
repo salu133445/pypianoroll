@@ -1,33 +1,28 @@
-"""Test cases for `track.py` module."""
-import unittest
+"""Test cases for metrics."""
 import numpy as np
 from pypianoroll import metrics
+from pytest import fixture
 
 
-class MetricTestCase(unittest.TestCase):
-    """Test case for metric module."""
+@fixture
+def pianoroll():
+    pianoroll = np.zeros((96, 128), np.uint8)
+    pianoroll[:24, [60, 64, 67, 72]] = 100
+    pianoroll[73:96, [72, 76, 79, 84]] = 80
+    return pianoroll
 
-    def setUp(self):
-        self.pianoroll = np.zeros((96, 128), np.uint8)
-        self.pianoroll[:24, [60, 64, 67, 72]] = 100
-        self.pianoroll[73:96, [72, 76, 79, 84]] = 80
-        self.resolution = 24
 
-    def tearDown(self):
-        self.pianoroll = None
-        self.resolution = None
+def test_empty_beat_rate(pianoroll):
+    """Test the empty_beat_rate metric."""
+    empty_beat_rate = metrics.empty_beat_rate(pianoroll, 24)
+    assert empty_beat_rate == 0.5
 
-    def test_empty_beat_rate(self):
-        """Test the empty_beat_rate metric."""
-        empty_beat_rate = metrics.empty_beat_rate(
-            self.pianoroll, self.resolution
-        )
-        self.assertEqual(empty_beat_rate, 0.5)
 
-    def test_n_pitches_used(self):
-        """Test the n_pitches_used metric."""
-        self.assertEqual(metrics.n_pitches_used(self.pianoroll), 7)
+def test_n_pitches_used(pianoroll):
+    """Test the n_pitches_used metric."""
+    assert metrics.n_pitches_used(pianoroll) == 7
 
-    def test_n_pitches_used(self):
-        """Test the n_pitches_used metric."""
-        self.assertEqual(metrics.n_pitches_used(self.pianoroll), 7)
+
+def test_n_pitches_used(pianoroll):
+    """Test the n_pitches_used metric."""
+    assert metrics.n_pitches_used(pianoroll) == 7
