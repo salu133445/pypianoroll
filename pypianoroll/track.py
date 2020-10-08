@@ -1,17 +1,15 @@
-"""Class for single-track pianorolls with metadata."""
-from __future__ import absolute_import, division, print_function
-
+"""Class for single-track piano rolls."""
 from copy import deepcopy
 
 import numpy as np
-from six import string_types
+from numpy import ndarray
 
 from .visualization import plot_track
 
 __all__ = ["Track"]
 
 
-class Track(object):
+class Track:
     """
     A container for single-track piano roll.
 
@@ -66,9 +64,16 @@ class Track(object):
 
     def validate(self):
         """Raise a proper error if any attribute is invalid."""
-        # pianoroll
-        if not isinstance(self.pianoroll, np.ndarray):
-            raise TypeError("`pianoroll` must be a NumPy array.")
+        if not isinstance(self.program, int):
+            raise TypeError("`program` must be of type int.")
+        if self.program < 0 or self.program > 127:
+            raise ValueError("`program` must be in between 0 to 127.")
+        if not isinstance(self.is_drum, bool):
+            raise TypeError("`is_drum` must be of type bool.")
+        if not isinstance(self.name, str):
+            raise TypeError("`name` must be of type str.")
+        if not isinstance(self.pianoroll, ndarray):
+            raise TypeError("`pianoroll` must be an ndarray.")
         if not (
             np.issubdtype(self.pianoroll.dtype, np.bool_)
             or np.issubdtype(self.pianoroll.dtype, np.number)
@@ -83,17 +88,6 @@ class Track(object):
             raise ValueError(
                 "The length of the second axis of `pianoroll` must be 128."
             )
-        # program
-        if not isinstance(self.program, int):
-            raise TypeError("`program` must be of type int.")
-        if self.program < 0 or self.program > 127:
-            raise ValueError("`program` must be in between 0 to 127.")
-        # is_drum
-        if not isinstance(self.is_drum, bool):
-            raise TypeError("`is_drum` must be of type bool.")
-        # name
-        if not isinstance(self.name, string_types):
-            raise TypeError("`name` must be of type string.")
 
     def is_valid(self):
         """Return True if all attributes are valid, otherwise False.

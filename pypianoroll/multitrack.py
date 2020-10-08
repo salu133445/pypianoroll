@@ -4,8 +4,6 @@ This module defines the core class of Pypianoroll---the Multitrack
 class, a container for multitrack piano rolls.
 
 """
-from __future__ import absolute_import, division, print_function
-
 import json
 import zipfile
 from copy import deepcopy
@@ -13,7 +11,6 @@ from copy import deepcopy
 import numpy as np
 import pretty_midi
 from scipy.sparse import csc_matrix
-from six import string_types
 
 from .track import Track
 from .visualization import plot_multitrack
@@ -54,7 +51,7 @@ def reconstruct_sparse(data_dict, name):
     return sparse_matrix.toarray()
 
 
-class Multitrack(object):
+class Multitrack:
     """A container for multitrack piano rolls.
 
     This is the core class of Pypianoroll.
@@ -191,8 +188,8 @@ class Multitrack(object):
                 raise ValueError("`downbeat` must be a 1D NumPy array.")
 
         # Name
-        if not isinstance(self.name, string_types):
-            raise TypeError("`name` must be a string.")
+        if not isinstance(self.name, str):
+            raise TypeError("`name` must be of type str.")
 
         # Tracks
         for track in self.tracks:

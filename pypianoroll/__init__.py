@@ -15,10 +15,7 @@ Features
 - Write multitrack piano rolls into MIDI files
 
 """
-from __future__ import absolute_import, division, print_function
-
 from . import core, inputs, metrics, multitrack, track, visualization
-
 from .core import *  # noqa: F401,F403
 from .inputs import *  # noqa: F401,F403
 from .metrics import *  # noqa: F401,F403

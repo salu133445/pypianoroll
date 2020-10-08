@@ -13,8 +13,6 @@ Functions
 - tonal_distance
 
 """
-from __future__ import division
-
 import math
 
 import numpy as np

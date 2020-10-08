@@ -1,6 +1,4 @@
 """Utilities for manipulating multitrack pianorolls."""
-from __future__ import absolute_import, division, print_function
-
 __all__ = [
     "assign_constant",
     "binarize",

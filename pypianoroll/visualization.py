@@ -1,6 +1,4 @@
 """Module for visualizing multitrack pianorolls."""
-from __future__ import absolute_import, division, print_function
-
 import matplotlib
 import numpy as np
 import pretty_midi
@@ -517,7 +515,7 @@ def plot_multitrack(
         if mode == "separate":
             cmaps = ("Blues", "Oranges", "Greens", "Reds", "Purples", "Greys")
         elif mode == "stacked":
-            cmaps = "hsv"
+            cmaps = ("hsv",)
         else:
             cmaps = ("Blues", "Greens")
 
@@ -574,7 +572,9 @@ def plot_multitrack(
 
         colormap = matplotlib.cm.get_cmap(cmaps[0])
         colormatrix = colormap(np.arange(0, 1, 1 / num_track))[:, :3]
-        recolored = np.matmul(stacked.reshape(-1, num_track), colormatrix)
+        recolored = np.clip(
+            np.matmul(stacked.reshape(-1, num_track), colormatrix), 0, 1
+        )
         stacked = recolored.reshape(stacked.shape[:2] + (3,))
 
         plot_pianoroll(
