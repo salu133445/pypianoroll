@@ -288,8 +288,8 @@ def in_scale_rate(pianoroll: ndarray, root: int = 3, mode: str = "major"):
 
     Parameters
     ----------
-    music : :class:`muspy.Music` object
-        Music object to evaluate.
+    pianoroll : ndarray
+        Piano roll to evaluate.
     root : int
         Root of the scale.
     mode : str, {'major', 'minor'}

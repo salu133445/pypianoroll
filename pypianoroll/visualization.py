@@ -43,9 +43,8 @@ def plot_pianoroll(
 
     Parameters
     ----------
-    ax : matplotlib.axes.Axes object
-        A :class:`matplotlib.axes.Axes` object where the piano roll will
-        be plotted on.
+    ax : matplotlib.axes.Axes
+        Axes object where the piano roll will be plotted on.
     pianoroll : np.ndarray
         A piano roll to be plotted. The values should be in [0, 1] when
         data type is float, and in [0, 127] when data type is integer.
@@ -345,10 +344,10 @@ def plot_track(
 
     Returns
     -------
-    fig : `matplotlib.figure.Figure` object
-        A :class:`matplotlib.figure.Figure` object.
-    ax : `matplotlib.axes.Axes` object
-        A :class:`matplotlib.axes.Axes` object.
+    :class:`matplotlib.figure.Figure`
+        Created Figure object.
+    :class:`matplotlib.axes.Axes`
+        Created Axes object.
 
     """
     fig, ax = plt.subplots()
@@ -476,10 +475,10 @@ def plot_multitrack(
 
     Returns
     -------
-    fig : `matplotlib.figure.Figure` object
-        A :class:`matplotlib.figure.Figure` object.
-    axs : list
-        List of :class:`matplotlib.axes.Axes` object.
+    :class:`matplotlib.figure.Figure`
+        Created Figure object.
+    list of :class:`matplotlib.axes.Axes`
+        Created list of Axes objects.
 
     """
 

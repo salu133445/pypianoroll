@@ -28,7 +28,6 @@ def assign_constant(obj: Union[Multitrack, Track], value: float):
     Arguments
     ---------
     obj : :class:`pypianoroll.Multitrack` or :class:`pypianoroll.Track`
-      object
         Object to modify.
     value : int or float
         Value to assign to all the nonzero entries in the piano roll(s).
@@ -43,7 +42,6 @@ def binarize(obj: Union[Multitrack, Track], threshold: float = 0):
     Parameters
     ----------
     obj : :class:`pypianoroll.Multitrack` or :class:`pypianoroll.Track`
-      object
         Object to binarize.
     threshold : int or float
         Threshold to binarize the piano roll(s). Defaults to zero.
@@ -58,7 +56,6 @@ def clip(obj: Union[Multitrack, Track], lower: float = 0, upper: float = 127):
     Parameters
     ----------
     obj : :class:`pypianoroll.Multitrack` or :class:`pypianoroll.Track`
-      object
         Object to clip.
     lower : int or float
         Lower bound to clip the piano roll(s). Defaults to 0.
@@ -76,7 +73,7 @@ def downsample(obj: Multitrack, factor: int):
 
     Parameters
     ----------
-    obj : :class:`pypianoroll.Multitrack` object
+    obj : :class:`pypianoroll.Multitrack`
         Object to downsample.
     factor : int
         Ratio of the original resolution to the desired resolution.
@@ -96,7 +93,6 @@ def pad(obj: Union[Multitrack, Track], pad_length: int):
     Parameters
     ----------
     obj : :class:`pypianoroll.Multitrack` or :class:`pypianoroll.Track`
-      object
         Object to pad.
     pad_length : int
         Length to pad along the time axis with zeros.
@@ -120,7 +116,6 @@ def pad_to_multiple(obj: Union[Multitrack, Track], factor: int):
     Parameters
     ----------
     obj : :class:`pypianoroll.Multitrack` or :class:`pypianoroll.Track`
-      object
         Object to pad.
     factor : int
         The value which the length of the resulting pianoroll(s) will be
@@ -138,7 +133,7 @@ def pad_to_same(obj: Union[Multitrack]):
 
     Parameters
     ----------
-    obj : :class:`pypianoroll.Multitrack` object
+    obj : :class:`pypianoroll.Multitrack`
         Object to pad.
 
     """
@@ -154,7 +149,6 @@ def transpose(obj: Union[Multitrack, Track], semitone: int):
     Parameters
     ----------
     obj : :class:`pypianoroll.Multitrack` or :class:`pypianoroll.Track`
-      object
         Object to transpose.
     semitone : int
         Number of semitones to transpose the piano roll(s).
@@ -181,7 +175,7 @@ def save(path: str, obj: Multitrack, compressed: bool = True):
     ----------
     path : str
         Path to the NPZ file to save.
-    obj : :class:`pypianoroll.Multitrack` object
+    obj : :class:`pypianoroll.Multitrack`
         Object to save.
     compressed : bool
         Whether to save to a compressed NPZ file. Defaults to True.
@@ -201,7 +195,7 @@ def write(obj: Multitrack, path: str):
 
     Parameters
     ----------
-    obj : :class:`pypianoroll.Multitrack` object
+    obj : :class:`pypianoroll.Multitrack`
         Object to write.
     path : str
         Path to the MIDI file to write.
@@ -219,7 +213,6 @@ def plot(obj: Union[Multitrack, Track], **kwargs):
     Parameters
     ----------
     obj : :class:`pypianoroll.Multitrack` or :class:`pypianoroll.Track`
-      object
         Object to plot.
 
     """
