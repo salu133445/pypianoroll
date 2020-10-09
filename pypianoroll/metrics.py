@@ -1,4 +1,4 @@
-"""Metrics for multitrack pianorolls.
+"""Metrics for multitrack piano rolls.
 
 Functions
 ---------
@@ -41,16 +41,16 @@ def _to_chroma(pianoroll: ndarray):
 def empty_beat_rate(pianoroll: ndarray, resolution: int):
     r"""Return the ratio of empty beats.
 
-    The empty-beat rate is defined as the ratio of the number of empty beats
-    (where no note is played) to the total number of beats. Return NaN if
-    song length is zero.
+    The empty-beat rate is defined as the ratio of the number of empty
+    beats (where no note is played) to the total number of beats. Return
+    NaN if song length is zero.
 
     .. math:: empty\_beat\_rate = \frac{\#(empty\_beats)}{\#(beats)}
 
     Parameters
     ----------
     pianoroll : ndarray
-        Pianoroll to evaluate.
+        Piano roll to evaluate.
 
     Returns
     -------
@@ -71,7 +71,7 @@ def n_pitches_used(pianoroll: ndarray):
     Parameters
     ----------
     pianoroll : ndarray
-        Pianoroll to evaluate.
+        Piano roll to evaluate.
 
     Returns
     -------
@@ -93,7 +93,7 @@ def n_pitch_classes_used(pianoroll: ndarray):
     Parameters
     ----------
     pianoroll : ndarray
-        Pianoroll to evaluate.
+        Piano roll to evaluate.
 
     Returns
     -------
@@ -113,9 +113,9 @@ def n_pitch_classes_used(pianoroll: ndarray):
 def qualified_note_rate(pianoroll: ndarray, threshold: float = 2):
     r"""Return the ratio of the number of the qualified notes.
 
-    The polyphony rate is defined as the ratio of the number of qualified
-    notes (notes longer than `threshold` (in time steps)) to the total
-    number of notes. Return NaN if no note is found.
+    The qualified note rate is defined as the ratio of the number of
+    qualified notes (notes longer than `threshold`, in time steps) to
+    the total number of notes. Return NaN if no note is found.
 
     .. math::
         qualified\_note\_rate = \frac{
@@ -127,9 +127,9 @@ def qualified_note_rate(pianoroll: ndarray, threshold: float = 2):
     Parameters
     ----------
     pianoroll : ndarray
-        Pianoroll to evaluate.
+        Piano roll to evaluate.
     threshold : int
-        The threshold of note length to count into the numerator.
+        Threshold of note length to count into the numerator.
 
     Returns
     -------
@@ -138,10 +138,11 @@ def qualified_note_rate(pianoroll: ndarray, threshold: float = 2):
 
     References
     ----------
-    1. Hao-Wen Dong, Wen-Yi Hsiao, Li-Chia Yang, and Yi-Hsuan Yang,
-       "MuseGAN: Multi-track sequential generative adversarial networks for
-       symbolic music generation and accompaniment," in Proceedings of the
-       32nd AAAI Conference on Artificial Intelligence (AAAI), 2018.
+    [1] Hao-Wen Dong, Wen-Yi Hsiao, Li-Chia Yang, and Yi-Hsuan Yang,
+        "MuseGAN: Multi-track sequential generative adversarial networks
+        for symbolic music generation and accompaniment," in Proceedings
+        of the 32nd AAAI Conference on Artificial Intelligence (AAAI),
+        2018.
 
     """
     if np.issubdtype(pianoroll.dtype, np.bool_):
@@ -159,10 +160,10 @@ def qualified_note_rate(pianoroll: ndarray, threshold: float = 2):
 def polyphonic_rate(pianoroll: ndarray, threshold: float = 2):
     r"""Return the ratio of time steps where multiple pitches are on.
 
-    The polyphony rate is defined as the ratio of the number of time steps
-    where multiple pitches are on to the total number of time steps. Drum
-    tracks are ignored. Return NaN if song length is zero. This metric is
-    used in [1], where it is called *polyphonicity*.
+    The polyphony rate is defined as the ratio of the number of time
+    steps where multiple pitches are on to the total number of time
+    steps. Drum tracks are ignored. Return NaN if song length is zero.
+    This metric is used in [1], where it is called *polyphonicity*.
 
     .. math::
         polyphony\_rate = \frac{
@@ -174,9 +175,9 @@ def polyphonic_rate(pianoroll: ndarray, threshold: float = 2):
     Parameters
     ----------
     pianoroll : ndarray
-        Pianoroll to evaluate.
+        Piano roll to evaluate.
     threshold : int
-        The threshold of number of pitches to count into the numerator.
+        Threshold of number of pitches to count into the numerator.
 
     Returns
     -------
@@ -185,10 +186,11 @@ def polyphonic_rate(pianoroll: ndarray, threshold: float = 2):
 
     References
     ----------
-    1. Hao-Wen Dong, Wen-Yi Hsiao, Li-Chia Yang, and Yi-Hsuan Yang,
-       "MuseGAN: Multi-track sequential generative adversarial networks for
-       symbolic music generation and accompaniment," in Proceedings of the
-       32nd AAAI Conference on Artificial Intelligence (AAAI), 2018.
+    [1] Hao-Wen Dong, Wen-Yi Hsiao, Li-Chia Yang, and Yi-Hsuan Yang,
+        "MuseGAN: Multi-track sequential generative adversarial networks
+        for symbolic music generation and accompaniment," in Proceedings
+        of the 32nd AAAI Conference on Artificial Intelligence (AAAI),
+        2018.
 
     """
     if len(pianoroll) < 1:
@@ -203,9 +205,9 @@ def drum_in_pattern_rate(
     r"""Return the ratio of drum notes in a certain drum pattern.
 
     The drum-in-pattern rate is defined as the ratio of the number of
-    notes in a certain scale to the total number of notes. Only drum tracks
-    are considered. Return NaN if no drum note is found. This metric is used
-    in [1].
+    notes in a certain scale to the total number of notes. Only drum
+    tracks are considered. Return NaN if no drum note is found. This
+    metric is used in [1].
 
     .. math::
         drum\_in\_pattern\_rate = \frac{
@@ -214,7 +216,7 @@ def drum_in_pattern_rate(
     Parameters
     ----------
     pianoroll : ndarray
-        Pianoroll to evaluate.
+        Piano roll to evaluate.
     resolution : int
         Time steps per beat.
     tolerance : float
@@ -227,10 +229,11 @@ def drum_in_pattern_rate(
 
     References
     ----------
-    1. Hao-Wen Dong, Wen-Yi Hsiao, Li-Chia Yang, and Yi-Hsuan Yang,
-       "MuseGAN: Multi-track sequential generative adversarial networks for
-       symbolic music generation and accompaniment," in Proceedings of the
-       32nd AAAI Conference on Artificial Intelligence (AAAI), 2018.
+    [1] Hao-Wen Dong, Wen-Yi Hsiao, Li-Chia Yang, and Yi-Hsuan Yang,
+        "MuseGAN: Multi-track sequential generative adversarial networks
+        for symbolic music generation and accompaniment," in Proceedings
+        of the 32nd AAAI Conference on Artificial Intelligence (AAAI),
+        2018.
 
     """
     if resolution not in (4, 6, 8, 9, 12, 16, 18, 24):
@@ -275,9 +278,10 @@ def _get_scale(root, mode):
 def in_scale_rate(pianoroll: ndarray, root: int = 3, mode: str = "major"):
     r"""Return the ratio of pitches in a certain musical scale.
 
-    The pitch-in-scale rate is defined as the ratio of the number of notes
-    in a certain scale to the total number of notes. Drum tracks are
-    ignored. Return NaN if no note is found. This metric is used in [1].
+    The pitch-in-scale rate is defined as the ratio of the number of
+    notes in a certain scale to the total number of notes. Drum tracks
+    are ignored. Return NaN if no note is found. This metric is used in
+    [1].
 
     .. math::
         pitch\_in\_scale\_rate = \frac{\#(notes\_in\_scale)}{\#(notes)}
@@ -298,14 +302,16 @@ def in_scale_rate(pianoroll: ndarray, root: int = 3, mode: str = "major"):
 
     See Also
     --------
-    :func:`muspy.scale_consistency`: Compute the largest pitch-in-class rate.
+    :func:`muspy.scale_consistency`: Compute the largest pitch-in-class
+      rate.
 
     References
     ----------
-    1. Hao-Wen Dong, Wen-Yi Hsiao, Li-Chia Yang, and Yi-Hsuan Yang,
-       "MuseGAN: Multi-track sequential generative adversarial networks for
-       symbolic music generation and accompaniment," in Proceedings of the
-       32nd AAAI Conference on Artificial Intelligence (AAAI), 2018.
+    [1] Hao-Wen Dong, Wen-Yi Hsiao, Li-Chia Yang, and Yi-Hsuan Yang,
+        "MuseGAN: Multi-track sequential generative adversarial networks
+        for symbolic music generation and accompaniment," in Proceedings
+        of the 32nd AAAI Conference on Artificial Intelligence (AAAI),
+        2018.
 
     """
     chroma = _to_chroma(pianoroll)
@@ -339,29 +345,29 @@ def tonal_distance(
     resolution: int,
     radii: Sequence[float] = (1.0, 1.0, 0.5),
 ):
-    """Return the tonal distance [1] between the two input pianorolls.
+    """Return the tonal distance [1] between the two input piano rolls.
 
     Parameters
     ----------
     pianoroll_1 : ndarray
-        First pianoroll to evaluate.
+        First piano roll to evaluate.
     pianoroll_2 : ndarray
-        Second pianoroll to evaluate.
+        Second piano roll to evaluate.
     resolution : int
         Time steps per beat.
     radii : tuple of float
-        The radii of the three tonal circles (see Equation 3 in [1]).
+        Radii of the three tonal circles (see Equation 3 in [1]).
 
     References
     ----------
-    1. Christopher Harte, Mark Sandler, and Martin Gasser, "Detecting
-       harmonic change in musical audio," in Proceedings of the 1st ACM
-       workshop on Audio and music computing multimedia, 2006.
+    [1] Christopher Harte, Mark Sandler, and Martin Gasser, "Detecting
+        harmonic change in musical audio," in Proceedings of the 1st ACM
+        workshop on Audio and music computing multimedia, 2006.
 
     """
     assert len(pianoroll_1) == len(
         pianoroll_2
-    ), "Input pianorolls must have the same length."
+    ), "Input piano rolls must have the same length."
 
     r1, r2, r3 = radii
     tonal_matrix = _get_tonal_matrix(r1, r2, r3)

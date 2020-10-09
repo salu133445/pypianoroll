@@ -1,4 +1,4 @@
-"""Module for visualizing multitrack pianorolls."""
+"""Module for visualizing multitrack piano rolls."""
 from typing import Optional, Sequence
 
 import matplotlib
@@ -39,30 +39,30 @@ def plot_pianoroll(
     grid_linewidth: float = 0.5,
 ):
     """
-    Plot a pianoroll given as a numpy array.
+    Plot a piano roll given as a numpy array.
 
     Parameters
     ----------
     ax : matplotlib.axes.Axes object
-        A :class:`matplotlib.axes.Axes` object where the pianoroll will be
-        plotted on.
+        A :class:`matplotlib.axes.Axes` object where the piano roll will
+        be plotted on.
     pianoroll : np.ndarray
-        A pianoroll to be plotted. The values should be in [0, 1] when data type
-        is float, and in [0, 127] when data type is integer.
+        A piano roll to be plotted. The values should be in [0, 1] when
+        data type is float, and in [0, 127] when data type is integer.
 
         - For a 2D array, shape=(num_time_step, num_pitch).
-        - For a 3D array, shape=(num_time_step, num_pitch, num_channel), where
-          channels can be either RGB or RGBA.
+        - For a 3D array, shape=(num_time_step, num_pitch, num_channel),
+          where channels can be either RGB or RGBA.
 
     is_drum : bool
-        A boolean number that indicates whether it is a percussion track.
-        Defaults to False.
+        A boolean number that indicates whether it is a percussion
+        track. Defaults to False.
     resolution : int
-        The number of time steps used to represent a beat. Required and only
+        Number of time steps used to represent a beat. Required and only
         effective when `xtick` is 'beat'.
     downbeats : list
-        An array that indicates whether the time step contains a downbeat (i.e.,
-        the first time step of a bar).
+        An array that indicates whether the time step contains a
+        downbeat (i.e., the first time step of a bar).
 
     preset : {'default', 'plain', 'frame'}
         A string that indicates the preset theme to use.
@@ -72,42 +72,43 @@ def plot_pianoroll(
         - In 'plain' preset, the x- and y-axis are both off.
 
     cmap :  `matplotlib.colors.Colormap`
-        The colormap to use in :func:`matplotlib.pyplot.imshow`. Defaults to
-        'Blues'. Only effective when `pianoroll` is 2D.
+        The colormap to use in :func:`matplotlib.pyplot.imshow`.
+        Defaults to 'Blues'. Only effective when `pianoroll` is 2D.
     xtick : {'auto', 'beat', 'step', 'off'}
-        A string that indicates what to use as ticks along the x-axis. If 'auto'
-        is given, automatically set to 'beat' if `resolution` is also given
-        and set to 'step', otherwise. Defaults to 'auto'.
+        A string that indicates what to use as ticks along the x-axis.
+        If 'auto' is given, automatically set to 'beat' if `resolution`
+        is also given and set to 'step', otherwise. Defaults to 'auto'.
     ytick : {'octave', 'pitch', 'off'}
         A string that indicates what to use as ticks along the y-axis.
         Defaults to 'octave'.
     xticklabel : bool
-        Whether to add tick labels along the x-axis. Only effective when `xtick`
-        is not 'off'.
+        Whether to add tick labels along the x-axis. Only effective
+        when `xtick` is not 'off'.
     yticklabel : {'auto', 'name', 'number', 'off'}
-        If 'name', use octave name and pitch name (key name when `is_drum` is
-        True) as tick labels along the y-axis. If 'number', use pitch number. If
-        'auto', set to 'name' when `ytick` is 'octave' and 'number' when `ytick`
-        is 'pitch'. Defaults to 'auto'. Only effective when `ytick` is not
-        'off'.
+        If 'name', use octave name and pitch name (key name when
+        `is_drum` is True) as tick labels along the y-axis. If 'number',
+        use pitch number. If 'auto', set to 'name' when `ytick` is
+        'octave' and 'number' when `ytick` is 'pitch'. Defaults to
+        'auto'. Only effective when `ytick` is not 'off'.
     tick_loc : tuple or list
-        The locations to put the ticks. Availables elements are 'bottom', 'top',
-        'left' and 'right'. Defaults to ('bottom', 'left').
+        The locations to put the ticks. Availables elements are
+        'bottom', 'top', 'left' and 'right'. Defaults to ('bottom',
+        'left').
     tick_direction : {'in', 'out', 'inout'}
-        A string that indicates where to put the ticks. Defaults to 'in'. Only
-        effective when one of `xtick` and `ytick` is on.
+        A string that indicates where to put the ticks. Defaults to
+        'in'. Only effective when one of `xtick` and `ytick` is on.
     label : {'x', 'y', 'both', 'off'}
-        A string that indicates whether to add labels to the x-axis and y-axis.
-        Defaults to 'both'.
+        A string that indicates whether to add labels to the x-axis and
+        y-axis. Defaults to 'both'.
     grid : {'x', 'y', 'both', 'off'}
-        A string that indicates whether to add grids to the x-axis, y-axis, both
-        or neither. Defaults to 'both'.
+        A string that indicates whether to add grids to the x-axis,
+        y-axis, both or neither. Defaults to 'both'.
     grid_linestyle : str
-        Will be passed to :meth:`matplotlib.axes.Axes.grid` as 'linestyle'
-        argument.
+        Will be passed to :meth:`matplotlib.axes.Axes.grid` as
+        'linestyle' argument.
     grid_linewidth : float
-        Will be passed to :meth:`matplotlib.axes.Axes.grid` as 'linewidth'
-        argument.
+        Will be passed to :meth:`matplotlib.axes.Axes.grid` as
+        'linewidth' argument.
 
     """
     if pianoroll.ndim not in (2, 3):
@@ -289,13 +290,13 @@ def plot_track(
     Parameters
     ----------
     filename :
-        The filename to which the plot is saved. If None, save nothing.
+        Filename to which the plot is saved. If None, save nothing.
     resolution : int
-        The number of time steps used to represent a beat. Required and only
+        Number of time steps used to represent a beat. Required and only
         effective when `xtick` is 'beat'.
     downbeats : list
-        An array that indicates whether the time step contains a downbeat (i.e.,
-        the first time step of a bar).
+        An array that indicates whether the time step contains a
+        downbeat (i.e., the first time step of a bar).
 
     preset : {'default', 'plain', 'frame'}
         A string that indicates the preset theme to use.
@@ -305,42 +306,42 @@ def plot_track(
         - In 'plain' preset, the x- and y-axis are both off.
 
     cmap :  `matplotlib.colors.Colormap`
-        The colormap to use in :func:`matplotlib.pyplot.imshow`. Defaults to
-        'Blues'. Only effective when `pianoroll` is 2D.
+        Colormap to use in :func:`matplotlib.pyplot.imshow`. Defaults
+        to 'Blues'. Only effective when `pianoroll` is 2D.
     xtick : {'auto', 'beat', 'step', 'off'}
-        A string that indicates what to use as ticks along the x-axis. If 'auto'
-        is given, automatically set to 'beat' if `resolution` is also given
-        and set to 'step', otherwise. Defaults to 'auto'.
+        A string that indicates what to use as ticks along the x-axis.
+        If 'auto' is given, automatically set to 'beat' if `resolution`
+        is also given and set to 'step', otherwise. Defaults to 'auto'.
     ytick : {'octave', 'pitch', 'off'}
-        A string that indicates what to use as ticks along the y-axis. Defaults
-        to 'octave'.
+        A string that indicates what to use as ticks along the y-axis.
+        Defaults to 'octave'.
     xticklabel : bool
-        Whether to add tick labels along the x-axis. Only effective when `xtick`
-        is not 'off'.
+        Whether to add tick labels along the x-axis. Only effective
+        when `xtick` is not 'off'.
     yticklabel : {'auto', 'name', 'number', 'off'}
-        If 'name', use octave name and pitch name (key name when `is_drum` is
-        True) as tick labels along the y-axis. If 'number', use pitch number. If
-        'auto', set to 'name' when `ytick` is 'octave' and 'number' when `ytick`
-        is 'pitch'. Defaults to 'auto'. Only effective when `ytick` is not
-        'off'.
+        If 'name', use octave name and pitch name (key name when
+        `is_drum` is True) as tick labels along the y-axis. If 'number',
+        use pitch number. If 'auto', set to 'name' when `ytick` is
+        'octave' and 'number' when `ytick` is 'pitch'. Defaults to
+        'auto'. Only effective when `ytick` is not 'off'.
     tick_loc : tuple or list
-        The locations to put the ticks. Availables elements are 'bottom', 'top',
-        'left' and 'right'. Defaults to ('bottom', 'left').
+        Locations to put the ticks. Availables elements are 'bottom',
+        'top', 'left' and 'right'. Defaults to ('bottom', 'left').
     tick_direction : {'in', 'out', 'inout'}
-        A string that indicates where to put the ticks. Defaults to 'in'. Only
-        effective when one of `xtick` and `ytick` is on.
+        A string that indicates where to put the ticks. Defaults to
+        'in'. Only effective when one of `xtick` and `ytick` is on.
     label : {'x', 'y', 'both', 'off'}
-        A string that indicates whether to add labels to the x-axis and y-axis.
-        Defaults to 'both'.
+        A string that indicates whether to add labels to the x-axis and
+        y-axis. Defaults to 'both'.
     grid : {'x', 'y', 'both', 'off'}
-        A string that indicates whether to add grids to the x-axis, y-axis, both
-        or neither. Defaults to 'both'.
+        A string that indicates whether to add grids to the x-axis,
+        y-axis, both or neither. Defaults to 'both'.
     grid_linestyle : str
-        Will be passed to :meth:`matplotlib.axes.Axes.grid` as 'linestyle'
-        argument.
+        Will be passed to :meth:`matplotlib.axes.Axes.grid` as
+        'linestyle' argument.
     grid_linewidth : float
-        Will be passed to :meth:`matplotlib.axes.Axes.grid` as 'linewidth'
-        argument.
+        Will be passed to :meth:`matplotlib.axes.Axes.grid` as
+        'linewidth' argument.
 
     Returns
     -------
@@ -401,22 +402,23 @@ def plot_multitrack(
     Parameters
     ----------
     filename : str
-        The filename to which the plot is saved. If None, save nothing.
+        Filename to which the plot is saved. If None, save nothing.
     mode : {'separate', 'stacked', 'hybrid'}
-        A string that indicate the plotting mode to use. Defaults to 'separate'.
+        A string that indicate the plotting mode to use. Defaults to
+        'separate'.
 
         - In 'separate' mode, all the tracks are plotted separately.
-        - In 'stacked' mode, a color is assigned based on `cmaps` to the
-          pianoroll of each track and the pianorolls are stacked and plotted as
-          a colored image with RGB channels.
-        - In 'hybrid' mode, the drum tracks are merged into a 'Drums' track,
-          while the other tracks are merged into an 'Others' track, and the two
-          merged tracks are then plotted separately.
+        - In 'stacked' mode, a color is assigned based on `cmaps` to
+          the piano roll of each track and the piano rolls are stacked
+          and plotted as a colored image with RGB channels.
+        - In 'hybrid' mode, the drum tracks are merged into a 'Drums'
+          track, while the other tracks are merged into an 'Others'
+          track, and the two merged tracks are then plotted separately.
 
     track_label : {'name', 'program', 'family', 'off'}
-        A sting that indicates what to use as labels to the track. When `mode`
-        is 'hybrid', all options other than 'off' will label the two track with
-        'Drums' and 'Others'.
+        A sting that indicates what to use as labels to the track. When
+        `mode` is 'hybrid', all options other than 'off' will label the
+        two track with 'Drums' and 'Others'.
     preset : {'default', 'plain', 'frame'}
         A string that indicates the preset theme to use.
 
@@ -425,50 +427,52 @@ def plot_multitrack(
         - In 'plain' preset, the x- and y-axis are both off.
 
     cmaps :  tuple or list
-        The `matplotlib.colors.Colormap` instances or colormap codes to use.
+        The `matplotlib.colors.Colormap` instances or colormap codes to
+        use.
 
-        - When `mode` is 'separate', each element will be passed to each call of
-          :func:`matplotlib.pyplot.imshow`. Defaults to ('Blues', 'Oranges',
-          'Greens', 'Reds', 'Purples', 'Greys').
-        - When `mode` is stacked, a color is assigned based on `cmaps` to the
-          pianoroll of each track. Defaults to ('hsv').
-        - When `mode` is 'hybrid', the first (second) element is used in the
-          'Drums' ('Others') track. Defaults to ('Blues', 'Greens').
+        - When `mode` is 'separate', each element will be passed to each
+          call of :func:`matplotlib.pyplot.imshow`. Defaults to
+          ('Blues', 'Oranges', 'Greens', 'Reds', 'Purples', 'Greys').
+        - When `mode` is stacked, a color is assigned based on `cmaps`
+          to the piano roll of each track. Defaults to ('hsv').
+        - When `mode` is 'hybrid', the first (second) element is used
+          in the 'Drums' ('Others') track. Defaults to ('Blues',
+          'Greens').
 
     xtick : {'auto', 'beat', 'step', 'off'}
-        A string that indicates what to use as ticks along the x-axis. If 'auto'
-        is given, automatically set to 'beat' if `resolution` is also given
-        and set to 'step', otherwise. Defaults to 'auto'.
+        A string that indicates what to use as ticks along the x-axis.
+        If 'auto' is given, automatically set to 'beat' if `resolution`
+        is also given and set to 'step', otherwise. Defaults to 'auto'.
     ytick : {'octave', 'pitch', 'off'}
-        A string that indicates what to use as ticks along the y-axis. Defaults
-        to 'octave'.
+        A string that indicates what to use as ticks along the y-axis.
+        Defaults to 'octave'.
     xticklabel : bool
-        Whether to add tick labels along the x-axis. Only effective when `xtick`
-        is not 'off'.
+        Whether to add tick labels along the x-axis. Only effective
+        when `xtick` is not 'off'.
     yticklabel : {'auto', 'name', 'number', 'off'}
-        If 'name', use octave name and pitch name (key name when `is_drum` is
-        True) as tick labels along the y-axis. If 'number', use pitch number. If
-        'auto', set to 'name' when `ytick` is 'octave' and 'number' when `ytick`
-        is 'pitch'. Defaults to 'auto'. Only effective when `ytick` is not
-        'off'.
+        If 'name', use octave name and pitch name (key name when
+        `is_drum` is True) as tick labels along the y-axis. If 'number',
+        use pitch number. If 'auto', set to 'name' when `ytick` is
+        'octave' and 'number' when `ytick` is 'pitch'. Defaults to
+        'auto'. Only effective when `ytick` is not 'off'.
     tick_loc : tuple or list
-        The locations to put the ticks. Availables elements are 'bottom', 'top',
-        'left' and 'right'. Defaults to ('bottom', 'left').
+        Locations to put the ticks. Availables elements are 'bottom',
+        'top', 'left' and 'right'. Defaults to ('bottom', 'left').
     tick_direction : {'in', 'out', 'inout'}
-        A string that indicates where to put the ticks. Defaults to 'in'. Only
-        effective when one of `xtick` and `ytick` is on.
+        A string that indicates where to put the ticks. Defaults to
+        'in'. Only effective when one of `xtick` and `ytick` is on.
     label : {'x', 'y', 'both', 'off'}
-        A string that indicates whether to add labels to the x-axis and y-axis.
-        Defaults to 'both'.
+        A string that indicates whether to add labels to the x-axis and
+        y-axis. Defaults to 'both'.
     grid : {'x', 'y', 'both', 'off'}
-        A string that indicates whether to add grids to the x-axis, y-axis, both
-        or neither. Defaults to 'both'.
+        A string that indicates whether to add grids to the x-axis,
+        y-axis, both or neither. Defaults to 'both'.
     grid_linestyle : str
-        Will be passed to :meth:`matplotlib.axes.Axes.grid` as 'linestyle'
-        argument.
+        Will be passed to :meth:`matplotlib.axes.Axes.grid` as
+        'linestyle' argument.
     grid_linewidth : float
-        Will be passed to :meth:`matplotlib.axes.Axes.grid` as 'linewidth'
-        argument.
+        Will be passed to :meth:`matplotlib.axes.Axes.grid` as
+        'linewidth' argument.
 
     Returns
     -------
@@ -691,35 +695,34 @@ def save_animation(
     **kwargs
 ):
     """
-    Save a pianoroll to an animation in video or GIF format.
+    Save a piano roll to an animation in video or GIF format.
 
     Parameters
     ----------
     filename : str
-        The filename to which the animation is saved.
+        Filename to which the animation is saved.
     pianoroll : np.ndarray
-        A pianoroll to be plotted. The values should be in [0, 1] when data type
-        is float, and in [0, 127] when data type is integer.
+        A piano roll to be plotted. The values should be in [0, 1] when
+        data type is float, and in [0, 127] when data type is integer.
 
         - For a 2D array, shape=(num_time_step, num_pitch).
         - For a 3D array, shape=(num_time_step, num_pitch, num_channel),
           where channels can be either RGB or RGBA.
 
     fps : int
-        The number of frames per second in the resulting video or GIF file.
+        Number of frames per second in the resulting video or GIF file.
     window : int
-        The window size to be applied to `pianoroll` for the animation.
+        Window size to be applied to `pianoroll` for the animation.
     hop : int
-        The hop size to be applied to `pianoroll` for the animation.
+        Hop size to be applied to `pianoroll` for the animation.
     is_drum : bool
-        A boolean number that indicates whether it is a percussion track.
-        Defaults to False.
+        Whether it is a percussion track. Defaults to False.
     resolution : int
-        The number of time steps used to represent a beat. Required and only
+        Number of time steps used to represent a beat. Required and only
         effective when `xtick` is 'beat'.
     downbeats : list
-        An array that indicates whether the time step contains a downbeat (i.e.,
-        the first time step of a bar).
+        An array that indicates whether the time step contains a
+        downbeat (i.e., the first time step of a bar).
 
     preset : {'default', 'plain', 'frame'}
         A string that indicates the preset theme to use.
@@ -729,42 +732,42 @@ def save_animation(
         - In 'plain' preset, the x- and y-axis are both off.
 
     cmap :  `matplotlib.colors.Colormap`
-        The colormap to use in :func:`matplotlib.pyplot.imshow`. Defaults to
-        'Blues'. Only effective when `pianoroll` is 2D.
+        Colormap to use in :func:`matplotlib.pyplot.imshow`. Defaults
+        to 'Blues'. Only effective when `pianoroll` is 2D.
     xtick : {'auto', 'beat', 'step', 'off'}
-        A string that indicates what to use as ticks along the x-axis. If 'auto'
-        is given, automatically set to 'beat' if `resolution` is also given
-        and set to 'step', otherwise. Defaults to 'auto'.
+        A string that indicates what to use as ticks along the x-axis.
+        If 'auto' is given, automatically set to 'beat' if `resolution`
+        is also given and set to 'step', otherwise. Defaults to 'auto'.
     ytick : {'octave', 'pitch', 'off'}
         A string that indicates what to use as ticks along the y-axis.
         Defaults to 'octave'.
     xticklabel : bool
-        Whether to add tick labels along the x-axis. Only effective when `xtick`
-        is not 'off'.
+        Whether to add tick labels along the x-axis. Only effective
+        when `xtick` is not 'off'.
     yticklabel : {'auto', 'name', 'number', 'off'}
-        If 'name', use octave name and pitch name (key name when `is_drum` is
-        True) as tick labels along the y-axis. If 'number', use pitch number. If
-        'auto', set to 'name' when `ytick` is 'octave' and 'number' when `ytick`
-        is 'pitch'. Defaults to 'auto'. Only effective when `ytick` is not
-        'off'.
+        If 'name', use octave name and pitch name (key name when
+        `is_drum` is True) as tick labels along the y-axis. If 'number',
+        use pitch number. If 'auto', set to 'name' when `ytick` is
+        'octave' and 'number' when `ytick` is 'pitch'. Defaults to
+        'auto'. Only effective when `ytick` is not 'off'.
     tick_loc : tuple or list
-        The locations to put the ticks. Availables elements are 'bottom', 'top',
-        'left' and 'right'. Defaults to ('bottom', 'left').
+        Locations to put the ticks. Availables elements are 'bottom',
+        'top', 'left' and 'right'. Defaults to ('bottom', 'left').
     tick_direction : {'in', 'out', 'inout'}
-        A string that indicates where to put the ticks. Defaults to 'in'. Only
-        effective when one of `xtick` and `ytick` is on.
+        A string that indicates where to put the ticks. Defaults to
+        'in'. Only effective when one of `xtick` and `ytick` is on.
     label : {'x', 'y', 'both', 'off'}
-        A string that indicates whether to add labels to the x-axis and y-axis.
-        Defaults to 'both'.
+        A string that indicates whether to add labels to the x-axis and
+        y-axis. Defaults to 'both'.
     grid : {'x', 'y', 'both', 'off'}
-        A string that indicates whether to add grids to the x-axis, y-axis, both
-        or neither. Defaults to 'both'.
+        A string that indicates whether to add grids to the x-axis,
+        y-axis, both or neither. Defaults to 'both'.
     grid_linestyle : str
-        Will be passed to :meth:`matplotlib.axes.Axes.grid` as 'linestyle'
-        argument.
+        Will be passed to :meth:`matplotlib.axes.Axes.grid` as
+        'linestyle' argument.
     grid_linewidth : float
-        Will be passed to :meth:`matplotlib.axes.Axes.grid` as 'linewidth'
-        argument.
+        Will be passed to :meth:`matplotlib.axes.Axes.grid` as
+        'linewidth' argument.
 
     """
     if not HAS_MOVIEPY:

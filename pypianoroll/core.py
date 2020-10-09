@@ -20,14 +20,15 @@ __all__ = [
 
 
 def assign_constant(obj: Union[Multitrack, Track], value: float):
-    """Assign a constant value to all nonzeros entries of the piano roll(s).
+    """Assign a constant value to all nonzeros entries.
 
-    If a piano roll is not binarized, its data type will be preserved. If a
-    piano roll is binarized, cast it to the dtype of `value`.
+    If a piano roll is not binarized, its data type will be preserved.
+    If a piano roll is binarized, cast it to the dtype of `value`.
 
     Arguments
     ---------
-    obj : :class:`pypianoroll.Multitrack` or :class:`pypianoroll.Track` object
+    obj : :class:`pypianoroll.Multitrack` or :class:`pypianoroll.Track`
+      object
         Object to modify.
     value : int or float
         Value to assign to all the nonzero entries in the piano roll(s).
@@ -41,7 +42,8 @@ def binarize(obj: Union[Multitrack, Track], threshold: float = 0):
 
     Parameters
     ----------
-    obj : :class:`pypianoroll.Multitrack` or :class:`pypianoroll.Track` object
+    obj : :class:`pypianoroll.Multitrack` or :class:`pypianoroll.Track`
+      object
         Object to binarize.
     threshold : int or float
         Threshold to binarize the piano roll(s). Defaults to zero.
@@ -55,7 +57,8 @@ def clip(obj: Union[Multitrack, Track], lower: float = 0, upper: float = 127):
 
     Parameters
     ----------
-    obj : :class:`pypianoroll.Multitrack` or :class:`pypianoroll.Track` object
+    obj : :class:`pypianoroll.Multitrack` or :class:`pypianoroll.Track`
+      object
         Object to clip.
     lower : int or float
         Lower bound to clip the piano roll(s). Defaults to 0.
@@ -92,7 +95,8 @@ def pad(obj: Union[Multitrack, Track], pad_length: int):
 
     Parameters
     ----------
-    obj : :class:`pypianoroll.Multitrack` or :class:`pypianoroll.Track` object
+    obj : :class:`pypianoroll.Multitrack` or :class:`pypianoroll.Track`
+      object
         Object to pad.
     pad_length : int
         Length to pad along the time axis with zeros.
@@ -102,7 +106,7 @@ def pad(obj: Union[Multitrack, Track], pad_length: int):
 
 
 def pad_to_multiple(obj: Union[Multitrack, Track], factor: int):
-    """Pad the piano rolls along the time axis to a multiple of `factor`.
+    """Pad the piano rolls along the time axis to a multiple.
 
     Pad the piano rolls with zeros at the end along the time axis of the
     minimum length that makes the lengths of the resulting piano rolls
@@ -110,16 +114,17 @@ def pad_to_multiple(obj: Union[Multitrack, Track], factor: int):
 
     Notes
     -----
-    The resulting pianoroll lengths are not guaranteed to be the same. See
-    :meth:`pypianoroll.Multitrack.pad_to_same`.
+    The resulting pianoroll lengths are not guaranteed to be the same.
+    See :meth:`pypianoroll.Multitrack.pad_to_same`.
 
     Parameters
     ----------
-    obj : :class:`pypianoroll.Multitrack` or :class:`pypianoroll.Track` object
+    obj : :class:`pypianoroll.Multitrack` or :class:`pypianoroll.Track`
+      object
         Object to pad.
     factor : int
-        The value which the length of the resulting pianoroll(s) will be a
-        multiple of.
+        The value which the length of the resulting pianoroll(s) will be
+        a multiple of.
 
     """
     return obj.pad_to_multiple(factor=factor)
@@ -148,7 +153,8 @@ def transpose(obj: Union[Multitrack, Track], semitone: int):
 
     Parameters
     ----------
-    obj : :class:`pypianoroll.Multitrack` or :class:`pypianoroll.Track` object
+    obj : :class:`pypianoroll.Multitrack` or :class:`pypianoroll.Track`
+      object
         Object to transpose.
     semitone : int
         Number of semitones to transpose the piano roll(s).
@@ -212,7 +218,8 @@ def plot(obj: Union[Multitrack, Track], **kwargs):
 
     Parameters
     ----------
-    obj : :class:`pypianoroll.Multitrack` or :class:`pypianoroll.Track` object
+    obj : :class:`pypianoroll.Multitrack` or :class:`pypianoroll.Track`
+      object
         Object to plot.
 
     """

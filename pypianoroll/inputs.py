@@ -83,47 +83,49 @@ def from_pretty_midi(
     pm : `pretty_midi.PrettyMIDI` object
         A :class:`pretty_midi.PrettyMIDI` object to be parsed.
     mode : {'max', 'sum'}
-        A string that indicates the merging strategy to apply to duplicate
-        notes. Default to 'max'.
+        A string that indicates the merging strategy to apply to
+        duplicate notes. Defaults to 'max'.
     algorithm : {'normal', 'strict', 'custom'}
-        A string that indicates the method used to get the location of the
-        first beat. Notes before it will be dropped unless an incomplete
-        beat before it is found (see Notes for more information). Defaults
-        to 'normal'.
+        A string that indicates the method used to get the location of
+        the first beat. Notes before it will be dropped unless an
+        incomplete beat before it is found (see Notes for more
+        information). Defaults to 'normal'.
 
-        - The 'normal' algorithm estimates the location of the first beat by
-            :meth:`pretty_midi.PrettyMIDI.estimate_beat_start`.
-        - The 'strict' algorithm sets the first beat at the event time of
-            the first time signature change. Raise a ValueError if no time
-            signature change event is found.
+        - The 'normal' algorithm estimates the location of the first
+          beat by :meth:`pretty_midi.PrettyMIDI.estimate_beat_start`.
+        - The 'strict' algorithm sets the first beat at the event time
+          of the first time signature change. Raise a ValueError if no
+          time signature change event is found.
         - The 'custom' algorithm takes argument `first_beat_time` as the
-            location of the first beat.
+          location of the first beat.
 
     binarized : bool
         True to binarize the parsed piano rolls before merging duplicate
-        notes. False to use the original parsed pianorolls. Defaults to
+        notes. False to use the original parsed piano rolls. Defaults to
         False.
     skip_empty_tracks : bool
-        True to remove tracks with empty piano rolls and compress the pitch
-        range of the parsed piano rolls. False to retain the empty tracks
-        and use the original parsed piano rolls. Deafault to True.
+        True to remove tracks with empty piano rolls and compress the
+        pitch range of the parsed piano rolls. False to retain the empty
+        tracks and use the original parsed piano rolls. Deafaults to
+        True.
     collect_onsets_only : bool
-        True to collect only the onset of the notes (i.e. note on events) in
-        all tracks, where the note off and duration information are dropped.
-        False to parse regular piano rolls.
+        True to collect only the onset of the notes (i.e. note on
+        events) in all tracks, where the note off and duration
+        information are dropped. False to parse regular piano rolls.
+        Defaults to False.
     threshold : int or float
-        A threshold used to binarize the parsed piano rolls. Only effective
-        when `binarized` is True. Defaults to zero.
+        A threshold used to binarize the parsed piano rolls. Only
+        effective when `binarized` is True. Defaults to zero.
     first_beat_time : float
-        The location (in sec) of the first beat. Required and only effective
-        when using 'custom' algorithm.
+        Location of the first beat, in sec. Required and only
+        effective  when using 'custom' algorithm.
 
     Notes
     -----
-    If an incomplete beat before the first beat is found, an additional beat
-    will be added before the (estimated) beat starting time. However, notes
-    before the (estimated) beat starting time for more than one beat are
-    dropped.
+    If an incomplete beat before the first beat is found, an additional
+    beat will be added before the (estimated) beat starting time.
+    However, notes before the (estimated) beat starting time for more
+    than one beat are dropped.
 
     Returns
     -------

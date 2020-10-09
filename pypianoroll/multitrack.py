@@ -24,11 +24,11 @@ DEFAULT_TEMPO = 120
 
 
 def decompose_sparse(matrix, name):
-    """Decompose a matrix to sparse components and return as a dictionary.
+    """Decompose a matrix to sparse components.
 
-    Convert a matrix to a :class:`scipy.sparse.csc_matrix` object. Return
-    its component arrays as a dictionary with key as `name` suffixed with
-    their component types.
+    Convert a matrix to a :class:`scipy.sparse.csc_matrix` object.
+    Return its component arrays as a dictionary with key as `name`
+    suffixed with their component types.
 
     """
     csc = csc_matrix(matrix)
@@ -41,7 +41,7 @@ def decompose_sparse(matrix, name):
 
 
 def reconstruct_sparse(data_dict, name):
-    """Reconstruct a matrix from a dictionary return by `_decompose_sparse`."""
+    """Reconstruct a matrix from a dictionary."""
     sparse_matrix = csc_matrix(
         (
             data_dict[name + "_csc_data"],
@@ -63,12 +63,12 @@ class Multitrack:
     resolution : int
         Time steps per quarter note.
     tempo : ndarray, dtype={int, float}, shape=(?, 1), optional
-        Tempo (in qpm) at each time step. The length is the total number of
-        time steps.
+        Tempo (in qpm) at each time step. The length is the total
+        number of time steps.
     downbeat : ndarray, dtype=bool, shape=(?, 1), optional
         A boolean array that indicates whether the time step contains a
-        downbeat (i.e., the first time step of a bar). The length is the total
-        number of time steps.
+        downbeat (i.e., the first time step of a bar). The length is the
+        total number of time steps.
     name : str, optional
         Multitrack name.
     tracks : list of :class:`pypianoroll.Track` objects, optional
@@ -201,22 +201,22 @@ class Multitrack:
             track.validate()
 
     def is_binarized(self):
-        """Return True if all piano rolls are binarized, otherwise False."""
+        """Return True if piano rolls are binarized, otherwise False."""
         for track in self.tracks:
             if not track.is_binarized():
                 return False
         return True
 
     def get_active_length(self):
-        """Return the maximum active length of the piano rolls (in time steps).
+        """Return the maximum active length of the piano rolls.
 
-        The active length is defined as the length of the piano roll without
-        trailing silence.
+        The active length is defined as the length of the piano roll
+        without trailing silence.
 
         Returns
         -------
         int
-            The maximum active length of the piano rolls (in time steps).
+            maximum active length of the piano rolls (in time steps).
 
         """
         active_length = 0
@@ -262,12 +262,12 @@ class Multitrack:
         return downbeat_steps
 
     def get_empty_tracks(self):
-        """Return the indices of tracks with empty pianorolls.
+        """Return the indices of tracks with empty piano rolls.
 
         Returns
         -------
         list
-            Indices of tracks with empty pianorolls.
+            Indices of tracks with empty piano rolls.
 
         """
         indices = []
@@ -297,17 +297,18 @@ class Multitrack:
         Parameters
         ----------
         mode : {'sum', 'max', 'any'}
-            A string that indicates the merging strategy to apply along the
-            track axis. Default to 'sum'.
+            Merging strategy to apply along the track axis.
+            Defaults to 'sum'.
 
-            - In 'sum' mode, the merged pianoroll is the sum of all the
-              pianorolls. Note that for binarized pianorolls, integer summation
-              is performed.
-            - In 'max' mode, for each pixel, the maximum value among all the
-              pianorolls is assigned to the merged pianoroll.
-            - In 'any' mode, the value of a pixel in the merged pianoroll is
-              True if any of the pianorolls has nonzero value at that pixel;
-              False if all pianorolls are inactive (zero-valued) at that pixel.
+            - In 'sum' mode, the merged piano roll is the sum of all the
+              piano rolls. Note that for binarized piano rolls, integer
+              summation is performed.
+            - In 'max' mode, for each pixel, the maximum value among
+              all the piano rolls is assigned to the merged piano roll.
+            - In 'any' mode, the value of a pixel in the merged piano
+              roll is True if any of the piano rolls has nonzero value
+              at that pixel; False if all piano rolls are inactive
+              (zero-valued) at that pixel.
 
         Returns
         -------
@@ -351,7 +352,7 @@ class Multitrack:
 
         Parameters
         ----------
-        track : pianoroll.Track
+        track : :class:`pypianoroll.Track`
             Track to append to the track list.
 
         """
@@ -359,15 +360,17 @@ class Multitrack:
         return self
 
     def assign_constant(self, value: float):
-        """Assign a constant value to all nonzeros entries of the piano rolls.
+        """Assign a constant value to all nonzero entries.
 
-        If a piano roll is not binarized, its data type will be preserved. If a
-        piano roll is binarized, cast it to the dtype of `value`.
+        If a piano roll is not binarized, its data type will be
+        preserved. If a piano roll is binarized, cast it to the dtype
+        of `value`.
 
         Arguments
         ---------
         value : int or float
-            Value to assign to all the nonzero entries in the piano rolls.
+            Value to assign to all the nonzero entries in the piano
+            rolls.
 
         """
         for track in self.tracks:
@@ -424,7 +427,8 @@ class Multitrack:
     def count_downbeat(self):
         """Return the number of down beats.
 
-        The return value is calculated based solely on attribute `downbeat`.
+        The return value is calculated based solely on attribute
+        `downbeat`.
 
         Returns
         -------
@@ -445,26 +449,29 @@ class Multitrack:
     ):
         """Merge certain tracks into a single track.
 
-        Merge the piano rolls of certain tracks (specified by `track_indices`).
-        The merged track will be appended to the end of the track list.
+        Merge the piano rolls of certain tracks (specified by
+        `track_indices`). The merged track will be appended to the end
+        of the track list.
 
         Parameters
         ----------
         track_indices : list
-            Indices of tracks to be merged. Defaults to merge all the tracks.
+            Indices of tracks to be merged. Defaults to merge all the
+            tracks.
         mode : {'sum', 'max', 'any'}
-            A string that indicates the merging strategy to apply along the
-            track axis. Default to 'sum'.
+            A string that indicates the merging strategy to apply along
+            the track axis. Default to 'sum'.
 
-            - In 'sum' mode, the merged pianoroll is the sum of the collected
-              pianorolls. Note that for binarized pianorolls, integer summation
-              is performed.
-            - In 'max' mode, for each pixel, the maximum value among the
-              collected pianorolls is assigned to the merged pianoroll.
-            - In 'any' mode, the value of a pixel in the merged pianoroll is
-              True if any of the collected pianorolls has nonzero value at that
-              pixel; False if all the collected pianorolls are inactive
-              (zero-valued) at that pixel.
+            - In 'sum' mode, the merged piano roll is the sum of
+              the collected piano rolls. Note that for binarized piano
+              rolls, integer summation is performed.
+            - In 'max' mode, for each pixel, the maximum value among
+              the collected piano rolls is assigned to the merged piano
+              roll.
+            - In 'any' mode, the value of a pixel in the merged piano
+              roll is True if any of the collected piano rolls has
+              nonzero value at that pixel; False if all the collected
+              piano rolls are inactive (zero-valued) at that pixel.
 
         program : int, 0-127, optional
             Program number according to General MIDI specification [1].
@@ -474,12 +481,12 @@ class Multitrack:
         name : str, optional
             Track name. Defaults to `merged`.
         remove_source : bool
-            Whether to remove the source tracks from the track list. Defaults
-            to False.
+            Whether to remove the source tracks from the track list.
+            Defaults to False.
 
         References
         ----------
-        [1] https://www.midi.org/specifications/item/gm-level-1-sound-set
+        1. https://www.midi.org/specifications/item/gm-level-1-sound-set
 
         """
         if mode not in ("max", "sum", "any"):
@@ -501,12 +508,12 @@ class Multitrack:
         return self
 
     def pad(self, pad_length):
-        """Pad the piano rolls with zeros at the end along the time axis.
+        """Pad the piano rolls with zeros.
 
         Notes
         -----
-        The lengths of the resulting piano rolls are not guaranteed to be
-        the same. See :meth:`pypianoroll.Multitrack.pad_to_same`.
+        The lengths of the resulting piano rolls are not guaranteed to
+        be the same. See :meth:`pypianoroll.Multitrack.pad_to_same`.
 
         Parameters
         ----------
@@ -519,22 +526,22 @@ class Multitrack:
         return self
 
     def pad_to_multiple(self, factor: int):
-        """Pad the piano rolls along the time axis to a multiple of `factor`.
+        """Pad the piano rolls along the time axis to a multiple.
 
-        Pad the piano rolls with zeros at the end along the time axis of the
-        minimum length that makes the lengths of the resulting piano rolls
-        multiples of `factor`.
+        Pad the piano rolls with zeros at the end along the time axis
+        of the minimum length that makes the lengths of the resulting
+        piano rolls multiples of `factor`.
 
         Notes
         -----
-        The resulting pianoroll lengths are not guaranteed to be the same. See
-        :meth:`pypianoroll.Multitrack.pad_to_same`.
+        The resulting piano roll lengths are not guaranteed to be the
+        same. See :meth:`pypianoroll.Multitrack.pad_to_same`.
 
         Parameters
         ----------
         factor : int
-            The value which the length of the resulting pianorolls will be a
-            multiple of.
+            The value which the length of the resulting piano rolls will
+            be a multiple of.
 
         """
         for track in self.tracks:
@@ -544,8 +551,8 @@ class Multitrack:
     def pad_to_same(self):
         """Pad piano rolls along the time axis to have the same length.
 
-        Pad shorter piano rolls with zeros at the end along the time axis so
-        that the resulting piano rolls have the same length.
+        Pad shorter piano rolls with zeros at the end along the time
+        axis so that the resulting piano rolls have the same length.
 
         """
         max_length = self.get_max_length()
@@ -579,8 +586,8 @@ class Multitrack:
     def transpose(self, semitone: int):
         """Transpose the piano rolls by a number of semitones.
 
-        Positive values are for a higher key, while negative values are for
-        a lower key. Drum tracks are ignored.
+        Positive values are for a higher key, while negative values are
+        for a lower key. Drum tracks are ignored.
 
         Parameters
         ----------
@@ -595,7 +602,8 @@ class Multitrack:
     def trim_trailing_silence(self):
         """Trim the trailing silences of the piano rolls.
 
-        All the piano rolls will have the same length after the trimming.
+        All the piano rolls will have the same length after the
+        trimming.
 
         """
         active_length = self.get_active_length()
@@ -618,8 +626,8 @@ class Multitrack:
         Notes
         -----
         To reduce the file size, the piano rolls are first converted to
-        instances of :class:`scipy.sparse.csc_matrix`. The component arrays
-        are then collected and saved to a npz file.
+        instances of :class:`scipy.sparse.csc_matrix`. The component
+        arrays are then collected and saved to a npz file.
 
         """
         info_dict: Dict = {
@@ -664,17 +672,19 @@ class Multitrack:
         Notes
         -----
         - Tempo changes are not supported by now.
-        - The velocities of the converted pianorolls are clipped to [0, 127].
-        - Adjacent nonzero values of the same pitch will be considered a single
-          note with their mean as its velocity.
+        - The velocities of the converted piano rolls are clipped to
+          [0, 127].
+        - Adjacent nonzero values of the same pitch will be considered
+          a single note with their mean as its velocity.
 
         Parameters
         ----------
         default_tempo : int
-            Default tempo to use. Defaults to the first element of attribute
-            `tempo`.
+            Default tempo to use. Defaults to the first element of
+            attribute `tempo`.
         default_velocity : int
-            Default velocity to assign to binarized tracks. Defaults to 64.
+            Default velocity to assign to binarized tracks. Defaults to
+            64.
 
         Returns
         -------

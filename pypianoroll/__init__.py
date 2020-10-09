@@ -1,9 +1,9 @@
 """A Python library for handling multitrack pianorolls.
 
-Pypianoroll is an open source Python library for working with multitrack
-pianorolls. It provides essential tools for handling multitrack
-pianorolls, including efficient I/O as well as manipulation, visualization
-and evaluation tools.
+Pypianoroll is an open source Python library for working with piano
+rolls. It provides essential tools for handling multitrack piano rolls,
+including efficient I/O as well as manipulation, visualization and
+evaluation tools.
 
 Features
 --------

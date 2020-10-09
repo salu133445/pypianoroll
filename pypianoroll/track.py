@@ -17,16 +17,16 @@ class Track:
     Attributes
     ----------
     program : int, 0-127, optional
-        Program number according to General MIDI specification [1]. Defaults
-        to 0 (Acoustic Grand Piano).
+        Program number according to General MIDI specification [1].
+        Defaults to 0 (Acoustic Grand Piano).
     is_drum : bool, optional
         Whether it is a percussion track. Defaults to False.
     name : str, optional
         Track name.
     pianoroll : ndarray, dtype={bool, int}, shape=(?, 128), optional
         Piano-roll matrix. The first dimension represents time, and the
-        second dimension represents pitch. If dtype is integer, assume the
-        data range is in [0, 255].
+        second dimension represents pitch. If dtype is integer, assume
+        the data range is in [0, 255].
 
     References
     ----------
@@ -110,15 +110,17 @@ class Track:
         return True
 
     def assign_constant(self, value: float, dtype: Any = None):
-        """Assign a constant value to all nonzeros entries of the piano roll.
+        """Assign a constant value to all nonzeros entries.
 
-        If the piano roll is not binarized, its data type will be preserved. If
-        the piano roll is binarized, cast it to the dtype of `value`.
+        If the piano roll is not binarized, its data type will be
+        preserved. If the piano roll is binarized, cast it to the dtype
+        of `value`.
 
         Arguments
         ---------
         value : int or float
-            Value to assign to all the nonzero entries in the piano roll.
+            Value to assign to all the nonzero entries in the piano
+            roll.
 
         """
         if not self.is_binarized():
@@ -140,7 +142,8 @@ class Track:
         Parameters
         ----------
         threshold : int or float
-            A threshold used to binarize the piano roll. Defaults to zero.
+            A threshold used to binarize the piano roll. Defaults to
+            zero.
 
         """
         if not self.is_binarized():
@@ -175,8 +178,8 @@ class Track:
     def get_active_length(self):
         """Return the active length of the piano roll (in time steps).
 
-        The active length is defined as the length of the piano roll without
-        trailing silence.
+        The active length is defined as the length of the piano roll
+        without trailing silence.
 
         Returns
         -------
@@ -232,7 +235,7 @@ class Track:
         return copied
 
     def is_binarized(self):
-        """Return True if the piano roll is binarized, otherwise return False.
+        """Return True if the piano roll is binarized, otherwise False.
 
         Returns
         -------
@@ -248,7 +251,7 @@ class Track:
         Parameters
         ----------
         pad_length : int
-            The length to pad with zeros along the time axis.
+            Length to pad with zeros along the time axis.
 
         """
         self.pianoroll = np.pad(
@@ -256,17 +259,17 @@ class Track:
         )
 
     def pad_to_multiple(self, factor: int):
-        """Pad the piano roll along the time axis to a multiple of `factor`.
+        """Pad the piano roll along the time axis to a multiple.
 
-        Pad the piano roll with zeros at the end along the time axis of the
-        minimum length that makes the length of the resulting piano roll a
-        multiple of `factor`.
+        Pad the piano roll with zeros at the end along the time axis of
+        the minimum length that makes the length of the resulting piano
+        roll a multiple of `factor`.
 
         Parameters
         ----------
         factor : int
-            The value which the length of the resulting piano roll will be
-            a multiple of.
+            The value which the length of the resulting piano roll will
+            be a multiple of.
 
         """
         remainder = self.pianoroll.shape[0] % factor
@@ -285,8 +288,8 @@ class Track:
     def transpose(self, semitone: int):
         """Transpose the piano roll by a number of semitones.
 
-        Positive values are for a higher key, while negative values are for
-        a lower key.
+        Positive values are for a higher key, while negative values are
+        for a lower key.
 
         Parameters
         ----------
