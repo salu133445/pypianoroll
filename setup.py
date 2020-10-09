@@ -40,7 +40,7 @@ setup(
         include=["pypianoroll", "pypianoroll.*"], exclude=["tests"]
     ),
     install_requires=[
-        "numpy>=1.10.0",
+        "numpy>=1.12.0",
         "scipy>=1.0.0",
         "pretty_midi>=0.2.8",
         "matplotlib>=1.5",
