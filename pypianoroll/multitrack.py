@@ -4,16 +4,14 @@ This module defines the core class of Pypianoroll---the Multitrack
 class, a container for multitrack piano rolls.
 
 """
-import json
-import zipfile
 from copy import deepcopy
-from typing import Dict, List, Optional
+from typing import List, Optional
 
 import numpy as np
 import pretty_midi
 from numpy import ndarray
-from scipy.sparse import csc_matrix
 
+from .outputs import save, to_pretty_midi, write
 from .track import Track
 from .visualization import plot_multitrack
 
@@ -21,36 +19,6 @@ __all__ = ["Multitrack"]
 
 DEFAULT_RESOLUTION = 24
 DEFAULT_TEMPO = 120
-
-
-def decompose_sparse(matrix, name):
-    """Decompose a matrix to sparse components.
-
-    Convert a matrix to a :class:`scipy.sparse.csc_matrix` object.
-    Return its component arrays as a dictionary with key as `name`
-    suffixed with their component types.
-
-    """
-    csc = csc_matrix(matrix)
-    return {
-        name + "_csc_data": csc.data,
-        name + "_csc_indices": csc.indices,
-        name + "_csc_indptr": csc.indptr,
-        name + "_csc_shape": csc.shape,
-    }
-
-
-def reconstruct_sparse(data_dict, name):
-    """Reconstruct a matrix from a dictionary."""
-    sparse_matrix = csc_matrix(
-        (
-            data_dict[name + "_csc_data"],
-            data_dict[name + "_csc_indices"],
-            data_dict[name + "_csc_indptr"],
-        ),
-        shape=data_dict[name + "_csc_shape"],
-    )
-    return sparse_matrix.toarray()
 
 
 class Multitrack:
@@ -71,7 +39,7 @@ class Multitrack:
         total number of time steps.
     name : str, optional
         Multitrack name.
-    tracks : list of :class:`pypianoroll.Track` objects, optional
+    tracks : list of :class:`pypianoroll.Track`, optional
         Music tracks.
 
     """
@@ -348,7 +316,7 @@ class Multitrack:
         return stacked
 
     def append(self, track: Track):
-        """Append a :class:`multitrack.Track` object to the track list.
+        """Append a Track object to the track list.
 
         Parameters
         ----------
@@ -612,156 +580,35 @@ class Multitrack:
         return self
 
     def save(self, path: str, compressed: bool = True):
-        """Save to a (compressed) NPZ file.
+        """Save to a NPZ file.
 
-        This could be later loaded by :func:`pypianoroll.load`.
-
-        Parameters
-        ----------
-        path : str
-            Path to the NPZ file to save.
-        compressed : bool
-            Whether to save to a compressed NPZ file. Defaults to True.
-
-        Notes
-        -----
-        To reduce the file size, the piano rolls are first converted to
-        instances of :class:`scipy.sparse.csc_matrix`. The component
-        arrays are then collected and saved to a npz file.
+        Refer to :func:`pypianoroll.save` for full documentation.
 
         """
-        info_dict: Dict = {
-            "resolution": self.resolution,
-            "name": self.name,
-        }
+        save(path, self, compressed=compressed)
 
-        array_dict = {}
-        if self.tempo is not None:
-            array_dict["tempo"] = self.tempo
-        if self.downbeat is not None:
-            array_dict["downbeat"] = self.downbeat
+    def to_pretty_midi(self, **kwargs):
+        """Return as a PrettyMIDI object.
 
-        for idx, track in enumerate(self.tracks):
-            array_dict.update(
-                decompose_sparse(track.pianoroll, "pianoroll_" + str(idx))
-            )
-            info_dict[str(idx)] = {
-                "program": track.program,
-                "is_drum": track.is_drum,
-                "name": track.name,
-            }
-
-        if not path.endswith(".npz"):
-            path += ".npz"
-        if compressed:
-            np.savez_compressed(path, **array_dict)
-        else:
-            np.savez(path, **array_dict)
-
-        compression = (
-            zipfile.ZIP_DEFLATED if compressed else zipfile.ZIP_STORED
-        )
-        with zipfile.ZipFile(path, "a") as zip_file:
-            zip_file.writestr("info.json", json.dumps(info_dict), compression)
-
-    def to_pretty_midi(
-        self, default_tempo: Optional[float] = None, default_velocity: int = 64
-    ):
-        """Convert to a :class:`pretty_midi.PrettyMIDI` object.
-
-        Notes
-        -----
-        - Tempo changes are not supported by now.
-        - The velocities of the converted piano rolls are clipped to
-          [0, 127].
-        - Adjacent nonzero values of the same pitch will be considered
-          a single note with their mean as its velocity.
-
-        Parameters
-        ----------
-        default_tempo : int
-            Default tempo to use. Defaults to the first element of
-            attribute `tempo`.
-        default_velocity : int
-            Default velocity to assign to binarized tracks. Defaults to
-            64.
-
-        Returns
-        -------
-        pm : `pretty_midi.PrettyMIDI` object
-            Converted :class:`pretty_midi.PrettyMIDI` instance.
+        Refer to :func:`pypianoroll.to_pretty_midi` for full
+        documentation.
 
         """
-        # TODO: Add downbeat support -> time signature change events
-        # TODO: Add tempo support -> tempo change events
-        if default_tempo is not None:
-            tempo = default_tempo
-        elif self.tempo:
-            tempo = self.tempo[0]
-        else:
-            tempo = DEFAULT_TEMPO
-
-        # Create a PrettyMIDI instance
-        pm = pretty_midi.PrettyMIDI(initial_tempo=tempo)
-
-        # Compute length of a time step
-        time_step_length = 60.0 / tempo / self.resolution
-
-        for track in self.tracks:
-            instrument = pretty_midi.Instrument(
-                program=track.program, is_drum=track.is_drum, name=track.name
-            )
-            copied = track.copy()
-            if copied.is_binarized():
-                copied.assign_constant(default_velocity)
-            copied.clip()
-            clipped = copied.pianoroll.astype(np.uint8)
-            binarized = clipped > 0
-            padded = np.pad(binarized, ((1, 1), (0, 0)), "constant")
-            diff = np.diff(padded.astype(np.int8), axis=0)
-
-            positives = np.nonzero((diff > 0).T)
-            pitches = positives[0]
-            note_ons = positives[1]
-            note_on_times = time_step_length * note_ons
-            note_offs = np.nonzero((diff < 0).T)[1]
-            note_off_times = time_step_length * note_offs
-
-            for idx, pitch in enumerate(pitches):
-                velocity = np.mean(
-                    clipped[note_ons[idx] : note_offs[idx], pitch]
-                )
-                note = pretty_midi.Note(
-                    velocity=int(velocity),
-                    pitch=pitch,
-                    start=note_on_times[idx],
-                    end=note_off_times[idx],
-                )
-                instrument.notes.append(note)
-
-            instrument.notes.sort(key=lambda x: x.start)
-            pm.instruments.append(instrument)
-
-        return pm
+        return to_pretty_midi(self, **kwargs)
 
     def write(self, path: str):
         """Write to a MIDI file.
 
-        Parameters
-        ----------
-        path : str
-            Path to the MIDI file to write.
+        Refer to :func:`pypianoroll.write` for full documentation.
 
         """
-        if not path.lower().endswith((".mid", ".midi")):
-            path = path + ".mid"
-        pm = self.to_pretty_midi()
-        pm.write(path)
+        return write(path, self)
 
     def plot(self, **kwargs):
         """Plot the multitrack and/or save a plot of it.
 
-        See :func:`pypianoroll.plot_multitrack` for full documentation.
+        Refer to :func:`pypianoroll.plot_multitrack` for full
+        documentation.
 
         """
         return plot_multitrack(self, **kwargs)
