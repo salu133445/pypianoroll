@@ -1,7 +1,12 @@
 """Test cases for metrics."""
 import numpy as np
-from pypianoroll import metrics
 from pytest import fixture
+
+from pypianoroll.metrics import (
+    empty_beat_rate,
+    n_pitch_classes_used,
+    n_pitches_used,
+)
 
 
 @fixture
@@ -14,15 +19,14 @@ def pianoroll():
 
 def test_empty_beat_rate(pianoroll):
     """Test the empty_beat_rate metric."""
-    empty_beat_rate = metrics.empty_beat_rate(pianoroll, 24)
-    assert empty_beat_rate == 0.5
+    assert empty_beat_rate(pianoroll, 24) == 0.5
 
 
 def test_n_pitches_used(pianoroll):
     """Test the n_pitches_used metric."""
-    assert metrics.n_pitches_used(pianoroll) == 7
+    assert n_pitches_used(pianoroll) == 7
 
 
-def test_n_pitches_used(pianoroll):
+def test_n_pitch_classes_used(pianoroll):
     """Test the n_pitches_used metric."""
-    assert metrics.n_pitches_used(pianoroll) == 7
+    assert n_pitch_classes_used(pianoroll) == 3

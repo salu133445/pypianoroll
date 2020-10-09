@@ -1,12 +1,9 @@
 """Test cases for Multitrack class."""
-import os
-import shutil
-import tempfile
-
 import numpy as np
+from pytest import fixture
+
 import pypianoroll
 from pypianoroll import Multitrack, Track
-from pytest import fixture
 
 
 @fixture
@@ -109,13 +106,13 @@ def test_save_load(multitrack, tmp_path):
         loaded.tracks[0].pianoroll, multitrack.tracks[0].pianoroll
     )
     assert loaded.tracks[0].program == 0
-    assert loaded.tracks[0].is_drum == False
+    assert not loaded.tracks[0].is_drum
     assert loaded.tracks[0].name == "track_1"
     assert np.allclose(
         loaded.tracks[1].pianoroll, multitrack.tracks[1].pianoroll
     )
     assert loaded.tracks[1].program == 0
-    assert loaded.tracks[1].is_drum == True
+    assert loaded.tracks[1].is_drum
     assert loaded.tracks[1].name == "track_2"
 
 
@@ -129,13 +126,13 @@ def test_write_read(multitrack, tmp_path):
         loaded.tracks[0].pianoroll, multitrack.tracks[0].pianoroll
     )
     assert loaded.tracks[0].program == 0
-    assert loaded.tracks[0].is_drum == False
+    assert not loaded.tracks[0].is_drum
     assert loaded.tracks[0].name == "track_1"
     assert np.allclose(
         (loaded.tracks[1].pianoroll > 0), multitrack.tracks[1].pianoroll,
     )
     assert loaded.tracks[1].program == 0
-    assert loaded.tracks[1].is_drum == True
+    assert loaded.tracks[1].is_drum
     assert loaded.tracks[1].name == "track_2"
 
 
@@ -159,8 +156,8 @@ def multitrack_to_merge():
 def test_get_merged_pianoroll_any(multitrack_to_merge):
     merged = multitrack_to_merge.get_merged_pianoroll("any")
     assert np.issubdtype(merged.dtype, np.bool_)
-    assert merged[0, 0] == False
-    assert merged[0, 60] == True
+    assert not merged[0, 0]
+    assert merged[0, 60]
 
 
 def test_get_merged_pianoroll_sum(multitrack_to_merge):

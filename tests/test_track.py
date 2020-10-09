@@ -1,7 +1,8 @@
 """Test cases for Track class."""
 import numpy as np
-from pypianoroll import Track
 from pytest import fixture
+
+from pypianoroll import Track
 
 
 @fixture
