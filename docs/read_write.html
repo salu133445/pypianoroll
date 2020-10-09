@@ -163,12 +163,15 @@
   <div class="section" id="read-write">
 <h1>Read &amp; Write<a class="headerlink" href="#read-write" title="Permalink to this headline">¶</a></h1>
 <p>Pypianoroll currently supports reading from and writing to MIDI files. Supports for MusicXML and ABC format are in the plan.</p>
-<p>Note that the MIDI reading and writing functions are based on the Python package pretty_midi. If you use them in a published work, please cite pretty_midi as instructed <a class="reference external" href="http://craffel.github.io/pretty-midi/">here</a>.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The MIDI reading and writing functions are built on top of pretty_midi. If you use these functions in a published work, please cite pretty_midi as instructed <a class="reference external" href="http://craffel.github.io/pretty-midi/">here</a>.</p>
+</div>
 <div class="section" id="functions">
 <h2>Functions<a class="headerlink" href="#functions" title="Permalink to this headline">¶</a></h2>
 <dl class="py function">
 <dt>
-<code class="sig-prename descclassname">pypianoroll.</code><code class="sig-name descname">read</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">path</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pypianoroll/inputs.html#read"><span class="viewcode-link">[source]</span></a></dt>
+<code class="sig-prename descclassname">pypianoroll.</code><code class="sig-name descname">read</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">path</span><span class="p">:</span> <span class="n">str</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pypianoroll/inputs.html#read"><span class="viewcode-link">[source]</span></a></dt>
 <dd><p>Read a MIDI file into a Multitrack object.</p>
 <p>See <a class="reference internal" href="doc.html#pypianoroll.from_pretty_midi" title="pypianoroll.from_pretty_midi"><code class="xref py py-meth docutils literal notranslate"><span class="pre">pypianoroll.from_pretty_midi()</span></code></a> for full documentation.</p>
 <dl class="field-list simple">
@@ -180,7 +183,7 @@
 
 <dl class="py function">
 <dt>
-<code class="sig-prename descclassname">pypianoroll.</code><code class="sig-name descname">write</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">obj</span></em>, <em class="sig-param"><span class="n">path</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pypianoroll/core.html#write"><span class="viewcode-link">[source]</span></a></dt>
+<code class="sig-prename descclassname">pypianoroll.</code><code class="sig-name descname">write</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">obj</span><span class="p">:</span> <span class="n">pypianoroll.multitrack.Multitrack</span></em>, <em class="sig-param"><span class="n">path</span><span class="p">:</span> <span class="n">str</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pypianoroll/core.html#write"><span class="viewcode-link">[source]</span></a></dt>
 <dd><p>Write the object to a MIDI file.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>

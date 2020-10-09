@@ -28,6 +28,12 @@ Features
 - Write multitrack piano rolls into MIDI files
 
 
+Why Pypianoroll
+===============
+
+Our aim is to provide convenient classes for piano-roll matrix and MIDI-like track information (program number, track name, drum track indicator). Pypianoroll is also designed to provide efficient I/O for piano rolls, since piano rolls have long been considered an inefficient way to store music data due to the sparse nature.
+
+
 Installation
 ============
 
@@ -45,27 +51,19 @@ Citing
 
 Please cite the following paper if you use Pypianoroll in a published work:
 
-Hao-Wen Dong, Wen-Yi Hsiao, and Yi-Hsuan Yang, "Pypianoroll: Open Source Python Package for Handling Multitrack Pianorolls," in Late-Breaking Demos of the 19th International Society for Music Information Retrieval Conference (ISMIR), 2018.
+Hao-Wen Dong, Wen-Yi Hsiao, and Yi-Hsuan Yang, "Pypianoroll: Open Source Python Package for Handling Multitrack Pianorolls," in *Late-Breaking Demos of the 19th International Society for Music Information Retrieval Conference (ISMIR)*, 2018.
+
+[`homepage <https://salu133445.github.io/pypianoroll/>`_]
 [`paper <https://salu133445.github.io/pypianoroll/pdf/pypianoroll-ismir2018-lbd-paper.pdf>`_]
 [`poster <https://salu133445.github.io/pypianoroll/pdf/pypianoroll-ismir2018-lbd-poster.pdf>`_]
-
-
-Why Pypianoroll
-===============
-
-Our aim is to provide convenient classes for pianoroll matrix and MIDI-like
-track information (program number, track name, drum track indicator).
-Pypianoroll is also designed to provide efficient I/O for pianorolls, since
-pianorolls have long been considered an inefficient way to store music data due
-to the sparse nature.
+[`code <https://github.com/salu133445/pypianoroll>`_]
+[`documentation <https://salu133445.github.io/pypianoroll/>`_]
 
 
 Lakh Pianoroll Dataset
 ======================
 
-`Lakh Pianoroll Dataset <https://salu133445.github.io/musegan/dataset>`_ (LPD) is a new multitrack pianoroll dataset using
-Pypianoroll for efficient data I/O and to save space, which is used as the
-training dataset in our `MuseGAN <https://salu133445.github.io/musegan>`_ project.
+`Lakh Pianoroll Dataset <https://salu133445.github.io/musegan/dataset>`_ (LPD) is a new multitrack piano roll dataset using Pypianoroll for efficient data I/O and to save space, which is used as the training dataset in our `MuseGAN <https://salu133445.github.io/musegan>`_ project.
 
 
 Contents

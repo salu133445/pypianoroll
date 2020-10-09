@@ -159,18 +159,18 @@
   <h1>Source code for pypianoroll.inputs</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot;MIDI I/O interface.&quot;&quot;&quot;</span>
 <span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span>
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-
 <span class="kn">from</span> <span class="nn">pretty_midi</span> <span class="kn">import</span> <span class="n">PrettyMIDI</span>
 
-<span class="kn">from</span> <span class="nn">.track</span> <span class="kn">import</span> <span class="n">Track</span>
 <span class="kn">from</span> <span class="nn">.multitrack</span> <span class="kn">import</span> <span class="n">DEFAULT_RESOLUTION</span><span class="p">,</span> <span class="n">Multitrack</span><span class="p">,</span> <span class="n">reconstruct_sparse</span>
+<span class="kn">from</span> <span class="nn">.track</span> <span class="kn">import</span> <span class="n">Track</span>
 
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;load&quot;</span><span class="p">,</span> <span class="s2">&quot;from_pretty_midi&quot;</span><span class="p">,</span> <span class="s2">&quot;read&quot;</span><span class="p">]</span>
 
 
-<div class="viewcode-block" id="load"><a class="viewcode-back" href="../../save_load.html#pypianoroll.load">[docs]</a><span class="k">def</span> <span class="nf">load</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
+<div class="viewcode-block" id="load"><a class="viewcode-back" href="../../save_load.html#pypianoroll.load">[docs]</a><span class="k">def</span> <span class="nf">load</span><span class="p">(</span><span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Load a NPZ file into a Multitrack object.</span>
 
 <span class="sd">    Supports only files previously saved by :func:`pypianoroll.save`.</span>
@@ -220,15 +220,15 @@
 
 
 <div class="viewcode-block" id="from_pretty_midi"><a class="viewcode-back" href="../../doc.html#pypianoroll.from_pretty_midi">[docs]</a><span class="k">def</span> <span class="nf">from_pretty_midi</span><span class="p">(</span>
-    <span class="n">pm</span><span class="p">,</span>
-    <span class="n">resolution</span><span class="o">=</span><span class="n">DEFAULT_RESOLUTION</span><span class="p">,</span>
-    <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;max&quot;</span><span class="p">,</span>
-    <span class="n">algorithm</span><span class="o">=</span><span class="s2">&quot;normal&quot;</span><span class="p">,</span>
-    <span class="n">binarized</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-    <span class="n">skip_empty_tracks</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-    <span class="n">collect_onsets_only</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-    <span class="n">threshold</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
-    <span class="n">first_beat_time</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">pm</span><span class="p">:</span> <span class="n">PrettyMIDI</span><span class="p">,</span>
+    <span class="n">resolution</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">DEFAULT_RESOLUTION</span><span class="p">,</span>
+    <span class="n">mode</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;max&quot;</span><span class="p">,</span>
+    <span class="n">algorithm</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;normal&quot;</span><span class="p">,</span>
+    <span class="n">binarized</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="n">skip_empty_tracks</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="n">collect_onsets_only</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="n">threshold</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+    <span class="n">first_beat_time</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Return a Multitrack object converted from a PrettyMIDI object.</span>
 
@@ -242,47 +242,49 @@
 <span class="sd">    pm : `pretty_midi.PrettyMIDI` object</span>
 <span class="sd">        A :class:`pretty_midi.PrettyMIDI` object to be parsed.</span>
 <span class="sd">    mode : {&#39;max&#39;, &#39;sum&#39;}</span>
-<span class="sd">        A string that indicates the merging strategy to apply to duplicate</span>
-<span class="sd">        notes. Default to &#39;max&#39;.</span>
+<span class="sd">        A string that indicates the merging strategy to apply to</span>
+<span class="sd">        duplicate notes. Defaults to &#39;max&#39;.</span>
 <span class="sd">    algorithm : {&#39;normal&#39;, &#39;strict&#39;, &#39;custom&#39;}</span>
-<span class="sd">        A string that indicates the method used to get the location of the</span>
-<span class="sd">        first beat. Notes before it will be dropped unless an incomplete</span>
-<span class="sd">        beat before it is found (see Notes for more information). Defaults</span>
-<span class="sd">        to &#39;normal&#39;.</span>
+<span class="sd">        A string that indicates the method used to get the location of</span>
+<span class="sd">        the first beat. Notes before it will be dropped unless an</span>
+<span class="sd">        incomplete beat before it is found (see Notes for more</span>
+<span class="sd">        information). Defaults to &#39;normal&#39;.</span>
 
-<span class="sd">        - The &#39;normal&#39; algorithm estimates the location of the first beat by</span>
-<span class="sd">            :meth:`pretty_midi.PrettyMIDI.estimate_beat_start`.</span>
-<span class="sd">        - The &#39;strict&#39; algorithm sets the first beat at the event time of</span>
-<span class="sd">            the first time signature change. Raise a ValueError if no time</span>
-<span class="sd">            signature change event is found.</span>
+<span class="sd">        - The &#39;normal&#39; algorithm estimates the location of the first</span>
+<span class="sd">          beat by :meth:`pretty_midi.PrettyMIDI.estimate_beat_start`.</span>
+<span class="sd">        - The &#39;strict&#39; algorithm sets the first beat at the event time</span>
+<span class="sd">          of the first time signature change. Raise a ValueError if no</span>
+<span class="sd">          time signature change event is found.</span>
 <span class="sd">        - The &#39;custom&#39; algorithm takes argument `first_beat_time` as the</span>
-<span class="sd">            location of the first beat.</span>
+<span class="sd">          location of the first beat.</span>
 
 <span class="sd">    binarized : bool</span>
 <span class="sd">        True to binarize the parsed piano rolls before merging duplicate</span>
-<span class="sd">        notes. False to use the original parsed pianorolls. Defaults to</span>
+<span class="sd">        notes. False to use the original parsed piano rolls. Defaults to</span>
 <span class="sd">        False.</span>
 <span class="sd">    skip_empty_tracks : bool</span>
-<span class="sd">        True to remove tracks with empty piano rolls and compress the pitch</span>
-<span class="sd">        range of the parsed piano rolls. False to retain the empty tracks</span>
-<span class="sd">        and use the original parsed piano rolls. Deafault to True.</span>
+<span class="sd">        True to remove tracks with empty piano rolls and compress the</span>
+<span class="sd">        pitch range of the parsed piano rolls. False to retain the empty</span>
+<span class="sd">        tracks and use the original parsed piano rolls. Deafaults to</span>
+<span class="sd">        True.</span>
 <span class="sd">    collect_onsets_only : bool</span>
-<span class="sd">        True to collect only the onset of the notes (i.e. note on events) in</span>
-<span class="sd">        all tracks, where the note off and duration information are dropped.</span>
-<span class="sd">        False to parse regular piano rolls.</span>
+<span class="sd">        True to collect only the onset of the notes (i.e. note on</span>
+<span class="sd">        events) in all tracks, where the note off and duration</span>
+<span class="sd">        information are dropped. False to parse regular piano rolls.</span>
+<span class="sd">        Defaults to False.</span>
 <span class="sd">    threshold : int or float</span>
-<span class="sd">        A threshold used to binarize the parsed piano rolls. Only effective</span>
-<span class="sd">        when `binarized` is True. Defaults to zero.</span>
+<span class="sd">        A threshold used to binarize the parsed piano rolls. Only</span>
+<span class="sd">        effective when `binarized` is True. Defaults to zero.</span>
 <span class="sd">    first_beat_time : float</span>
-<span class="sd">        The location (in sec) of the first beat. Required and only effective</span>
-<span class="sd">        when using &#39;custom&#39; algorithm.</span>
+<span class="sd">        Location of the first beat, in sec. Required and only</span>
+<span class="sd">        effective  when using &#39;custom&#39; algorithm.</span>
 
 <span class="sd">    Notes</span>
 <span class="sd">    -----</span>
-<span class="sd">    If an incomplete beat before the first beat is found, an additional beat</span>
-<span class="sd">    will be added before the (estimated) beat starting time. However, notes</span>
-<span class="sd">    before the (estimated) beat starting time for more than one beat are</span>
-<span class="sd">    dropped.</span>
+<span class="sd">    If an incomplete beat before the first beat is found, an additional</span>
+<span class="sd">    beat will be added before the (estimated) beat starting time.</span>
+<span class="sd">    However, notes before the (estimated) beat starting time for more</span>
+<span class="sd">    than one beat are dropped.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
@@ -467,7 +469,7 @@
     <span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="read"><a class="viewcode-back" href="../../read_write.html#pypianoroll.read">[docs]</a><span class="k">def</span> <span class="nf">read</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="read"><a class="viewcode-back" href="../../read_write.html#pypianoroll.read">[docs]</a><span class="k">def</span> <span class="nf">read</span><span class="p">(</span><span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Read a MIDI file into a Multitrack object.</span>
 
 <span class="sd">    See :meth:`pypianoroll.from_pretty_midi` for full documentation.</span>

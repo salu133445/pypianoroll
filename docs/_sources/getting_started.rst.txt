@@ -8,7 +8,7 @@ Objects
 The main objects in Pypianoroll are :class:`pypianoroll.Multitrack` and
 :class:`pypianoroll.Track` objects.
 
-A :class:`pypianoroll.Track` object is composed of a pianoroll matrix and
+A :class:`pypianoroll.Track` object is composed of a piano roll matrix and
 additional track information (program number, drum indicator and its name).
 
 A :class:`pypianoroll.Multitrack` object consists of a list of
@@ -29,8 +29,8 @@ Here is an example.
     from pypianoroll import Multitrack, Track
     from matplotlib import pyplot as plt
 
-    # Create a pianoroll matrix, where the first and second axes represent time
-    # and pitch, respectively, and assign a C major chord to the pianoroll
+    # Create a piano roll matrix, where the first and second axes represent time
+    # and pitch, respectively, and assign a C major chord to the piano roll
     pianoroll = np.zeros((96, 128))
     C_maj = [60, 64, 67, 72, 76, 79, 84]
     pianoroll[0:95, C_maj] = 100
@@ -39,7 +39,7 @@ Here is an example.
     track = Track(pianoroll=pianoroll, program=0, is_drum=False,
                   name='my awesome piano')
 
-    # Plot the pianoroll
+    # Plot the piano roll
     fig, ax = track.plot()
     plt.show()
 
@@ -65,7 +65,7 @@ And here is another example.
     multitrack = Multitrack(tracks=[track, another_track], tempo=120.0,
                             downbeat=[0, 96, 192, 288], beat_resolution=24)
 
-    # Plot the multitrack pianoroll
+    # Plot the multitrack piano roll
     fig, axs = multitrack.plot()
     plt.show()
 

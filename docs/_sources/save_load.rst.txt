@@ -15,7 +15,7 @@ Functions
     The saved .npz file is basically a zip archive which contains the following
     files:
 
-    - component arrays of the pianorolls in compressed sparse column format:
+    - component arrays of the piano rolls in compressed sparse column format:
 
         - ``pianoroll_[index]_csc_data.npy``
         - ``pianoroll_[index]_csc_indices.npy``

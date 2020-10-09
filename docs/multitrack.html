@@ -165,7 +165,7 @@
 <p>Pypianoroll provides the <cite>pypianoroll.Multitrack</cite> class for handling multitrack piano rolls.</p>
 <dl class="py class">
 <dt>
-<em class="property">class </em><code class="sig-prename descclassname">pypianoroll.</code><code class="sig-name descname">Multitrack</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">resolution</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">tempo</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">downbeat</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">name</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">tracks</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pypianoroll/multitrack.html#Multitrack"><span class="viewcode-link">[source]</span></a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">pypianoroll.</code><code class="sig-name descname">Multitrack</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">resolution</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>int<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">tempo</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.19)">numpy.ndarray</a><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">downbeat</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.19)">numpy.ndarray</a><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">name</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>str<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">tracks</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>List<span class="p">[</span>pypianoroll.track.Track<span class="p">]</span><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pypianoroll/multitrack.html#Multitrack"><span class="viewcode-link">[source]</span></a></dt>
 <dd><p>A container for multitrack piano rolls.</p>
 <p>This is the core class of Pypianoroll.</p>
 <dl class="py attribute">
@@ -182,8 +182,8 @@
 <dl class="py attribute">
 <dt>
 <code class="sig-name descname">tempo</code></dt>
-<dd><p>Tempo (in qpm) at each time step. The length is the total number of
-time steps.</p>
+<dd><p>Tempo (in qpm) at each time step. The length is the total
+number of time steps.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
 <dd class="field-odd"><p>ndarray, dtype={int, float}, shape=(?, 1), optional</p>
@@ -195,8 +195,8 @@ time steps.</p>
 <dt>
 <code class="sig-name descname">downbeat</code></dt>
 <dd><p>A boolean array that indicates whether the time step contains a
-downbeat (i.e., the first time step of a bar). The length is the total
-number of time steps.</p>
+downbeat (i.e., the first time step of a bar). The length is the
+total number of time steps.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
 <dd class="field-odd"><p>ndarray, dtype=bool, shape=(?, 1), optional</p>

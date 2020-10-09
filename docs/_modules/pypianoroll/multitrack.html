@@ -163,16 +163,15 @@
 <span class="sd">class, a container for multitrack piano rolls.</span>
 
 <span class="sd">&quot;&quot;&quot;</span>
-<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">absolute_import</span><span class="p">,</span> <span class="n">division</span><span class="p">,</span> <span class="n">print_function</span>
-
 <span class="kn">import</span> <span class="nn">json</span>
 <span class="kn">import</span> <span class="nn">zipfile</span>
 <span class="kn">from</span> <span class="nn">copy</span> <span class="kn">import</span> <span class="n">deepcopy</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span>
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">pretty_midi</span>
+<span class="kn">from</span> <span class="nn">numpy</span> <span class="kn">import</span> <span class="n">ndarray</span>
 <span class="kn">from</span> <span class="nn">scipy.sparse</span> <span class="kn">import</span> <span class="n">csc_matrix</span>
-<span class="kn">from</span> <span class="nn">six</span> <span class="kn">import</span> <span class="n">string_types</span>
 
 <span class="kn">from</span> <span class="nn">.track</span> <span class="kn">import</span> <span class="n">Track</span>
 <span class="kn">from</span> <span class="nn">.visualization</span> <span class="kn">import</span> <span class="n">plot_multitrack</span>
@@ -184,11 +183,11 @@
 
 
 <span class="k">def</span> <span class="nf">decompose_sparse</span><span class="p">(</span><span class="n">matrix</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Decompose a matrix to sparse components and return as a dictionary.</span>
+    <span class="sd">&quot;&quot;&quot;Decompose a matrix to sparse components.</span>
 
-<span class="sd">    Convert a matrix to a :class:`scipy.sparse.csc_matrix` object. Return</span>
-<span class="sd">    its component arrays as a dictionary with key as `name` suffixed with</span>
-<span class="sd">    their component types.</span>
+<span class="sd">    Convert a matrix to a :class:`scipy.sparse.csc_matrix` object.</span>
+<span class="sd">    Return its component arrays as a dictionary with key as `name`</span>
+<span class="sd">    suffixed with their component types.</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">csc</span> <span class="o">=</span> <span class="n">csc_matrix</span><span class="p">(</span><span class="n">matrix</span><span class="p">)</span>
@@ -201,7 +200,7 @@
 
 
 <span class="k">def</span> <span class="nf">reconstruct_sparse</span><span class="p">(</span><span class="n">data_dict</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Reconstruct a matrix from a dictionary return by `_decompose_sparse`.&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;Reconstruct a matrix from a dictionary.&quot;&quot;&quot;</span>
     <span class="n">sparse_matrix</span> <span class="o">=</span> <span class="n">csc_matrix</span><span class="p">(</span>
         <span class="p">(</span>
             <span class="n">data_dict</span><span class="p">[</span><span class="n">name</span> <span class="o">+</span> <span class="s2">&quot;_csc_data&quot;</span><span class="p">],</span>
@@ -213,7 +212,7 @@
     <span class="k">return</span> <span class="n">sparse_matrix</span><span class="o">.</span><span class="n">toarray</span><span class="p">()</span>
 
 
-<div class="viewcode-block" id="Multitrack"><a class="viewcode-back" href="../../multitrack.html#pypianoroll.Multitrack">[docs]</a><span class="k">class</span> <span class="nc">Multitrack</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<div class="viewcode-block" id="Multitrack"><a class="viewcode-back" href="../../multitrack.html#pypianoroll.Multitrack">[docs]</a><span class="k">class</span> <span class="nc">Multitrack</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;A container for multitrack piano rolls.</span>
 
 <span class="sd">    This is the core class of Pypianoroll.</span>
@@ -223,12 +222,12 @@
 <span class="sd">    resolution : int</span>
 <span class="sd">        Time steps per quarter note.</span>
 <span class="sd">    tempo : ndarray, dtype={int, float}, shape=(?, 1), optional</span>
-<span class="sd">        Tempo (in qpm) at each time step. The length is the total number of</span>
-<span class="sd">        time steps.</span>
+<span class="sd">        Tempo (in qpm) at each time step. The length is the total</span>
+<span class="sd">        number of time steps.</span>
 <span class="sd">    downbeat : ndarray, dtype=bool, shape=(?, 1), optional</span>
 <span class="sd">        A boolean array that indicates whether the time step contains a</span>
-<span class="sd">        downbeat (i.e., the first time step of a bar). The length is the total</span>
-<span class="sd">        number of time steps.</span>
+<span class="sd">        downbeat (i.e., the first time step of a bar). The length is the</span>
+<span class="sd">        total number of time steps.</span>
 <span class="sd">    name : str, optional</span>
 <span class="sd">        Multitrack name.</span>
 <span class="sd">    tracks : list of :class:`pypianoroll.Track` objects, optional</span>
@@ -238,16 +237,15 @@
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
-        <span class="n">resolution</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-        <span class="n">tempo</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-        <span class="n">downbeat</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-        <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-        <span class="n">tracks</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">resolution</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">tempo</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">ndarray</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">downbeat</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">ndarray</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">name</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">tracks</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">Track</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">):</span>
-        <span class="k">if</span> <span class="n">resolution</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">resolution</span> <span class="o">=</span> <span class="n">DEFAULT_RESOLUTION</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">resolution</span> <span class="o">=</span> <span class="n">resolution</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">resolution</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">resolution</span> <span class="k">if</span> <span class="n">resolution</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">DEFAULT_RESOLUTION</span>
+        <span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">tempo</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">tempo</span><span class="p">)</span> <span class="k">if</span> <span class="n">tempo</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="kc">None</span>
 
@@ -350,8 +348,8 @@
                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;`downbeat` must be a 1D NumPy array.&quot;</span><span class="p">)</span>
 
         <span class="c1"># Name</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">string_types</span><span class="p">):</span>
-            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;`name` must be a string.&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;`name` must be of type str.&quot;</span><span class="p">)</span>
 
         <span class="c1"># Tracks</span>
         <span class="k">for</span> <span class="n">track</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">tracks</span><span class="p">:</span>
@@ -362,22 +360,22 @@
             <span class="n">track</span><span class="o">.</span><span class="n">validate</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="Multitrack.is_binarized"><a class="viewcode-back" href="../../doc.html#pypianoroll.Multitrack.is_binarized">[docs]</a>    <span class="k">def</span> <span class="nf">is_binarized</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Return True if all piano rolls are binarized, otherwise False.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Return True if piano rolls are binarized, otherwise False.&quot;&quot;&quot;</span>
         <span class="k">for</span> <span class="n">track</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">tracks</span><span class="p">:</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="n">track</span><span class="o">.</span><span class="n">is_binarized</span><span class="p">():</span>
                 <span class="k">return</span> <span class="kc">False</span>
         <span class="k">return</span> <span class="kc">True</span></div>
 
 <div class="viewcode-block" id="Multitrack.get_active_length"><a class="viewcode-back" href="../../doc.html#pypianoroll.Multitrack.get_active_length">[docs]</a>    <span class="k">def</span> <span class="nf">get_active_length</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Return the maximum active length of the piano rolls (in time steps).</span>
+        <span class="sd">&quot;&quot;&quot;Return the maximum active length of the piano rolls.</span>
 
-<span class="sd">        The active length is defined as the length of the piano roll without</span>
-<span class="sd">        trailing silence.</span>
+<span class="sd">        The active length is defined as the length of the piano roll</span>
+<span class="sd">        without trailing silence.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        int</span>
-<span class="sd">            The maximum active length of the piano rolls (in time steps).</span>
+<span class="sd">            maximum active length of the piano rolls (in time steps).</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">active_length</span> <span class="o">=</span> <span class="mi">0</span>
@@ -423,12 +421,12 @@
         <span class="k">return</span> <span class="n">downbeat_steps</span></div>
 
 <div class="viewcode-block" id="Multitrack.get_empty_tracks"><a class="viewcode-back" href="../../doc.html#pypianoroll.Multitrack.get_empty_tracks">[docs]</a>    <span class="k">def</span> <span class="nf">get_empty_tracks</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Return the indices of tracks with empty pianorolls.</span>
+        <span class="sd">&quot;&quot;&quot;Return the indices of tracks with empty piano rolls.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        list</span>
-<span class="sd">            Indices of tracks with empty pianorolls.</span>
+<span class="sd">            Indices of tracks with empty piano rolls.</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">indices</span> <span class="o">=</span> <span class="p">[]</span>
@@ -452,23 +450,24 @@
                 <span class="n">max_length</span> <span class="o">=</span> <span class="n">track</span><span class="o">.</span><span class="n">pianoroll</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
         <span class="k">return</span> <span class="n">max_length</span></div>
 
-<div class="viewcode-block" id="Multitrack.get_merged_pianoroll"><a class="viewcode-back" href="../../doc.html#pypianoroll.Multitrack.get_merged_pianoroll">[docs]</a>    <span class="k">def</span> <span class="nf">get_merged_pianoroll</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;sum&quot;</span><span class="p">):</span>
+<div class="viewcode-block" id="Multitrack.get_merged_pianoroll"><a class="viewcode-back" href="../../doc.html#pypianoroll.Multitrack.get_merged_pianoroll">[docs]</a>    <span class="k">def</span> <span class="nf">get_merged_pianoroll</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mode</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;sum&quot;</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Return the merged piano roll.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        mode : {&#39;sum&#39;, &#39;max&#39;, &#39;any&#39;}</span>
-<span class="sd">            A string that indicates the merging strategy to apply along the</span>
-<span class="sd">            track axis. Default to &#39;sum&#39;.</span>
+<span class="sd">            Merging strategy to apply along the track axis.</span>
+<span class="sd">            Defaults to &#39;sum&#39;.</span>
 
-<span class="sd">            - In &#39;sum&#39; mode, the merged pianoroll is the sum of all the</span>
-<span class="sd">              pianorolls. Note that for binarized pianorolls, integer summation</span>
-<span class="sd">              is performed.</span>
-<span class="sd">            - In &#39;max&#39; mode, for each pixel, the maximum value among all the</span>
-<span class="sd">              pianorolls is assigned to the merged pianoroll.</span>
-<span class="sd">            - In &#39;any&#39; mode, the value of a pixel in the merged pianoroll is</span>
-<span class="sd">              True if any of the pianorolls has nonzero value at that pixel;</span>
-<span class="sd">              False if all pianorolls are inactive (zero-valued) at that pixel.</span>
+<span class="sd">            - In &#39;sum&#39; mode, the merged piano roll is the sum of all the</span>
+<span class="sd">              piano rolls. Note that for binarized piano rolls, integer</span>
+<span class="sd">              summation is performed.</span>
+<span class="sd">            - In &#39;max&#39; mode, for each pixel, the maximum value among</span>
+<span class="sd">              all the piano rolls is assigned to the merged piano roll.</span>
+<span class="sd">            - In &#39;any&#39; mode, the value of a pixel in the merged piano</span>
+<span class="sd">              roll is True if any of the piano rolls has nonzero value</span>
+<span class="sd">              at that pixel; False if all piano rolls are inactive</span>
+<span class="sd">              (zero-valued) at that pixel.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
@@ -507,34 +506,36 @@
         <span class="p">)</span>
         <span class="k">return</span> <span class="n">stacked</span></div>
 
-<div class="viewcode-block" id="Multitrack.append"><a class="viewcode-back" href="../../doc.html#pypianoroll.Multitrack.append">[docs]</a>    <span class="k">def</span> <span class="nf">append</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">track</span><span class="p">):</span>
+<div class="viewcode-block" id="Multitrack.append"><a class="viewcode-back" href="../../doc.html#pypianoroll.Multitrack.append">[docs]</a>    <span class="k">def</span> <span class="nf">append</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">track</span><span class="p">:</span> <span class="n">Track</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Append a :class:`multitrack.Track` object to the track list.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        track : pianoroll.Track</span>
+<span class="sd">        track : :class:`pypianoroll.Track`</span>
 <span class="sd">            Track to append to the track list.</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">tracks</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">track</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span></div>
 
-<div class="viewcode-block" id="Multitrack.assign_constant"><a class="viewcode-back" href="../../doc.html#pypianoroll.Multitrack.assign_constant">[docs]</a>    <span class="k">def</span> <span class="nf">assign_constant</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Assign a constant value to all nonzeros entries of the piano rolls.</span>
+<div class="viewcode-block" id="Multitrack.assign_constant"><a class="viewcode-back" href="../../doc.html#pypianoroll.Multitrack.assign_constant">[docs]</a>    <span class="k">def</span> <span class="nf">assign_constant</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">float</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Assign a constant value to all nonzero entries.</span>
 
-<span class="sd">        If a piano roll is not binarized, its data type will be preserved. If a</span>
-<span class="sd">        piano roll is binarized, cast it to the dtype of `value`.</span>
+<span class="sd">        If a piano roll is not binarized, its data type will be</span>
+<span class="sd">        preserved. If a piano roll is binarized, cast it to the dtype</span>
+<span class="sd">        of `value`.</span>
 
 <span class="sd">        Arguments</span>
 <span class="sd">        ---------</span>
 <span class="sd">        value : int or float</span>
-<span class="sd">            Value to assign to all the nonzero entries in the piano rolls.</span>
+<span class="sd">            Value to assign to all the nonzero entries in the piano</span>
+<span class="sd">            rolls.</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">for</span> <span class="n">track</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">tracks</span><span class="p">:</span>
             <span class="n">track</span><span class="o">.</span><span class="n">assign_constant</span><span class="p">(</span><span class="n">value</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="Multitrack.binarize"><a class="viewcode-back" href="../../doc.html#pypianoroll.Multitrack.binarize">[docs]</a>    <span class="k">def</span> <span class="nf">binarize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">threshold</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+<div class="viewcode-block" id="Multitrack.binarize"><a class="viewcode-back" href="../../doc.html#pypianoroll.Multitrack.binarize">[docs]</a>    <span class="k">def</span> <span class="nf">binarize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">threshold</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">0</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Binarize the piano rolls.</span>
 
 <span class="sd">        Parameters</span>
@@ -547,7 +548,7 @@
             <span class="n">track</span><span class="o">.</span><span class="n">binarize</span><span class="p">(</span><span class="n">threshold</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span></div>
 
-<div class="viewcode-block" id="Multitrack.clip"><a class="viewcode-back" href="../../doc.html#pypianoroll.Multitrack.clip">[docs]</a>    <span class="k">def</span> <span class="nf">clip</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lower</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">upper</span><span class="o">=</span><span class="mi">127</span><span class="p">):</span>
+<div class="viewcode-block" id="Multitrack.clip"><a class="viewcode-back" href="../../doc.html#pypianoroll.Multitrack.clip">[docs]</a>    <span class="k">def</span> <span class="nf">clip</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lower</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">upper</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">127</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Clip the piano rolls by a lower bound and an upper bound.</span>
 
 <span class="sd">        Parameters</span>
@@ -562,7 +563,7 @@
             <span class="n">track</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="n">lower</span><span class="p">,</span> <span class="n">upper</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span></div>
 
-<div class="viewcode-block" id="Multitrack.downsample"><a class="viewcode-back" href="../../doc.html#pypianoroll.Multitrack.downsample">[docs]</a>    <span class="k">def</span> <span class="nf">downsample</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">factor</span><span class="p">):</span>
+<div class="viewcode-block" id="Multitrack.downsample"><a class="viewcode-back" href="../../doc.html#pypianoroll.Multitrack.downsample">[docs]</a>    <span class="k">def</span> <span class="nf">downsample</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">factor</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Downsample the piano rolls by the given factor.</span>
 
 <span class="sd">        Attribute `resolution` will be updated accordingly as well.</span>
@@ -585,7 +586,8 @@
 <div class="viewcode-block" id="Multitrack.count_downbeat"><a class="viewcode-back" href="../../doc.html#pypianoroll.Multitrack.count_downbeat">[docs]</a>    <span class="k">def</span> <span class="nf">count_downbeat</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Return the number of down beats.</span>
 
-<span class="sd">        The return value is calculated based solely on attribute `downbeat`.</span>
+<span class="sd">        The return value is calculated based solely on attribute</span>
+<span class="sd">        `downbeat`.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
@@ -597,35 +599,38 @@
 
 <div class="viewcode-block" id="Multitrack.merge_tracks"><a class="viewcode-back" href="../../doc.html#pypianoroll.Multitrack.merge_tracks">[docs]</a>    <span class="k">def</span> <span class="nf">merge_tracks</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
-        <span class="n">track_indices</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-        <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;sum&quot;</span><span class="p">,</span>
-        <span class="n">program</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
-        <span class="n">is_drum</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;merged&quot;</span><span class="p">,</span>
-        <span class="n">remove_source</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">track_indices</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">mode</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;sum&quot;</span><span class="p">,</span>
+        <span class="n">program</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="n">is_drum</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;merged&quot;</span><span class="p">,</span>
+        <span class="n">remove_source</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Merge certain tracks into a single track.</span>
 
-<span class="sd">        Merge the piano rolls of certain tracks (specified by `track_indices`).</span>
-<span class="sd">        The merged track will be appended to the end of the track list.</span>
+<span class="sd">        Merge the piano rolls of certain tracks (specified by</span>
+<span class="sd">        `track_indices`). The merged track will be appended to the end</span>
+<span class="sd">        of the track list.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        track_indices : list</span>
-<span class="sd">            Indices of tracks to be merged. Defaults to merge all the tracks.</span>
+<span class="sd">            Indices of tracks to be merged. Defaults to merge all the</span>
+<span class="sd">            tracks.</span>
 <span class="sd">        mode : {&#39;sum&#39;, &#39;max&#39;, &#39;any&#39;}</span>
-<span class="sd">            A string that indicates the merging strategy to apply along the</span>
-<span class="sd">            track axis. Default to &#39;sum&#39;.</span>
+<span class="sd">            A string that indicates the merging strategy to apply along</span>
+<span class="sd">            the track axis. Default to &#39;sum&#39;.</span>
 
-<span class="sd">            - In &#39;sum&#39; mode, the merged pianoroll is the sum of the collected</span>
-<span class="sd">              pianorolls. Note that for binarized pianorolls, integer summation</span>
-<span class="sd">              is performed.</span>
-<span class="sd">            - In &#39;max&#39; mode, for each pixel, the maximum value among the</span>
-<span class="sd">              collected pianorolls is assigned to the merged pianoroll.</span>
-<span class="sd">            - In &#39;any&#39; mode, the value of a pixel in the merged pianoroll is</span>
-<span class="sd">              True if any of the collected pianorolls has nonzero value at that</span>
-<span class="sd">              pixel; False if all the collected pianorolls are inactive</span>
-<span class="sd">              (zero-valued) at that pixel.</span>
+<span class="sd">            - In &#39;sum&#39; mode, the merged piano roll is the sum of</span>
+<span class="sd">              the collected piano rolls. Note that for binarized piano</span>
+<span class="sd">              rolls, integer summation is performed.</span>
+<span class="sd">            - In &#39;max&#39; mode, for each pixel, the maximum value among</span>
+<span class="sd">              the collected piano rolls is assigned to the merged piano</span>
+<span class="sd">              roll.</span>
+<span class="sd">            - In &#39;any&#39; mode, the value of a pixel in the merged piano</span>
+<span class="sd">              roll is True if any of the collected piano rolls has</span>
+<span class="sd">              nonzero value at that pixel; False if all the collected</span>
+<span class="sd">              piano rolls are inactive (zero-valued) at that pixel.</span>
 
 <span class="sd">        program : int, 0-127, optional</span>
 <span class="sd">            Program number according to General MIDI specification [1].</span>
@@ -635,12 +640,12 @@
 <span class="sd">        name : str, optional</span>
 <span class="sd">            Track name. Defaults to `merged`.</span>
 <span class="sd">        remove_source : bool</span>
-<span class="sd">            Whether to remove the source tracks from the track list. Defaults</span>
-<span class="sd">            to False.</span>
+<span class="sd">            Whether to remove the source tracks from the track list.</span>
+<span class="sd">            Defaults to False.</span>
 
 <span class="sd">        References</span>
 <span class="sd">        ----------</span>
-<span class="sd">        [1] https://www.midi.org/specifications/item/gm-level-1-sound-set</span>
+<span class="sd">        1. https://www.midi.org/specifications/item/gm-level-1-sound-set</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">mode</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;max&quot;</span><span class="p">,</span> <span class="s2">&quot;sum&quot;</span><span class="p">,</span> <span class="s2">&quot;any&quot;</span><span class="p">):</span>
@@ -648,21 +653,26 @@
 
         <span class="n">merged</span> <span class="o">=</span> <span class="bp">self</span><span class="p">[</span><span class="n">track_indices</span><span class="p">]</span><span class="o">.</span><span class="n">get_merged_pianoroll</span><span class="p">(</span><span class="n">mode</span><span class="p">)</span>
 
-        <span class="n">merged_track</span> <span class="o">=</span> <span class="n">Track</span><span class="p">(</span><span class="n">merged</span><span class="p">,</span> <span class="n">program</span><span class="p">,</span> <span class="n">is_drum</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">merged_track</span><span class="p">)</span>
+        <span class="n">merged_track</span> <span class="o">=</span> <span class="n">Track</span><span class="p">(</span>
+            <span class="n">program</span><span class="o">=</span><span class="n">program</span><span class="p">,</span> <span class="n">is_drum</span><span class="o">=</span><span class="n">is_drum</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">pianoroll</span><span class="o">=</span><span class="n">merged</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tracks</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">merged_track</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">remove_source</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">remove_tracks</span><span class="p">(</span><span class="n">track_indices</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">track_indices</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">remove_tracks</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tracks</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)))</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">remove_tracks</span><span class="p">(</span><span class="n">track_indices</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="bp">self</span></div>
 
 <div class="viewcode-block" id="Multitrack.pad"><a class="viewcode-back" href="../../doc.html#pypianoroll.Multitrack.pad">[docs]</a>    <span class="k">def</span> <span class="nf">pad</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pad_length</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Pad the piano rolls with zeros at the end along the time axis.</span>
+        <span class="sd">&quot;&quot;&quot;Pad the piano rolls with zeros.</span>
 
 <span class="sd">        Notes</span>
 <span class="sd">        -----</span>
-<span class="sd">        The lengths of the resulting piano rolls are not guaranteed to be</span>
-<span class="sd">        the same. See :meth:`pypianoroll.Multitrack.pad_to_same`.</span>
+<span class="sd">        The lengths of the resulting piano rolls are not guaranteed to</span>
+<span class="sd">        be the same. See :meth:`pypianoroll.Multitrack.pad_to_same`.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -674,23 +684,23 @@
             <span class="n">track</span><span class="o">.</span><span class="n">pad</span><span class="p">(</span><span class="n">pad_length</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span></div>
 
-<div class="viewcode-block" id="Multitrack.pad_to_multiple"><a class="viewcode-back" href="../../doc.html#pypianoroll.Multitrack.pad_to_multiple">[docs]</a>    <span class="k">def</span> <span class="nf">pad_to_multiple</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">factor</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Pad the piano rolls along the time axis to a multiple of `factor`.</span>
+<div class="viewcode-block" id="Multitrack.pad_to_multiple"><a class="viewcode-back" href="../../doc.html#pypianoroll.Multitrack.pad_to_multiple">[docs]</a>    <span class="k">def</span> <span class="nf">pad_to_multiple</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">factor</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Pad the piano rolls along the time axis to a multiple.</span>
 
-<span class="sd">        Pad the piano rolls with zeros at the end along the time axis of the</span>
-<span class="sd">        minimum length that makes the lengths of the resulting piano rolls</span>
-<span class="sd">        multiples of `factor`.</span>
+<span class="sd">        Pad the piano rolls with zeros at the end along the time axis</span>
+<span class="sd">        of the minimum length that makes the lengths of the resulting</span>
+<span class="sd">        piano rolls multiples of `factor`.</span>
 
 <span class="sd">        Notes</span>
 <span class="sd">        -----</span>
-<span class="sd">        The resulting pianoroll lengths are not guaranteed to be the same. See</span>
-<span class="sd">        :meth:`pypianoroll.Multitrack.pad_to_same`.</span>
+<span class="sd">        The resulting piano roll lengths are not guaranteed to be the</span>
+<span class="sd">        same. See :meth:`pypianoroll.Multitrack.pad_to_same`.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        factor : int</span>
-<span class="sd">            The value which the length of the resulting pianorolls will be a</span>
-<span class="sd">            multiple of.</span>
+<span class="sd">            The value which the length of the resulting piano rolls will</span>
+<span class="sd">            be a multiple of.</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">for</span> <span class="n">track</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">tracks</span><span class="p">:</span>
@@ -700,8 +710,8 @@
 <div class="viewcode-block" id="Multitrack.pad_to_same"><a class="viewcode-back" href="../../doc.html#pypianoroll.Multitrack.pad_to_same">[docs]</a>    <span class="k">def</span> <span class="nf">pad_to_same</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Pad piano rolls along the time axis to have the same length.</span>
 
-<span class="sd">        Pad shorter piano rolls with zeros at the end along the time axis so</span>
-<span class="sd">        that the resulting piano rolls have the same length.</span>
+<span class="sd">        Pad shorter piano rolls with zeros at the end along the time</span>
+<span class="sd">        axis so that the resulting piano rolls have the same length.</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">max_length</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_max_length</span><span class="p">()</span>
@@ -714,7 +724,7 @@
         <span class="sd">&quot;&quot;&quot;Remove tracks with empty pianorolls.&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">remove_tracks</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_empty_tracks</span><span class="p">())</span></div>
 
-<div class="viewcode-block" id="Multitrack.remove_tracks"><a class="viewcode-back" href="../../doc.html#pypianoroll.Multitrack.remove_tracks">[docs]</a>    <span class="k">def</span> <span class="nf">remove_tracks</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">track_indices</span><span class="p">):</span>
+<div class="viewcode-block" id="Multitrack.remove_tracks"><a class="viewcode-back" href="../../doc.html#pypianoroll.Multitrack.remove_tracks">[docs]</a>    <span class="k">def</span> <span class="nf">remove_tracks</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">track_indices</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]):</span>
         <span class="sd">&quot;&quot;&quot;Remove certain tracks.</span>
 
 <span class="sd">        Parameters</span>
@@ -732,11 +742,11 @@
         <span class="p">]</span>
         <span class="k">return</span> <span class="bp">self</span></div>
 
-<div class="viewcode-block" id="Multitrack.transpose"><a class="viewcode-back" href="../../doc.html#pypianoroll.Multitrack.transpose">[docs]</a>    <span class="k">def</span> <span class="nf">transpose</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">semitone</span><span class="p">):</span>
+<div class="viewcode-block" id="Multitrack.transpose"><a class="viewcode-back" href="../../doc.html#pypianoroll.Multitrack.transpose">[docs]</a>    <span class="k">def</span> <span class="nf">transpose</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">semitone</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Transpose the piano rolls by a number of semitones.</span>
 
-<span class="sd">        Positive values are for a higher key, while negative values are for</span>
-<span class="sd">        a lower key. Drum tracks are ignored.</span>
+<span class="sd">        Positive values are for a higher key, while negative values are</span>
+<span class="sd">        for a lower key. Drum tracks are ignored.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -751,7 +761,8 @@
 <div class="viewcode-block" id="Multitrack.trim_trailing_silence"><a class="viewcode-back" href="../../doc.html#pypianoroll.Multitrack.trim_trailing_silence">[docs]</a>    <span class="k">def</span> <span class="nf">trim_trailing_silence</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Trim the trailing silences of the piano rolls.</span>
 
-<span class="sd">        All the piano rolls will have the same length after the trimming.</span>
+<span class="sd">        All the piano rolls will have the same length after the</span>
+<span class="sd">        trimming.</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">active_length</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_active_length</span><span class="p">()</span>
@@ -759,7 +770,7 @@
             <span class="n">track</span><span class="o">.</span><span class="n">pianoroll</span> <span class="o">=</span> <span class="n">track</span><span class="o">.</span><span class="n">pianoroll</span><span class="p">[:</span><span class="n">active_length</span><span class="p">]</span>
         <span class="k">return</span> <span class="bp">self</span></div>
 
-<div class="viewcode-block" id="Multitrack.save"><a class="viewcode-back" href="../../doc.html#pypianoroll.Multitrack.save">[docs]</a>    <span class="k">def</span> <span class="nf">save</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">compressed</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<div class="viewcode-block" id="Multitrack.save"><a class="viewcode-back" href="../../doc.html#pypianoroll.Multitrack.save">[docs]</a>    <span class="k">def</span> <span class="nf">save</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">compressed</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Save to a (compressed) NPZ file.</span>
 
 <span class="sd">        This could be later loaded by :func:`pypianoroll.load`.</span>
@@ -774,11 +785,11 @@
 <span class="sd">        Notes</span>
 <span class="sd">        -----</span>
 <span class="sd">        To reduce the file size, the piano rolls are first converted to</span>
-<span class="sd">        instances of :class:`scipy.sparse.csc_matrix`. The component arrays</span>
-<span class="sd">        are then collected and saved to a npz file.</span>
+<span class="sd">        instances of :class:`scipy.sparse.csc_matrix`. The component</span>
+<span class="sd">        arrays are then collected and saved to a npz file.</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">info_dict</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="n">info_dict</span><span class="p">:</span> <span class="n">Dict</span> <span class="o">=</span> <span class="p">{</span>
             <span class="s2">&quot;resolution&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">resolution</span><span class="p">,</span>
             <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
         <span class="p">}</span>
@@ -812,23 +823,27 @@
         <span class="k">with</span> <span class="n">zipfile</span><span class="o">.</span><span class="n">ZipFile</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s2">&quot;a&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">zip_file</span><span class="p">:</span>
             <span class="n">zip_file</span><span class="o">.</span><span class="n">writestr</span><span class="p">(</span><span class="s2">&quot;info.json&quot;</span><span class="p">,</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">info_dict</span><span class="p">),</span> <span class="n">compression</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="Multitrack.to_pretty_midi"><a class="viewcode-back" href="../../doc.html#pypianoroll.Multitrack.to_pretty_midi">[docs]</a>    <span class="k">def</span> <span class="nf">to_pretty_midi</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">default_tempo</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">default_velocity</span><span class="o">=</span><span class="mi">64</span><span class="p">):</span>
+<div class="viewcode-block" id="Multitrack.to_pretty_midi"><a class="viewcode-back" href="../../doc.html#pypianoroll.Multitrack.to_pretty_midi">[docs]</a>    <span class="k">def</span> <span class="nf">to_pretty_midi</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">default_tempo</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">default_velocity</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">64</span>
+    <span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Convert to a :class:`pretty_midi.PrettyMIDI` object.</span>
 
 <span class="sd">        Notes</span>
 <span class="sd">        -----</span>
 <span class="sd">        - Tempo changes are not supported by now.</span>
-<span class="sd">        - The velocities of the converted pianorolls are clipped to [0, 127].</span>
-<span class="sd">        - Adjacent nonzero values of the same pitch will be considered a single</span>
-<span class="sd">          note with their mean as its velocity.</span>
+<span class="sd">        - The velocities of the converted piano rolls are clipped to</span>
+<span class="sd">          [0, 127].</span>
+<span class="sd">        - Adjacent nonzero values of the same pitch will be considered</span>
+<span class="sd">          a single note with their mean as its velocity.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        default_tempo : int</span>
-<span class="sd">            Default tempo to use. Defaults to the first element of attribute</span>
-<span class="sd">            `tempo`.</span>
+<span class="sd">            Default tempo to use. Defaults to the first element of</span>
+<span class="sd">            attribute `tempo`.</span>
 <span class="sd">        default_velocity : int</span>
-<span class="sd">            Default velocity to assign to binarized tracks. Defaults to 64.</span>
+<span class="sd">            Default velocity to assign to binarized tracks. Defaults to</span>
+<span class="sd">            64.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
@@ -888,7 +903,7 @@
 
         <span class="k">return</span> <span class="n">pm</span></div>
 
-<div class="viewcode-block" id="Multitrack.write"><a class="viewcode-back" href="../../doc.html#pypianoroll.Multitrack.write">[docs]</a>    <span class="k">def</span> <span class="nf">write</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
+<div class="viewcode-block" id="Multitrack.write"><a class="viewcode-back" href="../../doc.html#pypianoroll.Multitrack.write">[docs]</a>    <span class="k">def</span> <span class="nf">write</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Write to a MIDI file.</span>
 
 <span class="sd">        Parameters</span>
