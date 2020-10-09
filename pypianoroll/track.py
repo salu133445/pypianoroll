@@ -1,5 +1,4 @@
 """Class for single-track piano rolls."""
-from copy import deepcopy
 from typing import Any, Optional
 
 import numpy as np
@@ -161,19 +160,6 @@ class Track:
 
         """
         self.pianoroll = self.pianoroll.clip(lower, upper)
-
-    def copy(self):
-        """
-        Return a copy of the object.
-
-        Returns
-        -------
-        copied : `pypianoroll.Track` object
-            A copy of the object.
-
-        """
-        copied = deepcopy(self)
-        return copied
 
     def get_active_length(self):
         """Return the active length of the piano roll (in time steps).
