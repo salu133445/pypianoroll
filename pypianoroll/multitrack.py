@@ -3,22 +3,37 @@
 This module defines the core class of Pypianoroll---the Multitrack
 class, a container for multitrack piano rolls.
 
+Classes
+-------
+
+- Multitrack
+
+Variables
+---------
+
+- DEFAULT_RESOLUTION
+- DEFAULT_TEMPO
+
 """
-from copy import deepcopy
-from typing import List, Optional
+from typing import List, Optional, Tuple, TypeVar
 
 import numpy as np
-import pretty_midi
 from numpy import ndarray
 
 from .outputs import save, to_pretty_midi, write
-from .track import Track
+from .track import BinaryTrack, StandardTrack, Track
 from .visualization import plot_multitrack
 
-__all__ = ["Multitrack"]
+__all__ = [
+    "Multitrack",
+    "DEFAULT_RESOLUTION",
+    "DEFAULT_TEMPO",
+]
 
 DEFAULT_RESOLUTION = 24
 DEFAULT_TEMPO = 120
+
+M = TypeVar("M", bound="Multitrack")
 
 
 class Multitrack:
@@ -28,17 +43,17 @@ class Multitrack:
 
     Attributes
     ----------
-    resolution : int
-        Time steps per quarter note.
-    tempo : ndarray, dtype={int, float}, shape=(?, 1), optional
-        Tempo (in qpm) at each time step. The length is the total
-        number of time steps.
-    downbeat : ndarray, dtype=bool, shape=(?, 1), optional
-        A boolean array that indicates whether the time step contains a
-        downbeat (i.e., the first time step of a bar). The length is the
-        total number of time steps.
     name : str, optional
         Multitrack name.
+    resolution : int
+        Time steps per quarter note.
+    tempo : ndarray, dtype=float, shape=(?, 1), optional
+        Tempo (in qpm) at each time step. Length is the total number
+        of time steps. Cast to float if not of data type float.
+    downbeat : ndarray, dtype=bool, shape=(?, 1), optional
+        Boolean array that indicates whether the time step contains a
+        downbeat (i.e., the first time step of a bar). Length is the
+        total number of time steps.
     tracks : list of :class:`pypianoroll.Track`, optional
         Music tracks.
 
@@ -46,32 +61,36 @@ class Multitrack:
 
     def __init__(
         self,
+        name: Optional[str] = None,
         resolution: Optional[int] = None,
         tempo: Optional[ndarray] = None,
         downbeat: Optional[ndarray] = None,
-        name: Optional[str] = None,
         tracks: Optional[List[Track]] = None,
     ):
-        self.resolution = (
-            resolution if resolution is not None else DEFAULT_RESOLUTION
-        )
+        self.name = name
 
-        self.tempo = np.asarray(tempo) if tempo is not None else None
+        if resolution is not None:
+            self.resolution = resolution
+        else:
+            self.resolution = DEFAULT_RESOLUTION
+
+        if tempo is None:
+            self.tempo = None
+        elif np.issubdtype(tempo.dtype, np.floating):
+            self.tempo = tempo
+        else:
+            self.tempo = np.asarray(tempo).astype(float)
 
         if downbeat is None:
             self.downbeat = None
+        elif np.issubdtype(downbeat.dtype, np.bool_):
+            self.downbeat = downbeat
         else:
-            downbeat = np.asarray(downbeat)
-            if np.issubdtype(downbeat.dtype, np.integer):
-                self.downbeat = np.zeros((max(downbeat) + 1, 1), bool)
-                self.downbeat[downbeat] = True
-            else:
-                self.downbeat = downbeat
+            self.downbeat = np.asarray(downbeat).astype(bool)
 
-        self.name = name
         self.tracks = tracks if tracks is not None else []
 
-    def __len__(self):
+    def __len__(self) -> int:
         return len(self.tracks)
 
     def __getitem__(self, val):
@@ -94,11 +113,11 @@ class Multitrack:
                 tempo = None
 
             return Multitrack(
-                tracks=tracks,
+                name=self.name,
+                resolution=self.resolution,
                 tempo=tempo,
                 downbeat=downbeat,
-                resolution=self.resolution,
-                name=self.name,
+                tracks=tracks,
             )
 
         if isinstance(val, list):
@@ -107,84 +126,188 @@ class Multitrack:
             tracks = self.tracks[val]
 
         return Multitrack(
-            tracks=tracks,
+            name=self.name,
+            resolution=self.resolution,
             tempo=self.tempo,
             downbeat=self.downbeat,
-            resolution=self.resolution,
-            name=self.name,
+            tracks=tracks,
         )
 
-    def __repr__(self):
-        to_join = []
-        if self.name is not None:
-            to_join.append("name=" + repr(self.name))
-        to_join.append("resolution=" + repr(self.resolution))
-        if self.tempo.size:
-            to_join.append("tempo=[" + repr(self.tempo[0]) + ", ...]")
-        if self.downbeat.size:
-            to_join.append("downbeat=[" + repr(self.downbeat[0]) + ", ...]")
-        if self.tracks:
-            to_join.append("tracks=" + repr(self.tracks))
-        return "Multitrack(" + ", ".join(to_join) + ")"
+    def __repr__(self) -> str:
+        if self.tempo is None:
+            tempo_repr = "None"
+        else:
+            tempo_repr = f"array(shape={self.tempo.shape})"
 
-    def validate(self):
-        """Raise a proper error if any attribute is invalid."""
-        # Resolution
-        if not isinstance(self.resolution, int):
-            raise TypeError("`resolution` must be of type int.")
-        if self.resolution < 1:
-            raise ValueError("`resolution` must be a positive integer.")
+        if self.downbeat is None:
+            downbeat_repr = "None"
+        else:
+            downbeat_repr = f"array(shape={self.downbeat.shape})"
 
-        # Tempo
-        if not isinstance(self.tempo, np.ndarray):
-            raise TypeError("`tempo` must be a NumPy array.")
-        if not np.issubdtype(self.tempo.dtype, np.number):
-            raise TypeError(
-                "Data type of `tempo` must be a subdtype of np.number."
-            )
-        if self.tempo.ndim != 1:
-            raise ValueError("`tempo` must be a 1D NumPy array.")
-        if np.any(self.tempo <= 0.0):
-            raise ValueError("`tempo` should contain only positive numbers.")
+        to_join = [
+            f"name={repr(self.name)}",
+            f"resolution={repr(self.resolution)}",
+            f"tempo={tempo_repr}",
+            f"downbeat={downbeat_repr}",
+            f"tracks={repr(self.tracks)}",
+        ]
+        return f"Multitrack({', '.join(to_join)})"
 
-        # Downbeat
-        if self.downbeat is not None:
+    def _validate_type(self, attr):
+        if getattr(self, attr) is None:
+            if attr == "resolution":
+                raise TypeError(f"`{attr}` must not be None.")
+            return
+
+        if attr == "name":
+            if not isinstance(self.name, str):
+                raise TypeError(
+                    "`name` must be of type str, but got type "
+                    f"{type(self.name)}."
+                )
+
+        elif attr == "resolution":
+            if not isinstance(self.resolution, int):
+                raise TypeError(
+                    "`resolution` must be of type int, but got "
+                    f"{type(self.resolution)}."
+                )
+        elif attr == "tempo":
+            if not isinstance(self.tempo, np.ndarray):
+                raise TypeError("`tempo` must be a NumPy array.")
+            if not np.issubdtype(self.tempo.dtype, np.number):
+                raise TypeError(
+                    "`tempo` must be of data type numpy.number, but got data "
+                    f"type {self.tempo.dtype}."
+                )
+        elif attr == "downbeat":
             if not isinstance(self.downbeat, np.ndarray):
                 raise TypeError("`downbeat` must be a NumPy array.")
             if not np.issubdtype(self.downbeat.dtype, np.bool_):
-                raise TypeError("Data type of `downbeat` must be bool.")
+                raise TypeError(
+                    "`downbeat` must be of data type bool, but got data type"
+                    f"{self.downbeat.dtype}."
+                )
+
+        elif attr == "tracks":
+            for i, track in enumerate(self.tracks):
+                if not isinstance(track, Track):
+                    raise TypeError(
+                        "`tracks` must be a list of type Track, but got type "
+                        f"{type(track)} at index {i}."
+                    )
+
+    def validate_type(self, attr=None):
+        """Raise an error if an attribute has an invalid type.
+
+        Parameters
+        ----------
+        attr : str
+            Attribute to validate. Defaults to validate all attributes.
+
+        Returns
+        -------
+        Object itself.
+
+        """
+        if attr is None:
+            attributes = ("name", "resolution", "tempo", "downbeat", "tracks")
+            for attribute in attributes:
+                self._validate_type(attribute)
+        else:
+            self._validate_type(attr)
+        return self
+
+    def _validate(self, attr):
+        self._validate_type(attr)
+        if attr == "resolution":
+            if self.resolution < 1:
+                raise ValueError("`resolution` must be a positive integer.")
+
+        elif attr == "tempo":
+            if self.tempo.ndim != 1:
+                raise ValueError("`tempo` must be a 1D NumPy array.")
+            if np.any(self.tempo <= 0.0):
+                raise ValueError("`tempo` must contain only positive numbers.")
+
+        elif attr == "downbeat":
             if self.downbeat.ndim != 1:
                 raise ValueError("`downbeat` must be a 1D NumPy array.")
 
-        # Name
-        if not isinstance(self.name, str):
-            raise TypeError("`name` must be of type str.")
+        elif attr == "tracks":
+            for track in self.tracks:
+                track.validate()
 
-        # Tracks
-        for track in self.tracks:
-            if not isinstance(track, Track):
-                raise TypeError(
-                    "`tracks` must be a list of `pypianoroll.Track` instances."
-                )
-            track.validate()
+    def validate(self: M, attr=None) -> M:
+        """Raise an error if an attribute has an invalid type or value.
 
-    def is_binarized(self):
-        """Return True if piano rolls are binarized, otherwise False."""
-        for track in self.tracks:
-            if not track.is_binarized():
-                return False
+        Parameters
+        ----------
+        attr : str
+            Attribute to validate. Defaults to validate all attributes.
+
+        Returns
+        -------
+        Object itself.
+
+        """
+        if attr is None:
+            attributes = ("name", "resolution", "tempo", "downbeat", "tracks")
+            for attribute in attributes:
+                self._validate(attribute)
+        else:
+            self._validate(attr)
+        return self
+
+    def is_valid_type(self, attr: Optional[str] = None) -> bool:
+        """Return True if an attribute is of a valid type.
+
+        Parameters
+        ----------
+        attr : str
+            Attribute to validate. Defaults to validate all attributes.
+
+        Returns
+        -------
+        bool
+            Whether the attribute is of a valid type.
+
+        """
+        try:
+            self.validate_type(attr)
+        except TypeError:
+            return False
         return True
 
-    def get_active_length(self):
-        """Return the maximum active length of the piano rolls.
+    def is_valid(self, attr: Optional[str] = None) -> bool:
+        """Return True if an attribute is valid.
 
-        The active length is defined as the length of the piano roll
-        without trailing silence.
+        Parameters
+        ----------
+        attr : str
+            Attribute to validate. Defaults to validate all attributes.
+
+        Returns
+        -------
+        bool
+            Whether the attribute has a valid type and value.
+
+        """
+        try:
+            self.validate(attr)
+        except (TypeError, ValueError):
+            return False
+        return True
+
+    def get_active_length(self) -> int:
+        """Return the maximum active length of the piano rolls.
 
         Returns
         -------
         int
-            maximum active length of the piano rolls (in time steps).
+            Maximum active length (in time steps) of the piano rolls,
+            where active length is the length of the piano roll without
+            trailing silence.
 
         """
         active_length = 0
@@ -194,14 +317,14 @@ class Multitrack:
                 active_length = now_length
         return active_length
 
-    def get_active_pitch_range(self):
+    def get_active_pitch_range(self) -> Tuple[int, int]:
         """Return the active pitch range as a tuple (lowest, highest).
 
         Returns
         -------
-        lowest : int
+        int
             Lowest active pitch in all the piano rolls.
-        highest : int
+        int
             Highest active pitch in all the piano rolls.
 
         """
@@ -215,42 +338,26 @@ class Multitrack:
                     highest = high
         return lowest, highest
 
-    def get_downbeat_steps(self):
+    def get_downbeat_steps(self) -> ndarray:
         """Return the indices of time steps that contain downbeats.
 
         Returns
         -------
-        downbeat_steps : list
+        ndarray, dtype=int
             Indices of time steps that contain downbeats.
 
         """
         if self.downbeat is None:
             return []
-        downbeat_steps = np.nonzero(self.downbeat)[0].tolist()
-        return downbeat_steps
+        return np.nonzero(self.downbeat)[0]
 
-    def get_empty_tracks(self):
-        """Return the indices of tracks with empty piano rolls.
-
-        Returns
-        -------
-        list
-            Indices of tracks with empty piano rolls.
-
-        """
-        indices = []
-        for i, track in enumerate(self.tracks):
-            if not np.any(track.pianoroll):
-                indices.append(i)
-        return indices
-
-    def get_max_length(self):
-        """Return the maximum length of the piano rolls (in time steps).
+    def get_max_length(self) -> int:
+        """Return the maximum length of the piano rolls.
 
         Returns
         -------
-        max_length : int
-            Maximum length of the piano rolls (in time step).
+        int
+            Maximum length (in time steps) of the piano rolls.
 
         """
         max_length = 0
@@ -259,92 +366,124 @@ class Multitrack:
                 max_length = track.pianoroll.shape[0]
         return max_length
 
-    def get_merged_pianoroll(self, mode: str = "sum"):
-        """Return the merged piano roll.
+    def count_downbeat(self) -> int:
+        """Return the number of down beats.
+
+        Returns
+        -------
+        int
+            Number of down beats.
+
+        Note
+        ----
+        Return value is calculated based only on the attribute
+        `downbeat`.
+
+        """
+        return np.count_nonzero(self.downbeat)
+
+    def stack(self) -> ndarray:
+        """Return the piano rolls stacked as a 3D tensor.
+
+        Returns
+        -------
+        ndarray, shape=(?, ?, 128)
+            Stacked piano roll, provided as *(track, time, pitch)*.
+
+        """
+        pianorolls = []
+        max_length = self.get_max_length()
+        for track in self.tracks:
+            if track.pianoroll.shape[0] < max_length:
+                pad_length = max_length - track.pianoroll.shape[0]
+                padded = np.pad(
+                    track.pianoroll, ((0, pad_length), (0, 0)), "constant",
+                )
+                pianorolls.append(padded)
+            else:
+                pianorolls.append(track.pianoroll)
+        return np.stack(pianorolls)
+
+    def blend(self, mode: str = "sum") -> ndarray:
+        """Return the blended pianoroll.
 
         Parameters
         ----------
         mode : {'sum', 'max', 'any'}
-            Merging strategy to apply along the track axis.
+            Blending strategy to apply along the track axis.
             Defaults to 'sum'.
 
-            - In 'sum' mode, the merged piano roll is the sum of all the
-              piano rolls. Note that for binarized piano rolls, integer
-              summation is performed.
-            - In 'max' mode, for each pixel, the maximum value among
-              all the piano rolls is assigned to the merged piano roll.
-            - In 'any' mode, the value of a pixel in the merged piano
-              roll is True if any of the piano rolls has nonzero value
-              at that pixel; False if all piano rolls are inactive
-              (zero-valued) at that pixel.
+            'sum' (default)
+                Sum the piano rolls. Note that for binary piano rolls, integer
+                summation is performed.
+            'max'
+                for each pixel, the maximum value among
+                all the piano rolls is assigned to the merged piano roll.
+            'any'
+                the value of a pixel in the merged piano
+                roll is True if any of the piano rolls has nonzero value
+                at that pixel; False if all piano rolls are inactive
+                (zero-valued) at that pixel.
 
         Returns
         -------
         ndarray, shape=(?, 128)
-            Merged piano roll.
+            Blended piano roll.
 
         """
-        stacked = self.get_stacked_pianoroll()
+        stacked = self.stack()
+        if mode.lower() == "any":
+            return np.any(stacked, axis=0)
+        if mode.lower() == "sum":
+            return np.sum(stacked, axis=0).clip(0, 127).astype(np.uint8)
+        if mode.lower() == "max":
+            return np.max(stacked, axis=0)
+        raise ValueError("`mode` must be one of 'max', 'sum' and 'any'.")
 
-        if mode == "any":
-            merged = np.any(stacked, axis=2)
-        elif mode == "sum":
-            merged = np.sum(stacked, axis=2)
-        elif mode == "max":
-            merged = np.max(stacked, axis=2)
-        else:
-            raise ValueError("`mode` must be one of {'max', 'sum', 'any'}.")
-
-        return merged
-
-    def get_stacked_pianoroll(self):
-        """Return a stacked multitrack piano-roll as a tensor.
-
-        The shape of the return array is (n_time_steps, 128, n_tracks).
-
-        Returns
-        -------
-        ndarray, shape=(?, 128, ?)
-            Stacked piano roll.
-
-        """
-        multitrack = deepcopy(self)
-        multitrack.pad_to_same()
-        stacked = np.stack(
-            [track.pianoroll for track in multitrack.tracks], -1
-        )
-        return stacked
-
-    def append(self, track: Track):
+    def append(self: M, track: Track) -> M:
         """Append a Track object to the track list.
 
         Parameters
         ----------
         track : :class:`pypianoroll.Track`
-            Track to append to the track list.
+            Track to append.
+
+        Returns
+        -------
+        Object itself.
 
         """
         self.tracks.append(track)
         return self
 
-    def assign_constant(self, value: float):
-        """Assign a constant value to all nonzero entries.
+    def remove_empty(self: M) -> M:
+        """Remove tracks with empty pianorolls."""
+        self.tracks = [
+            track for track in self.tracks if not np.any(track.pianoroll)
+        ]
+        return self
 
-        If a piano roll is not binarized, its data type will be
-        preserved. If a piano roll is binarized, cast it to the dtype
-        of `value`.
+    def assign_constant(self: M, value: int) -> M:
+        """Assign a constant value to all nonzero entries.
 
         Arguments
         ---------
-        value : int or float
-            Value to assign to all the nonzero entries in the piano
-            rolls.
+        value : int
+            Value to assign.
+
+        Returns
+        -------
+        Object itself.
 
         """
-        for track in self.tracks:
-            track.assign_constant(value)
+        for i, track in enumerate(self.tracks):
+            if isinstance(track, StandardTrack):
+                track.assign_constant(value)
+            elif isinstance(track, BinaryTrack):
+                self.tracks[i] = track.assign_constant(value)
+        return self
 
-    def binarize(self, threshold: float = 0):
+    def binarize(self: M, threshold: float = 0) -> M:
         """Binarize the piano rolls.
 
         Parameters
@@ -352,35 +491,51 @@ class Multitrack:
         threshold : int or float
             Threshold to binarize the piano rolls. Defaults to zero.
 
+        Returns
+        -------
+        Object itself.
+
         """
-        for track in self.tracks:
-            track.binarize(threshold)
+        for i, track in enumerate(self.tracks):
+            if isinstance(track, StandardTrack):
+                self.tracks[i] = track.binarize(threshold)
         return self
 
-    def clip(self, lower: float = 0, upper: float = 127):
-        """Clip the piano rolls by a lower bound and an upper bound.
+    def clip(self: M, lower: int = 0, upper: int = 127) -> M:
+        """Clip (limit) the the piano roll into [`lower`, `upper`].
 
         Parameters
         ----------
-        lower : int or float
-            Lower bound to clip the piano rolls. Defaults to 0.
-        upper : int or float
-            Upper bound to clip the piano rolls. Defaults to 127.
+        lower : int
+            Lower bound. Defaults to 0.
+        upper : int
+            Upper bound. Defaults to 127.
+
+        Returns
+        -------
+        Object itself.
 
         """
         for track in self.tracks:
-            track.clip(lower, upper)
+            if isinstance(track, StandardTrack):
+                track.clip(lower, upper)
         return self
 
-    def downsample(self, factor: int):
+    def downsample(self: M, factor: int) -> M:
         """Downsample the piano rolls by the given factor.
-
-        Attribute `resolution` will be updated accordingly as well.
 
         Parameters
         ----------
         factor : int
             Ratio of the original resolution to the desired resolution.
+
+        Returns
+        -------
+        Object itself.
+
+        Note
+        ----
+        Attribute `resolution` will also be updated accordingly.
 
         """
         if self.resolution % factor > 0:
@@ -392,118 +547,41 @@ class Multitrack:
             track.pianoroll = track.pianoroll[::factor]
         return self
 
-    def count_downbeat(self):
-        """Return the number of down beats.
-
-        The return value is calculated based solely on attribute
-        `downbeat`.
-
-        Returns
-        -------
-        int
-            Number of down beats.
-
-        """
-        return np.count_nonzero(self.downbeat)
-
-    def merge_tracks(
-        self,
-        track_indices: Optional[List[int]] = None,
-        mode: str = "sum",
-        program: int = 0,
-        is_drum: bool = False,
-        name: str = "merged",
-        remove_source: bool = False,
-    ):
-        """Merge certain tracks into a single track.
-
-        Merge the piano rolls of certain tracks (specified by
-        `track_indices`). The merged track will be appended to the end
-        of the track list.
-
-        Parameters
-        ----------
-        track_indices : list
-            Indices of tracks to be merged. Defaults to merge all the
-            tracks.
-        mode : {'sum', 'max', 'any'}
-            A string that indicates the merging strategy to apply along
-            the track axis. Default to 'sum'.
-
-            - In 'sum' mode, the merged piano roll is the sum of
-              the collected piano rolls. Note that for binarized piano
-              rolls, integer summation is performed.
-            - In 'max' mode, for each pixel, the maximum value among
-              the collected piano rolls is assigned to the merged piano
-              roll.
-            - In 'any' mode, the value of a pixel in the merged piano
-              roll is True if any of the collected piano rolls has
-              nonzero value at that pixel; False if all the collected
-              piano rolls are inactive (zero-valued) at that pixel.
-
-        program : int, 0-127, optional
-            Program number according to General MIDI specification [1].
-            Defaults to 0 (Acoustic Grand Piano).
-        is_drum : bool, optional
-            Whether it is a percussion track. Defaults to False.
-        name : str, optional
-            Track name. Defaults to `merged`.
-        remove_source : bool
-            Whether to remove the source tracks from the track list.
-            Defaults to False.
-
-        References
-        ----------
-        1. https://www.midi.org/specifications/item/gm-level-1-sound-set
-
-        """
-        if mode not in ("max", "sum", "any"):
-            raise ValueError("`mode` must be one of {'max', 'sum', 'any'}.")
-
-        merged = self[track_indices].get_merged_pianoroll(mode)
-
-        merged_track = Track(
-            program=program, is_drum=is_drum, name=name, pianoroll=merged
-        )
-        self.tracks.append(merged_track)
-
-        if remove_source:
-            if track_indices is None:
-                self.remove_tracks(list(range(len(self.tracks) - 1)))
-            else:
-                self.remove_tracks(track_indices)
-
-        return self
-
-    def pad(self, pad_length):
-        """Pad the piano rolls with zeros.
+    def pad(self: M, pad_length) -> M:
+        """Pad the piano rolls.
 
         Notes
         -----
         The lengths of the resulting piano rolls are not guaranteed to
-        be the same. See :meth:`pypianoroll.Multitrack.pad_to_same`.
+        be the same.
 
         Parameters
         ----------
         pad_length : int
-            Length to pad along the time axis with zeros.
+            Length to pad along the time axis.
+
+        Returns
+        -------
+        Object itself.
+
+        See Also
+        --------
+        :meth:`pypianoroll.Multitrack.pad_to_multiple` : Pad the piano
+          rolls so that their lengths are some multiples.
+        :meth:`pypianoroll.Multitrack.pad_to_same` : Pad the piano rolls
+          so that they have the same length.
 
         """
         for track in self.tracks:
             track.pad(pad_length)
         return self
 
-    def pad_to_multiple(self, factor: int):
-        """Pad the piano rolls along the time axis to a multiple.
+    def pad_to_multiple(self: M, factor: int) -> M:
+        """Pad the piano rolls so that their lengths are some multiples.
 
-        Pad the piano rolls with zeros at the end along the time axis
+        Pad the piano rolls at the end along the time axis
         of the minimum length that makes the lengths of the resulting
         piano rolls multiples of `factor`.
-
-        Notes
-        -----
-        The resulting piano roll lengths are not guaranteed to be the
-        same. See :meth:`pypianoroll.Multitrack.pad_to_same`.
 
         Parameters
         ----------
@@ -511,16 +589,36 @@ class Multitrack:
             The value which the length of the resulting piano rolls will
             be a multiple of.
 
+        Returns
+        -------
+        Object itself.
+
+        See Also
+        --------
+        :meth:`pypianoroll.Multitrack.pad` : Pad the piano rolls.
+        :meth:`pypianoroll.Multitrack.pad_to_same` : Pad the piano rolls
+          so that they have the same length.
+
         """
         for track in self.tracks:
             track.pad_to_multiple(factor)
         return self
 
-    def pad_to_same(self):
-        """Pad piano rolls along the time axis to have the same length.
+    def pad_to_same(self: M) -> M:
+        """Pad the piano rolls so that they have the same length.
 
-        Pad shorter piano rolls with zeros at the end along the time
+        Pad shorter piano rolls at the end along the time
         axis so that the resulting piano rolls have the same length.
+
+        Returns
+        -------
+        Object itself.
+
+        See Also
+        --------
+        :meth:`pypianoroll.Multitrack.pad` : Pad the piano rolls.
+        :meth:`pypianoroll.Multitrack.pad_to_multiple` : Pad the piano
+          rolls so that their lengths are some multiples.
 
         """
         max_length = self.get_max_length()
@@ -529,49 +627,38 @@ class Multitrack:
                 track.pad(max_length - track.pianoroll.shape[0])
         return self
 
-    def remove_empty_tracks(self):
-        """Remove tracks with empty pianorolls."""
-        self.remove_tracks(self.get_empty_tracks())
-
-    def remove_tracks(self, track_indices: List[int]):
-        """Remove certain tracks.
-
-        Parameters
-        ----------
-        track_indices : list
-            Indices of the tracks to remove.
-
-        """
-        if isinstance(track_indices, int):
-            track_indices = [track_indices]
-        self.tracks = [
-            track
-            for idx, track in enumerate(self.tracks)
-            if idx not in track_indices
-        ]
-        return self
-
-    def transpose(self, semitone: int):
+    def transpose(self: M, semitone: int) -> M:
         """Transpose the piano rolls by a number of semitones.
-
-        Positive values are for a higher key, while negative values are
-        for a lower key. Drum tracks are ignored.
 
         Parameters
         ----------
         semitone : int
-            Number of semitones to transpose the piano rolls.
+            Number of semitones to transpose. A positive value raises
+            the pitches, while a negative value lowers the pitches.
+
+        Returns
+        -------
+        Object itself.
+
+        Notes
+        -----
+        Drum tracks are skipped.
 
         """
         for track in self.tracks:
             if not track.is_drum:
                 track.transpose(semitone)
+        return self
 
-    def trim_trailing_silence(self):
+    def trim_trailing_silence(self: M) -> M:
         """Trim the trailing silences of the piano rolls.
 
         All the piano rolls will have the same length after the
         trimming.
+
+        Returns
+        -------
+        Object itself.
 
         """
         active_length = self.get_active_length()
@@ -587,6 +674,14 @@ class Multitrack:
         """
         save(path, self, compressed=compressed)
 
+    def write(self, path: str):
+        """Write to a MIDI file.
+
+        Refer to :func:`pypianoroll.write` for full documentation.
+
+        """
+        return write(path, self)
+
     def to_pretty_midi(self, **kwargs):
         """Return as a PrettyMIDI object.
 
@@ -595,14 +690,6 @@ class Multitrack:
 
         """
         return to_pretty_midi(self, **kwargs)
-
-    def write(self, path: str):
-        """Write to a MIDI file.
-
-        Refer to :func:`pypianoroll.write` for full documentation.
-
-        """
-        return write(path, self)
 
     def plot(self, **kwargs):
         """Plot the multitrack and/or save a plot of it.

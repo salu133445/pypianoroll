@@ -2,19 +2,28 @@
 import numpy as np
 from pytest import fixture
 
-from pypianoroll import Track
+from pypianoroll import BinaryTrack, StandardTrack
 
 
 @fixture
 def track():
     pianoroll = np.zeros((96, 128), np.uint8)
     pianoroll[:95, [60, 64, 67, 72, 76, 79, 84]] = 100
-    return Track(program=0, is_drum=False, name="test", pianoroll=pianoroll)
+    return StandardTrack(
+        program=0, is_drum=False, name="test", pianoroll=pianoroll
+    )
+
+
+def test_repr(track):
+    assert repr(track) == (
+        "StandardTrack(name='test', program=0, is_drum=False, "
+        "pianoroll=array(shape=(96, 128)))"
+    )
 
 
 def test_slice(track):
     sliced = track[20:40]
-    assert isinstance(sliced, Track)
+    assert isinstance(sliced, StandardTrack)
     assert sliced.pianoroll.shape == (20, 128)
 
 
@@ -24,14 +33,10 @@ def test_assign_constant(track):
 
 
 def test_binarize(track):
-    track.binarize()
-    assert np.issubdtype(track.pianoroll.dtype, np.bool_)
-    assert track.pianoroll[0, 60]
-    assert not track.pianoroll[0, 0]
-
-
-def test_is_binarized(track):
-    assert not track.is_binarized()
+    binarized = track.binarize()
+    assert binarized.pianoroll.dtype == np.bool_
+    assert binarized.pianoroll[0, 60]
+    assert not binarized.pianoroll[0, 0]
 
 
 def test_clip(track):
@@ -72,14 +77,25 @@ def trim_trailing_silence(track):
 def binary_track():
     pianoroll = np.zeros((96, 128), bool)
     pianoroll[:95, [60, 64, 67, 72]] = True
-    return Track(program=0, is_drum=False, name="test", pianoroll=pianoroll)
+    return BinaryTrack(
+        program=0, is_drum=True, name="test", pianoroll=pianoroll
+    )
 
 
-def test_assign_constant_binary_track(binary_track):
-    binary_track.assign_constant(50.0)
-    assert np.issubdtype(binary_track.pianoroll.dtype, np.floating)
-    assert binary_track.pianoroll[0, 60] == 50.0
+def test_repr_binary(binary_track):
+    assert repr(binary_track) == (
+        "BinaryTrack(program=0, is_drum=True, name='test', "
+        "pianoroll=array(shape=(96, 128)))"
+    )
 
 
-def test_is_binarized_binary_track(binary_track):
-    assert binary_track.is_binarized()
+def test_slice_binary(binary_track):
+    sliced = binary_track[20:40]
+    assert isinstance(sliced, BinaryTrack)
+    assert sliced.pianoroll.shape == (20, 128)
+
+
+def test_assign_constant_binary(binary_track):
+    track = binary_track.assign_constant(50)
+    assert track.pianoroll.dtype == np.uint8
+    assert track.pianoroll[0, 60] == 50
