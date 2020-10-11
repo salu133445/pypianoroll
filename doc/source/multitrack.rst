@@ -6,3 +6,4 @@ Pypianoroll provides the `pypianoroll.Multitrack` class for handling multitrack 
 
 .. autoclass:: pypianoroll.Multitrack
     :noindex:
+    :inherited-members:

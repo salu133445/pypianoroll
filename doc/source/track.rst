@@ -7,3 +7,4 @@ piano rolls.
 
 .. autoclass:: pypianoroll.Track
     :noindex:
+    :inherited-members:
