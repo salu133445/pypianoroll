@@ -57,7 +57,7 @@ def plot_pianoroll(
     ----------
     ax : :class:`matplotlib.axes.Axes`
         Axes to plot the piano roll on.
-    pianoroll : ndarray, shape=(?, 128) or (?, 128, 3) or (?, 128, 4)
+    pianoroll : ndarray, shape=(?, 128), (?, 128, 3) or (?, 128, 4)
         Piano roll to plot. For a 3D piano-roll array, the last axis can
         be either RGB or RGBA.
     is_drum : bool

@@ -2,9 +2,7 @@
 Visualization
 =============
 
-Pypianoroll supports visualizing piano rolls.
-
-Here are some examples.
+Pypianoroll provides tools for visualizing piano rolls. Here are some examples.
 
 .. image:: images/visualization_track.png
     :alt: Track visualization
@@ -14,9 +12,6 @@ Here are some examples.
 
 .. image:: images/visualization_multitrack_closeup.png
     :alt: Multitrack visualization closeup
-
-.. note::
-    We assume the piano roll is in symbolic timing. You may visualize traditional piano rolls in absolute timing by setting up x-axis properties in the plotting function.
 
 
 Functions
