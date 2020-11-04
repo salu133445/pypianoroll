@@ -79,7 +79,7 @@ Here is how saving and loading works (see `here <save_load.html>`_ for details).
     # Load the .npz file to a `pypianoroll.Multitrack` instance
     loaded = multitrack.load('test.npz')
 
-And here is how to parse and write MIDI files. Pypianoroll currently supports only MIDI files (see `here <parse_write.html>_` for details).
+And here is how to parse and write MIDI files. Pypianoroll currently supports only MIDI files (see `here <read_write.html>_` for details).
 
 .. code-block:: python
 
