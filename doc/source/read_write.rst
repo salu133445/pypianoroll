@@ -24,5 +24,4 @@ Functions
     :noindex:
 
 .. note::
-    Writing the tempo array and downbeat array to tempo change and time
-    signature change events are not supported yet.
+    Writing the tempo array and downbeat array to tempo change and time signature change events are not supported yet.

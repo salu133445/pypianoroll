@@ -2,8 +2,7 @@
 Track Class
 ===========
 
-Pypianoroll provides the `pypianoroll.Track` class for handling single-track
-piano rolls.
+Pypianoroll provides the `pypianoroll.Track`, `pypianoroll.BinaryTrack` and `pypianoroll.StandardTrack` classes for handling single-track piano rolls.
 
 .. autoclass:: pypianoroll.Track
     :noindex:

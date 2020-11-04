@@ -5,17 +5,11 @@ Getting Started
 Objects
 =======
 
-The main objects in Pypianoroll are :class:`pypianoroll.Multitrack` and
-:class:`pypianoroll.Track` objects.
+The main objects in Pypianoroll are :class:`pypianoroll.Multitrack` and :class:`pypianoroll.Track` objects.
 
-A :class:`pypianoroll.Track` object is composed of a piano roll matrix and
-additional track information (program number, drum indicator and its name).
+A :class:`pypianoroll.Track` object is composed of a piano roll matrix and metadata, including program number, drum indicator and name.
 
-A :class:`pypianoroll.Multitrack` object consists of a list of
-:class:`pypianoroll.Track` objects and additional and multitrack information
-(tempo and down beat information and its name).
-
-For more details, see `here <../multitrack>` and `here <../track>`.
+A :class:`pypianoroll.Multitrack` object consists of a list of :class:`pypianoroll.Track` objects, tempo array, downbeat array and metadata.
 
 
 Examples
@@ -75,7 +69,7 @@ Here's what the output should look like.
 .. image:: images/example_multitrack_plot.png
     :align: center
 
-Here is how saving and loading works. (For more details, see `here <../save_load>`)
+Here is how saving and loading works (see `here <../save_load>` for details).
 
 .. code-block:: python
 
@@ -85,8 +79,7 @@ Here is how saving and loading works. (For more details, see `here <../save_load
     # Load the .npz file to a `pypianoroll.Multitrack` instance
     loaded = multitrack.load('test.npz')
 
-And here is how to parse and write MIDI files. Pypianoroll currently supports
-only MIDI files. (For more details, see `here <../parse_write>`)
+And here is how to parse and write MIDI files. Pypianoroll currently supports only MIDI files (see `here <../parse_write>` for details).
 
 .. code-block:: python
 

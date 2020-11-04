@@ -164,14 +164,9 @@
 <h1>Getting Started<a class="headerlink" href="#getting-started" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="objects">
 <h2>Objects<a class="headerlink" href="#objects" title="Permalink to this headline">¶</a></h2>
-<p>The main objects in Pypianoroll are <a class="reference internal" href="doc.html#pypianoroll.Multitrack" title="pypianoroll.Multitrack"><code class="xref py py-class docutils literal notranslate"><span class="pre">pypianoroll.Multitrack</span></code></a> and
-<a class="reference internal" href="doc.html#pypianoroll.Track" title="pypianoroll.Track"><code class="xref py py-class docutils literal notranslate"><span class="pre">pypianoroll.Track</span></code></a> objects.</p>
-<p>A <a class="reference internal" href="doc.html#pypianoroll.Track" title="pypianoroll.Track"><code class="xref py py-class docutils literal notranslate"><span class="pre">pypianoroll.Track</span></code></a> object is composed of a piano roll matrix and
-additional track information (program number, drum indicator and its name).</p>
-<p>A <a class="reference internal" href="doc.html#pypianoroll.Multitrack" title="pypianoroll.Multitrack"><code class="xref py py-class docutils literal notranslate"><span class="pre">pypianoroll.Multitrack</span></code></a> object consists of a list of
-<a class="reference internal" href="doc.html#pypianoroll.Track" title="pypianoroll.Track"><code class="xref py py-class docutils literal notranslate"><span class="pre">pypianoroll.Track</span></code></a> objects and additional and multitrack information
-(tempo and down beat information and its name).</p>
-<p>For more details, see <cite>here &lt;../multitrack&gt;</cite> and <cite>here &lt;../track&gt;</cite>.</p>
+<p>The main objects in Pypianoroll are <a class="reference internal" href="doc.html#pypianoroll.Multitrack" title="pypianoroll.Multitrack"><code class="xref py py-class docutils literal notranslate"><span class="pre">pypianoroll.Multitrack</span></code></a> and <a class="reference internal" href="doc.html#pypianoroll.Track" title="pypianoroll.Track"><code class="xref py py-class docutils literal notranslate"><span class="pre">pypianoroll.Track</span></code></a> objects.</p>
+<p>A <a class="reference internal" href="doc.html#pypianoroll.Track" title="pypianoroll.Track"><code class="xref py py-class docutils literal notranslate"><span class="pre">pypianoroll.Track</span></code></a> object is composed of a piano roll matrix and metadata, including program number, drum indicator and name.</p>
+<p>A <a class="reference internal" href="doc.html#pypianoroll.Multitrack" title="pypianoroll.Multitrack"><code class="xref py py-class docutils literal notranslate"><span class="pre">pypianoroll.Multitrack</span></code></a> object consists of a list of <a class="reference internal" href="doc.html#pypianoroll.Track" title="pypianoroll.Track"><code class="xref py py-class docutils literal notranslate"><span class="pre">pypianoroll.Track</span></code></a> objects, tempo array, downbeat array and metadata.</p>
 </div>
 <div class="section" id="examples">
 <h2>Examples<a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h2>
@@ -219,7 +214,7 @@ additional track information (program number, drum indicator and its name).</p>
 </div>
 <p>Here’s what the output should look like.</p>
 <img alt="_images/example_multitrack_plot.png" class="align-center" src="_images/example_multitrack_plot.png" />
-<p>Here is how saving and loading works. (For more details, see <cite>here &lt;../save_load&gt;</cite>)</p>
+<p>Here is how saving and loading works (see <cite>here &lt;../save_load&gt;</cite> for details).</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Save the `pypianoroll.Multitrack` instance to a .npz file</span>
 <span class="n">multitrack</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s1">&#39;test.npz&#39;</span><span class="p">)</span>
 
@@ -227,8 +222,7 @@ additional track information (program number, drum indicator and its name).</p>
 <span class="n">loaded</span> <span class="o">=</span> <span class="n">multitrack</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s1">&#39;test.npz&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>And here is how to parse and write MIDI files. Pypianoroll currently supports
-only MIDI files. (For more details, see <cite>here &lt;../parse_write&gt;</cite>)</p>
+<p>And here is how to parse and write MIDI files. Pypianoroll currently supports only MIDI files (see <cite>here &lt;../parse_write&gt;</cite> for details).</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Read a MIDI file to a `pypianoroll.Multitrack` instance</span>
 <span class="n">multitrack</span> <span class="o">=</span> <span class="n">multitrack</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s1">&#39;test.mid&#39;</span><span class="p">)</span>
 

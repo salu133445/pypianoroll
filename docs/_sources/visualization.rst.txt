@@ -2,8 +2,7 @@
 Visualization
 =============
 
-Pypianoroll supports visualizing piano rolls and creating piano-roll
-animations.
+Pypianoroll supports visualizing piano rolls.
 
 Here are some examples.
 

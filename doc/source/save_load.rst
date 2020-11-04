@@ -12,8 +12,7 @@ Functions
     :noindex:
 
 .. note::
-    The saved .npz file is basically a zip archive which contains the following
-    files:
+    The saved .npz file is basically a zip archive which contains the following files:
 
     - component arrays of the piano rolls in compressed sparse column format:
 
