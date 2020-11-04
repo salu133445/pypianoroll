@@ -5,13 +5,14 @@ from .multitrack import Multitrack
 from .track import BinaryTrack, StandardTrack, Track
 
 __all__ = [
-    "assign_constant",
     "binarize",
     "clip",
     "pad",
     "pad_to_multiple",
     "pad_to_same",
     "plot",
+    "set_nonzeros",
+    "set_resolution",
     "transpose",
     "trim",
 ]
@@ -22,32 +23,33 @@ _StandardTrack = TypeVar("_StandardTrack", Multitrack, StandardTrack)
 
 
 @overload
-def assign_constant(obj: Multitrack, value: int) -> Multitrack:
+def set_nonzeros(obj: Multitrack, value: int) -> Multitrack:
     """Assign a constant value to all nonzeros entries."""
 
 
 @overload
-def assign_constant(
+def set_nonzeros(
     obj: Union[StandardTrack, BinaryTrack], value: int
 ) -> StandardTrack:
     """Assign a constant value to all nonzeros entries."""
 
 
-def assign_constant(
+def set_nonzeros(
     obj: Union[Multitrack, StandardTrack, BinaryTrack], value: int
 ):
     """Assign a constant value to all nonzeros entries.
 
     Arguments
     ---------
-    obj : :class:`pypianoroll.Multitrack` or
+    obj : :class:`pypianoroll.Multitrack`,
+      :class:`pypianoroll.StandardTrack` or
       :class:`pypianoroll.BinaryTrack`
         Object to modify.
     value : int
         Value to assign.
 
     """
-    return obj.assign_constant(value=value)
+    return obj.set_nonzeros(value=value)
 
 
 @overload
@@ -98,22 +100,26 @@ def clip(
     return obj.clip(lower=lower, upper=upper)
 
 
-def downsample(obj: _Multitrack, factor: int) -> _Multitrack:
+def set_resolution(
+    obj: _Multitrack, resolution: int, rounding: Optional[str] = "round"
+) -> _Multitrack:
     """Downsample the piano rolls by a factor.
 
     Parameters
     ----------
     obj : :class:`pypianoroll.Multitrack`
         Object to downsample.
-    factor : int
-        Ratio of the original resolution to the desired resolution.
+    resolution : int
+        Target resolution.
+    rounding : {'round', 'ceil', 'floor'}
+        Rounding mode. Defaults to 'round'.
 
     Returns
     -------
     Object itself.
 
     """
-    return obj.downsample(factor=factor)
+    return obj.set_resolution(resolution=resolution, rounding=rounding)
 
 
 def pad(obj: _MultitrackOrTrack, pad_length: int) -> _MultitrackOrTrack:
