@@ -10,16 +10,16 @@
 
 # Documents
 *.bibtex   text diff=bibtex
-*.doc	        diff=astextplain
-*.DOC	        diff=astextplain
-*.docx          diff=astextplain
-*.DOCX          diff=astextplain
-*.dot           diff=astextplain
-*.DOT           diff=astextplain
-*.pdf           diff=astextplain
-*.PDF           diff=astextplain
-*.rtf           diff=astextplain
-*.RTF	        diff=astextplain
+*.doc      diff=astextplain
+*.DOC      diff=astextplain
+*.docx     diff=astextplain
+*.DOCX     diff=astextplain
+*.dot      diff=astextplain
+*.DOT      diff=astextplain
+*.pdf      diff=astextplain
+*.PDF      diff=astextplain
+*.rtf      diff=astextplain
+*.RTF      diff=astextplain
 *.md       text
 *.tex      text diff=tex
 *.adoc     text
@@ -81,9 +81,10 @@
 .gitkeep       export-ignore
 .travis.yml    export-ignore
 .vscode        export-ignore
-doc/           export-ignore
-docs/          export-ignore
-tests/         export-ignore
+/doc           export-ignore
+/docs          export-ignore
+/examples      export-ignore
+/tests         export-ignore
 
 # Basic .gitattributes for a python repo.
 

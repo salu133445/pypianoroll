@@ -9,7 +9,6 @@ line_length = 79
 minversion = "6.0"
 addopts = "-ra -q"
 testpaths = "tests"
-env = "TF_CPP_MIN_LOG_LEVEL=1"
 
 [tool.pylint.master]
 ignore-patterns = "test_.*?py"

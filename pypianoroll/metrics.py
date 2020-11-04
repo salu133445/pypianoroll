@@ -13,8 +13,8 @@ Functions
 - tonal_distance
 
 """
-import math
-from typing import Sequence
+from math import nan
+from typing import Sequence, Tuple
 
 import numpy as np
 from numpy import ndarray
@@ -31,14 +31,14 @@ __all__ = [
 ]
 
 
-def _to_chroma(pianoroll: ndarray):
+def _to_chroma(pianoroll: ndarray) -> ndarray:
     """Return the unnormalized chroma features."""
     reshaped = pianoroll[:, :120].reshape(-1, 12, 10)
     reshaped[..., :8] += pianoroll[:, 120:].reshape(-1, 1, 8)
     return np.sum(reshaped, -1)
 
 
-def empty_beat_rate(pianoroll: ndarray, resolution: int):
+def empty_beat_rate(pianoroll: ndarray, resolution: int) -> float:
     r"""Return the ratio of empty beats.
 
     The empty-beat rate is defined as the ratio of the number of empty
@@ -60,12 +60,12 @@ def empty_beat_rate(pianoroll: ndarray, resolution: int):
     """
     reshaped = pianoroll.reshape(-1, resolution * pianoroll.shape[1])
     if len(reshaped) < 1:
-        return math.nan
+        return nan
     n_empty_beats = np.count_nonzero(reshaped.any(1))
     return n_empty_beats / len(reshaped)
 
 
-def n_pitches_used(pianoroll: ndarray):
+def n_pitches_used(pianoroll: ndarray) -> int:
     """Return the number of unique pitches used.
 
     Parameters
@@ -87,7 +87,7 @@ def n_pitches_used(pianoroll: ndarray):
     return np.count_nonzero(np.any(pianoroll, 0))
 
 
-def n_pitch_classes_used(pianoroll: ndarray):
+def n_pitch_classes_used(pianoroll: ndarray) -> int:
     """Return the number of unique pitch classes used.
 
     Parameters
@@ -106,11 +106,41 @@ def n_pitch_classes_used(pianoroll: ndarray):
       pitches used.
 
     """
-    chroma = _to_chroma(pianoroll)
-    return np.count_nonzero(np.any(chroma, 0))
+    return np.count_nonzero(_to_chroma(pianoroll).any(0))
 
 
-def qualified_note_rate(pianoroll: ndarray, threshold: float = 2):
+def pitch_range_tuple(pianoroll) -> Tuple[float, float]:
+    """Return the pitch range as a tuple `(lowest, highest)`.
+
+    Returns
+    -------
+    int or nan
+        Highest active pitch.
+    int or nan
+        Lowest active pitch.
+
+    """
+    nonzero = pianoroll.any(0).nonzero()[0]
+    if not nonzero.size:
+        return nan, nan
+    return nonzero[0], nonzero[-1]
+
+
+def pitch_range(pianoroll) -> float:
+    """Return the pitch range.
+
+    Returns
+    -------
+    int or nan
+        Pitch range (in semitones), i.e., difference between the
+        highest and the lowest active pitches.
+
+    """
+    lowest, highest = pitch_range_tuple(pianoroll)
+    return highest - lowest
+
+
+def qualified_note_rate(pianoroll: ndarray, threshold: float = 2) -> float:
     r"""Return the ratio of the number of the qualified notes.
 
     The qualified note rate is defined as the ratio of the number of
@@ -138,11 +168,11 @@ def qualified_note_rate(pianoroll: ndarray, threshold: float = 2):
 
     References
     ----------
-    [1] Hao-Wen Dong, Wen-Yi Hsiao, Li-Chia Yang, and Yi-Hsuan Yang,
-        "MuseGAN: Multi-track sequential generative adversarial networks
-        for symbolic music generation and accompaniment," in Proceedings
-        of the 32nd AAAI Conference on Artificial Intelligence (AAAI),
-        2018.
+    1. Hao-Wen Dong, Wen-Yi Hsiao, Li-Chia Yang, and Yi-Hsuan Yang,
+       "MuseGAN: Multi-track sequential generative adversarial networks
+       for symbolic music generation and accompaniment," in Proceedings
+       of the 32nd AAAI Conference on Artificial Intelligence (AAAI),
+       2018.
 
     """
     if np.issubdtype(pianoroll.dtype, np.bool_):
@@ -151,13 +181,13 @@ def qualified_note_rate(pianoroll: ndarray, threshold: float = 2):
     diff = np.diff(padded, axis=0).reshape(-1)
     onsets = (diff > 0).nonzero()[0]
     if len(onsets) < 1:
-        return math.nan
+        return nan
     offsets = (diff < 0).nonzero()[0]
     n_qualified_notes = np.count_nonzero(offsets - onsets >= threshold)
     return n_qualified_notes / len(onsets)
 
 
-def polyphonic_rate(pianoroll: ndarray, threshold: float = 2):
+def polyphonic_rate(pianoroll: ndarray, threshold: float = 2) -> float:
     r"""Return the ratio of time steps where multiple pitches are on.
 
     The polyphony rate is defined as the ratio of the number of time
@@ -186,22 +216,22 @@ def polyphonic_rate(pianoroll: ndarray, threshold: float = 2):
 
     References
     ----------
-    [1] Hao-Wen Dong, Wen-Yi Hsiao, Li-Chia Yang, and Yi-Hsuan Yang,
-        "MuseGAN: Multi-track sequential generative adversarial networks
-        for symbolic music generation and accompaniment," in Proceedings
-        of the 32nd AAAI Conference on Artificial Intelligence (AAAI),
-        2018.
+    1. Hao-Wen Dong, Wen-Yi Hsiao, Li-Chia Yang, and Yi-Hsuan Yang,
+       "MuseGAN: Multi-track sequential generative adversarial networks
+       for symbolic music generation and accompaniment," in Proceedings
+       of the 32nd AAAI Conference on Artificial Intelligence (AAAI),
+       2018.
 
     """
     if len(pianoroll) < 1:
-        return math.nan
+        return nan
     n_poly = np.count_nonzero(np.count_nonzero(pianoroll, 1) > threshold)
     return n_poly / len(pianoroll)
 
 
 def drum_in_pattern_rate(
     pianoroll: ndarray, resolution: int, tolerance: float = 0.1
-):
+) -> float:
     r"""Return the ratio of drum notes in a certain drum pattern.
 
     The drum-in-pattern rate is defined as the ratio of the number of
@@ -229,11 +259,11 @@ def drum_in_pattern_rate(
 
     References
     ----------
-    [1] Hao-Wen Dong, Wen-Yi Hsiao, Li-Chia Yang, and Yi-Hsuan Yang,
-        "MuseGAN: Multi-track sequential generative adversarial networks
-        for symbolic music generation and accompaniment," in Proceedings
-        of the 32nd AAAI Conference on Artificial Intelligence (AAAI),
-        2018.
+    1. Hao-Wen Dong, Wen-Yi Hsiao, Li-Chia Yang, and Yi-Hsuan Yang,
+       "MuseGAN: Multi-track sequential generative adversarial networks
+       for symbolic music generation and accompaniment," in Proceedings
+       of the 32nd AAAI Conference on Artificial Intelligence (AAAI),
+       2018.
 
     """
     if resolution not in (4, 6, 8, 9, 12, 16, 18, 24):
@@ -266,7 +296,7 @@ def drum_in_pattern_rate(
     return n_in_pattern / np.count_nonzero(pianoroll)
 
 
-def _get_scale(root, mode):
+def _get_scale(root: int, mode: str) -> ndarray:
     """Return the scale mask for a specific root."""
     if mode == "major":
         a_scale_mask = np.array([0, 1, 1, 0, 1, 0, 1, 0, 1, 1, 0, 1], bool)
@@ -275,7 +305,9 @@ def _get_scale(root, mode):
     return np.roll(a_scale_mask, root)
 
 
-def in_scale_rate(pianoroll: ndarray, root: int = 3, mode: str = "major"):
+def in_scale_rate(
+    pianoroll: ndarray, root: int = 3, mode: str = "major"
+) -> float:
     r"""Return the ratio of pitches in a certain musical scale.
 
     The pitch-in-scale rate is defined as the ratio of the number of
@@ -307,11 +339,11 @@ def in_scale_rate(pianoroll: ndarray, root: int = 3, mode: str = "major"):
 
     References
     ----------
-    [1] Hao-Wen Dong, Wen-Yi Hsiao, Li-Chia Yang, and Yi-Hsuan Yang,
-        "MuseGAN: Multi-track sequential generative adversarial networks
-        for symbolic music generation and accompaniment," in Proceedings
-        of the 32nd AAAI Conference on Artificial Intelligence (AAAI),
-        2018.
+    1. Hao-Wen Dong, Wen-Yi Hsiao, Li-Chia Yang, and Yi-Hsuan Yang,
+       "MuseGAN: Multi-track sequential generative adversarial networks
+       for symbolic music generation and accompaniment," in Proceedings
+       of the 32nd AAAI Conference on Artificial Intelligence (AAAI),
+       2018.
 
     """
     chroma = _to_chroma(pianoroll)
@@ -320,7 +352,7 @@ def in_scale_rate(pianoroll: ndarray, root: int = 3, mode: str = "major"):
     return n_in_scale / np.count_nonzero(pianoroll)
 
 
-def _get_tonal_matrix(r1, r2, r3):
+def _get_tonal_matrix(r1, r2, r3) -> ndarray:
     """Return a tonal matrix for computing the tonal distance."""
     tonal_matrix = np.empty((6, 12))
     tonal_matrix[0] = r1 * np.sin(np.arange(12) * (7.0 / 6.0) * np.pi)
@@ -332,10 +364,12 @@ def _get_tonal_matrix(r1, r2, r3):
     return tonal_matrix
 
 
-def _to_tonal_space(pianoroll, resolution, tonal_matrix):
+def _to_tonal_space(
+    pianoroll: ndarray, resolution: int, tonal_matrix: ndarray
+) -> ndarray:
     """Return the tensor in tonal space (chroma normalized per beat)."""
-    beat_chroma = np.reshape(_to_chroma(pianoroll), (-1, resolution, 12))
-    beat_chroma = beat_chroma / np.sum(beat_chroma, 2, keepdims=True)
+    beat_chroma = _to_chroma(pianoroll).reshape((-1, resolution, 12))
+    beat_chroma = beat_chroma / beat_chroma.sum(2, keepdims=True)
     return np.matmul(tonal_matrix, beat_chroma.T).T
 
 
@@ -344,7 +378,7 @@ def tonal_distance(
     pianoroll_2: ndarray,
     resolution: int,
     radii: Sequence[float] = (1.0, 1.0, 0.5),
-):
+) -> float:
     """Return the tonal distance [1] between the two input piano rolls.
 
     Parameters
@@ -360,9 +394,9 @@ def tonal_distance(
 
     References
     ----------
-    [1] Christopher Harte, Mark Sandler, and Martin Gasser, "Detecting
-        harmonic change in musical audio," in Proceedings of the 1st ACM
-        workshop on Audio and music computing multimedia, 2006.
+    1. Christopher Harte, Mark Sandler, and Martin Gasser, "Detecting
+       harmonic change in musical audio," in Proceedings of the 1st ACM
+       workshop on Audio and music computing multimedia, 2006.
 
     """
     assert len(pianoroll_1) == len(

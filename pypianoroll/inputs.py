@@ -1,6 +1,7 @@
 """Input interfaces."""
 import json
-from typing import Optional
+from pathlib import Path
+from typing import Optional, Union
 
 import numpy as np
 from pretty_midi import PrettyMIDI
@@ -12,14 +13,14 @@ from .utils import reconstruct_sparse
 __all__ = ["load", "from_pretty_midi", "read"]
 
 
-def load(path: str):
+def load(path: Union[str, Path]) -> Multitrack:
     """Load a NPZ file into a Multitrack object.
 
     Supports only files previously saved by :func:`pypianoroll.save`.
 
     Parameters
     ----------
-    path : str
+    path : str or Path
         Path to the file to load.
 
     See Also
@@ -76,7 +77,7 @@ def from_pretty_midi(
     collect_onsets_only: bool = False,
     threshold: float = 0,
     first_beat_time: Optional[float] = None,
-):
+) -> Multitrack:
     """Return a Multitrack object converted from a PrettyMIDI object.
 
     Parse a :class:`pretty_midi.PrettyMIDI` object. The data type of the
@@ -86,7 +87,7 @@ def from_pretty_midi(
 
     Parameters
     ----------
-    midi : `pretty_midi.PrettyMIDI`
+    midi : :class:`pretty_midi.PrettyMIDI`
         PrettyMIDI object to parse.
     mode : {'max', 'sum'}
         Merging strategy for duplicate notes. Defaults to 'max'.
@@ -162,7 +163,7 @@ def from_pretty_midi(
             raise ValueError("`first_beat_time` must be a positive number.")
     else:
         raise ValueError(
-            "`algorithm` must be one of 'normal', 'strict' and 'custom'."
+            "`algorithm` must be one of 'normal', 'strict' or 'custom'."
         )
 
     # get tempo change event times and contents
@@ -293,9 +294,9 @@ def from_pretty_midi(
                     pianoroll[start:end, pitches[idx]] = maximum
 
         track = Track(
+            name=instrument.name,
             program=instrument.program,
             is_drum=instrument.is_drum,
-            name=instrument.name,
             pianoroll=pianoroll,
         )
         tracks.append(track)
@@ -305,15 +306,16 @@ def from_pretty_midi(
     )
 
 
-def read(path: str, **kwargs):
+def read(path: Union[str, Path], **kwargs) -> Multitrack:
     """Read a MIDI file into a Multitrack object.
-
-    See :meth:`pypianoroll.from_pretty_midi` for full documentation.
 
     Parameters
     ----------
     path : str or Path
         Path to the file to read.
+    **kwargs
+        Keyword arguments to pass to
+        :func:`pypianoroll.from_pretty_midi`.
 
     See Also
     --------
@@ -322,5 +324,4 @@ def read(path: str, **kwargs):
     :func:`pypianoroll.load` : Load a NPZ file into a Multitrack object.
 
     """
-    pm = PrettyMIDI(path)
-    return from_pretty_midi(pm, **kwargs)
+    return from_pretty_midi(PrettyMIDI(str(path)), **kwargs)

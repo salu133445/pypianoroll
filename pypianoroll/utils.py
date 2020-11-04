@@ -1,8 +1,11 @@
 """Utility functions."""
+from typing import Dict
+
+from numpy import ndarray
 from scipy.sparse import csc_matrix
 
 
-def decompose_sparse(matrix, name):
+def decompose_sparse(matrix: ndarray, name: str) -> Dict[str, ndarray]:
     """Decompose a matrix to sparse components.
 
     Convert a matrix to a :class:`scipy.sparse.csc_matrix` object.
@@ -19,7 +22,7 @@ def decompose_sparse(matrix, name):
     }
 
 
-def reconstruct_sparse(data_dict, name):
+def reconstruct_sparse(data_dict: Dict[str, ndarray], name: str) -> ndarray:
     """Reconstruct a matrix from a dictionary."""
     sparse_matrix = csc_matrix(
         (

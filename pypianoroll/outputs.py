@@ -3,11 +3,14 @@ import json
 import zipfile
 from copy import deepcopy
 from operator import attrgetter
-from typing import TYPE_CHECKING, Dict, Optional
+from pathlib import Path
+from typing import TYPE_CHECKING, Dict, Optional, Union
 
 import numpy as np
 import pretty_midi
+from pretty_midi import Instrument, PrettyMIDI
 
+from .track import BinaryTrack, StandardTrack
 from .utils import decompose_sparse
 
 if TYPE_CHECKING:
@@ -16,12 +19,14 @@ if TYPE_CHECKING:
 DEFAULT_TEMPO = 120
 
 
-def save(path: str, multitrack: "Multitrack", compressed: bool = True):
+def save(
+    path: Union[str, Path], multitrack: "Multitrack", compressed: bool = True
+):
     """Save a Multitrack object to a NPZ file.
 
     Parameters
     ----------
-    path : str
+    path : str or Path
         Path to the NPZ file to save.
     multitrack : :class:`pypianoroll.Multitrack`
         Multitrack to save.
@@ -62,8 +67,6 @@ def save(path: str, multitrack: "Multitrack", compressed: bool = True):
             "name": track.name,
         }
 
-    if not path.endswith(".npz"):
-        path += ".npz"
     if compressed:
         np.savez_compressed(path, **array_dict)
     else:
@@ -78,7 +81,7 @@ def to_pretty_midi(
     multitrack: "Multitrack",
     default_tempo: Optional[float] = None,
     default_velocity: int = 64,
-):
+) -> PrettyMIDI:
     """Return a Multitrack object as a PrettyMIDI object.
 
     Notes
@@ -114,20 +117,25 @@ def to_pretty_midi(
         tempo = DEFAULT_TEMPO
 
     # Create a PrettyMIDI instance
-    midi = pretty_midi.PrettyMIDI(initial_tempo=tempo)
+    midi = PrettyMIDI(initial_tempo=tempo)
 
     # Compute length of a time step
     time_step_length = 60.0 / tempo / multitrack.resolution
 
     for track in multitrack.tracks:
-        instrument = pretty_midi.Instrument(
+        instrument = Instrument(
             program=track.program, is_drum=track.is_drum, name=track.name
         )
-        copied = deepcopy(track)
-        if copied.is_binarized():
-            copied.assign_constant(default_velocity)
-        copied.clip()
-        clipped = copied.pianoroll.astype(np.uint8)
+        if isinstance(track, BinaryTrack):
+            processed = track.set_nonzeros(default_velocity)
+        elif isinstance(track, StandardTrack):
+            copied = deepcopy(track)
+            processed = copied.clip()
+        else:
+            raise ValueError(
+                f"Expect BinaryTrack or StandardTrack, but got {type(track)}."
+            )
+        clipped = processed.pianoroll.astype(np.uint8)
         binarized = clipped > 0
         padded = np.pad(binarized, ((1, 1), (0, 0)), "constant")
         diff = np.diff(padded.astype(np.int8), axis=0)
@@ -172,7 +180,4 @@ def write(path: str, multitrack: "Multitrack"):
     :func:`pypianoroll.save` : Save a Multitrack object to a NPZ file.
 
     """
-    if not path.lower().endswith((".mid", ".midi")):
-        path = path + ".mid"
-    midi = to_pretty_midi(multitrack)
-    midi.write(path)
+    return to_pretty_midi(multitrack).write(str(path))

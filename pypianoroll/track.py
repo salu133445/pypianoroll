@@ -14,7 +14,7 @@ Variables
 - DEFAULT_IS_DRUM
 
 """
-from typing import Optional, Tuple, TypeVar
+from typing import Optional, TypeVar
 
 import numpy as np
 from numpy import ndarray
@@ -32,8 +32,8 @@ __all__ = [
 DEFAULT_PROGRAM = 0
 DEFAULT_IS_DRUM = False
 
-T = TypeVar("T", bound="Track")
-ST = TypeVar("ST", bound="StandardTrack")
+_Track = TypeVar("_Track", bound="Track")
+_StandardTrack = TypeVar("_StandardTrack", bound="StandardTrack")
 
 
 class Track:
@@ -41,13 +41,13 @@ class Track:
 
     Attributes
     ----------
+    name : str, optional
+        Track name.
     program : int, 0-127, optional
         Program number according to General MIDI specification [1].
         Defaults to 0 (Acoustic Grand Piano).
     is_drum : bool, optional
         Whether it is a percussion track. Defaults to False.
-    name : str, optional
-        Track name.
     pianoroll : ndarray, shape=(?, 128), optional
         Piano-roll matrix. The first dimension represents time, and the
         second dimension represents pitch.
@@ -69,7 +69,7 @@ class Track:
         self.program = program if program is not None else DEFAULT_PROGRAM
         self.is_drum = is_drum if is_drum is not None else DEFAULT_IS_DRUM
         if pianoroll is None:
-            self.pianoroll = np.array([])
+            self.pianoroll = np.zeros((0, 128))
         else:
             self.pianoroll = np.asarray(pianoroll)
 
@@ -82,9 +82,15 @@ class Track:
         ]
         return f"Track({', '.join(to_join)})"
 
+    def __len__(self) -> int:
+        return len(self.pianoroll)
+
+    def __getitem__(self, key) -> ndarray:
+        return self.pianoroll[key]
+
     def _validate_type(self, attr):
         if getattr(self, attr) is None:
-            if attr in ("program", "is_drum"):
+            if attr in ("program", "is_drum", "pianoroll"):
                 raise TypeError(f"`{attr}` must not be None.")
             return
         if attr == "program":
@@ -132,6 +138,10 @@ class Track:
         return self
 
     def _validate(self, attr):
+        if getattr(self, attr) is None:
+            if attr in ("program", "is_drum", "pianoroll"):
+                raise TypeError(f"`{attr}` must not be None.")
+            return
         self._validate_type(attr)
         if attr == "program":
             if self.program < 0 or self.program > 127:
@@ -206,7 +216,7 @@ class Track:
             return False
         return True
 
-    def get_active_length(self) -> int:
+    def get_length(self) -> int:
         """Return the active length of the piano roll.
 
         Returns
@@ -218,40 +228,28 @@ class Track:
         """
         nonzero_steps = np.any(self.pianoroll, axis=1)
         inv_last_nonzero_step = np.argmax(np.flip(nonzero_steps, axis=0))
-        active_length = self.pianoroll.shape[0] - inv_last_nonzero_step
-        return active_length
+        return self.pianoroll.shape[0] - inv_last_nonzero_step
 
-    def get_active_pitch_range(self) -> Tuple[int, int]:
-        """Return the active pitch range as a tuple (lowest, highest).
+    def copy(self):
+        """Return a copy of the track.
 
         Returns
         -------
-        int
-            Lowest active pitch in the piano roll.
-        int
-            Highest active pitch in the piano roll.
+        A copy of the object itself.
+
+        Notes
+        -----
+        The piano-roll array is copied using :func:`numpy.copy`.
 
         """
-        if self.pianoroll.shape[1] < 1:
-            raise ValueError(
-                "Cannot compute the active pitch range for an empty piano roll"
-            )
-        lowest = 0
-        highest = 127
-        while lowest < highest:
-            if np.any(self.pianoroll[:, lowest]):
-                break
-            lowest += 1
-        if lowest == highest:
-            raise ValueError(
-                "Cannot compute the active pitch range for an empty piano roll"
-            )
-        while not np.any(self.pianoroll[:, highest]):
-            highest -= 1
+        return Track(
+            name=self.name,
+            program=self.program,
+            is_drum=self.is_drum,
+            pianoroll=self.pianoroll.copy(),
+        )
 
-        return lowest, highest
-
-    def pad(self: T, pad_length: int) -> T:
+    def pad(self: _Track, pad_length: int) -> _Track:
         """Pad the piano roll.
 
         Parameters
@@ -274,12 +272,12 @@ class Track:
         )
         return self
 
-    def pad_to_multiple(self: T, factor: int) -> T:
+    def pad_to_multiple(self: _Track, factor: int) -> _Track:
         """Pad the piano roll so that its length is some multiple.
 
-        Pad the piano roll at the end along the time axis of
-        the minimum length that makes the length of the resulting piano
-        roll a multiple of `factor`.
+        Pad the piano roll at the end along the time axis of the minimum
+        length that makes the length of the resulting piano roll a
+        multiple of `factor`.
 
         Parameters
         ----------
@@ -302,7 +300,7 @@ class Track:
             self.pianoroll = np.pad(self.pianoroll, pad_width, "constant")
         return self
 
-    def transpose(self: T, semitone: int) -> T:
+    def transpose(self: _Track, semitone: int) -> _Track:
         """Transpose the piano roll by a number of semitones.
 
         Parameters
@@ -328,17 +326,50 @@ class Track:
             self.pianoroll[:, (128 + semitone) :] = 0
         return self
 
-    def trim_trailing_silence(self: T) -> T:
-        """Trim the trailing silence of the piano roll.
+    def trim(
+        self: _Track, start: Optional[int] = None, end: Optional[int] = None
+    ) -> _Track:
+        """Trim the piano roll.
+
+        Parameters
+        ----------
+        start : int, optional
+            Start time. Defaults to 0.
+        end : int, optional
+            End time. Defaults to active length.
 
         Returns
         -------
         Object itself.
 
         """
-        length = self.get_active_length()
-        self.pianoroll = self.pianoroll[:length]
+        if start is None:
+            start = 0
+        elif start < 0:
+            raise ValueError("`start` must be nonnegative.")
+        if end is None:
+            end = self.get_length()
+        elif end > len(self.pianoroll):
+            raise ValueError(
+                "`end` must be shorter than the piano roll length."
+            )
+        self.pianoroll = self.pianoroll[start:end]
         return self
+
+    def standardize(self: "Track") -> "StandardTrack":
+        """Standardize the track.
+
+        Returns
+        -------
+        Converted StandardTrack object.
+
+        """
+        return StandardTrack(
+            name=self.name,
+            program=self.program,
+            is_drum=self.is_drum,
+            pianoroll=self.pianoroll,
+        )
 
     def plot(self, **kwargs):
         """Plot the piano roll.
@@ -354,13 +385,13 @@ class StandardTrack(Track):
 
     Attributes
     ----------
+    name : str, optional
+        Track name.
     program : int, 0-127, optional
         Program number according to General MIDI specification [1].
         Defaults to 0 (Acoustic Grand Piano).
     is_drum : bool, optional
         Whether it is a percussion track. Defaults to False.
-    name : str, optional
-        Track name.
     pianoroll : ndarray, dtype=uint8, shape=(?, 128), optional
         Piano-roll matrix. The first dimension represents time, and the
         second dimension represents pitch. Cast to uint8 if not of data
@@ -374,13 +405,14 @@ class StandardTrack(Track):
 
     def __init__(
         self,
-        program: int = 0,
-        is_drum: bool = False,
         name: Optional[str] = None,
+        program: Optional[int] = None,
+        is_drum: Optional[bool] = None,
         pianoroll: Optional[ndarray] = None,
     ):
         super().__init__(name, program, is_drum, pianoroll)
-        self.pianoroll = self.pianoroll.astype(np.uint8)
+        if self.pianoroll.dtype != np.uint8:
+            self.pianoroll = self.pianoroll.astype(np.uint8)
 
     def __repr__(self):
         to_join = [
@@ -406,7 +438,7 @@ class StandardTrack(Track):
                 "`pianoroll` must contain only integers between 0 to 127."
             )
 
-    def assign_constant(self: ST, value: int) -> ST:
+    def set_nonzeros(self: _StandardTrack, value: int) -> _StandardTrack:
         """Assign a constant value to all nonzeros entries.
 
         Arguments
@@ -422,27 +454,9 @@ class StandardTrack(Track):
         self.pianoroll[self.pianoroll.nonzero()] = value
         return self
 
-    def binarize(self, threshold: float = 0) -> "BinaryTrack":
-        """Binarize the piano roll.
-
-        Parameters
-        ----------
-        threshold : int or float
-            Threshold for binarizing the piano roll. Defaults to 0.
-
-        Returns
-        -------
-        Object itself.
-
-        """
-        return BinaryTrack(
-            program=self.program,
-            is_drum=self.is_drum,
-            name=self.name,
-            pianoroll=(self.pianoroll > threshold),
-        )
-
-    def clip(self: ST, lower: int = 0, upper: int = 127) -> ST:
+    def clip(
+        self: _StandardTrack, lower: int = 0, upper: int = 127
+    ) -> _StandardTrack:
         """Clip (limit) the the piano roll into [`lower`, `upper`].
 
         Parameters
@@ -464,19 +478,39 @@ class StandardTrack(Track):
         self.pianoroll = self.pianoroll.clip(lower, upper)
         return self
 
+    def binarize(self, threshold: float = 0) -> "BinaryTrack":
+        """Binarize the piano roll.
+
+        Parameters
+        ----------
+        threshold : int or float
+            Threshold. Defaults to 0.
+
+        Returns
+        -------
+        Converted Binary object.
+
+        """
+        return BinaryTrack(
+            program=self.program,
+            is_drum=self.is_drum,
+            name=self.name,
+            pianoroll=(self.pianoroll > threshold),
+        )
+
 
 class BinaryTrack(Track):
     """A container for single-track, binary piano rolls.
 
     Attributes
     ----------
+    name : str, optional
+        Track name.
     program : int, 0-127, optional
         Program number according to General MIDI specification [1].
         Defaults to 0 (Acoustic Grand Piano).
     is_drum : bool, optional
         Whether it is a percussion track. Defaults to False.
-    name : str, optional
-        Track name.
     pianoroll : ndarray, dtype=bool, shape=(?, 128), optional
         Piano-roll matrix. The first dimension represents time, and the
         second dimension represents pitch. Cast to bool if not of data
@@ -490,13 +524,14 @@ class BinaryTrack(Track):
 
     def __init__(
         self,
-        program: int = 0,
-        is_drum: bool = False,
         name: Optional[str] = None,
+        program: Optional[int] = None,
+        is_drum: Optional[bool] = None,
         pianoroll: Optional[ndarray] = None,
     ):
         super().__init__(name, program, is_drum, pianoroll)
-        self.pianoroll = self.pianoroll.astype(np.bool_)
+        if self.pianoroll.dtype != np.bool_:
+            self.pianoroll = self.pianoroll.astype(np.bool_)
 
     def __repr__(self):
         to_join = [
@@ -515,7 +550,7 @@ class BinaryTrack(Track):
                 f"{self.pianoroll.dtype}."
             )
 
-    def assign_constant(self, value: int) -> "Track":
+    def set_nonzeros(self, value: int) -> "StandardTrack":
         """Assign a constant value to all nonzeros entries.
 
         Arguments
@@ -525,14 +560,14 @@ class BinaryTrack(Track):
 
         Returns
         -------
-        Object itself.
+        Converted StandardTrack object.
 
         """
         pianoroll = np.zeros(self.pianoroll.shape, np.uint8)
         pianoroll[self.pianoroll.nonzero()] = value
-        return Track(
+        return StandardTrack(
+            name=self.name,
             program=self.program,
             is_drum=self.is_drum,
-            name=self.name,
             pianoroll=pianoroll,
         )
