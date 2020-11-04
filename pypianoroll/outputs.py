@@ -1,4 +1,18 @@
-"""Output interfaces."""
+"""Output interfaces.
+
+Functions
+---------
+
+- save
+- to_pretty_midi
+- write
+
+Variable
+--------
+
+- DEFAULT_TEMPO
+
+"""
 import json
 import zipfile
 from copy import deepcopy

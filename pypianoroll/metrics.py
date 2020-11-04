@@ -1,4 +1,4 @@
-"""Metrics for multitrack piano rolls.
+"""Objective metrics for piano rolls.
 
 Functions
 ---------
@@ -8,6 +8,8 @@ Functions
 - in_scale_rate
 - n_pitch_classes_used
 - n_pitches_used
+- pitch_range
+- pitch_range_tuple
 - polyphonic_rate
 - qualified_note_rate
 - tonal_distance

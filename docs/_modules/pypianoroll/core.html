@@ -157,7 +157,24 @@
            <div itemprop="articleBody">
             
   <h1>Source code for pypianoroll.core</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;Utilities for manipulating multitrack pianorolls.&quot;&quot;&quot;</span>
+<span></span><span class="sd">&quot;&quot;&quot;Functions for Pypianoroll objects.</span>
+
+<span class="sd">Functions</span>
+<span class="sd">---------</span>
+
+<span class="sd">- binarize</span>
+<span class="sd">- clip</span>
+<span class="sd">- pad</span>
+<span class="sd">- pad_to_multiple</span>
+<span class="sd">- pad_to_same</span>
+<span class="sd">- plot</span>
+<span class="sd">- set_nonzeros</span>
+<span class="sd">- set_resolution</span>
+<span class="sd">- transpose</span>
+<span class="sd">- trim</span>
+
+
+<span class="sd">&quot;&quot;&quot;</span>
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">TypeVar</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">overload</span>
 
 <span class="kn">from</span> <span class="nn">.multitrack</span> <span class="kn">import</span> <span class="n">Multitrack</span>

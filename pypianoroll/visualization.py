@@ -1,4 +1,13 @@
-"""Module for visualizing multitrack piano rolls."""
+"""Visualization tools.
+
+Functions
+---------
+
+- plot_multitrack
+- plot_pianoroll
+- plot_track
+
+"""
 from typing import TYPE_CHECKING, List, Optional, Sequence
 
 import matplotlib
@@ -301,6 +310,7 @@ def plot_multitrack(
     grid_axis: str = "both",
     grid_linestyle: str = ":",
     grid_linewidth: float = 0.5,
+    **kwargs,
 ) -> List[Axes]:
     """
     Plot the multitrack.
@@ -334,7 +344,7 @@ def plot_multitrack(
         defaults to `('hsv')`. If `mode` is 'hybrid', defaults to
         `('Blues', 'Greens')`.
     **kwargs
-        Keyword arguments to pass to :func:`pypianoroll.plot_track`.
+        Keyword arguments to pass to :func:`pypianoroll.plot_pianoroll`.
 
     Returns
     -------
@@ -394,6 +404,7 @@ def plot_multitrack(
                 grid_axis=grid_axis,
                 grid_linestyle=grid_linestyle,
                 grid_linewidth=grid_linewidth,
+                **kwargs,
             )
             if track_label != "none":
                 _add_tracklabel(axs[idx], track_label, track)
@@ -435,6 +446,7 @@ def plot_multitrack(
             grid_axis=grid_axis,
             grid_linestyle=grid_linestyle,
             grid_linewidth=grid_linewidth,
+            **kwargs,
         )
 
         if track_label != "none":
@@ -482,6 +494,7 @@ def plot_multitrack(
             grid_axis=grid_axis,
             grid_linestyle=grid_linestyle,
             grid_linewidth=grid_linewidth,
+            **kwargs,
         )
         plot_pianoroll(
             axs[1],
@@ -500,6 +513,7 @@ def plot_multitrack(
             grid_axis=grid_axis,
             grid_linestyle=grid_linestyle,
             grid_linewidth=grid_linewidth,
+            **kwargs,
         )
         fig.subplots_adjust(hspace=0)
 

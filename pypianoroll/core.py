@@ -1,4 +1,21 @@
-"""Utilities for manipulating multitrack pianorolls."""
+"""Functions for Pypianoroll objects.
+
+Functions
+---------
+
+- binarize
+- clip
+- pad
+- pad_to_multiple
+- pad_to_same
+- plot
+- set_nonzeros
+- set_resolution
+- transpose
+- trim
+
+
+"""
 from typing import Optional, TypeVar, Union, overload
 
 from .multitrack import Multitrack

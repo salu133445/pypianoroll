@@ -1,18 +1,14 @@
-"""Multitrack class.
+"""Class for multitrack piano rolls.
 
-This module defines the core class of Pypianoroll---the Multitrack
-class, a container for multitrack piano rolls.
-
-Classes
--------
+Class
+-----
 
 - Multitrack
 
-Variables
----------
+Variable
+--------
 
 - DEFAULT_RESOLUTION
-- DEFAULT_TEMPO
 
 """
 from typing import Optional, Sequence, TypeVar

@@ -1,4 +1,12 @@
-"""Utility functions."""
+"""Utility functions.
+
+Functions
+---------
+
+- decompose_sparse
+- reconstruct_sparse
+
+"""
 from typing import Dict
 
 from numpy import ndarray
