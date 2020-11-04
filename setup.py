@@ -46,7 +46,6 @@ setup(
         "matplotlib>=1.5",
     ],
     extras_require={
-        "animation": ["moviepy>=0.2.3.2"],
         "test": ["pytest>=6.0", "pytest-cov>=2.0"],
     },
     classifiers=[

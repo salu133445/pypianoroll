@@ -18,6 +18,7 @@ Variables
 from typing import Optional, Sequence, TypeVar
 
 import numpy as np
+from matplotlib.axes import Axes
 from numpy import ndarray
 
 from .outputs import save, to_pretty_midi, write
@@ -680,63 +681,11 @@ class Multitrack:
         """
         return to_pretty_midi(self, **kwargs)
 
-    def plot(self, **kwargs):
-        """Plot the multitrack and/or save a plot of it.
+    def plot(self, axs: Optional[Sequence[Axes]] = None, **kwargs) -> ndarray:
+        """Plot the multitrack piano roll.
 
         Refer to :func:`pypianoroll.plot_multitrack` for full
         documentation.
 
         """
-        return plot_multitrack(self, **kwargs)
-
-
-def multitrack_like(
-    multitrack: Multitrack,
-    name: Optional[str] = None,
-    resolution: Optional[int] = None,
-    tempo: Optional[ndarray] = None,
-    downbeat: Optional[ndarray] = None,
-    tracks: Optional[Sequence[Track]] = None,
-):
-    """Construct a Multitrack based on another multitrack.
-
-    Parameters
-    ----------
-    multitrack : Multitrack
-        Base multitrack.
-    name : str, optional
-        Multitrack name.
-    resolution : int
-        Time steps per quarter note.
-    tempo : ndarray, dtype=float, shape=(?, 1), optional
-        Tempo (in qpm) at each time step. Length is the total number
-        of time steps. Cast to float if not of data type float.
-    downbeat : ndarray, dtype=bool, shape=(?, 1), optional
-        Boolean array that indicates whether the time step contains a
-        downbeat (i.e., the first time step of a bar). Length is the
-        total number of time steps.
-    tracks : sequence of :class:`pypianoroll.Track`, optional
-        Music tracks.
-
-    Returns
-    -------
-    :class:`pypianoroll.Multitrack`
-        Created Multitrack object.
-
-    """
-    if tempo is not None:
-        tempo = None if multitrack.tempo is None else multitrack.tempo.copy()
-    if downbeat is not None:
-        if multitrack.downbeat is None:
-            downbeat = None
-        else:
-            downbeat = multitrack.downbeat.copy()
-    if tracks is not None:
-        tracks = [track.copy() for track in multitrack.tracks]
-    return Multitrack(
-        name=multitrack.name if name is None else None,
-        resolution=multitrack.resolution if resolution is None else None,
-        tempo=tempo,
-        downbeat=downbeat,
-        tracks=tracks,
-    )
+        return plot_multitrack(self, axs, **kwargs)

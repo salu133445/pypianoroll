@@ -21,7 +21,6 @@ import sys
 sys.path.insert(0, os.path.abspath(os.path.join("..", "..")))
 import pypianoroll
 
-
 # -- Project information -----------------------------------------------------
 
 project = "Pypianoroll"
@@ -76,4 +75,5 @@ intersphinx_mapping = {
     "scipy": ("https://docs.scipy.org/doc/scipy/reference/", None),
     "matplotlib": ("https://matplotlib.org/", None),
     "pretty_midi": ("https://craffel.github.io/pretty-midi/", None),
+    "muspy": ("https://salu133445.github.io/muspy/", None),
 }

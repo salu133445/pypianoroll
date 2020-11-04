@@ -17,6 +17,7 @@ Variables
 from typing import Optional, TypeVar
 
 import numpy as np
+from matplotlib.axes import Axes
 from numpy import ndarray
 
 from .visualization import plot_track
@@ -371,13 +372,13 @@ class Track:
             pianoroll=self.pianoroll,
         )
 
-    def plot(self, **kwargs):
+    def plot(self, ax: Optional[Axes] = None, **kwargs) -> Axes:
         """Plot the piano roll.
 
         Refer to :func:`pypianoroll.plot_track` for full documentation.
 
         """
-        return plot_track(self, **kwargs)
+        return plot_track(self, ax, **kwargs)
 
 
 class StandardTrack(Track):
