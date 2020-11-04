@@ -185,14 +185,6 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="doc.html#pypianoroll.Multitrack.append">append() (pypianoroll.Multitrack method)</a>
 </li>
-      <li><a href="doc.html#pypianoroll.assign_constant">assign_constant() (in module pypianoroll)</a>
-
-      <ul>
-        <li><a href="doc.html#pypianoroll.Multitrack.assign_constant">(pypianoroll.Multitrack method)</a>
-</li>
-        <li><a href="doc.html#pypianoroll.Track.assign_constant">(pypianoroll.Track method)</a>
-</li>
-      </ul></li>
   </ul></td>
 </tr></table>
 
@@ -204,9 +196,15 @@
       <ul>
         <li><a href="doc.html#pypianoroll.Multitrack.binarize">(pypianoroll.Multitrack method)</a>
 </li>
-        <li><a href="doc.html#pypianoroll.Track.binarize">(pypianoroll.Track method)</a>
+        <li><a href="doc.html#pypianoroll.StandardTrack.binarize">(pypianoroll.StandardTrack method)</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="doc.html#pypianoroll.BinaryTrack">BinaryTrack (class in pypianoroll)</a>
+</li>
+      <li><a href="doc.html#pypianoroll.Multitrack.blend">blend() (pypianoroll.Multitrack method)</a>
+</li>
   </ul></td>
 </tr></table>
 
@@ -218,13 +216,17 @@
       <ul>
         <li><a href="doc.html#pypianoroll.Multitrack.clip">(pypianoroll.Multitrack method)</a>
 </li>
-        <li><a href="doc.html#pypianoroll.Track.clip">(pypianoroll.Track method)</a>
+        <li><a href="doc.html#pypianoroll.StandardTrack.clip">(pypianoroll.StandardTrack method)</a>
 </li>
       </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="doc.html#pypianoroll.Track.copy">copy() (pypianoroll.Track method)</a>
+      <li><a href="doc.html#pypianoroll.Multitrack.copy">copy() (pypianoroll.Multitrack method)</a>
+
+      <ul>
+        <li><a href="doc.html#pypianoroll.Track.copy">(pypianoroll.Track method)</a>
 </li>
+      </ul></li>
       <li><a href="doc.html#pypianoroll.Multitrack.count_downbeat">count_downbeat() (pypianoroll.Multitrack method)</a>
 </li>
   </ul></td>
@@ -237,8 +239,6 @@
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="doc.html#pypianoroll.Multitrack.downsample">downsample() (pypianoroll.Multitrack method)</a>
-</li>
       <li><a href="doc.html#pypianoroll.drum_in_pattern_rate">drum_in_pattern_rate() (in module pypianoroll)</a>
 </li>
   </ul></td>
@@ -263,31 +263,17 @@
 <h2 id="G">G</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="doc.html#pypianoroll.Multitrack.get_active_length">get_active_length() (pypianoroll.Multitrack method)</a>
-
-      <ul>
-        <li><a href="doc.html#pypianoroll.Track.get_active_length">(pypianoroll.Track method)</a>
-</li>
-      </ul></li>
-      <li><a href="doc.html#pypianoroll.Multitrack.get_active_pitch_range">get_active_pitch_range() (pypianoroll.Multitrack method)</a>
-
-      <ul>
-        <li><a href="doc.html#pypianoroll.Track.get_active_pitch_range">(pypianoroll.Track method)</a>
-</li>
-      </ul></li>
       <li><a href="doc.html#pypianoroll.Multitrack.get_downbeat_steps">get_downbeat_steps() (pypianoroll.Multitrack method)</a>
 </li>
+      <li><a href="doc.html#pypianoroll.Multitrack.get_length">get_length() (pypianoroll.Multitrack method)</a>
+
+      <ul>
+        <li><a href="doc.html#pypianoroll.Track.get_length">(pypianoroll.Track method)</a>
+</li>
+      </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="doc.html#pypianoroll.Multitrack.get_empty_tracks">get_empty_tracks() (pypianoroll.Multitrack method)</a>
-</li>
       <li><a href="doc.html#pypianoroll.Multitrack.get_max_length">get_max_length() (pypianoroll.Multitrack method)</a>
-</li>
-      <li><a href="doc.html#pypianoroll.Multitrack.get_merged_pianoroll">get_merged_pianoroll() (pypianoroll.Multitrack method)</a>
-</li>
-      <li><a href="doc.html#pypianoroll.Track.get_pianoroll_copy">get_pianoroll_copy() (pypianoroll.Track method)</a>
-</li>
-      <li><a href="doc.html#pypianoroll.Multitrack.get_stacked_pianoroll">get_stacked_pianoroll() (pypianoroll.Multitrack method)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -297,18 +283,28 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="doc.html#pypianoroll.in_scale_rate">in_scale_rate() (in module pypianoroll)</a>
 </li>
-      <li><a href="doc.html#pypianoroll.Multitrack.is_binarized">is_binarized() (pypianoroll.Multitrack method)</a>
+      <li><a href="doc.html#pypianoroll.BinaryTrack.is_drum">is_drum (pypianoroll.BinaryTrack attribute)</a>
 
       <ul>
-        <li><a href="doc.html#pypianoroll.Track.is_binarized">(pypianoroll.Track method)</a>
+        <li><a href="doc.html#pypianoroll.StandardTrack.is_drum">(pypianoroll.StandardTrack attribute)</a>
+</li>
+        <li><a href="doc.html#pypianoroll.Track.is_drum">(pypianoroll.Track attribute)</a>
 </li>
       </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="doc.html#pypianoroll.Track.is_drum">is_drum (pypianoroll.Track attribute)</a>
+      <li><a href="doc.html#pypianoroll.Multitrack.is_valid">is_valid() (pypianoroll.Multitrack method)</a>
+
+      <ul>
+        <li><a href="doc.html#pypianoroll.Track.is_valid">(pypianoroll.Track method)</a>
 </li>
-      <li><a href="doc.html#pypianoroll.Track.is_valid">is_valid() (pypianoroll.Track method)</a>
+      </ul></li>
+      <li><a href="doc.html#pypianoroll.Multitrack.is_valid_type">is_valid_type() (pypianoroll.Multitrack method)</a>
+
+      <ul>
+        <li><a href="doc.html#pypianoroll.Track.is_valid_type">(pypianoroll.Track method)</a>
 </li>
+      </ul></li>
   </ul></td>
 </tr></table>
 
@@ -323,8 +319,6 @@
 <h2 id="M">M</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="doc.html#pypianoroll.Multitrack.merge_tracks">merge_tracks() (pypianoroll.Multitrack method)</a>
-</li>
       <li>
     module
 
@@ -346,11 +340,13 @@
 </li>
       <li><a href="doc.html#pypianoroll.n_pitches_used">n_pitches_used() (in module pypianoroll)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="doc.html#pypianoroll.Multitrack.name">name (pypianoroll.Multitrack attribute)</a>
+      <li><a href="doc.html#pypianoroll.BinaryTrack.name">name (pypianoroll.BinaryTrack attribute)</a>
 
       <ul>
+        <li><a href="doc.html#pypianoroll.Multitrack.name">(pypianoroll.Multitrack attribute)</a>
+</li>
+        <li><a href="doc.html#pypianoroll.StandardTrack.name">(pypianoroll.StandardTrack attribute)</a>
+</li>
         <li><a href="doc.html#pypianoroll.Track.name">(pypianoroll.Track attribute)</a>
 </li>
       </ul></li>
@@ -382,10 +378,20 @@
         <li><a href="doc.html#pypianoroll.Multitrack.pad_to_same">(pypianoroll.Multitrack method)</a>
 </li>
       </ul></li>
-      <li><a href="doc.html#pypianoroll.Track.pianoroll">pianoroll (pypianoroll.Track attribute)</a>
+      <li><a href="doc.html#pypianoroll.BinaryTrack.pianoroll">pianoroll (pypianoroll.BinaryTrack attribute)</a>
+
+      <ul>
+        <li><a href="doc.html#pypianoroll.StandardTrack.pianoroll">(pypianoroll.StandardTrack attribute)</a>
+</li>
+        <li><a href="doc.html#pypianoroll.Track.pianoroll">(pypianoroll.Track attribute)</a>
+</li>
+      </ul></li>
+      <li><a href="doc.html#pypianoroll.pitch_range">pitch_range() (in module pypianoroll)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="doc.html#pypianoroll.pitch_range_tuple">pitch_range_tuple() (in module pypianoroll)</a>
+</li>
       <li><a href="doc.html#pypianoroll.plot">plot() (in module pypianoroll)</a>
 
       <ul>
@@ -402,8 +408,14 @@
 </li>
       <li><a href="doc.html#pypianoroll.polyphonic_rate">polyphonic_rate() (in module pypianoroll)</a>
 </li>
-      <li><a href="doc.html#pypianoroll.Track.program">program (pypianoroll.Track attribute)</a>
+      <li><a href="doc.html#pypianoroll.BinaryTrack.program">program (pypianoroll.BinaryTrack attribute)</a>
+
+      <ul>
+        <li><a href="doc.html#pypianoroll.StandardTrack.program">(pypianoroll.StandardTrack attribute)</a>
 </li>
+        <li><a href="doc.html#pypianoroll.Track.program">(pypianoroll.Track attribute)</a>
+</li>
+      </ul></li>
       <li>
     pypianoroll
 
@@ -427,11 +439,9 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="doc.html#pypianoroll.read">read() (in module pypianoroll)</a>
 </li>
-      <li><a href="doc.html#pypianoroll.Multitrack.remove_empty_tracks">remove_empty_tracks() (pypianoroll.Multitrack method)</a>
-</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="doc.html#pypianoroll.Multitrack.remove_tracks">remove_tracks() (pypianoroll.Multitrack method)</a>
+      <li><a href="doc.html#pypianoroll.Multitrack.remove_empty">remove_empty() (pypianoroll.Multitrack method)</a>
 </li>
       <li><a href="doc.html#pypianoroll.Multitrack.resolution">resolution (pypianoroll.Multitrack attribute)</a>
 </li>
@@ -447,9 +457,29 @@
         <li><a href="doc.html#pypianoroll.Multitrack.save">(pypianoroll.Multitrack method)</a>
 </li>
       </ul></li>
+      <li><a href="doc.html#pypianoroll.set_nonzeros">set_nonzeros() (in module pypianoroll)</a>
+
+      <ul>
+        <li><a href="doc.html#pypianoroll.BinaryTrack.set_nonzeros">(pypianoroll.BinaryTrack method)</a>
+</li>
+        <li><a href="doc.html#pypianoroll.Multitrack.set_nonzeros">(pypianoroll.Multitrack method)</a>
+</li>
+        <li><a href="doc.html#pypianoroll.StandardTrack.set_nonzeros">(pypianoroll.StandardTrack method)</a>
+</li>
+      </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="doc.html#pypianoroll.save_animation">save_animation() (in module pypianoroll)</a>
+      <li><a href="doc.html#pypianoroll.set_resolution">set_resolution() (in module pypianoroll)</a>
+
+      <ul>
+        <li><a href="doc.html#pypianoroll.Multitrack.set_resolution">(pypianoroll.Multitrack method)</a>
+</li>
+      </ul></li>
+      <li><a href="doc.html#pypianoroll.Multitrack.stack">stack() (pypianoroll.Multitrack method)</a>
+</li>
+      <li><a href="doc.html#pypianoroll.Track.standardize">standardize() (pypianoroll.Track method)</a>
+</li>
+      <li><a href="doc.html#pypianoroll.StandardTrack">StandardTrack (class in pypianoroll)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -459,8 +489,12 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="doc.html#pypianoroll.Multitrack.tempo">tempo (pypianoroll.Multitrack attribute)</a>
 </li>
-      <li><a href="doc.html#pypianoroll.Multitrack.to_pretty_midi">to_pretty_midi() (pypianoroll.Multitrack method)</a>
+      <li><a href="doc.html#pypianoroll.to_pretty_midi">to_pretty_midi() (in module pypianoroll)</a>
+
+      <ul>
+        <li><a href="doc.html#pypianoroll.Multitrack.to_pretty_midi">(pypianoroll.Multitrack method)</a>
 </li>
+      </ul></li>
       <li><a href="doc.html#pypianoroll.tonal_distance">tonal_distance() (in module pypianoroll)</a>
 </li>
       <li><a href="doc.html#pypianoroll.Track">Track (class in pypianoroll)</a>
@@ -477,12 +511,12 @@
         <li><a href="doc.html#pypianoroll.Track.transpose">(pypianoroll.Track method)</a>
 </li>
       </ul></li>
-      <li><a href="doc.html#pypianoroll.trim_trailing_silence">trim_trailing_silence() (in module pypianoroll)</a>
+      <li><a href="doc.html#pypianoroll.trim">trim() (in module pypianoroll)</a>
 
       <ul>
-        <li><a href="doc.html#pypianoroll.Multitrack.trim_trailing_silence">(pypianoroll.Multitrack method)</a>
+        <li><a href="doc.html#pypianoroll.Multitrack.trim">(pypianoroll.Multitrack method)</a>
 </li>
-        <li><a href="doc.html#pypianoroll.Track.trim_trailing_silence">(pypianoroll.Track method)</a>
+        <li><a href="doc.html#pypianoroll.Track.trim">(pypianoroll.Track method)</a>
 </li>
       </ul></li>
   </ul></td>
@@ -495,6 +529,14 @@
 
       <ul>
         <li><a href="doc.html#pypianoroll.Track.validate">(pypianoroll.Track method)</a>
+</li>
+      </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="doc.html#pypianoroll.Multitrack.validate_type">validate_type() (pypianoroll.Multitrack method)</a>
+
+      <ul>
+        <li><a href="doc.html#pypianoroll.Track.validate_type">(pypianoroll.Track method)</a>
 </li>
       </ul></li>
   </ul></td>

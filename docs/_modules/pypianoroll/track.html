@@ -157,272 +157,287 @@
            <div itemprop="articleBody">
             
   <h1>Source code for pypianoroll.track</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;Class for single-track piano rolls.&quot;&quot;&quot;</span>
-<span class="kn">from</span> <span class="nn">copy</span> <span class="kn">import</span> <span class="n">deepcopy</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Optional</span>
+<span></span><span class="sd">&quot;&quot;&quot;Classes for single-track piano rolls.</span>
+
+<span class="sd">Classes</span>
+<span class="sd">-------</span>
+
+<span class="sd">- BinaryTrack</span>
+<span class="sd">- StandardTrack</span>
+<span class="sd">- Track</span>
+
+<span class="sd">Variables</span>
+<span class="sd">---------</span>
+
+<span class="sd">- DEFAULT_PROGRAM</span>
+<span class="sd">- DEFAULT_IS_DRUM</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">TypeVar</span>
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">matplotlib.axes</span> <span class="kn">import</span> <span class="n">Axes</span>
 <span class="kn">from</span> <span class="nn">numpy</span> <span class="kn">import</span> <span class="n">ndarray</span>
 
 <span class="kn">from</span> <span class="nn">.visualization</span> <span class="kn">import</span> <span class="n">plot_track</span>
 
-<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Track&quot;</span><span class="p">]</span>
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s2">&quot;BinaryTrack&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;StandardTrack&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Track&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;DEFAULT_PROGRAM&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;DEFAULT_IS_DRUM&quot;</span><span class="p">,</span>
+<span class="p">]</span>
+
+<span class="n">DEFAULT_PROGRAM</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="n">DEFAULT_IS_DRUM</span> <span class="o">=</span> <span class="kc">False</span>
+
+<span class="n">_Track</span> <span class="o">=</span> <span class="n">TypeVar</span><span class="p">(</span><span class="s2">&quot;_Track&quot;</span><span class="p">,</span> <span class="n">bound</span><span class="o">=</span><span class="s2">&quot;Track&quot;</span><span class="p">)</span>
+<span class="n">_StandardTrack</span> <span class="o">=</span> <span class="n">TypeVar</span><span class="p">(</span><span class="s2">&quot;_StandardTrack&quot;</span><span class="p">,</span> <span class="n">bound</span><span class="o">=</span><span class="s2">&quot;StandardTrack&quot;</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="Track"><a class="viewcode-back" href="../../track.html#pypianoroll.Track">[docs]</a><span class="k">class</span> <span class="nc">Track</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    A container for single-track piano roll.</span>
+    <span class="sd">&quot;&quot;&quot;A generic container for single-track piano rolls.</span>
 
 <span class="sd">    Attributes</span>
 <span class="sd">    ----------</span>
+<span class="sd">    name : str, optional</span>
+<span class="sd">        Track name.</span>
 <span class="sd">    program : int, 0-127, optional</span>
 <span class="sd">        Program number according to General MIDI specification [1].</span>
 <span class="sd">        Defaults to 0 (Acoustic Grand Piano).</span>
 <span class="sd">    is_drum : bool, optional</span>
 <span class="sd">        Whether it is a percussion track. Defaults to False.</span>
-<span class="sd">    name : str, optional</span>
-<span class="sd">        Track name.</span>
-<span class="sd">    pianoroll : ndarray, dtype={bool, int}, shape=(?, 128), optional</span>
+<span class="sd">    pianoroll : ndarray, shape=(?, 128), optional</span>
 <span class="sd">        Piano-roll matrix. The first dimension represents time, and the</span>
-<span class="sd">        second dimension represents pitch. If dtype is integer, assume</span>
-<span class="sd">        the data range is in [0, 255].</span>
+<span class="sd">        second dimension represents pitch.</span>
 
 <span class="sd">    References</span>
 <span class="sd">    ----------</span>
-<span class="sd">    [1] https://www.midi.org/specifications/item/gm-level-1-sound-set</span>
+<span class="sd">    1. https://www.midi.org/specifications/item/gm-level-1-sound-set</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
-        <span class="n">program</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
-        <span class="n">is_drum</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
         <span class="n">name</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">program</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">is_drum</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">pianoroll</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">ndarray</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">program</span> <span class="o">=</span> <span class="n">program</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">is_drum</span> <span class="o">=</span> <span class="n">is_drum</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">pianoroll</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([])</span> <span class="k">if</span> <span class="n">pianoroll</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">pianoroll</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">program</span> <span class="o">=</span> <span class="n">program</span> <span class="k">if</span> <span class="n">program</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">DEFAULT_PROGRAM</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">is_drum</span> <span class="o">=</span> <span class="n">is_drum</span> <span class="k">if</span> <span class="n">is_drum</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">DEFAULT_IS_DRUM</span>
+        <span class="k">if</span> <span class="n">pianoroll</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">pianoroll</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="mi">128</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">pianoroll</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">pianoroll</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="fm">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">val</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">Track</span><span class="p">(</span>
-            <span class="n">program</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">program</span><span class="p">,</span>
-            <span class="n">is_drum</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">is_drum</span><span class="p">,</span>
-            <span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
-            <span class="n">pianoroll</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">pianoroll</span><span class="p">[</span><span class="n">val</span><span class="p">],</span>
-        <span class="p">)</span>
+    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="n">to_join</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="sa">f</span><span class="s2">&quot;name=</span><span class="si">{</span><span class="nb">repr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+            <span class="sa">f</span><span class="s2">&quot;program=</span><span class="si">{</span><span class="nb">repr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">program</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+            <span class="sa">f</span><span class="s2">&quot;is_drum=</span><span class="si">{</span><span class="nb">repr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">is_drum</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+            <span class="sa">f</span><span class="s2">&quot;pianoroll=array(shape=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">pianoroll</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">,</span>
+        <span class="p">]</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;Track(</span><span class="si">{</span><span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">to_join</span><span class="p">)</span><span class="si">}</span><span class="s2">)&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="n">to_join</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="k">for</span> <span class="n">attr</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;program&quot;</span><span class="p">,</span> <span class="s2">&quot;is_drum&quot;</span><span class="p">,</span> <span class="s2">&quot;name&quot;</span><span class="p">):</span>
-            <span class="n">value</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">attr</span><span class="p">)</span>
-            <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="n">to_join</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">attr</span> <span class="o">+</span> <span class="s2">&quot;=&quot;</span> <span class="o">+</span> <span class="nb">repr</span><span class="p">(</span><span class="n">value</span><span class="p">))</span>
-        <span class="n">to_join</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
-            <span class="s2">&quot;pianoroll=array(shape=</span><span class="si">{}</span><span class="s2">, dtype=</span><span class="si">{}</span><span class="s2">)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">pianoroll</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">pianoroll</span><span class="o">.</span><span class="n">dtype</span>
-            <span class="p">)</span>
-        <span class="p">)</span>
-        <span class="k">return</span> <span class="s2">&quot;Track(&quot;</span> <span class="o">+</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">to_join</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;)&quot;</span>
+    <span class="k">def</span> <span class="fm">__len__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pianoroll</span><span class="p">)</span>
 
-<div class="viewcode-block" id="Track.validate"><a class="viewcode-back" href="../../doc.html#pypianoroll.Track.validate">[docs]</a>    <span class="k">def</span> <span class="nf">validate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Raise a proper error if any attribute is invalid.&quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">program</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
-            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;`program` must be of type int.&quot;</span><span class="p">)</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">program</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">program</span> <span class="o">&gt;</span> <span class="mi">127</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;`program` must be in between 0 to 127.&quot;</span><span class="p">)</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">is_drum</span><span class="p">,</span> <span class="nb">bool</span><span class="p">):</span>
-            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;`is_drum` must be of type bool.&quot;</span><span class="p">)</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
-            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;`name` must be of type str.&quot;</span><span class="p">)</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pianoroll</span><span class="p">,</span> <span class="n">ndarray</span><span class="p">):</span>
-            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;`pianoroll` must be an ndarray.&quot;</span><span class="p">)</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span>
-            <span class="n">np</span><span class="o">.</span><span class="n">issubdtype</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pianoroll</span><span class="o">.</span><span class="n">dtype</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">bool_</span><span class="p">)</span>
-            <span class="ow">or</span> <span class="n">np</span><span class="o">.</span><span class="n">issubdtype</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pianoroll</span><span class="o">.</span><span class="n">dtype</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">number</span><span class="p">)</span>
-        <span class="p">):</span>
-            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
-                <span class="s2">&quot;The data type of `pianoroll` must be np.bool_ or a subdtype &quot;</span>
-                <span class="s2">&quot;of np.number.&quot;</span>
-            <span class="p">)</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">pianoroll</span><span class="o">.</span><span class="n">ndim</span> <span class="o">!=</span> <span class="mi">2</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;`pianoroll` must have exactly two dimensions.&quot;</span><span class="p">)</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">pianoroll</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">!=</span> <span class="mi">128</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                <span class="s2">&quot;The length of the second axis of `pianoroll` must be 128.&quot;</span>
-            <span class="p">)</span></div>
+    <span class="k">def</span> <span class="fm">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ndarray</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">pianoroll</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
 
-<div class="viewcode-block" id="Track.is_valid"><a class="viewcode-back" href="../../doc.html#pypianoroll.Track.is_valid">[docs]</a>    <span class="k">def</span> <span class="nf">is_valid</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Return True if all attributes are valid, otherwise False.</span>
+    <span class="k">def</span> <span class="nf">_validate_type</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">attr</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">attr</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">attr</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;program&quot;</span><span class="p">,</span> <span class="s2">&quot;is_drum&quot;</span><span class="p">,</span> <span class="s2">&quot;pianoroll&quot;</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;`</span><span class="si">{</span><span class="n">attr</span><span class="si">}</span><span class="s2">` must not be None.&quot;</span><span class="p">)</span>
+            <span class="k">return</span>
+        <span class="k">if</span> <span class="n">attr</span> <span class="o">==</span> <span class="s2">&quot;program&quot;</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">program</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
+                    <span class="s2">&quot;`program` must be of type int, not &quot;</span>
+                    <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">program</span><span class="p">)</span><span class="si">}</span><span class="s2">.&quot;</span>
+                <span class="p">)</span>
+        <span class="k">elif</span> <span class="n">attr</span> <span class="o">==</span> <span class="s2">&quot;is_drum&quot;</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">is_drum</span><span class="p">,</span> <span class="nb">bool</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
+                    <span class="s2">&quot;`is_drum` must be of type bool, not &quot;</span>
+                    <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">is_drum</span><span class="p">)</span><span class="si">}</span><span class="s2">.&quot;</span>
+                <span class="p">)</span>
+        <span class="k">elif</span> <span class="n">attr</span> <span class="o">==</span> <span class="s2">&quot;name&quot;</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;`name` must be of type str, not </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)</span><span class="si">}</span><span class="s2">.&quot;</span>
+                <span class="p">)</span>
+        <span class="k">elif</span> <span class="n">attr</span> <span class="o">==</span> <span class="s2">&quot;pianoroll&quot;</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pianoroll</span><span class="p">,</span> <span class="n">ndarray</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
+                    <span class="s2">&quot;`pianoroll` must be a NumPy array, not &quot;</span>
+                    <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pianoroll</span><span class="p">)</span><span class="si">}</span><span class="s2">.&quot;</span>
+                <span class="p">)</span>
+
+<div class="viewcode-block" id="Track.validate_type"><a class="viewcode-back" href="../../track.html#pypianoroll.Track.validate_type">[docs]</a>    <span class="k">def</span> <span class="nf">validate_type</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">attr</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Raise an error if an attribute has an invalid type.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        attr : str</span>
+<span class="sd">            Attribute to validate. Defaults to validate all attributes.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        Object itself.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">attr</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">attribute</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;program&quot;</span><span class="p">,</span> <span class="s2">&quot;is_drum&quot;</span><span class="p">,</span> <span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="s2">&quot;pianoroll&quot;</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_validate_type</span><span class="p">(</span><span class="n">attribute</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_validate_type</span><span class="p">(</span><span class="n">attr</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+    <span class="k">def</span> <span class="nf">_validate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">attr</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">attr</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">attr</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;program&quot;</span><span class="p">,</span> <span class="s2">&quot;is_drum&quot;</span><span class="p">,</span> <span class="s2">&quot;pianoroll&quot;</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;`</span><span class="si">{</span><span class="n">attr</span><span class="si">}</span><span class="s2">` must not be None.&quot;</span><span class="p">)</span>
+            <span class="k">return</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_validate_type</span><span class="p">(</span><span class="n">attr</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">attr</span> <span class="o">==</span> <span class="s2">&quot;program&quot;</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">program</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">program</span> <span class="o">&gt;</span> <span class="mi">127</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;`program` must be in between 0 to 127.&quot;</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">attr</span> <span class="o">==</span> <span class="s2">&quot;pianoroll&quot;</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">pianoroll</span><span class="o">.</span><span class="n">ndim</span> <span class="o">!=</span> <span class="mi">2</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="s2">&quot;`pianoroll` must have exactly two dimensions.&quot;</span>
+                <span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">pianoroll</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">!=</span> <span class="mi">128</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="s2">&quot;Length of the second axis of `pianoroll` must be 128.&quot;</span>
+                <span class="p">)</span>
+
+<div class="viewcode-block" id="Track.validate"><a class="viewcode-back" href="../../track.html#pypianoroll.Track.validate">[docs]</a>    <span class="k">def</span> <span class="nf">validate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">attr</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Raise an error if an attribute has an invalid type or value.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        attr : str</span>
+<span class="sd">            Attribute to validate. Defaults to validate all attributes.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        Object itself.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">attr</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">attribute</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;program&quot;</span><span class="p">,</span> <span class="s2">&quot;is_drum&quot;</span><span class="p">,</span> <span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="s2">&quot;pianoroll&quot;</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_validate</span><span class="p">(</span><span class="n">attribute</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_validate</span><span class="p">(</span><span class="n">attr</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+<div class="viewcode-block" id="Track.is_valid_type"><a class="viewcode-back" href="../../track.html#pypianoroll.Track.is_valid_type">[docs]</a>    <span class="k">def</span> <span class="nf">is_valid_type</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">attr</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Return True if an attribute is of a valid type.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        attr : str</span>
+<span class="sd">            Attribute to validate. Defaults to validate all attributes.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        bool</span>
-<span class="sd">            Whether all attributes is valid.</span>
+<span class="sd">            Whether the attribute is of a valid type.</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">try</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">validate</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">validate_type</span><span class="p">(</span><span class="n">attr</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">TypeError</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span>
+        <span class="k">return</span> <span class="kc">True</span></div>
+
+<div class="viewcode-block" id="Track.is_valid"><a class="viewcode-back" href="../../track.html#pypianoroll.Track.is_valid">[docs]</a>    <span class="k">def</span> <span class="nf">is_valid</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">attr</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Return True if an attribute is valid.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        attr : str</span>
+<span class="sd">            Attribute to validate. Defaults to validate all attributes.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        bool</span>
+<span class="sd">            Whether the attribute has a valid type and value.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">validate</span><span class="p">(</span><span class="n">attr</span><span class="p">)</span>
         <span class="k">except</span> <span class="p">(</span><span class="ne">TypeError</span><span class="p">,</span> <span class="ne">ValueError</span><span class="p">):</span>
             <span class="k">return</span> <span class="kc">False</span>
         <span class="k">return</span> <span class="kc">True</span></div>
 
-<div class="viewcode-block" id="Track.assign_constant"><a class="viewcode-back" href="../../doc.html#pypianoroll.Track.assign_constant">[docs]</a>    <span class="k">def</span> <span class="nf">assign_constant</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">dtype</span><span class="p">:</span> <span class="n">Any</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Assign a constant value to all nonzeros entries.</span>
-
-<span class="sd">        If the piano roll is not binarized, its data type will be</span>
-<span class="sd">        preserved. If the piano roll is binarized, cast it to the dtype</span>
-<span class="sd">        of `value`.</span>
-
-<span class="sd">        Arguments</span>
-<span class="sd">        ---------</span>
-<span class="sd">        value : int or float</span>
-<span class="sd">            Value to assign to all the nonzero entries in the piano</span>
-<span class="sd">            roll.</span>
-
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_binarized</span><span class="p">():</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">pianoroll</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">pianoroll</span><span class="o">.</span><span class="n">nonzero</span><span class="p">()]</span> <span class="o">=</span> <span class="n">value</span>
-            <span class="k">return</span>
-        <span class="k">if</span> <span class="n">dtype</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
-                <span class="n">dtype</span> <span class="o">=</span> <span class="nb">int</span>
-            <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">float</span><span class="p">):</span>
-                <span class="n">dtype</span> <span class="o">=</span> <span class="nb">float</span>
-        <span class="n">nonzero</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pianoroll</span><span class="o">.</span><span class="n">nonzero</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">pianoroll</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pianoroll</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">dtype</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">pianoroll</span><span class="p">[</span><span class="n">nonzero</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span></div>
-
-<div class="viewcode-block" id="Track.binarize"><a class="viewcode-back" href="../../doc.html#pypianoroll.Track.binarize">[docs]</a>    <span class="k">def</span> <span class="nf">binarize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">threshold</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">0</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Binarize the piano roll.</span>
-
-<span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        threshold : int or float</span>
-<span class="sd">            A threshold used to binarize the piano roll. Defaults to</span>
-<span class="sd">            zero.</span>
-
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_binarized</span><span class="p">():</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">pianoroll</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pianoroll</span> <span class="o">&gt;</span> <span class="n">threshold</span></div>
-
-<div class="viewcode-block" id="Track.clip"><a class="viewcode-back" href="../../doc.html#pypianoroll.Track.clip">[docs]</a>    <span class="k">def</span> <span class="nf">clip</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lower</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">upper</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">127</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Clip the piano roll by a lower bound and an upper bound.</span>
-
-<span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        lower : int or float</span>
-<span class="sd">            Lower bound to clip the piano roll. Defaults to 0.</span>
-<span class="sd">        upper : int or float</span>
-<span class="sd">            Upper bound to clip the piano roll. Defaults to 127.</span>
-
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">pianoroll</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pianoroll</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="n">lower</span><span class="p">,</span> <span class="n">upper</span><span class="p">)</span></div>
-
-<div class="viewcode-block" id="Track.copy"><a class="viewcode-back" href="../../doc.html#pypianoroll.Track.copy">[docs]</a>    <span class="k">def</span> <span class="nf">copy</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Return a copy of the object.</span>
-
-<span class="sd">        Returns</span>
-<span class="sd">        -------</span>
-<span class="sd">        copied : `pypianoroll.Track` object</span>
-<span class="sd">            A copy of the object.</span>
-
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">copied</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">copied</span></div>
-
-<div class="viewcode-block" id="Track.get_active_length"><a class="viewcode-back" href="../../doc.html#pypianoroll.Track.get_active_length">[docs]</a>    <span class="k">def</span> <span class="nf">get_active_length</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Return the active length of the piano roll (in time steps).</span>
-
-<span class="sd">        The active length is defined as the length of the piano roll</span>
-<span class="sd">        without trailing silence.</span>
+<div class="viewcode-block" id="Track.get_length"><a class="viewcode-back" href="../../track.html#pypianoroll.Track.get_length">[docs]</a>    <span class="k">def</span> <span class="nf">get_length</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Return the active length of the piano roll.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        int</span>
-<span class="sd">            Active length.</span>
+<span class="sd">            Length (in time steps) of the piano roll without trailing</span>
+<span class="sd">            silence.</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">nonzero_steps</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pianoroll</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
         <span class="n">inv_last_nonzero_step</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">flip</span><span class="p">(</span><span class="n">nonzero_steps</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">))</span>
-        <span class="n">active_length</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pianoroll</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">inv_last_nonzero_step</span>
-        <span class="k">return</span> <span class="n">active_length</span></div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">pianoroll</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">inv_last_nonzero_step</span></div>
 
-<div class="viewcode-block" id="Track.get_active_pitch_range"><a class="viewcode-back" href="../../doc.html#pypianoroll.Track.get_active_pitch_range">[docs]</a>    <span class="k">def</span> <span class="nf">get_active_pitch_range</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Return the active pitch range as a tuple (lowest, highest).</span>
-
-<span class="sd">        Returns</span>
-<span class="sd">        -------</span>
-<span class="sd">        lowest : int</span>
-<span class="sd">            Lowest active pitch in the piano roll.</span>
-<span class="sd">        highest : int</span>
-<span class="sd">            Highest active pitch in the piano roll.</span>
-
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">pianoroll</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                <span class="s2">&quot;Cannot compute the active pitch range for an empty piano roll&quot;</span>
-            <span class="p">)</span>
-        <span class="n">lowest</span> <span class="o">=</span> <span class="mi">0</span>
-        <span class="n">highest</span> <span class="o">=</span> <span class="mi">127</span>
-        <span class="k">while</span> <span class="n">lowest</span> <span class="o">&lt;</span> <span class="n">highest</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pianoroll</span><span class="p">[:,</span> <span class="n">lowest</span><span class="p">]):</span>
-                <span class="k">break</span>
-            <span class="n">lowest</span> <span class="o">+=</span> <span class="mi">1</span>
-        <span class="k">if</span> <span class="n">lowest</span> <span class="o">==</span> <span class="n">highest</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                <span class="s2">&quot;Cannot compute the active pitch range for an empty piano roll&quot;</span>
-            <span class="p">)</span>
-        <span class="k">while</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pianoroll</span><span class="p">[:,</span> <span class="n">highest</span><span class="p">]):</span>
-            <span class="n">highest</span> <span class="o">-=</span> <span class="mi">1</span>
-
-        <span class="k">return</span> <span class="n">lowest</span><span class="p">,</span> <span class="n">highest</span></div>
-
-<div class="viewcode-block" id="Track.get_pianoroll_copy"><a class="viewcode-back" href="../../doc.html#pypianoroll.Track.get_pianoroll_copy">[docs]</a>    <span class="k">def</span> <span class="nf">get_pianoroll_copy</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Return a copy of the piano roll matrix.</span>
+<div class="viewcode-block" id="Track.copy"><a class="viewcode-back" href="../../track.html#pypianoroll.Track.copy">[docs]</a>    <span class="k">def</span> <span class="nf">copy</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return a copy of the track.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
-<span class="sd">        copied : ndarray</span>
-<span class="sd">            A copy of the pianoroll matrix.</span>
+<span class="sd">        A copy of the object itself.</span>
+
+<span class="sd">        Notes</span>
+<span class="sd">        -----</span>
+<span class="sd">        The piano-roll array is copied using :func:`numpy.copy`.</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">copied</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pianoroll</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">copied</span></div>
+        <span class="k">return</span> <span class="n">Track</span><span class="p">(</span>
+            <span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+            <span class="n">program</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">program</span><span class="p">,</span>
+            <span class="n">is_drum</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">is_drum</span><span class="p">,</span>
+            <span class="n">pianoroll</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">pianoroll</span><span class="o">.</span><span class="n">copy</span><span class="p">(),</span>
+        <span class="p">)</span></div>
 
-<div class="viewcode-block" id="Track.is_binarized"><a class="viewcode-back" href="../../doc.html#pypianoroll.Track.is_binarized">[docs]</a>    <span class="k">def</span> <span class="nf">is_binarized</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Return True if the piano roll is binarized, otherwise False.</span>
-
-<span class="sd">        Returns</span>
-<span class="sd">        -------</span>
-<span class="sd">        bool</span>
-<span class="sd">            Whether the piano roll is binarized.</span>
-
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">issubdtype</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pianoroll</span><span class="o">.</span><span class="n">dtype</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">bool_</span><span class="p">)</span></div>
-
-<div class="viewcode-block" id="Track.pad"><a class="viewcode-back" href="../../doc.html#pypianoroll.Track.pad">[docs]</a>    <span class="k">def</span> <span class="nf">pad</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pad_length</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Pad the piano roll with zeros at the end along the time axis.</span>
+<div class="viewcode-block" id="Track.pad"><a class="viewcode-back" href="../../track.html#pypianoroll.Track.pad">[docs]</a>    <span class="k">def</span> <span class="nf">pad</span><span class="p">(</span><span class="bp">self</span><span class="p">:</span> <span class="n">_Track</span><span class="p">,</span> <span class="n">pad_length</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">_Track</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Pad the piano roll.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        pad_length : int</span>
-<span class="sd">            Length to pad with zeros along the time axis.</span>
+<span class="sd">            Length to pad along the time axis.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        Object itself.</span>
+
+<span class="sd">        See Also</span>
+<span class="sd">        --------</span>
+<span class="sd">        :func:`pypianoroll.Track.pad_to_multiple` : Pad the piano</span>
+<span class="sd">          roll so that its length is some multiple.</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">pianoroll</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">pad</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">pianoroll</span><span class="p">,</span> <span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="n">pad_length</span><span class="p">),</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)),</span> <span class="s2">&quot;constant&quot;</span>
-        <span class="p">)</span></div>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
 
-<div class="viewcode-block" id="Track.pad_to_multiple"><a class="viewcode-back" href="../../doc.html#pypianoroll.Track.pad_to_multiple">[docs]</a>    <span class="k">def</span> <span class="nf">pad_to_multiple</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">factor</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Pad the piano roll along the time axis to a multiple.</span>
+<div class="viewcode-block" id="Track.pad_to_multiple"><a class="viewcode-back" href="../../track.html#pypianoroll.Track.pad_to_multiple">[docs]</a>    <span class="k">def</span> <span class="nf">pad_to_multiple</span><span class="p">(</span><span class="bp">self</span><span class="p">:</span> <span class="n">_Track</span><span class="p">,</span> <span class="n">factor</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">_Track</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Pad the piano roll so that its length is some multiple.</span>
 
-<span class="sd">        Pad the piano roll with zeros at the end along the time axis of</span>
-<span class="sd">        the minimum length that makes the length of the resulting piano</span>
-<span class="sd">        roll a multiple of `factor`.</span>
+<span class="sd">        Pad the piano roll at the end along the time axis of the minimum</span>
+<span class="sd">        length that makes the length of the resulting piano roll a</span>
+<span class="sd">        multiple of `factor`.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -430,30 +445,33 @@
 <span class="sd">            The value which the length of the resulting piano roll will</span>
 <span class="sd">            be a multiple of.</span>
 
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        Object itself.</span>
+
+<span class="sd">        See Also</span>
+<span class="sd">        --------</span>
+<span class="sd">        :func:`pypianoroll.Track.pad` : Pad the piano roll.</span>
+
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">remainder</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pianoroll</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">%</span> <span class="n">factor</span>
         <span class="k">if</span> <span class="n">remainder</span><span class="p">:</span>
             <span class="n">pad_width</span> <span class="o">=</span> <span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="p">(</span><span class="n">factor</span> <span class="o">-</span> <span class="n">remainder</span><span class="p">)),</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">pianoroll</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">pad</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pianoroll</span><span class="p">,</span> <span class="n">pad_width</span><span class="p">,</span> <span class="s2">&quot;constant&quot;</span><span class="p">)</span></div>
+            <span class="bp">self</span><span class="o">.</span><span class="n">pianoroll</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">pad</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pianoroll</span><span class="p">,</span> <span class="n">pad_width</span><span class="p">,</span> <span class="s2">&quot;constant&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
 
-<div class="viewcode-block" id="Track.plot"><a class="viewcode-back" href="../../doc.html#pypianoroll.Track.plot">[docs]</a>    <span class="k">def</span> <span class="nf">plot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Plot the piano roll and/or save a plot of it.</span>
-
-<span class="sd">        See :func:`pypianoroll.plot_track` for full documentation.</span>
-
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">plot_track</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
-
-<div class="viewcode-block" id="Track.transpose"><a class="viewcode-back" href="../../doc.html#pypianoroll.Track.transpose">[docs]</a>    <span class="k">def</span> <span class="nf">transpose</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">semitone</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+<div class="viewcode-block" id="Track.transpose"><a class="viewcode-back" href="../../track.html#pypianoroll.Track.transpose">[docs]</a>    <span class="k">def</span> <span class="nf">transpose</span><span class="p">(</span><span class="bp">self</span><span class="p">:</span> <span class="n">_Track</span><span class="p">,</span> <span class="n">semitone</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">_Track</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Transpose the piano roll by a number of semitones.</span>
-
-<span class="sd">        Positive values are for a higher key, while negative values are</span>
-<span class="sd">        for a lower key.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        semitone : int</span>
-<span class="sd">            Number of semitones to transpose the piano roll.</span>
+<span class="sd">            Number of semitones to transpose. A positive value raises</span>
+<span class="sd">            the pitches, while a negative value lowers the pitches.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        Object itself.</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="mi">0</span> <span class="o">&lt;</span> <span class="n">semitone</span> <span class="o">&lt;</span> <span class="mi">128</span><span class="p">:</span>
@@ -465,12 +483,254 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">pianoroll</span><span class="p">[:,</span> <span class="p">:</span> <span class="p">(</span><span class="mi">128</span> <span class="o">+</span> <span class="n">semitone</span><span class="p">)]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pianoroll</span><span class="p">[</span>
                 <span class="p">:,</span> <span class="o">-</span><span class="n">semitone</span><span class="p">:</span>
             <span class="p">]</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">pianoroll</span><span class="p">[:,</span> <span class="p">(</span><span class="mi">128</span> <span class="o">+</span> <span class="n">semitone</span><span class="p">)</span> <span class="p">:]</span> <span class="o">=</span> <span class="mi">0</span></div>
+            <span class="bp">self</span><span class="o">.</span><span class="n">pianoroll</span><span class="p">[:,</span> <span class="p">(</span><span class="mi">128</span> <span class="o">+</span> <span class="n">semitone</span><span class="p">)</span> <span class="p">:]</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
 
-<div class="viewcode-block" id="Track.trim_trailing_silence"><a class="viewcode-back" href="../../doc.html#pypianoroll.Track.trim_trailing_silence">[docs]</a>    <span class="k">def</span> <span class="nf">trim_trailing_silence</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Trim the trailing silence of the piano roll.&quot;&quot;&quot;</span>
-        <span class="n">length</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_active_length</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">pianoroll</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pianoroll</span><span class="p">[:</span><span class="n">length</span><span class="p">]</span></div></div>
+<div class="viewcode-block" id="Track.trim"><a class="viewcode-back" href="../../track.html#pypianoroll.Track.trim">[docs]</a>    <span class="k">def</span> <span class="nf">trim</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">:</span> <span class="n">_Track</span><span class="p">,</span> <span class="n">start</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">end</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">_Track</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Trim the piano roll.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        start : int, optional</span>
+<span class="sd">            Start time. Defaults to 0.</span>
+<span class="sd">        end : int, optional</span>
+<span class="sd">            End time. Defaults to active length.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        Object itself.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">start</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">start</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">elif</span> <span class="n">start</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;`start` must be nonnegative.&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">end</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">end</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_length</span><span class="p">()</span>
+        <span class="k">elif</span> <span class="n">end</span> <span class="o">&gt;</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pianoroll</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s2">&quot;`end` must be shorter than the piano roll length.&quot;</span>
+            <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pianoroll</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pianoroll</span><span class="p">[</span><span class="n">start</span><span class="p">:</span><span class="n">end</span><span class="p">]</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+<div class="viewcode-block" id="Track.standardize"><a class="viewcode-back" href="../../track.html#pypianoroll.Track.standardize">[docs]</a>    <span class="k">def</span> <span class="nf">standardize</span><span class="p">(</span><span class="bp">self</span><span class="p">:</span> <span class="s2">&quot;Track&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;StandardTrack&quot;</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Standardize the track.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        Converted StandardTrack object.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">StandardTrack</span><span class="p">(</span>
+            <span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+            <span class="n">program</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">program</span><span class="p">,</span>
+            <span class="n">is_drum</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">is_drum</span><span class="p">,</span>
+            <span class="n">pianoroll</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">pianoroll</span><span class="p">,</span>
+        <span class="p">)</span></div>
+
+<div class="viewcode-block" id="Track.plot"><a class="viewcode-back" href="../../track.html#pypianoroll.Track.plot">[docs]</a>    <span class="k">def</span> <span class="nf">plot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ax</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Axes</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Axes</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Plot the piano roll.</span>
+
+<span class="sd">        Refer to :func:`pypianoroll.plot_track` for full documentation.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">plot_track</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ax</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="StandardTrack"><a class="viewcode-back" href="../../track.html#pypianoroll.StandardTrack">[docs]</a><span class="k">class</span> <span class="nc">StandardTrack</span><span class="p">(</span><span class="n">Track</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;A container for single-track piano rolls with velocities.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    name : str, optional</span>
+<span class="sd">        Track name.</span>
+<span class="sd">    program : int, 0-127, optional</span>
+<span class="sd">        Program number according to General MIDI specification [1].</span>
+<span class="sd">        Defaults to 0 (Acoustic Grand Piano).</span>
+<span class="sd">    is_drum : bool, optional</span>
+<span class="sd">        Whether it is a percussion track. Defaults to False.</span>
+<span class="sd">    pianoroll : ndarray, dtype=uint8, shape=(?, 128), optional</span>
+<span class="sd">        Piano-roll matrix. The first dimension represents time, and the</span>
+<span class="sd">        second dimension represents pitch. Cast to uint8 if not of data</span>
+<span class="sd">        type uint8.</span>
+
+<span class="sd">    References</span>
+<span class="sd">    ----------</span>
+<span class="sd">    1. https://www.midi.org/specifications/item/gm-level-1-sound-set</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">name</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">program</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">is_drum</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">pianoroll</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">ndarray</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">program</span><span class="p">,</span> <span class="n">is_drum</span><span class="p">,</span> <span class="n">pianoroll</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">pianoroll</span><span class="o">.</span><span class="n">dtype</span> <span class="o">!=</span> <span class="n">np</span><span class="o">.</span><span class="n">uint8</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">pianoroll</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pianoroll</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">uint8</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">to_join</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="sa">f</span><span class="s2">&quot;name=</span><span class="si">{</span><span class="nb">repr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+            <span class="sa">f</span><span class="s2">&quot;program=</span><span class="si">{</span><span class="nb">repr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">program</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+            <span class="sa">f</span><span class="s2">&quot;is_drum=</span><span class="si">{</span><span class="nb">repr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">is_drum</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+            <span class="sa">f</span><span class="s2">&quot;pianoroll=array(shape=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">pianoroll</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">,</span>
+        <span class="p">]</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;StandardTrack(</span><span class="si">{</span><span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">to_join</span><span class="p">)</span><span class="si">}</span><span class="s2">)&quot;</span>
+
+    <span class="k">def</span> <span class="nf">_validate_type</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">attr</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">_validate_type</span><span class="p">(</span><span class="n">attr</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">attr</span> <span class="o">==</span> <span class="s2">&quot;pianoroll&quot;</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">pianoroll</span><span class="o">.</span><span class="n">dtype</span> <span class="o">!=</span> <span class="n">np</span><span class="o">.</span><span class="n">uint8</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
+                <span class="s2">&quot;`pianoroll` must be of data type uint8, not &quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">pianoroll</span><span class="o">.</span><span class="n">dtype</span><span class="si">}</span><span class="s2">.&quot;</span>
+            <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_validate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">attr</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">_validate</span><span class="p">(</span><span class="n">attr</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">attr</span> <span class="o">==</span> <span class="s2">&quot;pianoroll&quot;</span> <span class="ow">and</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pianoroll</span> <span class="o">&gt;</span> <span class="mi">127</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s2">&quot;`pianoroll` must contain only integers between 0 to 127.&quot;</span>
+            <span class="p">)</span>
+
+<div class="viewcode-block" id="StandardTrack.set_nonzeros"><a class="viewcode-back" href="../../track.html#pypianoroll.StandardTrack.set_nonzeros">[docs]</a>    <span class="k">def</span> <span class="nf">set_nonzeros</span><span class="p">(</span><span class="bp">self</span><span class="p">:</span> <span class="n">_StandardTrack</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">_StandardTrack</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Assign a constant value to all nonzeros entries.</span>
+
+<span class="sd">        Arguments</span>
+<span class="sd">        ---------</span>
+<span class="sd">        value : int</span>
+<span class="sd">            Value to assign.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        Object itself.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pianoroll</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">pianoroll</span><span class="o">.</span><span class="n">nonzero</span><span class="p">()]</span> <span class="o">=</span> <span class="n">value</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+<div class="viewcode-block" id="StandardTrack.clip"><a class="viewcode-back" href="../../track.html#pypianoroll.StandardTrack.clip">[docs]</a>    <span class="k">def</span> <span class="nf">clip</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">:</span> <span class="n">_StandardTrack</span><span class="p">,</span> <span class="n">lower</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">upper</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">127</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">_StandardTrack</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Clip (limit) the the piano roll into [`lower`, `upper`].</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        lower : int</span>
+<span class="sd">            Lower bound. Defaults to 0.</span>
+<span class="sd">        upper : int</span>
+<span class="sd">            Upper bound. Defaults to 127.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        Object itself.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">lower</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;`lower` must be of type int.&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">upper</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;`upper` must be of type int.&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pianoroll</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pianoroll</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="n">lower</span><span class="p">,</span> <span class="n">upper</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+<div class="viewcode-block" id="StandardTrack.binarize"><a class="viewcode-back" href="../../track.html#pypianoroll.StandardTrack.binarize">[docs]</a>    <span class="k">def</span> <span class="nf">binarize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">threshold</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;BinaryTrack&quot;</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Binarize the piano roll.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        threshold : int or float</span>
+<span class="sd">            Threshold. Defaults to 0.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        Converted Binary object.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">BinaryTrack</span><span class="p">(</span>
+            <span class="n">program</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">program</span><span class="p">,</span>
+            <span class="n">is_drum</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">is_drum</span><span class="p">,</span>
+            <span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+            <span class="n">pianoroll</span><span class="o">=</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pianoroll</span> <span class="o">&gt;</span> <span class="n">threshold</span><span class="p">),</span>
+        <span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="BinaryTrack"><a class="viewcode-back" href="../../track.html#pypianoroll.BinaryTrack">[docs]</a><span class="k">class</span> <span class="nc">BinaryTrack</span><span class="p">(</span><span class="n">Track</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;A container for single-track, binary piano rolls.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    name : str, optional</span>
+<span class="sd">        Track name.</span>
+<span class="sd">    program : int, 0-127, optional</span>
+<span class="sd">        Program number according to General MIDI specification [1].</span>
+<span class="sd">        Defaults to 0 (Acoustic Grand Piano).</span>
+<span class="sd">    is_drum : bool, optional</span>
+<span class="sd">        Whether it is a percussion track. Defaults to False.</span>
+<span class="sd">    pianoroll : ndarray, dtype=bool, shape=(?, 128), optional</span>
+<span class="sd">        Piano-roll matrix. The first dimension represents time, and the</span>
+<span class="sd">        second dimension represents pitch. Cast to bool if not of data</span>
+<span class="sd">        type uint8.</span>
+
+<span class="sd">    References</span>
+<span class="sd">    ----------</span>
+<span class="sd">    1. https://www.midi.org/specifications/item/gm-level-1-sound-set</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">name</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">program</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">is_drum</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">pianoroll</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">ndarray</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">program</span><span class="p">,</span> <span class="n">is_drum</span><span class="p">,</span> <span class="n">pianoroll</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">pianoroll</span><span class="o">.</span><span class="n">dtype</span> <span class="o">!=</span> <span class="n">np</span><span class="o">.</span><span class="n">bool_</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">pianoroll</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pianoroll</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">bool_</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">to_join</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="sa">f</span><span class="s2">&quot;name=</span><span class="si">{</span><span class="nb">repr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+            <span class="sa">f</span><span class="s2">&quot;program=</span><span class="si">{</span><span class="nb">repr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">program</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+            <span class="sa">f</span><span class="s2">&quot;is_drum=</span><span class="si">{</span><span class="nb">repr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">is_drum</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+            <span class="sa">f</span><span class="s2">&quot;pianoroll=array(shape=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">pianoroll</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">,</span>
+        <span class="p">]</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;BinaryTrack(</span><span class="si">{</span><span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">to_join</span><span class="p">)</span><span class="si">}</span><span class="s2">)&quot;</span>
+
+    <span class="k">def</span> <span class="nf">_validate_type</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">attr</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">_validate_type</span><span class="p">(</span><span class="n">attr</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">attr</span> <span class="o">==</span> <span class="s2">&quot;pianoroll&quot;</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">pianoroll</span><span class="o">.</span><span class="n">dtype</span> <span class="o">!=</span> <span class="n">np</span><span class="o">.</span><span class="n">bool_</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
+                <span class="s2">&quot;`pianoroll` must be of data type bool, not &quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">pianoroll</span><span class="o">.</span><span class="n">dtype</span><span class="si">}</span><span class="s2">.&quot;</span>
+            <span class="p">)</span>
+
+<div class="viewcode-block" id="BinaryTrack.set_nonzeros"><a class="viewcode-back" href="../../track.html#pypianoroll.BinaryTrack.set_nonzeros">[docs]</a>    <span class="k">def</span> <span class="nf">set_nonzeros</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;StandardTrack&quot;</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Assign a constant value to all nonzeros entries.</span>
+
+<span class="sd">        Arguments</span>
+<span class="sd">        ---------</span>
+<span class="sd">        value : int</span>
+<span class="sd">            Value to assign.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        Converted StandardTrack object.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">pianoroll</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pianoroll</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">uint8</span><span class="p">)</span>
+        <span class="n">pianoroll</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">pianoroll</span><span class="o">.</span><span class="n">nonzero</span><span class="p">()]</span> <span class="o">=</span> <span class="n">value</span>
+        <span class="k">return</span> <span class="n">StandardTrack</span><span class="p">(</span>
+            <span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+            <span class="n">program</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">program</span><span class="p">,</span>
+            <span class="n">is_drum</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">is_drum</span><span class="p">,</span>
+            <span class="n">pianoroll</span><span class="o">=</span><span class="n">pianoroll</span><span class="p">,</span>
+        <span class="p">)</span></div></div>
 </pre></div>
 
            </div>

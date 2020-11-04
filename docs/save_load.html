@@ -162,27 +162,35 @@
             
   <div class="section" id="save-load">
 <h1>Save &amp; Load<a class="headerlink" href="#save-load" title="Permalink to this headline">¶</a></h1>
-<p>Pypianoroll supports efficient I/O for <a class="reference internal" href="doc.html#pypianoroll.Multitrack" title="pypianoroll.Multitrack"><code class="xref py py-class docutils literal notranslate"><span class="pre">pypianoroll.Multitrack</span></code></a> objects. The piano rolls will be first converted to sparse matrices (specifically, instances of <a class="reference external" href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.sparse.csc_matrix.html#scipy.sparse.csc_matrix" title="(in SciPy v1.5.2)"><code class="xref py py-class docutils literal notranslate"><span class="pre">scipy.sparse.csc_matrix</span></code></a>) and then stored in a NPZ file.</p>
+<p>Pypianoroll supports efficient I/O for <a class="reference internal" href="doc.html#pypianoroll.Multitrack" title="pypianoroll.Multitrack"><code class="xref py py-class docutils literal notranslate"><span class="pre">pypianoroll.Multitrack</span></code></a> objects. The piano rolls will be first converted to sparse matrices (specifically, instances of <a class="reference external" href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.sparse.csc_matrix.html#scipy.sparse.csc_matrix" title="(in SciPy v1.5.3)"><code class="xref py py-class docutils literal notranslate"><span class="pre">scipy.sparse.csc_matrix</span></code></a>) and then stored in a NPZ file.</p>
 <div class="section" id="functions">
 <h2>Functions<a class="headerlink" href="#functions" title="Permalink to this headline">¶</a></h2>
 <dl class="py function">
 <dt>
-<code class="sig-prename descclassname">pypianoroll.</code><code class="sig-name descname">save</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">path</span><span class="p">:</span> <span class="n">str</span></em>, <em class="sig-param"><span class="n">obj</span><span class="p">:</span> <span class="n">pypianoroll.multitrack.Multitrack</span></em>, <em class="sig-param"><span class="n">compressed</span><span class="p">:</span> <span class="n">bool</span> <span class="o">=</span> <span class="default_value">True</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pypianoroll/core.html#save"><span class="viewcode-link">[source]</span></a></dt>
-<dd><p>Save the object to a (compressed) NPZ file.</p>
-<p>This could be later loaded by <a class="reference internal" href="doc.html#pypianoroll.load" title="pypianoroll.load"><code class="xref py py-func docutils literal notranslate"><span class="pre">pypianoroll.load()</span></code></a>.</p>
+<code class="sig-prename descclassname">pypianoroll.</code><code class="sig-name descname">save</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">path</span><span class="p">:</span> <span class="n">Union<span class="p">[</span>str<span class="p">, </span>pathlib.Path<span class="p">]</span></span></em>, <em class="sig-param"><span class="n">multitrack</span><span class="p">:</span> <span class="n">Multitrack</span></em>, <em class="sig-param"><span class="n">compressed</span><span class="p">:</span> <span class="n">bool</span> <span class="o">=</span> <span class="default_value">True</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pypianoroll/outputs.html#save"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Save a Multitrack object to a NPZ file.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>path</strong> (<em>str</em>) – Path to the NPZ file to save.</p></li>
-<li><p><strong>obj</strong> (<a class="reference internal" href="doc.html#pypianoroll.Multitrack" title="pypianoroll.Multitrack"><code class="xref py py-class docutils literal notranslate"><span class="pre">pypianoroll.Multitrack</span></code></a> object) – Object to save.</p></li>
+<li><p><strong>path</strong> (<em>str</em><em> or </em><em>Path</em>) – Path to the NPZ file to save.</p></li>
+<li><p><strong>multitrack</strong> (<a class="reference internal" href="doc.html#pypianoroll.Multitrack" title="pypianoroll.Multitrack"><code class="xref py py-class docutils literal notranslate"><span class="pre">pypianoroll.Multitrack</span></code></a>) – Multitrack to save.</p></li>
 <li><p><strong>compressed</strong> (<em>bool</em>) – Whether to save to a compressed NPZ file. Defaults to True.</p></li>
 </ul>
 </dd>
 </dl>
 <p class="rubric">Notes</p>
 <p>To reduce the file size, the piano rolls are first converted to
-instances of <a class="reference external" href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.sparse.csc_matrix.html#scipy.sparse.csc_matrix" title="(in SciPy v1.5.2)"><code class="xref py py-class docutils literal notranslate"><span class="pre">scipy.sparse.csc_matrix</span></code></a>. The component arrays
-are then collected and saved to a npz file.</p>
+instances of <a class="reference external" href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.sparse.csc_matrix.html#scipy.sparse.csc_matrix" title="(in SciPy v1.5.3)"><code class="xref py py-class docutils literal notranslate"><span class="pre">scipy.sparse.csc_matrix</span></code></a>. The component
+arrays are then collected and saved to a npz file.</p>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<dl class="simple">
+<dt><a class="reference internal" href="doc.html#pypianoroll.load" title="pypianoroll.load"><code class="xref py py-func docutils literal notranslate"><span class="pre">pypianoroll.load()</span></code></a></dt><dd><p>Load a NPZ file into a Multitrack object.</p>
+</dd>
+<dt><a class="reference internal" href="doc.html#pypianoroll.write" title="pypianoroll.write"><code class="xref py py-func docutils literal notranslate"><span class="pre">pypianoroll.write()</span></code></a></dt><dd><p>Write a Multitrack object to a MIDI file.</p>
+</dd>
+</dl>
+</div>
 </dd></dl>
 
 <div class="admonition note">
@@ -206,14 +214,23 @@ files:</p>
 </div>
 <dl class="py function">
 <dt>
-<code class="sig-prename descclassname">pypianoroll.</code><code class="sig-name descname">load</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">path</span><span class="p">:</span> <span class="n">str</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pypianoroll/inputs.html#load"><span class="viewcode-link">[source]</span></a></dt>
+<code class="sig-prename descclassname">pypianoroll.</code><code class="sig-name descname">load</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">path</span><span class="p">:</span> <span class="n">Union<span class="p">[</span>str<span class="p">, </span>pathlib.Path<span class="p">]</span></span></em><span class="sig-paren">)</span> &#x2192; pypianoroll.multitrack.Multitrack<a class="reference internal" href="_modules/pypianoroll/inputs.html#load"><span class="viewcode-link">[source]</span></a></dt>
 <dd><p>Load a NPZ file into a Multitrack object.</p>
 <p>Supports only files previously saved by <a class="reference internal" href="doc.html#pypianoroll.save" title="pypianoroll.save"><code class="xref py py-func docutils literal notranslate"><span class="pre">pypianoroll.save()</span></code></a>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>path</strong> (<em>str</em>) – Path to the NPZ file to load.</p>
+<dd class="field-odd"><p><strong>path</strong> (<em>str</em><em> or </em><em>Path</em>) – Path to the file to load.</p>
 </dd>
 </dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<dl class="simple">
+<dt><a class="reference internal" href="doc.html#pypianoroll.save" title="pypianoroll.save"><code class="xref py py-func docutils literal notranslate"><span class="pre">pypianoroll.save()</span></code></a></dt><dd><p>Save a Multitrack object to a NPZ file.</p>
+</dd>
+<dt><a class="reference internal" href="doc.html#pypianoroll.read" title="pypianoroll.read"><code class="xref py py-func docutils literal notranslate"><span class="pre">pypianoroll.read()</span></code></a></dt><dd><p>Read a MIDI file into a Multitrack object.</p>
+</dd>
+</dl>
+</div>
 </dd></dl>
 
 </div>

@@ -25,6 +25,8 @@ __all__ = [
     "in_scale_rate",
     "n_pitch_classes_used",
     "n_pitches_used",
+    "pitch_range",
+    "pitch_range_tuple",
     "polyphonic_rate",
     "qualified_note_rate",
     "tonal_distance",
@@ -119,6 +121,10 @@ def pitch_range_tuple(pianoroll) -> Tuple[float, float]:
     int or nan
         Lowest active pitch.
 
+    See Also
+    --------
+    :func:`pypianoroll.pitch_range`: Compute the pitch range.
+
     """
     nonzero = pianoroll.any(0).nonzero()[0]
     if not nonzero.size:
@@ -134,6 +140,11 @@ def pitch_range(pianoroll) -> float:
     int or nan
         Pitch range (in semitones), i.e., difference between the
         highest and the lowest active pitches.
+
+    See Also
+    --------
+    :func:`pypianoroll.pitch_range_tuple`: Return the pitch range as a
+      tuple.
 
     """
     lowest, highest = pitch_range_tuple(pianoroll)

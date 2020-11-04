@@ -1,2 +1,2 @@
 """Pypianoroll library version."""
-__version__ = "0.5.3"
+__version__ = "1.0.0"

@@ -41,9 +41,9 @@ def set_nonzeros(
 
     Arguments
     ---------
-    obj : :class:`pypianoroll.Multitrack`,
-      :class:`pypianoroll.StandardTrack` or
-      :class:`pypianoroll.BinaryTrack`
+    obj : :class:`pypianoroll.Multitrack`, \
+            :class:`pypianoroll.StandardTrack` or \
+            :class:`pypianoroll.BinaryTrack`
         Object to modify.
     value : int
         Value to assign.
@@ -67,8 +67,8 @@ def binarize(obj: Union[Multitrack, StandardTrack], threshold: int = 0):
 
     Parameters
     ----------
-    obj : :class:`pypianoroll.Multitrack` or
-      :class:`pypianoroll.StandardTrack`
+    obj : :class:`pypianoroll.Multitrack` or \
+            :class:`pypianoroll.StandardTrack`
         Object to binarize.
     threshold : int
         Threshold. Defaults to 0.
@@ -84,8 +84,8 @@ def clip(
 
     Parameters
     ----------
-    obj : :class:`pypianoroll.Multitrack` or
-      :class:`pypianoroll.StandardTrack`
+    obj : :class:`pypianoroll.Multitrack` or \
+            :class:`pypianoroll.StandardTrack`
         Object to clip.
     lower : int
         Lower bound. Defaults to 0.

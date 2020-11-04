@@ -166,8 +166,19 @@
 piano rolls.</p>
 <dl class="py class">
 <dt>
-<em class="property">class </em><code class="sig-prename descclassname">pypianoroll.</code><code class="sig-name descname">Track</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">program</span><span class="p">:</span> <span class="n">int</span> <span class="o">=</span> <span class="default_value">0</span></em>, <em class="sig-param"><span class="n">is_drum</span><span class="p">:</span> <span class="n">bool</span> <span class="o">=</span> <span class="default_value">False</span></em>, <em class="sig-param"><span class="n">name</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>str<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">pianoroll</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.19)">numpy.ndarray</a><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pypianoroll/track.html#Track"><span class="viewcode-link">[source]</span></a></dt>
-<dd><p>A container for single-track piano roll.</p>
+<em class="property">class </em><code class="sig-prename descclassname">pypianoroll.</code><code class="sig-name descname">Track</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">name</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>str<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">program</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>int<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">is_drum</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>bool<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">pianoroll</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.19)">numpy.ndarray</a><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pypianoroll/track.html#Track"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>A generic container for single-track piano rolls.</p>
+<dl class="py attribute">
+<dt>
+<code class="sig-name descname">name</code></dt>
+<dd><p>Track name.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>str, optional</p>
+</dd>
+</dl>
+</dd></dl>
+
 <dl class="py attribute">
 <dt>
 <code class="sig-name descname">program</code></dt>
@@ -193,6 +204,238 @@ Defaults to 0 (Acoustic Grand Piano).</p>
 
 <dl class="py attribute">
 <dt>
+<code class="sig-name descname">pianoroll</code></dt>
+<dd><p>Piano-roll matrix. The first dimension represents time, and the
+second dimension represents pitch.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>ndarray, shape=(?, 128), optional</p>
+</dd>
+</dl>
+</dd></dl>
+
+<p class="rubric">References</p>
+<ol class="arabic simple">
+<li><p><a class="reference external" href="https://www.midi.org/specifications/item/gm-level-1-sound-set">https://www.midi.org/specifications/item/gm-level-1-sound-set</a></p></li>
+</ol>
+<dl class="py method">
+<dt>
+<code class="sig-name descname">copy</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pypianoroll/track.html#Track.copy"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Return a copy of the track.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p></p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>A copy of the object itself.</p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>The piano-roll array is copied using <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.copy.html#numpy.copy" title="(in NumPy v1.19)"><code class="xref py py-func docutils literal notranslate"><span class="pre">numpy.copy()</span></code></a>.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt>
+<code class="sig-name descname">get_length</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; int<a class="reference internal" href="_modules/pypianoroll/track.html#Track.get_length"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Return the active length of the piano roll.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Length (in time steps) of the piano roll without trailing
+silence.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt>
+<code class="sig-name descname">is_valid</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">attr</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>str<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span> &#x2192; bool<a class="reference internal" href="_modules/pypianoroll/track.html#Track.is_valid"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Return True if an attribute is valid.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>attr</strong> (<em>str</em>) – Attribute to validate. Defaults to validate all attributes.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Whether the attribute has a valid type and value.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt>
+<code class="sig-name descname">is_valid_type</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">attr</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>str<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span> &#x2192; bool<a class="reference internal" href="_modules/pypianoroll/track.html#Track.is_valid_type"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Return True if an attribute is of a valid type.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>attr</strong> (<em>str</em>) – Attribute to validate. Defaults to validate all attributes.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Whether the attribute is of a valid type.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt>
+<code class="sig-name descname">pad</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">pad_length</span><span class="p">:</span> <span class="n">int</span></em><span class="sig-paren">)</span> &#x2192; _Track<a class="reference internal" href="_modules/pypianoroll/track.html#Track.pad"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Pad the piano roll.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>pad_length</strong> (<em>int</em>) – Length to pad along the time axis.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Object itself.</p>
+</dd>
+</dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<dl class="simple">
+<dt><a class="reference internal" href="doc.html#pypianoroll.Track.pad_to_multiple" title="pypianoroll.Track.pad_to_multiple"><code class="xref py py-func docutils literal notranslate"><span class="pre">pypianoroll.Track.pad_to_multiple()</span></code></a></dt><dd><p>Pad the piano roll so that its length is some multiple.</p>
+</dd>
+</dl>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt>
+<code class="sig-name descname">pad_to_multiple</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">factor</span><span class="p">:</span> <span class="n">int</span></em><span class="sig-paren">)</span> &#x2192; _Track<a class="reference internal" href="_modules/pypianoroll/track.html#Track.pad_to_multiple"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Pad the piano roll so that its length is some multiple.</p>
+<p>Pad the piano roll at the end along the time axis of the minimum
+length that makes the length of the resulting piano roll a
+multiple of <cite>factor</cite>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>factor</strong> (<em>int</em>) – The value which the length of the resulting piano roll will
+be a multiple of.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Object itself.</p>
+</dd>
+</dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<dl class="simple">
+<dt><a class="reference internal" href="doc.html#pypianoroll.Track.pad" title="pypianoroll.Track.pad"><code class="xref py py-func docutils literal notranslate"><span class="pre">pypianoroll.Track.pad()</span></code></a></dt><dd><p>Pad the piano roll.</p>
+</dd>
+</dl>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt>
+<code class="sig-name descname">plot</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">ax</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>matplotlib.axes._axes.Axes<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span> &#x2192; matplotlib.axes._axes.Axes<a class="reference internal" href="_modules/pypianoroll/track.html#Track.plot"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Plot the piano roll.</p>
+<p>Refer to <a class="reference internal" href="doc.html#pypianoroll.plot_track" title="pypianoroll.plot_track"><code class="xref py py-func docutils literal notranslate"><span class="pre">pypianoroll.plot_track()</span></code></a> for full documentation.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt>
+<code class="sig-name descname">standardize</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; pypianoroll.track.StandardTrack<a class="reference internal" href="_modules/pypianoroll/track.html#Track.standardize"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Standardize the track.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p></p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>Converted StandardTrack object.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt>
+<code class="sig-name descname">transpose</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">semitone</span><span class="p">:</span> <span class="n">int</span></em><span class="sig-paren">)</span> &#x2192; _Track<a class="reference internal" href="_modules/pypianoroll/track.html#Track.transpose"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Transpose the piano roll by a number of semitones.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>semitone</strong> (<em>int</em>) – Number of semitones to transpose. A positive value raises
+the pitches, while a negative value lowers the pitches.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Object itself.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt>
+<code class="sig-name descname">trim</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">start</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>int<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">end</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>int<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span> &#x2192; _Track<a class="reference internal" href="_modules/pypianoroll/track.html#Track.trim"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Trim the piano roll.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>start</strong> (<em>int</em><em>, </em><em>optional</em>) – Start time. Defaults to 0.</p></li>
+<li><p><strong>end</strong> (<em>int</em><em>, </em><em>optional</em>) – End time. Defaults to active length.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Object itself.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt>
+<code class="sig-name descname">validate</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">attr</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pypianoroll/track.html#Track.validate"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Raise an error if an attribute has an invalid type or value.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>attr</strong> (<em>str</em>) – Attribute to validate. Defaults to validate all attributes.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Object itself.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt>
+<code class="sig-name descname">validate_type</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">attr</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pypianoroll/track.html#Track.validate_type"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Raise an error if an attribute has an invalid type.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>attr</strong> (<em>str</em>) – Attribute to validate. Defaults to validate all attributes.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Object itself.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt>
+<em class="property">class </em><code class="sig-prename descclassname">pypianoroll.</code><code class="sig-name descname">BinaryTrack</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">name</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>str<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">program</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>int<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">is_drum</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>bool<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">pianoroll</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.19)">numpy.ndarray</a><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pypianoroll/track.html#BinaryTrack"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>A container for single-track, binary piano rolls.</p>
+<dl class="py attribute">
+<dt>
 <code class="sig-name descname">name</code></dt>
 <dd><p>Track name.</p>
 <dl class="field-list simple">
@@ -204,19 +447,592 @@ Defaults to 0 (Acoustic Grand Piano).</p>
 
 <dl class="py attribute">
 <dt>
-<code class="sig-name descname">pianoroll</code></dt>
-<dd><p>Piano-roll matrix. The first dimension represents time, and the
-second dimension represents pitch. If dtype is integer, assume
-the data range is in [0, 255].</p>
+<code class="sig-name descname">program</code></dt>
+<dd><p>Program number according to General MIDI specification [1].
+Defaults to 0 (Acoustic Grand Piano).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
-<dd class="field-odd"><p>ndarray, dtype={bool, int}, shape=(?, 128), optional</p>
+<dd class="field-odd"><p>int, 0-127, optional</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt>
+<code class="sig-name descname">is_drum</code></dt>
+<dd><p>Whether it is a percussion track. Defaults to False.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>bool, optional</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt>
+<code class="sig-name descname">pianoroll</code></dt>
+<dd><p>Piano-roll matrix. The first dimension represents time, and the
+second dimension represents pitch. Cast to bool if not of data
+type uint8.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>ndarray, dtype=bool, shape=(?, 128), optional</p>
 </dd>
 </dl>
 </dd></dl>
 
 <p class="rubric">References</p>
-<p>[1] <a class="reference external" href="https://www.midi.org/specifications/item/gm-level-1-sound-set">https://www.midi.org/specifications/item/gm-level-1-sound-set</a></p>
+<ol class="arabic simple">
+<li><p><a class="reference external" href="https://www.midi.org/specifications/item/gm-level-1-sound-set">https://www.midi.org/specifications/item/gm-level-1-sound-set</a></p></li>
+</ol>
+<dl class="py method">
+<dt>
+<code class="sig-name descname">copy</code><span class="sig-paren">(</span><span class="sig-paren">)</span></dt>
+<dd><p>Return a copy of the track.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p></p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>A copy of the object itself.</p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>The piano-roll array is copied using <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.copy.html#numpy.copy" title="(in NumPy v1.19)"><code class="xref py py-func docutils literal notranslate"><span class="pre">numpy.copy()</span></code></a>.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt>
+<code class="sig-name descname">get_length</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; int</dt>
+<dd><p>Return the active length of the piano roll.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Length (in time steps) of the piano roll without trailing
+silence.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt>
+<code class="sig-name descname">is_valid</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">attr</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>str<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span> &#x2192; bool</dt>
+<dd><p>Return True if an attribute is valid.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>attr</strong> (<em>str</em>) – Attribute to validate. Defaults to validate all attributes.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Whether the attribute has a valid type and value.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt>
+<code class="sig-name descname">is_valid_type</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">attr</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>str<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span> &#x2192; bool</dt>
+<dd><p>Return True if an attribute is of a valid type.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>attr</strong> (<em>str</em>) – Attribute to validate. Defaults to validate all attributes.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Whether the attribute is of a valid type.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt>
+<code class="sig-name descname">pad</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">pad_length</span><span class="p">:</span> <span class="n">int</span></em><span class="sig-paren">)</span> &#x2192; _Track</dt>
+<dd><p>Pad the piano roll.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>pad_length</strong> (<em>int</em>) – Length to pad along the time axis.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Object itself.</p>
+</dd>
+</dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<dl class="simple">
+<dt><a class="reference internal" href="doc.html#pypianoroll.Track.pad_to_multiple" title="pypianoroll.Track.pad_to_multiple"><code class="xref py py-func docutils literal notranslate"><span class="pre">pypianoroll.Track.pad_to_multiple()</span></code></a></dt><dd><p>Pad the piano roll so that its length is some multiple.</p>
+</dd>
+</dl>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt>
+<code class="sig-name descname">pad_to_multiple</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">factor</span><span class="p">:</span> <span class="n">int</span></em><span class="sig-paren">)</span> &#x2192; _Track</dt>
+<dd><p>Pad the piano roll so that its length is some multiple.</p>
+<p>Pad the piano roll at the end along the time axis of the minimum
+length that makes the length of the resulting piano roll a
+multiple of <cite>factor</cite>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>factor</strong> (<em>int</em>) – The value which the length of the resulting piano roll will
+be a multiple of.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Object itself.</p>
+</dd>
+</dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<dl class="simple">
+<dt><a class="reference internal" href="doc.html#pypianoroll.Track.pad" title="pypianoroll.Track.pad"><code class="xref py py-func docutils literal notranslate"><span class="pre">pypianoroll.Track.pad()</span></code></a></dt><dd><p>Pad the piano roll.</p>
+</dd>
+</dl>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt>
+<code class="sig-name descname">plot</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">ax</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>matplotlib.axes._axes.Axes<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span> &#x2192; matplotlib.axes._axes.Axes</dt>
+<dd><p>Plot the piano roll.</p>
+<p>Refer to <a class="reference internal" href="doc.html#pypianoroll.plot_track" title="pypianoroll.plot_track"><code class="xref py py-func docutils literal notranslate"><span class="pre">pypianoroll.plot_track()</span></code></a> for full documentation.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt>
+<code class="sig-name descname">set_nonzeros</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">value</span><span class="p">:</span> <span class="n">int</span></em><span class="sig-paren">)</span> &#x2192; pypianoroll.track.StandardTrack<a class="reference internal" href="_modules/pypianoroll/track.html#BinaryTrack.set_nonzeros"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Assign a constant value to all nonzeros entries.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>value</strong> (<em>int</em>) – Value to assign.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Converted StandardTrack object.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt>
+<code class="sig-name descname">standardize</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; pypianoroll.track.StandardTrack</dt>
+<dd><p>Standardize the track.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p></p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>Converted StandardTrack object.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt>
+<code class="sig-name descname">transpose</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">semitone</span><span class="p">:</span> <span class="n">int</span></em><span class="sig-paren">)</span> &#x2192; _Track</dt>
+<dd><p>Transpose the piano roll by a number of semitones.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>semitone</strong> (<em>int</em>) – Number of semitones to transpose. A positive value raises
+the pitches, while a negative value lowers the pitches.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Object itself.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt>
+<code class="sig-name descname">trim</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">start</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>int<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">end</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>int<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span> &#x2192; _Track</dt>
+<dd><p>Trim the piano roll.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>start</strong> (<em>int</em><em>, </em><em>optional</em>) – Start time. Defaults to 0.</p></li>
+<li><p><strong>end</strong> (<em>int</em><em>, </em><em>optional</em>) – End time. Defaults to active length.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Object itself.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt>
+<code class="sig-name descname">validate</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">attr</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span></dt>
+<dd><p>Raise an error if an attribute has an invalid type or value.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>attr</strong> (<em>str</em>) – Attribute to validate. Defaults to validate all attributes.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Object itself.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt>
+<code class="sig-name descname">validate_type</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">attr</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span></dt>
+<dd><p>Raise an error if an attribute has an invalid type.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>attr</strong> (<em>str</em>) – Attribute to validate. Defaults to validate all attributes.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Object itself.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt>
+<em class="property">class </em><code class="sig-prename descclassname">pypianoroll.</code><code class="sig-name descname">StandardTrack</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">name</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>str<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">program</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>int<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">is_drum</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>bool<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">pianoroll</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.19)">numpy.ndarray</a><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pypianoroll/track.html#StandardTrack"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>A container for single-track piano rolls with velocities.</p>
+<dl class="py attribute">
+<dt>
+<code class="sig-name descname">name</code></dt>
+<dd><p>Track name.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>str, optional</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt>
+<code class="sig-name descname">program</code></dt>
+<dd><p>Program number according to General MIDI specification [1].
+Defaults to 0 (Acoustic Grand Piano).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>int, 0-127, optional</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt>
+<code class="sig-name descname">is_drum</code></dt>
+<dd><p>Whether it is a percussion track. Defaults to False.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>bool, optional</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt>
+<code class="sig-name descname">pianoroll</code></dt>
+<dd><p>Piano-roll matrix. The first dimension represents time, and the
+second dimension represents pitch. Cast to uint8 if not of data
+type uint8.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>ndarray, dtype=uint8, shape=(?, 128), optional</p>
+</dd>
+</dl>
+</dd></dl>
+
+<p class="rubric">References</p>
+<ol class="arabic simple">
+<li><p><a class="reference external" href="https://www.midi.org/specifications/item/gm-level-1-sound-set">https://www.midi.org/specifications/item/gm-level-1-sound-set</a></p></li>
+</ol>
+<dl class="py method">
+<dt>
+<code class="sig-name descname">binarize</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">threshold</span><span class="p">:</span> <span class="n">float</span> <span class="o">=</span> <span class="default_value">0</span></em><span class="sig-paren">)</span> &#x2192; pypianoroll.track.BinaryTrack<a class="reference internal" href="_modules/pypianoroll/track.html#StandardTrack.binarize"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Binarize the piano roll.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>threshold</strong> (<em>int</em><em> or </em><em>float</em>) – Threshold. Defaults to 0.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Converted Binary object.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt>
+<code class="sig-name descname">clip</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">lower</span><span class="p">:</span> <span class="n">int</span> <span class="o">=</span> <span class="default_value">0</span></em>, <em class="sig-param"><span class="n">upper</span><span class="p">:</span> <span class="n">int</span> <span class="o">=</span> <span class="default_value">127</span></em><span class="sig-paren">)</span> &#x2192; _StandardTrack<a class="reference internal" href="_modules/pypianoroll/track.html#StandardTrack.clip"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Clip (limit) the the piano roll into [<cite>lower</cite>, <cite>upper</cite>].</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>lower</strong> (<em>int</em>) – Lower bound. Defaults to 0.</p></li>
+<li><p><strong>upper</strong> (<em>int</em>) – Upper bound. Defaults to 127.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Object itself.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt>
+<code class="sig-name descname">copy</code><span class="sig-paren">(</span><span class="sig-paren">)</span></dt>
+<dd><p>Return a copy of the track.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p></p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>A copy of the object itself.</p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>The piano-roll array is copied using <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.copy.html#numpy.copy" title="(in NumPy v1.19)"><code class="xref py py-func docutils literal notranslate"><span class="pre">numpy.copy()</span></code></a>.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt>
+<code class="sig-name descname">get_length</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; int</dt>
+<dd><p>Return the active length of the piano roll.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Length (in time steps) of the piano roll without trailing
+silence.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt>
+<code class="sig-name descname">is_valid</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">attr</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>str<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span> &#x2192; bool</dt>
+<dd><p>Return True if an attribute is valid.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>attr</strong> (<em>str</em>) – Attribute to validate. Defaults to validate all attributes.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Whether the attribute has a valid type and value.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt>
+<code class="sig-name descname">is_valid_type</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">attr</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>str<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span> &#x2192; bool</dt>
+<dd><p>Return True if an attribute is of a valid type.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>attr</strong> (<em>str</em>) – Attribute to validate. Defaults to validate all attributes.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Whether the attribute is of a valid type.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt>
+<code class="sig-name descname">pad</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">pad_length</span><span class="p">:</span> <span class="n">int</span></em><span class="sig-paren">)</span> &#x2192; _Track</dt>
+<dd><p>Pad the piano roll.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>pad_length</strong> (<em>int</em>) – Length to pad along the time axis.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Object itself.</p>
+</dd>
+</dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<dl class="simple">
+<dt><a class="reference internal" href="doc.html#pypianoroll.Track.pad_to_multiple" title="pypianoroll.Track.pad_to_multiple"><code class="xref py py-func docutils literal notranslate"><span class="pre">pypianoroll.Track.pad_to_multiple()</span></code></a></dt><dd><p>Pad the piano roll so that its length is some multiple.</p>
+</dd>
+</dl>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt>
+<code class="sig-name descname">pad_to_multiple</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">factor</span><span class="p">:</span> <span class="n">int</span></em><span class="sig-paren">)</span> &#x2192; _Track</dt>
+<dd><p>Pad the piano roll so that its length is some multiple.</p>
+<p>Pad the piano roll at the end along the time axis of the minimum
+length that makes the length of the resulting piano roll a
+multiple of <cite>factor</cite>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>factor</strong> (<em>int</em>) – The value which the length of the resulting piano roll will
+be a multiple of.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Object itself.</p>
+</dd>
+</dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<dl class="simple">
+<dt><a class="reference internal" href="doc.html#pypianoroll.Track.pad" title="pypianoroll.Track.pad"><code class="xref py py-func docutils literal notranslate"><span class="pre">pypianoroll.Track.pad()</span></code></a></dt><dd><p>Pad the piano roll.</p>
+</dd>
+</dl>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt>
+<code class="sig-name descname">plot</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">ax</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>matplotlib.axes._axes.Axes<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span> &#x2192; matplotlib.axes._axes.Axes</dt>
+<dd><p>Plot the piano roll.</p>
+<p>Refer to <a class="reference internal" href="doc.html#pypianoroll.plot_track" title="pypianoroll.plot_track"><code class="xref py py-func docutils literal notranslate"><span class="pre">pypianoroll.plot_track()</span></code></a> for full documentation.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt>
+<code class="sig-name descname">set_nonzeros</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">value</span><span class="p">:</span> <span class="n">int</span></em><span class="sig-paren">)</span> &#x2192; _StandardTrack<a class="reference internal" href="_modules/pypianoroll/track.html#StandardTrack.set_nonzeros"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Assign a constant value to all nonzeros entries.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>value</strong> (<em>int</em>) – Value to assign.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Object itself.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt>
+<code class="sig-name descname">standardize</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; pypianoroll.track.StandardTrack</dt>
+<dd><p>Standardize the track.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p></p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>Converted StandardTrack object.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt>
+<code class="sig-name descname">transpose</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">semitone</span><span class="p">:</span> <span class="n">int</span></em><span class="sig-paren">)</span> &#x2192; _Track</dt>
+<dd><p>Transpose the piano roll by a number of semitones.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>semitone</strong> (<em>int</em>) – Number of semitones to transpose. A positive value raises
+the pitches, while a negative value lowers the pitches.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Object itself.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt>
+<code class="sig-name descname">trim</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">start</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>int<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">end</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>int<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span> &#x2192; _Track</dt>
+<dd><p>Trim the piano roll.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>start</strong> (<em>int</em><em>, </em><em>optional</em>) – Start time. Defaults to 0.</p></li>
+<li><p><strong>end</strong> (<em>int</em><em>, </em><em>optional</em>) – End time. Defaults to active length.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Object itself.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt>
+<code class="sig-name descname">validate</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">attr</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span></dt>
+<dd><p>Raise an error if an attribute has an invalid type or value.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>attr</strong> (<em>str</em>) – Attribute to validate. Defaults to validate all attributes.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Object itself.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt>
+<code class="sig-name descname">validate_type</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">attr</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span></dt>
+<dd><p>Raise an error if an attribute has an invalid type.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>attr</strong> (<em>str</em>) – Attribute to validate. Defaults to validate all attributes.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Object itself.</p>
+</dd>
+</dl>
+</dd></dl>
+
 </dd></dl>
 
 </div>

@@ -158,189 +158,151 @@
             
   <h1>Source code for pypianoroll.visualization</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot;Module for visualizing multitrack piano rolls.&quot;&quot;&quot;</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Sequence</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">TYPE_CHECKING</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Sequence</span>
 
 <span class="kn">import</span> <span class="nn">matplotlib</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">pretty_midi</span>
 <span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+<span class="kn">from</span> <span class="nn">matplotlib.axes</span> <span class="kn">import</span> <span class="n">Axes</span>
 <span class="kn">from</span> <span class="nn">matplotlib.patches</span> <span class="kn">import</span> <span class="n">Patch</span>
 <span class="kn">from</span> <span class="nn">numpy</span> <span class="kn">import</span> <span class="n">ndarray</span>
+<span class="kn">from</span> <span class="nn">pretty_midi</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">note_number_to_drum_name</span><span class="p">,</span>
+    <span class="n">note_number_to_name</span><span class="p">,</span>
+    <span class="n">program_to_instrument_class</span><span class="p">,</span>
+    <span class="n">program_to_instrument_name</span><span class="p">,</span>
+<span class="p">)</span>
 
-<span class="k">try</span><span class="p">:</span>
-    <span class="kn">from</span> <span class="nn">moviepy.editor</span> <span class="kn">import</span> <span class="n">VideoClip</span>
-    <span class="kn">from</span> <span class="nn">moviepy.video.io.bindings</span> <span class="kn">import</span> <span class="n">mplfig_to_npimage</span>
+<span class="k">if</span> <span class="n">TYPE_CHECKING</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">.multitrack</span> <span class="kn">import</span> <span class="n">Multitrack</span>
+    <span class="kn">from</span> <span class="nn">.track</span> <span class="kn">import</span> <span class="n">Track</span>
 
-    <span class="n">HAS_MOVIEPY</span> <span class="o">=</span> <span class="kc">True</span>
-<span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
-    <span class="n">HAS_MOVIEPY</span> <span class="o">=</span> <span class="kc">False</span>
-
-<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;plot_multitrack&quot;</span><span class="p">,</span> <span class="s2">&quot;plot_pianoroll&quot;</span><span class="p">,</span> <span class="s2">&quot;plot_track&quot;</span><span class="p">,</span> <span class="s2">&quot;save_animation&quot;</span><span class="p">]</span>
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;plot_multitrack&quot;</span><span class="p">,</span> <span class="s2">&quot;plot_pianoroll&quot;</span><span class="p">,</span> <span class="s2">&quot;plot_track&quot;</span><span class="p">]</span>
 
 
 <div class="viewcode-block" id="plot_pianoroll"><a class="viewcode-back" href="../../visualization.html#pypianoroll.plot_pianoroll">[docs]</a><span class="k">def</span> <span class="nf">plot_pianoroll</span><span class="p">(</span>
-    <span class="n">ax</span><span class="p">,</span>
+    <span class="n">ax</span><span class="p">:</span> <span class="n">Axes</span><span class="p">,</span>
     <span class="n">pianoroll</span><span class="p">:</span> <span class="n">ndarray</span><span class="p">,</span>
     <span class="n">is_drum</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="n">resolution</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">downbeats</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Sequence</span><span class="p">[</span><span class="nb">int</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-    <span class="n">preset</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;default&quot;</span><span class="p">,</span>
+    <span class="n">preset</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;full&quot;</span><span class="p">,</span>
     <span class="n">cmap</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;Blues&quot;</span><span class="p">,</span>
     <span class="n">xtick</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;auto&quot;</span><span class="p">,</span>
     <span class="n">ytick</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;octave&quot;</span><span class="p">,</span>
     <span class="n">xticklabel</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
     <span class="n">yticklabel</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;auto&quot;</span><span class="p">,</span>
-    <span class="n">tick_loc</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Sequence</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">tick_loc</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;bottom&quot;</span><span class="p">,</span> <span class="s2">&quot;left&quot;</span><span class="p">),</span>
     <span class="n">tick_direction</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;in&quot;</span><span class="p">,</span>
     <span class="n">label</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;both&quot;</span><span class="p">,</span>
-    <span class="n">grid</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;both&quot;</span><span class="p">,</span>
+    <span class="n">grid_axis</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;both&quot;</span><span class="p">,</span>
     <span class="n">grid_linestyle</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;:&quot;</span><span class="p">,</span>
     <span class="n">grid_linewidth</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.5</span><span class="p">,</span>
+    <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
 <span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Plot a piano roll given as a numpy array.</span>
+<span class="sd">    Plot a piano roll.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    ax : matplotlib.axes.Axes object</span>
-<span class="sd">        A :class:`matplotlib.axes.Axes` object where the piano roll will</span>
-<span class="sd">        be plotted on.</span>
-<span class="sd">    pianoroll : np.ndarray</span>
-<span class="sd">        A piano roll to be plotted. The values should be in [0, 1] when</span>
-<span class="sd">        data type is float, and in [0, 127] when data type is integer.</span>
-
-<span class="sd">        - For a 2D array, shape=(num_time_step, num_pitch).</span>
-<span class="sd">        - For a 3D array, shape=(num_time_step, num_pitch, num_channel),</span>
-<span class="sd">          where channels can be either RGB or RGBA.</span>
-
+<span class="sd">    ax : :class:`matplotlib.axes.Axes`</span>
+<span class="sd">        Axes to plot the piano roll on.</span>
+<span class="sd">    pianoroll : ndarray, shape=(?, 128) or (?, 128, 3) or (?, 128, 4)</span>
+<span class="sd">        Piano roll to plot. For a 3D piano-roll array, the last axis can</span>
+<span class="sd">        be either RGB or RGBA.</span>
 <span class="sd">    is_drum : bool</span>
-<span class="sd">        A boolean number that indicates whether it is a percussion</span>
-<span class="sd">        track. Defaults to False.</span>
+<span class="sd">        Whether it is a percussion track. Defaults to False.</span>
 <span class="sd">    resolution : int</span>
-<span class="sd">        Number of time steps used to represent a beat. Required and only</span>
-<span class="sd">        effective when `xtick` is &#39;beat&#39;.</span>
+<span class="sd">        Time steps per quarter note. Required if `xtick` is &#39;beat&#39;.</span>
 <span class="sd">    downbeats : list</span>
-<span class="sd">        An array that indicates whether the time step contains a</span>
+<span class="sd">        Boolean array that indicates whether the time step contains a</span>
 <span class="sd">        downbeat (i.e., the first time step of a bar).</span>
-
-<span class="sd">    preset : {&#39;default&#39;, &#39;plain&#39;, &#39;frame&#39;}</span>
-<span class="sd">        A string that indicates the preset theme to use.</span>
-
-<span class="sd">        - In &#39;default&#39; preset, the ticks, grid and labels are on.</span>
-<span class="sd">        - In &#39;frame&#39; preset, the ticks and grid are both off.</span>
-<span class="sd">        - In &#39;plain&#39; preset, the x- and y-axis are both off.</span>
-
-<span class="sd">    cmap :  `matplotlib.colors.Colormap`</span>
-<span class="sd">        The colormap to use in :func:`matplotlib.pyplot.imshow`.</span>
-<span class="sd">        Defaults to &#39;Blues&#39;. Only effective when `pianoroll` is 2D.</span>
+<span class="sd">    preset : {&#39;full&#39;, &#39;frame&#39;, &#39;plain&#39;}</span>
+<span class="sd">        Preset theme. For &#39;full&#39; preset, ticks, grid and labels are on.</span>
+<span class="sd">        For &#39;frame&#39; preset, ticks and grid are both off. For &#39;plain&#39;</span>
+<span class="sd">        preset, the x- and y-axis are both off. Defaults to &#39;full&#39;.</span>
+<span class="sd">    cmap : str or :class:`matplotlib.colors.Colormap`</span>
+<span class="sd">        Colormap. Will be passed to :func:`matplotlib.pyplot.imshow`.</span>
+<span class="sd">        Only effective when `pianoroll` is 2D. Defaults to &#39;Blues&#39;.</span>
 <span class="sd">    xtick : {&#39;auto&#39;, &#39;beat&#39;, &#39;step&#39;, &#39;off&#39;}</span>
-<span class="sd">        A string that indicates what to use as ticks along the x-axis.</span>
-<span class="sd">        If &#39;auto&#39; is given, automatically set to &#39;beat&#39; if `resolution`</span>
-<span class="sd">        is also given and set to &#39;step&#39;, otherwise. Defaults to &#39;auto&#39;.</span>
+<span class="sd">        Tick format for the x-axis. For &#39;auto&#39; mode, set to &#39;beat&#39; if</span>
+<span class="sd">        `resolution` is given, otherwise set to &#39;step&#39;. Defaults to</span>
+<span class="sd">        &#39;auto&#39;.</span>
 <span class="sd">    ytick : {&#39;octave&#39;, &#39;pitch&#39;, &#39;off&#39;}</span>
-<span class="sd">        A string that indicates what to use as ticks along the y-axis.</span>
-<span class="sd">        Defaults to &#39;octave&#39;.</span>
+<span class="sd">        Tick format for the y-axis. Defaults to &#39;octave&#39;.</span>
 <span class="sd">    xticklabel : bool</span>
-<span class="sd">        Whether to add tick labels along the x-axis. Only effective</span>
-<span class="sd">        when `xtick` is not &#39;off&#39;.</span>
+<span class="sd">        Whether to add tick labels along the x-axis.</span>
 <span class="sd">    yticklabel : {&#39;auto&#39;, &#39;name&#39;, &#39;number&#39;, &#39;off&#39;}</span>
-<span class="sd">        If &#39;name&#39;, use octave name and pitch name (key name when</span>
-<span class="sd">        `is_drum` is True) as tick labels along the y-axis. If &#39;number&#39;,</span>
-<span class="sd">        use pitch number. If &#39;auto&#39;, set to &#39;name&#39; when `ytick` is</span>
-<span class="sd">        &#39;octave&#39; and &#39;number&#39; when `ytick` is &#39;pitch&#39;. Defaults to</span>
-<span class="sd">        &#39;auto&#39;. Only effective when `ytick` is not &#39;off&#39;.</span>
-<span class="sd">    tick_loc : tuple or list</span>
-<span class="sd">        The locations to put the ticks. Availables elements are</span>
-<span class="sd">        &#39;bottom&#39;, &#39;top&#39;, &#39;left&#39; and &#39;right&#39;. Defaults to (&#39;bottom&#39;,</span>
-<span class="sd">        &#39;left&#39;).</span>
+<span class="sd">        Tick label format for the y-axis. For &#39;name&#39; mode, use pitch</span>
+<span class="sd">        name as tick labels. For &#39;number&#39; mode, use pitch number. For</span>
+<span class="sd">        &#39;auto&#39; mode, set to &#39;name&#39; if `ytick` is &#39;octave&#39; and &#39;number&#39;</span>
+<span class="sd">        if `ytick` is &#39;pitch&#39;. Defaults to &#39;auto&#39;.</span>
+<span class="sd">    tick_loc : sequence of {&#39;bottom&#39;, &#39;top&#39;, &#39;left&#39;, &#39;right&#39;}</span>
+<span class="sd">        Tick locations. Defaults to `(&#39;bottom&#39;, &#39;left&#39;)`.</span>
 <span class="sd">    tick_direction : {&#39;in&#39;, &#39;out&#39;, &#39;inout&#39;}</span>
-<span class="sd">        A string that indicates where to put the ticks. Defaults to</span>
-<span class="sd">        &#39;in&#39;. Only effective when one of `xtick` and `ytick` is on.</span>
+<span class="sd">        Tick direction. Defaults to &#39;in&#39;.</span>
 <span class="sd">    label : {&#39;x&#39;, &#39;y&#39;, &#39;both&#39;, &#39;off&#39;}</span>
-<span class="sd">        A string that indicates whether to add labels to the x-axis and</span>
-<span class="sd">        y-axis. Defaults to &#39;both&#39;.</span>
-<span class="sd">    grid : {&#39;x&#39;, &#39;y&#39;, &#39;both&#39;, &#39;off&#39;}</span>
-<span class="sd">        A string that indicates whether to add grids to the x-axis,</span>
-<span class="sd">        y-axis, both or neither. Defaults to &#39;both&#39;.</span>
+<span class="sd">        Whether to add labels to x- and y-axes. Defaults to &#39;both&#39;.</span>
+<span class="sd">    grid_axis : {&#39;x&#39;, &#39;y&#39;, &#39;both&#39;, &#39;off&#39;}</span>
+<span class="sd">        Whether to add grids to the x- and y-axes. Defaults to &#39;both&#39;.</span>
 <span class="sd">    grid_linestyle : str</span>
-<span class="sd">        Will be passed to :meth:`matplotlib.axes.Axes.grid` as</span>
-<span class="sd">        &#39;linestyle&#39; argument.</span>
+<span class="sd">        Grid line style. Will be passed to</span>
+<span class="sd">        :meth:`matplotlib.axes.Axes.grid`.</span>
 <span class="sd">    grid_linewidth : float</span>
-<span class="sd">        Will be passed to :meth:`matplotlib.axes.Axes.grid` as</span>
-<span class="sd">        &#39;linewidth&#39; argument.</span>
+<span class="sd">        Grid line width. Will be passed to</span>
+<span class="sd">        :meth:`matplotlib.axes.Axes.grid`.</span>
+<span class="sd">    **kwargs</span>
+<span class="sd">        Keyword arguments to be passed to</span>
+<span class="sd">        :meth:`matplotlib.axes.Axes.imshow`.</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="n">pianoroll</span><span class="o">.</span><span class="n">ndim</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">):</span>
+    <span class="c1"># Plot the piano roll</span>
+    <span class="k">if</span> <span class="n">pianoroll</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="n">transposed</span> <span class="o">=</span> <span class="n">pianoroll</span><span class="o">.</span><span class="n">T</span>
+    <span class="k">elif</span> <span class="n">pianoroll</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+        <span class="n">transposed</span> <span class="o">=</span> <span class="n">pianoroll</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;`pianoroll` must be a 2D or 3D numpy array&quot;</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">pianoroll</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">!=</span> <span class="mi">128</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-            <span class="s2">&quot;The length of the second axis of `pianoroll` must be 128.&quot;</span>
-        <span class="p">)</span>
-    <span class="k">if</span> <span class="n">xtick</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;auto&quot;</span><span class="p">,</span> <span class="s2">&quot;beat&quot;</span><span class="p">,</span> <span class="s2">&quot;step&quot;</span><span class="p">,</span> <span class="s2">&quot;off&quot;</span><span class="p">):</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-            <span class="s2">&quot;`xtick` must be one of {&#39;auto&#39;, &#39;beat&#39;, &#39;step&#39;, &#39;none&#39;}.&quot;</span>
-        <span class="p">)</span>
-    <span class="k">if</span> <span class="n">xtick</span> <span class="o">==</span> <span class="s2">&quot;beat&quot;</span> <span class="ow">and</span> <span class="n">resolution</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-            <span class="s2">&quot;`resolution` must be specified when `xtick` is &#39;beat&#39;.&quot;</span>
-        <span class="p">)</span>
-    <span class="k">if</span> <span class="n">ytick</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;octave&quot;</span><span class="p">,</span> <span class="s2">&quot;pitch&quot;</span><span class="p">,</span> <span class="s2">&quot;off&quot;</span><span class="p">):</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;`ytick` must be one of {octave&#39;, &#39;pitch&#39;, &#39;off&#39;}.&quot;</span><span class="p">)</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">xticklabel</span><span class="p">,</span> <span class="nb">bool</span><span class="p">):</span>
-        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;`xticklabel` must be bool.&quot;</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">yticklabel</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;auto&quot;</span><span class="p">,</span> <span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="s2">&quot;number&quot;</span><span class="p">,</span> <span class="s2">&quot;off&quot;</span><span class="p">):</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-            <span class="s2">&quot;`yticklabel` must be one of {&#39;auto&#39;, &#39;name&#39;, &#39;number&#39;, &#39;off&#39;}.&quot;</span>
-        <span class="p">)</span>
-    <span class="k">if</span> <span class="n">tick_direction</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;in&quot;</span><span class="p">,</span> <span class="s2">&quot;out&quot;</span><span class="p">,</span> <span class="s2">&quot;inout&quot;</span><span class="p">):</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-            <span class="s2">&quot;`tick_direction` must be one of {&#39;in&#39;, &#39;out&#39;, &#39;inout&#39;}.&quot;</span>
-        <span class="p">)</span>
-    <span class="k">if</span> <span class="n">label</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;x&quot;</span><span class="p">,</span> <span class="s2">&quot;y&quot;</span><span class="p">,</span> <span class="s2">&quot;both&quot;</span><span class="p">,</span> <span class="s2">&quot;off&quot;</span><span class="p">):</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;`label` must be one of {&#39;x&#39;, &#39;y&#39;, &#39;both&#39;, &#39;off&#39;}.&quot;</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">grid</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;x&quot;</span><span class="p">,</span> <span class="s2">&quot;y&quot;</span><span class="p">,</span> <span class="s2">&quot;both&quot;</span><span class="p">,</span> <span class="s2">&quot;off&quot;</span><span class="p">):</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;`grid` must be one of {&#39;x&#39;, &#39;y&#39;, &#39;both&#39;, &#39;off&#39;}.&quot;</span><span class="p">)</span>
 
-    <span class="c1"># plotting</span>
-    <span class="k">if</span> <span class="n">pianoroll</span><span class="o">.</span><span class="n">ndim</span> <span class="o">&gt;</span> <span class="mi">2</span><span class="p">:</span>
-        <span class="n">to_plot</span> <span class="o">=</span> <span class="n">pianoroll</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">to_plot</span> <span class="o">=</span> <span class="n">pianoroll</span><span class="o">.</span><span class="n">T</span>
-    <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">issubdtype</span><span class="p">(</span><span class="n">pianoroll</span><span class="o">.</span><span class="n">dtype</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">bool_</span><span class="p">)</span> <span class="ow">or</span> <span class="n">np</span><span class="o">.</span><span class="n">issubdtype</span><span class="p">(</span>
-        <span class="n">pianoroll</span><span class="o">.</span><span class="n">dtype</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">floating</span>
-    <span class="p">):</span>
-        <span class="n">ax</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span>
-            <span class="n">to_plot</span><span class="p">,</span>
-            <span class="n">cmap</span><span class="o">=</span><span class="n">cmap</span><span class="p">,</span>
-            <span class="n">aspect</span><span class="o">=</span><span class="s2">&quot;auto&quot;</span><span class="p">,</span>
-            <span class="n">vmin</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
-            <span class="n">vmax</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
-            <span class="n">origin</span><span class="o">=</span><span class="s2">&quot;lower&quot;</span><span class="p">,</span>
-            <span class="n">interpolation</span><span class="o">=</span><span class="s2">&quot;none&quot;</span><span class="p">,</span>
-        <span class="p">)</span>
-    <span class="k">elif</span> <span class="n">np</span><span class="o">.</span><span class="n">issubdtype</span><span class="p">(</span><span class="n">pianoroll</span><span class="o">.</span><span class="n">dtype</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">integer</span><span class="p">):</span>
-        <span class="n">ax</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span>
-            <span class="n">to_plot</span><span class="p">,</span>
-            <span class="n">cmap</span><span class="o">=</span><span class="n">cmap</span><span class="p">,</span>
-            <span class="n">aspect</span><span class="o">=</span><span class="s2">&quot;auto&quot;</span><span class="p">,</span>
-            <span class="n">vmin</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
-            <span class="n">vmax</span><span class="o">=</span><span class="mi">127</span><span class="p">,</span>
-            <span class="n">origin</span><span class="o">=</span><span class="s2">&quot;lower&quot;</span><span class="p">,</span>
-            <span class="n">interpolation</span><span class="o">=</span><span class="s2">&quot;none&quot;</span><span class="p">,</span>
-        <span class="p">)</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;Unsupported data type for `pianoroll`.&quot;</span><span class="p">)</span>
+    <span class="n">img</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span>
+        <span class="n">transposed</span><span class="p">,</span>
+        <span class="n">cmap</span><span class="o">=</span><span class="n">cmap</span><span class="p">,</span>
+        <span class="n">aspect</span><span class="o">=</span><span class="s2">&quot;auto&quot;</span><span class="p">,</span>
+        <span class="n">vmin</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+        <span class="n">vmax</span><span class="o">=</span><span class="mi">1</span> <span class="k">if</span> <span class="n">pianoroll</span><span class="o">.</span><span class="n">dtype</span> <span class="o">==</span> <span class="n">np</span><span class="o">.</span><span class="n">bool_</span> <span class="k">else</span> <span class="mi">127</span><span class="p">,</span>
+        <span class="n">origin</span><span class="o">=</span><span class="s2">&quot;lower&quot;</span><span class="p">,</span>
+        <span class="n">interpolation</span><span class="o">=</span><span class="s2">&quot;none&quot;</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
+    <span class="p">)</span>
 
-    <span class="c1"># tick setting</span>
-    <span class="k">if</span> <span class="n">tick_loc</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">tick_loc</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;bottom&quot;</span><span class="p">,</span> <span class="s2">&quot;left&quot;</span><span class="p">)</span>
+    <span class="c1"># Format ticks and labels</span>
     <span class="k">if</span> <span class="n">xtick</span> <span class="o">==</span> <span class="s2">&quot;auto&quot;</span><span class="p">:</span>
         <span class="n">xtick</span> <span class="o">=</span> <span class="s2">&quot;beat&quot;</span> <span class="k">if</span> <span class="n">resolution</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="s2">&quot;step&quot;</span>
+    <span class="k">elif</span> <span class="n">xtick</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;beat&quot;</span><span class="p">,</span> <span class="s2">&quot;step&quot;</span><span class="p">,</span> <span class="s2">&quot;off&quot;</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="s2">&quot;`xtick` must be one of &#39;auto&#39;, &#39;beat&#39;, &#39;step&#39; or &#39;off&#39;, not &quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">xtick</span><span class="si">}</span><span class="s2">.&quot;</span>
+        <span class="p">)</span>
     <span class="k">if</span> <span class="n">yticklabel</span> <span class="o">==</span> <span class="s2">&quot;auto&quot;</span><span class="p">:</span>
         <span class="n">yticklabel</span> <span class="o">=</span> <span class="s2">&quot;name&quot;</span> <span class="k">if</span> <span class="n">ytick</span> <span class="o">==</span> <span class="s2">&quot;octave&quot;</span> <span class="k">else</span> <span class="s2">&quot;number&quot;</span>
+    <span class="k">elif</span> <span class="n">yticklabel</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="s2">&quot;number&quot;</span><span class="p">,</span> <span class="s2">&quot;off&quot;</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="s2">&quot;`yticklabel` must be one of &#39;auto&#39;, &#39;name&#39;, &#39;number&#39; or &#39;off&#39;, &quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">yticklabel</span><span class="si">}</span><span class="s2">.&quot;</span>
+        <span class="p">)</span>
 
-    <span class="k">if</span> <span class="n">preset</span> <span class="o">==</span> <span class="s2">&quot;plain&quot;</span><span class="p">:</span>
-        <span class="n">ax</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s2">&quot;off&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">preset</span> <span class="o">==</span> <span class="s2">&quot;full&quot;</span><span class="p">:</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">tick_params</span><span class="p">(</span>
+            <span class="n">direction</span><span class="o">=</span><span class="n">tick_direction</span><span class="p">,</span>
+            <span class="n">bottom</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;bottom&quot;</span> <span class="ow">in</span> <span class="n">tick_loc</span><span class="p">),</span>
+            <span class="n">top</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;top&quot;</span> <span class="ow">in</span> <span class="n">tick_loc</span><span class="p">),</span>
+            <span class="n">left</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;left&quot;</span> <span class="ow">in</span> <span class="n">tick_loc</span><span class="p">),</span>
+            <span class="n">right</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;right&quot;</span> <span class="ow">in</span> <span class="n">tick_loc</span><span class="p">),</span>
+            <span class="n">labelbottom</span><span class="o">=</span><span class="n">xticklabel</span><span class="p">,</span>
+            <span class="n">labelleft</span><span class="o">=</span><span class="p">(</span><span class="n">yticklabel</span> <span class="o">!=</span> <span class="s2">&quot;off&quot;</span><span class="p">),</span>
+            <span class="n">labeltop</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+            <span class="n">labelright</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="p">)</span>
     <span class="k">elif</span> <span class="n">preset</span> <span class="o">==</span> <span class="s2">&quot;frame&quot;</span><span class="p">:</span>
         <span class="n">ax</span><span class="o">.</span><span class="n">tick_params</span><span class="p">(</span>
             <span class="n">direction</span><span class="o">=</span><span class="n">tick_direction</span><span class="p">,</span>
@@ -353,31 +315,29 @@
             <span class="n">labelleft</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
             <span class="n">labelright</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
         <span class="p">)</span>
+    <span class="k">elif</span> <span class="n">preset</span> <span class="o">==</span> <span class="s2">&quot;plain&quot;</span><span class="p">:</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s2">&quot;off&quot;</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="n">ax</span><span class="o">.</span><span class="n">tick_params</span><span class="p">(</span>
-            <span class="n">direction</span><span class="o">=</span><span class="n">tick_direction</span><span class="p">,</span>
-            <span class="n">bottom</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;bottom&quot;</span> <span class="ow">in</span> <span class="n">tick_loc</span><span class="p">),</span>
-            <span class="n">top</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;top&quot;</span> <span class="ow">in</span> <span class="n">tick_loc</span><span class="p">),</span>
-            <span class="n">left</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;left&quot;</span> <span class="ow">in</span> <span class="n">tick_loc</span><span class="p">),</span>
-            <span class="n">right</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;right&quot;</span> <span class="ow">in</span> <span class="n">tick_loc</span><span class="p">),</span>
-            <span class="n">labelbottom</span><span class="o">=</span><span class="p">(</span><span class="n">xticklabel</span> <span class="o">!=</span> <span class="s2">&quot;off&quot;</span><span class="p">),</span>
-            <span class="n">labelleft</span><span class="o">=</span><span class="p">(</span><span class="n">yticklabel</span> <span class="o">!=</span> <span class="s2">&quot;off&quot;</span><span class="p">),</span>
-            <span class="n">labeltop</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-            <span class="n">labelright</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;`preset` must be one of &#39;full&#39;, &#39;frame&#39; or &#39;plain&#39;, not </span><span class="si">{</span><span class="n">preset</span><span class="si">}</span><span class="s2">&quot;</span>
         <span class="p">)</span>
 
-    <span class="c1"># x-axis</span>
+    <span class="c1"># Format x-axis</span>
     <span class="k">if</span> <span class="n">xtick</span> <span class="o">==</span> <span class="s2">&quot;beat&quot;</span> <span class="ow">and</span> <span class="n">preset</span> <span class="o">!=</span> <span class="s2">&quot;frame&quot;</span><span class="p">:</span>
-        <span class="n">num_beat</span> <span class="o">=</span> <span class="n">pianoroll</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">//</span> <span class="n">resolution</span>
-        <span class="n">ax</span><span class="o">.</span><span class="n">set_xticks</span><span class="p">(</span><span class="n">resolution</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">num_beat</span><span class="p">)</span> <span class="o">-</span> <span class="mf">0.5</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">resolution</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s2">&quot;`resolution` must not be None when `xtick` is &#39;beat&#39;.&quot;</span>
+            <span class="p">)</span>
+        <span class="n">n_beats</span> <span class="o">=</span> <span class="n">pianoroll</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">//</span> <span class="n">resolution</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_xticks</span><span class="p">(</span><span class="n">resolution</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">n_beats</span><span class="p">)</span> <span class="o">-</span> <span class="mf">0.5</span><span class="p">)</span>
         <span class="n">ax</span><span class="o">.</span><span class="n">set_xticklabels</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
         <span class="n">ax</span><span class="o">.</span><span class="n">set_xticks</span><span class="p">(</span>
-            <span class="n">resolution</span> <span class="o">*</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">num_beat</span><span class="p">)</span> <span class="o">+</span> <span class="mf">0.5</span><span class="p">)</span> <span class="o">-</span> <span class="mf">0.5</span><span class="p">,</span> <span class="n">minor</span><span class="o">=</span><span class="kc">True</span>
+            <span class="n">resolution</span> <span class="o">*</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">n_beats</span><span class="p">)</span> <span class="o">+</span> <span class="mf">0.5</span><span class="p">)</span> <span class="o">-</span> <span class="mf">0.5</span><span class="p">,</span> <span class="n">minor</span><span class="o">=</span><span class="kc">True</span>
         <span class="p">)</span>
-        <span class="n">ax</span><span class="o">.</span><span class="n">set_xticklabels</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">num_beat</span> <span class="o">+</span> <span class="mi">1</span><span class="p">),</span> <span class="n">minor</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_xticklabels</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">n_beats</span> <span class="o">+</span> <span class="mi">1</span><span class="p">),</span> <span class="n">minor</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
         <span class="n">ax</span><span class="o">.</span><span class="n">tick_params</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="s2">&quot;x&quot;</span><span class="p">,</span> <span class="n">which</span><span class="o">=</span><span class="s2">&quot;minor&quot;</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 
-    <span class="c1"># y-axis</span>
+    <span class="c1"># Format y-axis</span>
     <span class="k">if</span> <span class="n">ytick</span> <span class="o">==</span> <span class="s2">&quot;octave&quot;</span><span class="p">:</span>
         <span class="n">ax</span><span class="o">.</span><span class="n">set_yticks</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">128</span><span class="p">,</span> <span class="mi">12</span><span class="p">))</span>
         <span class="k">if</span> <span class="n">yticklabel</span> <span class="o">==</span> <span class="s2">&quot;name&quot;</span><span class="p">:</span>
@@ -387,17 +347,23 @@
         <span class="k">if</span> <span class="n">yticklabel</span> <span class="o">==</span> <span class="s2">&quot;name&quot;</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">is_drum</span><span class="p">:</span>
                 <span class="n">ax</span><span class="o">.</span><span class="n">set_yticklabels</span><span class="p">(</span>
-                    <span class="p">[</span>
-                        <span class="n">pretty_midi</span><span class="o">.</span><span class="n">note_number_to_drum_name</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
-                        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">128</span><span class="p">)</span>
-                    <span class="p">]</span>
+                    <span class="p">[</span><span class="n">note_number_to_drum_name</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">128</span><span class="p">)]</span>
                 <span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">ax</span><span class="o">.</span><span class="n">set_yticklabels</span><span class="p">(</span>
-                    <span class="p">[</span><span class="n">pretty_midi</span><span class="o">.</span><span class="n">note_number_to_name</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">128</span><span class="p">)]</span>
+                    <span class="p">[</span><span class="n">note_number_to_name</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">128</span><span class="p">)]</span>
                 <span class="p">)</span>
+    <span class="k">elif</span> <span class="n">ytick</span> <span class="o">!=</span> <span class="s2">&quot;off&quot;</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;`ytick` must be one of &#39;octave&#39;, &#39;pitch&#39; or &#39;off&#39;, not </span><span class="si">{</span><span class="n">ytick</span><span class="si">}</span><span class="s2">.&quot;</span>
+        <span class="p">)</span>
 
-    <span class="c1"># axis labels</span>
+    <span class="c1"># Format axis labels</span>
+    <span class="k">if</span> <span class="n">label</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;x&quot;</span><span class="p">,</span> <span class="s2">&quot;y&quot;</span><span class="p">,</span> <span class="s2">&quot;both&quot;</span><span class="p">,</span> <span class="s2">&quot;off&quot;</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;`label` must be one of &#39;x&#39;, &#39;y&#39;, &#39;both&#39; or &#39;off&#39;, not </span><span class="si">{</span><span class="n">label</span><span class="si">}</span><span class="s2">.&quot;</span>
+        <span class="p">)</span>
+
     <span class="k">if</span> <span class="n">label</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;x&quot;</span><span class="p">,</span> <span class="s2">&quot;both&quot;</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">xtick</span> <span class="o">==</span> <span class="s2">&quot;step&quot;</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">xticklabel</span><span class="p">:</span>
             <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;time (step)&quot;</span><span class="p">)</span>
@@ -410,294 +376,171 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;pitch&quot;</span><span class="p">)</span>
 
-    <span class="c1"># grid</span>
-    <span class="k">if</span> <span class="n">grid</span> <span class="o">!=</span> <span class="s2">&quot;off&quot;</span><span class="p">:</span>
+    <span class="c1"># Plot the grid</span>
+    <span class="k">if</span> <span class="n">grid_axis</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;x&quot;</span><span class="p">,</span> <span class="s2">&quot;y&quot;</span><span class="p">,</span> <span class="s2">&quot;both&quot;</span><span class="p">,</span> <span class="s2">&quot;off&quot;</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="s2">&quot;`grid` must be one of &#39;x&#39;, &#39;y&#39;, &#39;both&#39; or &#39;off&#39;, not &quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">grid_axis</span><span class="si">}</span><span class="s2">.&quot;</span>
+        <span class="p">)</span>
+    <span class="k">if</span> <span class="n">grid_axis</span> <span class="o">!=</span> <span class="s2">&quot;off&quot;</span><span class="p">:</span>
         <span class="n">ax</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span>
-            <span class="n">axis</span><span class="o">=</span><span class="n">grid</span><span class="p">,</span>
+            <span class="n">axis</span><span class="o">=</span><span class="n">grid_axis</span><span class="p">,</span>
             <span class="n">color</span><span class="o">=</span><span class="s2">&quot;k&quot;</span><span class="p">,</span>
             <span class="n">linestyle</span><span class="o">=</span><span class="n">grid_linestyle</span><span class="p">,</span>
             <span class="n">linewidth</span><span class="o">=</span><span class="n">grid_linewidth</span><span class="p">,</span>
         <span class="p">)</span>
 
-    <span class="c1"># downbeat boarder</span>
-    <span class="k">if</span> <span class="n">downbeats</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">preset</span> <span class="o">!=</span> <span class="s2">&quot;plain&quot;</span><span class="p">:</span>
-        <span class="k">for</span> <span class="n">step</span> <span class="ow">in</span> <span class="n">downbeats</span><span class="p">:</span>
-            <span class="n">ax</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">step</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;k&quot;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span></div>
+    <span class="c1"># Plot downbeat boundaries</span>
+    <span class="k">if</span> <span class="n">downbeats</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">downbeat</span> <span class="ow">in</span> <span class="n">downbeats</span><span class="p">:</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">downbeat</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;k&quot;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">img</span></div>
 
 
-<div class="viewcode-block" id="plot_track"><a class="viewcode-back" href="../../visualization.html#pypianoroll.plot_track">[docs]</a><span class="k">def</span> <span class="nf">plot_track</span><span class="p">(</span>
-    <span class="n">track</span><span class="p">,</span>
-    <span class="n">filename</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-    <span class="n">resolution</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-    <span class="n">downbeats</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Sequence</span><span class="p">[</span><span class="nb">int</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-    <span class="n">preset</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;default&quot;</span><span class="p">,</span>
-    <span class="n">cmap</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;Blues&quot;</span><span class="p">,</span>
-    <span class="n">xtick</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;auto&quot;</span><span class="p">,</span>
-    <span class="n">ytick</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;octave&quot;</span><span class="p">,</span>
-    <span class="n">xticklabel</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-    <span class="n">yticklabel</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;auto&quot;</span><span class="p">,</span>
-    <span class="n">tick_loc</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Sequence</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-    <span class="n">tick_direction</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;in&quot;</span><span class="p">,</span>
-    <span class="n">label</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;both&quot;</span><span class="p">,</span>
-    <span class="n">grid</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;both&quot;</span><span class="p">,</span>
-    <span class="n">grid_linestyle</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;:&quot;</span><span class="p">,</span>
-    <span class="n">grid_linewidth</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.5</span><span class="p">,</span>
-<span class="p">):</span>
+<div class="viewcode-block" id="plot_track"><a class="viewcode-back" href="../../visualization.html#pypianoroll.plot_track">[docs]</a><span class="k">def</span> <span class="nf">plot_track</span><span class="p">(</span><span class="n">track</span><span class="p">:</span> <span class="s2">&quot;Track&quot;</span><span class="p">,</span> <span class="n">ax</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Axes</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Axes</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Plot the pianoroll or save a plot of the pianoroll.</span>
+<span class="sd">    Plot a track.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    filename :</span>
-<span class="sd">        Filename to which the plot is saved. If None, save nothing.</span>
-<span class="sd">    resolution : int</span>
-<span class="sd">        Number of time steps used to represent a beat. Required and only</span>
-<span class="sd">        effective when `xtick` is &#39;beat&#39;.</span>
-<span class="sd">    downbeats : list</span>
-<span class="sd">        An array that indicates whether the time step contains a</span>
-<span class="sd">        downbeat (i.e., the first time step of a bar).</span>
-
-<span class="sd">    preset : {&#39;default&#39;, &#39;plain&#39;, &#39;frame&#39;}</span>
-<span class="sd">        A string that indicates the preset theme to use.</span>
-
-<span class="sd">        - In &#39;default&#39; preset, the ticks, grid and labels are on.</span>
-<span class="sd">        - In &#39;frame&#39; preset, the ticks and grid are both off.</span>
-<span class="sd">        - In &#39;plain&#39; preset, the x- and y-axis are both off.</span>
-
-<span class="sd">    cmap :  `matplotlib.colors.Colormap`</span>
-<span class="sd">        Colormap to use in :func:`matplotlib.pyplot.imshow`. Defaults</span>
-<span class="sd">        to &#39;Blues&#39;. Only effective when `pianoroll` is 2D.</span>
-<span class="sd">    xtick : {&#39;auto&#39;, &#39;beat&#39;, &#39;step&#39;, &#39;off&#39;}</span>
-<span class="sd">        A string that indicates what to use as ticks along the x-axis.</span>
-<span class="sd">        If &#39;auto&#39; is given, automatically set to &#39;beat&#39; if `resolution`</span>
-<span class="sd">        is also given and set to &#39;step&#39;, otherwise. Defaults to &#39;auto&#39;.</span>
-<span class="sd">    ytick : {&#39;octave&#39;, &#39;pitch&#39;, &#39;off&#39;}</span>
-<span class="sd">        A string that indicates what to use as ticks along the y-axis.</span>
-<span class="sd">        Defaults to &#39;octave&#39;.</span>
-<span class="sd">    xticklabel : bool</span>
-<span class="sd">        Whether to add tick labels along the x-axis. Only effective</span>
-<span class="sd">        when `xtick` is not &#39;off&#39;.</span>
-<span class="sd">    yticklabel : {&#39;auto&#39;, &#39;name&#39;, &#39;number&#39;, &#39;off&#39;}</span>
-<span class="sd">        If &#39;name&#39;, use octave name and pitch name (key name when</span>
-<span class="sd">        `is_drum` is True) as tick labels along the y-axis. If &#39;number&#39;,</span>
-<span class="sd">        use pitch number. If &#39;auto&#39;, set to &#39;name&#39; when `ytick` is</span>
-<span class="sd">        &#39;octave&#39; and &#39;number&#39; when `ytick` is &#39;pitch&#39;. Defaults to</span>
-<span class="sd">        &#39;auto&#39;. Only effective when `ytick` is not &#39;off&#39;.</span>
-<span class="sd">    tick_loc : tuple or list</span>
-<span class="sd">        Locations to put the ticks. Availables elements are &#39;bottom&#39;,</span>
-<span class="sd">        &#39;top&#39;, &#39;left&#39; and &#39;right&#39;. Defaults to (&#39;bottom&#39;, &#39;left&#39;).</span>
-<span class="sd">    tick_direction : {&#39;in&#39;, &#39;out&#39;, &#39;inout&#39;}</span>
-<span class="sd">        A string that indicates where to put the ticks. Defaults to</span>
-<span class="sd">        &#39;in&#39;. Only effective when one of `xtick` and `ytick` is on.</span>
-<span class="sd">    label : {&#39;x&#39;, &#39;y&#39;, &#39;both&#39;, &#39;off&#39;}</span>
-<span class="sd">        A string that indicates whether to add labels to the x-axis and</span>
-<span class="sd">        y-axis. Defaults to &#39;both&#39;.</span>
-<span class="sd">    grid : {&#39;x&#39;, &#39;y&#39;, &#39;both&#39;, &#39;off&#39;}</span>
-<span class="sd">        A string that indicates whether to add grids to the x-axis,</span>
-<span class="sd">        y-axis, both or neither. Defaults to &#39;both&#39;.</span>
-<span class="sd">    grid_linestyle : str</span>
-<span class="sd">        Will be passed to :meth:`matplotlib.axes.Axes.grid` as</span>
-<span class="sd">        &#39;linestyle&#39; argument.</span>
-<span class="sd">    grid_linewidth : float</span>
-<span class="sd">        Will be passed to :meth:`matplotlib.axes.Axes.grid` as</span>
-<span class="sd">        &#39;linewidth&#39; argument.</span>
+<span class="sd">    track : :class:`pypianoroll.Track`</span>
+<span class="sd">        Track to plot.</span>
+<span class="sd">    ax : :class:`matplotlib.axes.Axes`</span>
+<span class="sd">        Axes to plot the piano roll on. Defaults to call `plt.gca()`.</span>
+<span class="sd">    **kwargs</span>
+<span class="sd">        Keyword arguments to pass to :func:`pypianoroll.plot_pianoroll`.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">    fig : `matplotlib.figure.Figure` object</span>
-<span class="sd">        A :class:`matplotlib.figure.Figure` object.</span>
-<span class="sd">    ax : `matplotlib.axes.Axes` object</span>
-<span class="sd">        A :class:`matplotlib.axes.Axes` object.</span>
+<span class="sd">    :class:`matplotlib.axes.Axes`</span>
+<span class="sd">        (Created) Axes object.</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
-    <span class="n">plot_pianoroll</span><span class="p">(</span>
-        <span class="n">ax</span><span class="p">,</span>
-        <span class="n">track</span><span class="o">.</span><span class="n">pianoroll</span><span class="p">,</span>
-        <span class="n">track</span><span class="o">.</span><span class="n">is_drum</span><span class="p">,</span>
-        <span class="n">resolution</span><span class="p">,</span>
-        <span class="n">downbeats</span><span class="p">,</span>
-        <span class="n">preset</span><span class="o">=</span><span class="n">preset</span><span class="p">,</span>
-        <span class="n">cmap</span><span class="o">=</span><span class="n">cmap</span><span class="p">,</span>
-        <span class="n">xtick</span><span class="o">=</span><span class="n">xtick</span><span class="p">,</span>
-        <span class="n">ytick</span><span class="o">=</span><span class="n">ytick</span><span class="p">,</span>
-        <span class="n">xticklabel</span><span class="o">=</span><span class="n">xticklabel</span><span class="p">,</span>
-        <span class="n">yticklabel</span><span class="o">=</span><span class="n">yticklabel</span><span class="p">,</span>
-        <span class="n">tick_loc</span><span class="o">=</span><span class="n">tick_loc</span><span class="p">,</span>
-        <span class="n">tick_direction</span><span class="o">=</span><span class="n">tick_direction</span><span class="p">,</span>
-        <span class="n">label</span><span class="o">=</span><span class="n">label</span><span class="p">,</span>
-        <span class="n">grid</span><span class="o">=</span><span class="n">grid</span><span class="p">,</span>
-        <span class="n">grid_linestyle</span><span class="o">=</span><span class="n">grid_linestyle</span><span class="p">,</span>
-        <span class="n">grid_linewidth</span><span class="o">=</span><span class="n">grid_linewidth</span><span class="p">,</span>
+    <span class="k">if</span> <span class="n">ax</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span>
+    <span class="n">plot_pianoroll</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">track</span><span class="o">.</span><span class="n">pianoroll</span><span class="p">,</span> <span class="n">track</span><span class="o">.</span><span class="n">is_drum</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">ax</span></div>
+
+
+<span class="k">def</span> <span class="nf">_get_track_label</span><span class="p">(</span><span class="n">track_label</span><span class="p">,</span> <span class="n">track</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Return corresponding track labels.&quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">track_label</span> <span class="o">==</span> <span class="s2">&quot;name&quot;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">track</span><span class="o">.</span><span class="n">name</span>
+    <span class="k">if</span> <span class="n">track_label</span> <span class="o">==</span> <span class="s2">&quot;program&quot;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">program_to_instrument_name</span><span class="p">(</span><span class="n">track</span><span class="o">.</span><span class="n">program</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">track_label</span> <span class="o">==</span> <span class="s2">&quot;family&quot;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">program_to_instrument_class</span><span class="p">(</span><span class="n">track</span><span class="o">.</span><span class="n">program</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">track_label</span>
+
+
+<span class="k">def</span> <span class="nf">_add_tracklabel</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">track_label</span><span class="p">,</span> <span class="n">track</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Add a track label to an axis.&quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">ax</span><span class="o">.</span><span class="n">get_ylabel</span><span class="p">():</span>
+        <span class="k">return</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span>
+        <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">_get_track_label</span><span class="p">(</span><span class="n">track_label</span><span class="p">,</span> <span class="n">track</span><span class="p">)</span><span class="si">}</span><span class="se">\n\n</span><span class="si">{</span><span class="n">ax</span><span class="o">.</span><span class="n">get_ylabel</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span>
     <span class="p">)</span>
-
-    <span class="k">if</span> <span class="n">filename</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
-
-    <span class="k">return</span> <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span></div>
 
 
 <div class="viewcode-block" id="plot_multitrack"><a class="viewcode-back" href="../../visualization.html#pypianoroll.plot_multitrack">[docs]</a><span class="k">def</span> <span class="nf">plot_multitrack</span><span class="p">(</span>
-    <span class="n">multitrack</span><span class="p">,</span>
-    <span class="n">filename</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">multitrack</span><span class="p">:</span> <span class="s2">&quot;Multitrack&quot;</span><span class="p">,</span>
+    <span class="n">axs</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Sequence</span><span class="p">[</span><span class="n">Axes</span><span class="p">]],</span>
     <span class="n">mode</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;separate&quot;</span><span class="p">,</span>
     <span class="n">track_label</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;name&quot;</span><span class="p">,</span>
-    <span class="n">preset</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;default&quot;</span><span class="p">,</span>
+    <span class="n">preset</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;full&quot;</span><span class="p">,</span>
     <span class="n">cmaps</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Sequence</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">xtick</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;auto&quot;</span><span class="p">,</span>
     <span class="n">ytick</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;octave&quot;</span><span class="p">,</span>
     <span class="n">xticklabel</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
     <span class="n">yticklabel</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;auto&quot;</span><span class="p">,</span>
-    <span class="n">tick_loc</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Sequence</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">tick_loc</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;bottom&quot;</span><span class="p">,</span> <span class="s2">&quot;left&quot;</span><span class="p">),</span>
     <span class="n">tick_direction</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;in&quot;</span><span class="p">,</span>
     <span class="n">label</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;both&quot;</span><span class="p">,</span>
-    <span class="n">grid</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;both&quot;</span><span class="p">,</span>
+    <span class="n">grid_axis</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;both&quot;</span><span class="p">,</span>
     <span class="n">grid_linestyle</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;:&quot;</span><span class="p">,</span>
     <span class="n">grid_linewidth</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.5</span><span class="p">,</span>
-<span class="p">):</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Axes</span><span class="p">]:</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Plot the pianorolls or save a plot of them.</span>
+<span class="sd">    Plot the multitrack.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    filename : str</span>
-<span class="sd">        Filename to which the plot is saved. If None, save nothing.</span>
-<span class="sd">    mode : {&#39;separate&#39;, &#39;stacked&#39;, &#39;hybrid&#39;}</span>
-<span class="sd">        A string that indicate the plotting mode to use. Defaults to</span>
+<span class="sd">    multitrack : :class:`pypianoroll.Multitrack`</span>
+<span class="sd">        Multitrack to plot.</span>
+<span class="sd">    axs : sequence of :class:`matplotlib.axes.Axes`</span>
+<span class="sd">        Axes to plot the tracks on.</span>
+<span class="sd">    mode : {&#39;separate&#39;, &#39;blended&#39;, &#39;hybrid&#39;}</span>
+<span class="sd">        Plotting strategy for visualizing multiple tracks. For</span>
+<span class="sd">        &#39;separate&#39; mode, plot each track separately. For &#39;blended&#39;,</span>
+<span class="sd">        blend and plot the pianoroll as a colored image. For &#39;hybrid&#39;</span>
+<span class="sd">        mode, drum tracks are blended into a &#39;Drums&#39; track and all</span>
+<span class="sd">        other tracks are blended into an &#39;Others&#39; track. Defaults to</span>
 <span class="sd">        &#39;separate&#39;.</span>
-
-<span class="sd">        - In &#39;separate&#39; mode, all the tracks are plotted separately.</span>
-<span class="sd">        - In &#39;stacked&#39; mode, a color is assigned based on `cmaps` to</span>
-<span class="sd">          the piano roll of each track and the piano rolls are stacked</span>
-<span class="sd">          and plotted as a colored image with RGB channels.</span>
-<span class="sd">        - In &#39;hybrid&#39; mode, the drum tracks are merged into a &#39;Drums&#39;</span>
-<span class="sd">          track, while the other tracks are merged into an &#39;Others&#39;</span>
-<span class="sd">          track, and the two merged tracks are then plotted separately.</span>
-
 <span class="sd">    track_label : {&#39;name&#39;, &#39;program&#39;, &#39;family&#39;, &#39;off&#39;}</span>
-<span class="sd">        A sting that indicates what to use as labels to the track. When</span>
-<span class="sd">        `mode` is &#39;hybrid&#39;, all options other than &#39;off&#39; will label the</span>
-<span class="sd">        two track with &#39;Drums&#39; and &#39;Others&#39;.</span>
-<span class="sd">    preset : {&#39;default&#39;, &#39;plain&#39;, &#39;frame&#39;}</span>
-<span class="sd">        A string that indicates the preset theme to use.</span>
-
-<span class="sd">        - In &#39;default&#39; preset, the ticks, grid and labels are on.</span>
-<span class="sd">        - In &#39;frame&#39; preset, the ticks and grid are both off.</span>
-<span class="sd">        - In &#39;plain&#39; preset, the x- and y-axis are both off.</span>
-
+<span class="sd">        Track label format. When `mode` is &#39;hybrid&#39;, all options other</span>
+<span class="sd">        than &#39;off&#39; will label the two track with &#39;Drums&#39; and &#39;Others&#39;.</span>
+<span class="sd">    preset : {&#39;full&#39;, &#39;frame&#39;, &#39;plain&#39;}</span>
+<span class="sd">        Preset theme to use. For &#39;full&#39; preset, ticks, grid and labels</span>
+<span class="sd">        are on. For &#39;frame&#39; preset, ticks and grid are both off. For</span>
+<span class="sd">        &#39;plain&#39; preset, the x- and y-axis are both off. Defaults to</span>
+<span class="sd">        &#39;full&#39;.</span>
 <span class="sd">    cmaps :  tuple or list</span>
-<span class="sd">        The `matplotlib.colors.Colormap` instances or colormap codes to</span>
-<span class="sd">        use.</span>
-
-<span class="sd">        - When `mode` is &#39;separate&#39;, each element will be passed to each</span>
-<span class="sd">          call of :func:`matplotlib.pyplot.imshow`. Defaults to</span>
-<span class="sd">          (&#39;Blues&#39;, &#39;Oranges&#39;, &#39;Greens&#39;, &#39;Reds&#39;, &#39;Purples&#39;, &#39;Greys&#39;).</span>
-<span class="sd">        - When `mode` is stacked, a color is assigned based on `cmaps`</span>
-<span class="sd">          to the piano roll of each track. Defaults to (&#39;hsv&#39;).</span>
-<span class="sd">        - When `mode` is &#39;hybrid&#39;, the first (second) element is used</span>
-<span class="sd">          in the &#39;Drums&#39; (&#39;Others&#39;) track. Defaults to (&#39;Blues&#39;,</span>
-<span class="sd">          &#39;Greens&#39;).</span>
-
-<span class="sd">    xtick : {&#39;auto&#39;, &#39;beat&#39;, &#39;step&#39;, &#39;off&#39;}</span>
-<span class="sd">        A string that indicates what to use as ticks along the x-axis.</span>
-<span class="sd">        If &#39;auto&#39; is given, automatically set to &#39;beat&#39; if `resolution`</span>
-<span class="sd">        is also given and set to &#39;step&#39;, otherwise. Defaults to &#39;auto&#39;.</span>
-<span class="sd">    ytick : {&#39;octave&#39;, &#39;pitch&#39;, &#39;off&#39;}</span>
-<span class="sd">        A string that indicates what to use as ticks along the y-axis.</span>
-<span class="sd">        Defaults to &#39;octave&#39;.</span>
-<span class="sd">    xticklabel : bool</span>
-<span class="sd">        Whether to add tick labels along the x-axis. Only effective</span>
-<span class="sd">        when `xtick` is not &#39;off&#39;.</span>
-<span class="sd">    yticklabel : {&#39;auto&#39;, &#39;name&#39;, &#39;number&#39;, &#39;off&#39;}</span>
-<span class="sd">        If &#39;name&#39;, use octave name and pitch name (key name when</span>
-<span class="sd">        `is_drum` is True) as tick labels along the y-axis. If &#39;number&#39;,</span>
-<span class="sd">        use pitch number. If &#39;auto&#39;, set to &#39;name&#39; when `ytick` is</span>
-<span class="sd">        &#39;octave&#39; and &#39;number&#39; when `ytick` is &#39;pitch&#39;. Defaults to</span>
-<span class="sd">        &#39;auto&#39;. Only effective when `ytick` is not &#39;off&#39;.</span>
-<span class="sd">    tick_loc : tuple or list</span>
-<span class="sd">        Locations to put the ticks. Availables elements are &#39;bottom&#39;,</span>
-<span class="sd">        &#39;top&#39;, &#39;left&#39; and &#39;right&#39;. Defaults to (&#39;bottom&#39;, &#39;left&#39;).</span>
-<span class="sd">    tick_direction : {&#39;in&#39;, &#39;out&#39;, &#39;inout&#39;}</span>
-<span class="sd">        A string that indicates where to put the ticks. Defaults to</span>
-<span class="sd">        &#39;in&#39;. Only effective when one of `xtick` and `ytick` is on.</span>
-<span class="sd">    label : {&#39;x&#39;, &#39;y&#39;, &#39;both&#39;, &#39;off&#39;}</span>
-<span class="sd">        A string that indicates whether to add labels to the x-axis and</span>
-<span class="sd">        y-axis. Defaults to &#39;both&#39;.</span>
-<span class="sd">    grid : {&#39;x&#39;, &#39;y&#39;, &#39;both&#39;, &#39;off&#39;}</span>
-<span class="sd">        A string that indicates whether to add grids to the x-axis,</span>
-<span class="sd">        y-axis, both or neither. Defaults to &#39;both&#39;.</span>
-<span class="sd">    grid_linestyle : str</span>
-<span class="sd">        Will be passed to :meth:`matplotlib.axes.Axes.grid` as</span>
-<span class="sd">        &#39;linestyle&#39; argument.</span>
-<span class="sd">    grid_linewidth : float</span>
-<span class="sd">        Will be passed to :meth:`matplotlib.axes.Axes.grid` as</span>
-<span class="sd">        &#39;linewidth&#39; argument.</span>
+<span class="sd">        Colormaps. Will be passed to :func:`matplotlib.pyplot.imshow`.</span>
+<span class="sd">        Only effective when `pianoroll` is 2D. Defaults to &#39;Blues&#39;.</span>
+<span class="sd">        If `mode` is &#39;separate&#39;, defaults to `(&#39;Blues&#39;, &#39;Oranges&#39;,</span>
+<span class="sd">        &#39;Greens&#39;, &#39;Reds&#39;, &#39;Purples&#39;, &#39;Greys&#39;)`. If `mode` is &#39;blended&#39;,</span>
+<span class="sd">        defaults to `(&#39;hsv&#39;)`. If `mode` is &#39;hybrid&#39;, defaults to</span>
+<span class="sd">        `(&#39;Blues&#39;, &#39;Greens&#39;)`.</span>
+<span class="sd">    **kwargs</span>
+<span class="sd">        Keyword arguments to pass to :func:`pypianoroll.plot_track`.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">    fig : `matplotlib.figure.Figure` object</span>
-<span class="sd">        A :class:`matplotlib.figure.Figure` object.</span>
-<span class="sd">    axs : list</span>
-<span class="sd">        List of :class:`matplotlib.axes.Axes` object.</span>
+<span class="sd">    list of :class:`matplotlib.axes.Axes`</span>
+<span class="sd">        (Created) list of Axes objects.</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
-
-    <span class="k">def</span> <span class="nf">get_track_label</span><span class="p">(</span><span class="n">track_label</span><span class="p">,</span> <span class="n">track</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Return corresponding track labels.&quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="n">track_label</span> <span class="o">==</span> <span class="s2">&quot;name&quot;</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">track</span><span class="o">.</span><span class="n">name</span>
-        <span class="k">if</span> <span class="n">track_label</span> <span class="o">==</span> <span class="s2">&quot;program&quot;</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">pretty_midi</span><span class="o">.</span><span class="n">program_to_instrument_name</span><span class="p">(</span><span class="n">track</span><span class="o">.</span><span class="n">program</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">track_label</span> <span class="o">==</span> <span class="s2">&quot;family&quot;</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">pretty_midi</span><span class="o">.</span><span class="n">program_to_instrument_class</span><span class="p">(</span><span class="n">track</span><span class="o">.</span><span class="n">program</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">track_label</span>
-
-    <span class="k">def</span> <span class="nf">add_tracklabel</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">track_label</span><span class="p">,</span> <span class="n">track</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Add a track label to an axis.&quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">ax</span><span class="o">.</span><span class="n">get_ylabel</span><span class="p">():</span>
-            <span class="k">return</span>
-        <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span>
-            <span class="n">get_track_label</span><span class="p">(</span><span class="n">track_label</span><span class="p">,</span> <span class="n">track</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="n">ax</span><span class="o">.</span><span class="n">get_ylabel</span><span class="p">()</span>
-        <span class="p">)</span>
-
-    <span class="n">multitrack</span><span class="o">.</span><span class="n">validate</span><span class="p">()</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">multitrack</span><span class="o">.</span><span class="n">tracks</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;There is no track to plot.&quot;</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">mode</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;separate&quot;</span><span class="p">,</span> <span class="s2">&quot;stacked&quot;</span><span class="p">,</span> <span class="s2">&quot;hybrid&quot;</span><span class="p">):</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-            <span class="s2">&quot;`mode` must be one of {&#39;separate&#39;, &#39;stacked&#39;, &#39;hybrid&#39;}.&quot;</span>
-        <span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;There is no track to plot.&quot;</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">track_label</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="s2">&quot;program&quot;</span><span class="p">,</span> <span class="s2">&quot;family&quot;</span><span class="p">,</span> <span class="s2">&quot;off&quot;</span><span class="p">):</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-            <span class="s2">&quot;`track_label` must be one of {&#39;name&#39;, &#39;program&#39;, &#39;family&#39;}.&quot;</span>
+            <span class="s2">&quot;`track_label` must be one of &#39;name&#39;, &#39;program&#39; or &#39;family&#39;, not &quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">track_label</span><span class="si">}</span><span class="s2">.&quot;</span>
         <span class="p">)</span>
 
+    <span class="c1"># Set default color maps</span>
     <span class="k">if</span> <span class="n">cmaps</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">mode</span> <span class="o">==</span> <span class="s2">&quot;separate&quot;</span><span class="p">:</span>
             <span class="n">cmaps</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;Blues&quot;</span><span class="p">,</span> <span class="s2">&quot;Oranges&quot;</span><span class="p">,</span> <span class="s2">&quot;Greens&quot;</span><span class="p">,</span> <span class="s2">&quot;Reds&quot;</span><span class="p">,</span> <span class="s2">&quot;Purples&quot;</span><span class="p">,</span> <span class="s2">&quot;Greys&quot;</span><span class="p">)</span>
-        <span class="k">elif</span> <span class="n">mode</span> <span class="o">==</span> <span class="s2">&quot;stacked&quot;</span><span class="p">:</span>
+        <span class="k">elif</span> <span class="n">mode</span> <span class="o">==</span> <span class="s2">&quot;blended&quot;</span><span class="p">:</span>
             <span class="n">cmaps</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;hsv&quot;</span><span class="p">,)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">cmaps</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;Blues&quot;</span><span class="p">,</span> <span class="s2">&quot;Greens&quot;</span><span class="p">)</span>
 
-    <span class="n">num_track</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">multitrack</span><span class="o">.</span><span class="n">tracks</span><span class="p">)</span>
+    <span class="n">n_tracks</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">multitrack</span><span class="o">.</span><span class="n">tracks</span><span class="p">)</span>
     <span class="n">downbeats</span> <span class="o">=</span> <span class="n">multitrack</span><span class="o">.</span><span class="n">get_downbeat_steps</span><span class="p">()</span>
 
     <span class="k">if</span> <span class="n">mode</span> <span class="o">==</span> <span class="s2">&quot;separate&quot;</span><span class="p">:</span>
-        <span class="k">if</span> <span class="n">num_track</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
-            <span class="n">fig</span><span class="p">,</span> <span class="n">axs</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">num_track</span><span class="p">,</span> <span class="n">sharex</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
-            <span class="n">axs</span> <span class="o">=</span> <span class="p">[</span><span class="n">ax</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">axs</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">n_tracks</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="n">fig</span><span class="p">,</span> <span class="n">axs_</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">n_tracks</span><span class="p">,</span> <span class="n">sharex</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+                <span class="n">fig</span><span class="o">.</span><span class="n">subplots_adjust</span><span class="p">(</span><span class="n">hspace</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+                <span class="n">axs</span> <span class="o">=</span> <span class="n">axs_</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
+                <span class="n">axs</span> <span class="o">=</span> <span class="p">[</span><span class="n">ax</span><span class="p">]</span>
+        <span class="k">elif</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">axs</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+            <span class="n">axs</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">axs</span><span class="p">)</span>
 
         <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">track</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">multitrack</span><span class="o">.</span><span class="n">tracks</span><span class="p">):</span>
-            <span class="n">now_xticklabel</span> <span class="o">=</span> <span class="n">xticklabel</span> <span class="k">if</span> <span class="n">idx</span> <span class="o">&lt;</span> <span class="n">num_track</span> <span class="k">else</span> <span class="kc">False</span>
+            <span class="n">now_xticklabel</span> <span class="o">=</span> <span class="n">xticklabel</span> <span class="k">if</span> <span class="n">idx</span> <span class="o">&lt;</span> <span class="n">n_tracks</span> <span class="k">else</span> <span class="kc">False</span>
             <span class="n">plot_pianoroll</span><span class="p">(</span>
-                <span class="n">axs</span><span class="p">[</span><span class="n">idx</span><span class="p">],</span>
-                <span class="n">track</span><span class="o">.</span><span class="n">pianoroll</span><span class="p">,</span>
-                <span class="kc">False</span><span class="p">,</span>
-                <span class="n">multitrack</span><span class="o">.</span><span class="n">resolution</span><span class="p">,</span>
-                <span class="n">downbeats</span><span class="p">,</span>
+                <span class="n">ax</span><span class="o">=</span><span class="n">axs</span><span class="p">[</span><span class="n">idx</span><span class="p">],</span>
+                <span class="n">pianoroll</span><span class="o">=</span><span class="n">track</span><span class="o">.</span><span class="n">pianoroll</span><span class="p">,</span>
+                <span class="n">is_drum</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                <span class="n">resolution</span><span class="o">=</span><span class="n">multitrack</span><span class="o">.</span><span class="n">resolution</span><span class="p">,</span>
+                <span class="n">downbeats</span><span class="o">=</span><span class="n">downbeats</span><span class="p">,</span>
                 <span class="n">preset</span><span class="o">=</span><span class="n">preset</span><span class="p">,</span>
                 <span class="n">cmap</span><span class="o">=</span><span class="n">cmaps</span><span class="p">[</span><span class="n">idx</span> <span class="o">%</span> <span class="nb">len</span><span class="p">(</span><span class="n">cmaps</span><span class="p">)],</span>
                 <span class="n">xtick</span><span class="o">=</span><span class="n">xtick</span><span class="p">,</span>
@@ -707,43 +550,39 @@
                 <span class="n">tick_loc</span><span class="o">=</span><span class="n">tick_loc</span><span class="p">,</span>
                 <span class="n">tick_direction</span><span class="o">=</span><span class="n">tick_direction</span><span class="p">,</span>
                 <span class="n">label</span><span class="o">=</span><span class="n">label</span><span class="p">,</span>
-                <span class="n">grid</span><span class="o">=</span><span class="n">grid</span><span class="p">,</span>
+                <span class="n">grid_axis</span><span class="o">=</span><span class="n">grid_axis</span><span class="p">,</span>
                 <span class="n">grid_linestyle</span><span class="o">=</span><span class="n">grid_linestyle</span><span class="p">,</span>
                 <span class="n">grid_linewidth</span><span class="o">=</span><span class="n">grid_linewidth</span><span class="p">,</span>
             <span class="p">)</span>
             <span class="k">if</span> <span class="n">track_label</span> <span class="o">!=</span> <span class="s2">&quot;none&quot;</span><span class="p">:</span>
-                <span class="n">add_tracklabel</span><span class="p">(</span><span class="n">axs</span><span class="p">[</span><span class="n">idx</span><span class="p">],</span> <span class="n">track_label</span><span class="p">,</span> <span class="n">track</span><span class="p">)</span>
+                <span class="n">_add_tracklabel</span><span class="p">(</span><span class="n">axs</span><span class="p">[</span><span class="n">idx</span><span class="p">],</span> <span class="n">track_label</span><span class="p">,</span> <span class="n">track</span><span class="p">)</span>
 
-        <span class="k">if</span> <span class="n">num_track</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
-            <span class="n">fig</span><span class="o">.</span><span class="n">subplots_adjust</span><span class="p">(</span><span class="n">hspace</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
-
-        <span class="k">if</span> <span class="n">filename</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
-
-        <span class="k">return</span> <span class="p">(</span><span class="n">fig</span><span class="p">,</span> <span class="n">axs</span><span class="p">)</span>
-
-    <span class="k">if</span> <span class="n">mode</span> <span class="o">==</span> <span class="s2">&quot;stacked&quot;</span><span class="p">:</span>
+    <span class="k">elif</span> <span class="n">mode</span> <span class="o">==</span> <span class="s2">&quot;blended&quot;</span><span class="p">:</span>
         <span class="n">is_all_drum</span> <span class="o">=</span> <span class="kc">True</span>
         <span class="k">for</span> <span class="n">track</span> <span class="ow">in</span> <span class="n">multitrack</span><span class="o">.</span><span class="n">tracks</span><span class="p">:</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="n">track</span><span class="o">.</span><span class="n">is_drum</span><span class="p">:</span>
                 <span class="n">is_all_drum</span> <span class="o">=</span> <span class="kc">False</span>
 
-        <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
-        <span class="n">stacked</span> <span class="o">=</span> <span class="n">multitrack</span><span class="o">.</span><span class="n">get_stacked_pianoroll</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">axs</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
+            <span class="n">axs</span> <span class="o">=</span> <span class="p">[</span><span class="n">ax</span><span class="p">]</span>
+        <span class="k">elif</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">axs</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+            <span class="n">axs</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">axs</span><span class="p">)</span>
+        <span class="n">stacked</span> <span class="o">=</span> <span class="n">multitrack</span><span class="o">.</span><span class="n">stack</span><span class="p">()</span>
 
         <span class="n">colormap</span> <span class="o">=</span> <span class="n">matplotlib</span><span class="o">.</span><span class="n">cm</span><span class="o">.</span><span class="n">get_cmap</span><span class="p">(</span><span class="n">cmaps</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
-        <span class="n">colormatrix</span> <span class="o">=</span> <span class="n">colormap</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span> <span class="o">/</span> <span class="n">num_track</span><span class="p">))[:,</span> <span class="p">:</span><span class="mi">3</span><span class="p">]</span>
+        <span class="n">colormatrix</span> <span class="o">=</span> <span class="n">colormap</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span> <span class="o">/</span> <span class="n">n_tracks</span><span class="p">))[:,</span> <span class="p">:</span><span class="mi">3</span><span class="p">]</span>
         <span class="n">recolored</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span>
-            <span class="n">np</span><span class="o">.</span><span class="n">matmul</span><span class="p">(</span><span class="n">stacked</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">num_track</span><span class="p">),</span> <span class="n">colormatrix</span><span class="p">),</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">matmul</span><span class="p">(</span><span class="n">stacked</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">n_tracks</span><span class="p">),</span> <span class="n">colormatrix</span><span class="p">),</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span>
         <span class="p">)</span>
-        <span class="n">stacked</span> <span class="o">=</span> <span class="n">recolored</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">stacked</span><span class="o">.</span><span class="n">shape</span><span class="p">[:</span><span class="mi">2</span><span class="p">]</span> <span class="o">+</span> <span class="p">(</span><span class="mi">3</span><span class="p">,))</span>
+        <span class="n">blended</span> <span class="o">=</span> <span class="n">recolored</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">stacked</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span> <span class="o">+</span> <span class="p">(</span><span class="mi">3</span><span class="p">,))</span>
 
         <span class="n">plot_pianoroll</span><span class="p">(</span>
-            <span class="n">ax</span><span class="p">,</span>
-            <span class="n">stacked</span><span class="p">,</span>
-            <span class="n">is_all_drum</span><span class="p">,</span>
-            <span class="n">multitrack</span><span class="o">.</span><span class="n">resolution</span><span class="p">,</span>
-            <span class="n">downbeats</span><span class="p">,</span>
+            <span class="n">ax</span><span class="o">=</span><span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+            <span class="n">pianoroll</span><span class="o">=</span><span class="n">blended</span><span class="p">,</span>
+            <span class="n">is_drum</span><span class="o">=</span><span class="n">is_all_drum</span><span class="p">,</span>
+            <span class="n">resolution</span><span class="o">=</span><span class="n">multitrack</span><span class="o">.</span><span class="n">resolution</span><span class="p">,</span>
+            <span class="n">downbeats</span><span class="o">=</span><span class="n">downbeats</span><span class="p">,</span>
             <span class="n">preset</span><span class="o">=</span><span class="n">preset</span><span class="p">,</span>
             <span class="n">xtick</span><span class="o">=</span><span class="n">xtick</span><span class="p">,</span>
             <span class="n">ytick</span><span class="o">=</span><span class="n">ytick</span><span class="p">,</span>
@@ -752,7 +591,7 @@
             <span class="n">tick_loc</span><span class="o">=</span><span class="n">tick_loc</span><span class="p">,</span>
             <span class="n">tick_direction</span><span class="o">=</span><span class="n">tick_direction</span><span class="p">,</span>
             <span class="n">label</span><span class="o">=</span><span class="n">label</span><span class="p">,</span>
-            <span class="n">grid</span><span class="o">=</span><span class="n">grid</span><span class="p">,</span>
+            <span class="n">grid_axis</span><span class="o">=</span><span class="n">grid_axis</span><span class="p">,</span>
             <span class="n">grid_linestyle</span><span class="o">=</span><span class="n">grid_linestyle</span><span class="p">,</span>
             <span class="n">grid_linewidth</span><span class="o">=</span><span class="n">grid_linewidth</span><span class="p">,</span>
         <span class="p">)</span>
@@ -761,28 +600,31 @@
             <span class="n">patches</span> <span class="o">=</span> <span class="p">[</span>
                 <span class="n">Patch</span><span class="p">(</span>
                     <span class="n">color</span><span class="o">=</span><span class="n">colormatrix</span><span class="p">[</span><span class="n">idx</span><span class="p">],</span>
-                    <span class="n">label</span><span class="o">=</span><span class="n">get_track_label</span><span class="p">(</span><span class="n">track_label</span><span class="p">,</span> <span class="n">track</span><span class="p">),</span>
+                    <span class="n">label</span><span class="o">=</span><span class="n">_get_track_label</span><span class="p">(</span><span class="n">track_label</span><span class="p">,</span> <span class="n">track</span><span class="p">),</span>
                 <span class="p">)</span>
                 <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">track</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">multitrack</span><span class="o">.</span><span class="n">tracks</span><span class="p">)</span>
             <span class="p">]</span>
             <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">handles</span><span class="o">=</span><span class="n">patches</span><span class="p">)</span>
 
-        <span class="k">if</span> <span class="n">filename</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">mode</span> <span class="o">==</span> <span class="s2">&quot;hybrid&quot;</span><span class="p">:</span>
+        <span class="n">drums</span> <span class="o">=</span> <span class="n">multitrack</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="n">drums</span><span class="o">.</span><span class="n">tracks</span> <span class="o">=</span> <span class="p">[</span><span class="n">track</span> <span class="k">for</span> <span class="n">track</span> <span class="ow">in</span> <span class="n">multitrack</span><span class="o">.</span><span class="n">tracks</span> <span class="k">if</span> <span class="n">track</span><span class="o">.</span><span class="n">is_drum</span><span class="p">]</span>
+        <span class="n">merged_drums</span> <span class="o">=</span> <span class="n">drums</span><span class="o">.</span><span class="n">blend</span><span class="p">()</span>
 
-        <span class="k">return</span> <span class="p">(</span><span class="n">fig</span><span class="p">,</span> <span class="p">[</span><span class="n">ax</span><span class="p">])</span>
-
-    <span class="k">if</span> <span class="n">mode</span> <span class="o">==</span> <span class="s2">&quot;hybrid&quot;</span><span class="p">:</span>
-        <span class="n">drums</span> <span class="o">=</span> <span class="p">[</span>
-            <span class="n">i</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">track</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">multitrack</span><span class="o">.</span><span class="n">tracks</span><span class="p">)</span> <span class="k">if</span> <span class="n">track</span><span class="o">.</span><span class="n">is_drum</span>
+        <span class="n">others</span> <span class="o">=</span> <span class="n">multitrack</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="n">others</span><span class="o">.</span><span class="n">tracks</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">track</span> <span class="k">for</span> <span class="n">track</span> <span class="ow">in</span> <span class="n">multitrack</span><span class="o">.</span><span class="n">tracks</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">track</span><span class="o">.</span><span class="n">is_drum</span>
         <span class="p">]</span>
-        <span class="n">others</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">multitrack</span><span class="o">.</span><span class="n">tracks</span><span class="p">))</span> <span class="k">if</span> <span class="n">i</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">drums</span><span class="p">]</span>
-        <span class="n">merged_drums</span> <span class="o">=</span> <span class="n">multitrack</span><span class="o">.</span><span class="n">get_merged_pianoroll</span><span class="p">(</span><span class="n">drums</span><span class="p">)</span>
-        <span class="n">merged_others</span> <span class="o">=</span> <span class="n">multitrack</span><span class="o">.</span><span class="n">get_merged_pianoroll</span><span class="p">(</span><span class="n">others</span><span class="p">)</span>
+        <span class="n">merged_others</span> <span class="o">=</span> <span class="n">others</span><span class="o">.</span><span class="n">blend</span><span class="p">()</span>
 
-        <span class="n">fig</span><span class="p">,</span> <span class="p">(</span><span class="n">ax1</span><span class="p">,</span> <span class="n">ax2</span><span class="p">)</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">sharex</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">sharey</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">axs</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">fig</span><span class="p">,</span> <span class="n">axs_</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">sharex</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">sharey</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="n">axs</span> <span class="o">=</span> <span class="n">axs_</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+        <span class="k">elif</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">axs</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+            <span class="n">axs</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">axs</span><span class="p">)</span>
+
         <span class="n">plot_pianoroll</span><span class="p">(</span>
-            <span class="n">ax1</span><span class="p">,</span>
+            <span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
             <span class="n">merged_drums</span><span class="p">,</span>
             <span class="kc">True</span><span class="p">,</span>
             <span class="n">multitrack</span><span class="o">.</span><span class="n">resolution</span><span class="p">,</span>
@@ -796,12 +638,12 @@
             <span class="n">tick_loc</span><span class="o">=</span><span class="n">tick_loc</span><span class="p">,</span>
             <span class="n">tick_direction</span><span class="o">=</span><span class="n">tick_direction</span><span class="p">,</span>
             <span class="n">label</span><span class="o">=</span><span class="n">label</span><span class="p">,</span>
-            <span class="n">grid</span><span class="o">=</span><span class="n">grid</span><span class="p">,</span>
+            <span class="n">grid_axis</span><span class="o">=</span><span class="n">grid_axis</span><span class="p">,</span>
             <span class="n">grid_linestyle</span><span class="o">=</span><span class="n">grid_linestyle</span><span class="p">,</span>
             <span class="n">grid_linewidth</span><span class="o">=</span><span class="n">grid_linewidth</span><span class="p">,</span>
         <span class="p">)</span>
         <span class="n">plot_pianoroll</span><span class="p">(</span>
-            <span class="n">ax2</span><span class="p">,</span>
+            <span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
             <span class="n">merged_others</span><span class="p">,</span>
             <span class="kc">False</span><span class="p">,</span>
             <span class="n">multitrack</span><span class="o">.</span><span class="n">resolution</span><span class="p">,</span>
@@ -814,218 +656,23 @@
             <span class="n">tick_loc</span><span class="o">=</span><span class="n">tick_loc</span><span class="p">,</span>
             <span class="n">tick_direction</span><span class="o">=</span><span class="n">tick_direction</span><span class="p">,</span>
             <span class="n">label</span><span class="o">=</span><span class="n">label</span><span class="p">,</span>
-            <span class="n">grid</span><span class="o">=</span><span class="n">grid</span><span class="p">,</span>
+            <span class="n">grid_axis</span><span class="o">=</span><span class="n">grid_axis</span><span class="p">,</span>
             <span class="n">grid_linestyle</span><span class="o">=</span><span class="n">grid_linestyle</span><span class="p">,</span>
             <span class="n">grid_linewidth</span><span class="o">=</span><span class="n">grid_linewidth</span><span class="p">,</span>
         <span class="p">)</span>
         <span class="n">fig</span><span class="o">.</span><span class="n">subplots_adjust</span><span class="p">(</span><span class="n">hspace</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">track_label</span> <span class="o">!=</span> <span class="s2">&quot;none&quot;</span><span class="p">:</span>
-            <span class="n">add_tracklabel</span><span class="p">(</span><span class="n">ax1</span><span class="p">,</span> <span class="s2">&quot;Drums&quot;</span><span class="p">)</span>
-            <span class="n">add_tracklabel</span><span class="p">(</span><span class="n">ax2</span><span class="p">,</span> <span class="s2">&quot;Others&quot;</span><span class="p">)</span>
+            <span class="n">_add_tracklabel</span><span class="p">(</span><span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s2">&quot;Drums&quot;</span><span class="p">)</span>
+            <span class="n">_add_tracklabel</span><span class="p">(</span><span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="s2">&quot;Others&quot;</span><span class="p">)</span>
 
-        <span class="k">if</span> <span class="n">filename</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
-
-        <span class="k">return</span> <span class="p">(</span><span class="n">fig</span><span class="p">,</span> <span class="p">[</span><span class="n">ax1</span><span class="p">,</span> <span class="n">ax2</span><span class="p">])</span></div>
-
-
-<div class="viewcode-block" id="save_animation"><a class="viewcode-back" href="../../visualization.html#pypianoroll.save_animation">[docs]</a><span class="k">def</span> <span class="nf">save_animation</span><span class="p">(</span>
-    <span class="n">filename</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
-    <span class="n">pianoroll</span><span class="p">:</span> <span class="n">ndarray</span><span class="p">,</span>
-    <span class="n">fps</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
-    <span class="n">window</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
-    <span class="n">hop</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
-    <span class="n">is_drum</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
-    <span class="n">resolution</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-    <span class="n">downbeats</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Sequence</span><span class="p">[</span><span class="nb">int</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-    <span class="n">preset</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;default&quot;</span><span class="p">,</span>
-    <span class="n">cmap</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;Blues&quot;</span><span class="p">,</span>
-    <span class="n">xtick</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;auto&quot;</span><span class="p">,</span>
-    <span class="n">ytick</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;octave&quot;</span><span class="p">,</span>
-    <span class="n">xticklabel</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
-    <span class="n">yticklabel</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;auto&quot;</span><span class="p">,</span>
-    <span class="n">tick_loc</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Sequence</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-    <span class="n">tick_direction</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;in&quot;</span><span class="p">,</span>
-    <span class="n">label</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;both&quot;</span><span class="p">,</span>
-    <span class="n">grid</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;both&quot;</span><span class="p">,</span>
-    <span class="n">grid_linestyle</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;:&quot;</span><span class="p">,</span>
-    <span class="n">grid_linewidth</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.5</span><span class="p">,</span>
-    <span class="o">**</span><span class="n">kwargs</span>
-<span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Save a piano roll to an animation in video or GIF format.</span>
-
-<span class="sd">    Parameters</span>
-<span class="sd">    ----------</span>
-<span class="sd">    filename : str</span>
-<span class="sd">        Filename to which the animation is saved.</span>
-<span class="sd">    pianoroll : np.ndarray</span>
-<span class="sd">        A piano roll to be plotted. The values should be in [0, 1] when</span>
-<span class="sd">        data type is float, and in [0, 127] when data type is integer.</span>
-
-<span class="sd">        - For a 2D array, shape=(num_time_step, num_pitch).</span>
-<span class="sd">        - For a 3D array, shape=(num_time_step, num_pitch, num_channel),</span>
-<span class="sd">          where channels can be either RGB or RGBA.</span>
-
-<span class="sd">    fps : int</span>
-<span class="sd">        Number of frames per second in the resulting video or GIF file.</span>
-<span class="sd">    window : int</span>
-<span class="sd">        Window size to be applied to `pianoroll` for the animation.</span>
-<span class="sd">    hop : int</span>
-<span class="sd">        Hop size to be applied to `pianoroll` for the animation.</span>
-<span class="sd">    is_drum : bool</span>
-<span class="sd">        Whether it is a percussion track. Defaults to False.</span>
-<span class="sd">    resolution : int</span>
-<span class="sd">        Number of time steps used to represent a beat. Required and only</span>
-<span class="sd">        effective when `xtick` is &#39;beat&#39;.</span>
-<span class="sd">    downbeats : list</span>
-<span class="sd">        An array that indicates whether the time step contains a</span>
-<span class="sd">        downbeat (i.e., the first time step of a bar).</span>
-
-<span class="sd">    preset : {&#39;default&#39;, &#39;plain&#39;, &#39;frame&#39;}</span>
-<span class="sd">        A string that indicates the preset theme to use.</span>
-
-<span class="sd">        - In &#39;default&#39; preset, the ticks, grid and labels are on.</span>
-<span class="sd">        - In &#39;frame&#39; preset, the ticks and grid are both off.</span>
-<span class="sd">        - In &#39;plain&#39; preset, the x- and y-axis are both off.</span>
-
-<span class="sd">    cmap :  `matplotlib.colors.Colormap`</span>
-<span class="sd">        Colormap to use in :func:`matplotlib.pyplot.imshow`. Defaults</span>
-<span class="sd">        to &#39;Blues&#39;. Only effective when `pianoroll` is 2D.</span>
-<span class="sd">    xtick : {&#39;auto&#39;, &#39;beat&#39;, &#39;step&#39;, &#39;off&#39;}</span>
-<span class="sd">        A string that indicates what to use as ticks along the x-axis.</span>
-<span class="sd">        If &#39;auto&#39; is given, automatically set to &#39;beat&#39; if `resolution`</span>
-<span class="sd">        is also given and set to &#39;step&#39;, otherwise. Defaults to &#39;auto&#39;.</span>
-<span class="sd">    ytick : {&#39;octave&#39;, &#39;pitch&#39;, &#39;off&#39;}</span>
-<span class="sd">        A string that indicates what to use as ticks along the y-axis.</span>
-<span class="sd">        Defaults to &#39;octave&#39;.</span>
-<span class="sd">    xticklabel : bool</span>
-<span class="sd">        Whether to add tick labels along the x-axis. Only effective</span>
-<span class="sd">        when `xtick` is not &#39;off&#39;.</span>
-<span class="sd">    yticklabel : {&#39;auto&#39;, &#39;name&#39;, &#39;number&#39;, &#39;off&#39;}</span>
-<span class="sd">        If &#39;name&#39;, use octave name and pitch name (key name when</span>
-<span class="sd">        `is_drum` is True) as tick labels along the y-axis. If &#39;number&#39;,</span>
-<span class="sd">        use pitch number. If &#39;auto&#39;, set to &#39;name&#39; when `ytick` is</span>
-<span class="sd">        &#39;octave&#39; and &#39;number&#39; when `ytick` is &#39;pitch&#39;. Defaults to</span>
-<span class="sd">        &#39;auto&#39;. Only effective when `ytick` is not &#39;off&#39;.</span>
-<span class="sd">    tick_loc : tuple or list</span>
-<span class="sd">        Locations to put the ticks. Availables elements are &#39;bottom&#39;,</span>
-<span class="sd">        &#39;top&#39;, &#39;left&#39; and &#39;right&#39;. Defaults to (&#39;bottom&#39;, &#39;left&#39;).</span>
-<span class="sd">    tick_direction : {&#39;in&#39;, &#39;out&#39;, &#39;inout&#39;}</span>
-<span class="sd">        A string that indicates where to put the ticks. Defaults to</span>
-<span class="sd">        &#39;in&#39;. Only effective when one of `xtick` and `ytick` is on.</span>
-<span class="sd">    label : {&#39;x&#39;, &#39;y&#39;, &#39;both&#39;, &#39;off&#39;}</span>
-<span class="sd">        A string that indicates whether to add labels to the x-axis and</span>
-<span class="sd">        y-axis. Defaults to &#39;both&#39;.</span>
-<span class="sd">    grid : {&#39;x&#39;, &#39;y&#39;, &#39;both&#39;, &#39;off&#39;}</span>
-<span class="sd">        A string that indicates whether to add grids to the x-axis,</span>
-<span class="sd">        y-axis, both or neither. Defaults to &#39;both&#39;.</span>
-<span class="sd">    grid_linestyle : str</span>
-<span class="sd">        Will be passed to :meth:`matplotlib.axes.Axes.grid` as</span>
-<span class="sd">        &#39;linestyle&#39; argument.</span>
-<span class="sd">    grid_linewidth : float</span>
-<span class="sd">        Will be passed to :meth:`matplotlib.axes.Axes.grid` as</span>
-<span class="sd">        &#39;linewidth&#39; argument.</span>
-
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">HAS_MOVIEPY</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ImportError</span><span class="p">(</span>
-            <span class="s2">&quot;moviepy package is required for animation supports.&quot;</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="s2">&quot;`mode` must be one of &#39;separate&#39;, &#39;blended&#39; or &#39;hybrid&#39;, not&quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">mode</span><span class="si">}</span><span class="s2">.&quot;</span>
         <span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">make_frame</span><span class="p">(</span><span class="n">t</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Return an image of the frame for time t.&quot;&quot;&quot;</span>
-        <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">gcf</span><span class="p">()</span>
-        <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span>
-        <span class="n">f_idx</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">t</span> <span class="o">*</span> <span class="n">fps</span><span class="p">)</span>
-        <span class="n">start</span> <span class="o">=</span> <span class="n">hop</span> <span class="o">*</span> <span class="n">f_idx</span>
-        <span class="n">end</span> <span class="o">=</span> <span class="n">start</span> <span class="o">+</span> <span class="n">window</span>
-        <span class="n">to_plot</span> <span class="o">=</span> <span class="n">transposed</span><span class="p">[:,</span> <span class="n">start</span><span class="p">:</span><span class="n">end</span><span class="p">]</span>
-        <span class="n">extent</span> <span class="o">=</span> <span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="n">end</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">127</span><span class="p">)</span>
-        <span class="n">ax</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span>
-            <span class="n">to_plot</span><span class="p">,</span>
-            <span class="n">cmap</span><span class="o">=</span><span class="n">cmap</span><span class="p">,</span>
-            <span class="n">aspect</span><span class="o">=</span><span class="s2">&quot;auto&quot;</span><span class="p">,</span>
-            <span class="n">vmin</span><span class="o">=</span><span class="n">vmin</span><span class="p">,</span>
-            <span class="n">vmax</span><span class="o">=</span><span class="n">vmax</span><span class="p">,</span>
-            <span class="n">origin</span><span class="o">=</span><span class="s2">&quot;lower&quot;</span><span class="p">,</span>
-            <span class="n">interpolation</span><span class="o">=</span><span class="s2">&quot;none&quot;</span><span class="p">,</span>
-            <span class="n">extent</span><span class="o">=</span><span class="n">extent</span><span class="p">,</span>
-        <span class="p">)</span>
-
-        <span class="k">if</span> <span class="n">xtick</span> <span class="o">==</span> <span class="s2">&quot;beat&quot;</span><span class="p">:</span>
-            <span class="n">next_major_idx</span> <span class="o">=</span> <span class="n">resolution</span> <span class="o">-</span> <span class="n">start</span> <span class="o">%</span> <span class="n">resolution</span>
-            <span class="k">if</span> <span class="n">start</span> <span class="o">%</span> <span class="n">resolution</span> <span class="o">&lt;</span> <span class="n">resolution</span> <span class="o">//</span> <span class="mi">2</span><span class="p">:</span>
-                <span class="n">next_minor_idx</span> <span class="o">=</span> <span class="n">resolution</span> <span class="o">//</span> <span class="mi">2</span> <span class="o">-</span> <span class="n">start</span> <span class="o">%</span> <span class="n">resolution</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="n">next_minor_idx</span> <span class="o">=</span> <span class="p">(</span>
-                    <span class="n">resolution</span> <span class="o">//</span> <span class="mi">2</span> <span class="o">-</span> <span class="n">start</span> <span class="o">%</span> <span class="n">resolution</span> <span class="o">+</span> <span class="n">resolution</span>
-                <span class="p">)</span>
-            <span class="n">xticks_major</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">next_major_idx</span><span class="p">,</span> <span class="n">window</span><span class="p">,</span> <span class="n">resolution</span><span class="p">)</span>
-            <span class="n">xticks_minor</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">next_minor_idx</span><span class="p">,</span> <span class="n">window</span><span class="p">,</span> <span class="n">resolution</span><span class="p">)</span>
-            <span class="k">if</span> <span class="n">end</span> <span class="o">%</span> <span class="n">resolution</span> <span class="o">&lt;</span> <span class="n">resolution</span> <span class="o">//</span> <span class="mi">2</span><span class="p">:</span>
-                <span class="n">last_minor_idx</span> <span class="o">=</span> <span class="n">resolution</span> <span class="o">//</span> <span class="mi">2</span> <span class="o">-</span> <span class="n">end</span> <span class="o">%</span> <span class="n">resolution</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="n">last_minor_idx</span> <span class="o">=</span> <span class="p">(</span>
-                    <span class="n">resolution</span> <span class="o">//</span> <span class="mi">2</span> <span class="o">-</span> <span class="n">end</span> <span class="o">%</span> <span class="n">resolution</span> <span class="o">+</span> <span class="n">resolution</span>
-                <span class="p">)</span>
-            <span class="n">xtick_labels</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span>
-                <span class="p">(</span><span class="n">start</span> <span class="o">+</span> <span class="n">next_minor_idx</span><span class="p">)</span> <span class="o">//</span> <span class="n">resolution</span><span class="p">,</span>
-                <span class="p">(</span><span class="n">end</span> <span class="o">+</span> <span class="n">last_minor_idx</span><span class="p">)</span> <span class="o">//</span> <span class="n">resolution</span><span class="p">,</span>
-            <span class="p">)</span>
-            <span class="n">ax</span><span class="o">.</span><span class="n">set_xticks</span><span class="p">(</span><span class="n">xticks_major</span><span class="p">)</span>
-            <span class="n">ax</span><span class="o">.</span><span class="n">set_xticklabels</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
-            <span class="n">ax</span><span class="o">.</span><span class="n">set_xticks</span><span class="p">(</span><span class="n">xticks_minor</span><span class="p">,</span> <span class="n">minor</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-            <span class="n">ax</span><span class="o">.</span><span class="n">set_xticklabels</span><span class="p">(</span><span class="n">xtick_labels</span><span class="p">,</span> <span class="n">minor</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-            <span class="n">ax</span><span class="o">.</span><span class="n">tick_params</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="s2">&quot;x&quot;</span><span class="p">,</span> <span class="n">which</span><span class="o">=</span><span class="s2">&quot;minor&quot;</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
-
-        <span class="k">return</span> <span class="n">mplfig_to_npimage</span><span class="p">(</span><span class="n">fig</span><span class="p">)</span>
-
-    <span class="k">if</span> <span class="n">xtick</span> <span class="o">==</span> <span class="s2">&quot;auto&quot;</span><span class="p">:</span>
-        <span class="n">xtick</span> <span class="o">=</span> <span class="s2">&quot;beat&quot;</span> <span class="k">if</span> <span class="n">resolution</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="s2">&quot;step&quot;</span>
-
-    <span class="n">_</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
-    <span class="n">plot_pianoroll</span><span class="p">(</span>
-        <span class="n">ax</span><span class="p">,</span>
-        <span class="n">pianoroll</span><span class="p">[:</span><span class="n">window</span><span class="p">],</span>
-        <span class="n">is_drum</span><span class="p">,</span>
-        <span class="n">resolution</span><span class="p">,</span>
-        <span class="n">downbeats</span><span class="p">,</span>
-        <span class="n">preset</span><span class="o">=</span><span class="n">preset</span><span class="p">,</span>
-        <span class="n">cmap</span><span class="o">=</span><span class="n">cmap</span><span class="p">,</span>
-        <span class="n">xtick</span><span class="o">=</span><span class="n">xtick</span><span class="p">,</span>
-        <span class="n">ytick</span><span class="o">=</span><span class="n">ytick</span><span class="p">,</span>
-        <span class="n">xticklabel</span><span class="o">=</span><span class="n">xticklabel</span><span class="p">,</span>
-        <span class="n">yticklabel</span><span class="o">=</span><span class="n">yticklabel</span><span class="p">,</span>
-        <span class="n">tick_loc</span><span class="o">=</span><span class="n">tick_loc</span><span class="p">,</span>
-        <span class="n">tick_direction</span><span class="o">=</span><span class="n">tick_direction</span><span class="p">,</span>
-        <span class="n">label</span><span class="o">=</span><span class="n">label</span><span class="p">,</span>
-        <span class="n">grid</span><span class="o">=</span><span class="n">grid</span><span class="p">,</span>
-        <span class="n">grid_linestyle</span><span class="o">=</span><span class="n">grid_linestyle</span><span class="p">,</span>
-        <span class="n">grid_linewidth</span><span class="o">=</span><span class="n">grid_linewidth</span><span class="p">,</span>
-    <span class="p">)</span>
-
-    <span class="n">num_frame</span> <span class="o">=</span> <span class="nb">int</span><span class="p">((</span><span class="n">pianoroll</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">window</span><span class="p">)</span> <span class="o">/</span> <span class="n">hop</span><span class="p">)</span>
-    <span class="n">duration</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">num_frame</span> <span class="o">/</span> <span class="n">fps</span><span class="p">)</span>
-
-    <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">issubdtype</span><span class="p">(</span><span class="n">pianoroll</span><span class="o">.</span><span class="n">dtype</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">bool_</span><span class="p">)</span> <span class="ow">or</span> <span class="n">np</span><span class="o">.</span><span class="n">issubdtype</span><span class="p">(</span>
-        <span class="n">pianoroll</span><span class="o">.</span><span class="n">dtype</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">floating</span>
-    <span class="p">):</span>
-        <span class="n">vmax</span> <span class="o">=</span> <span class="mi">1</span>
-    <span class="k">elif</span> <span class="n">np</span><span class="o">.</span><span class="n">issubdtype</span><span class="p">(</span><span class="n">pianoroll</span><span class="o">.</span><span class="n">dtype</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">integer</span><span class="p">):</span>
-        <span class="n">vmax</span> <span class="o">=</span> <span class="mi">127</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;Unsupported data type for `pianoroll`.&quot;</span><span class="p">)</span>
-    <span class="n">vmin</span> <span class="o">=</span> <span class="mi">0</span>
-
-    <span class="n">transposed</span> <span class="o">=</span> <span class="n">pianoroll</span><span class="o">.</span><span class="n">T</span>
-    <span class="n">animation</span> <span class="o">=</span> <span class="n">VideoClip</span><span class="p">(</span><span class="n">make_frame</span><span class="p">,</span> <span class="n">duration</span><span class="o">=</span><span class="n">duration</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">filename</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;.gif&quot;</span><span class="p">):</span>
-        <span class="n">animation</span><span class="o">.</span><span class="n">write_gif</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">fps</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">animation</span><span class="o">.</span><span class="n">write_videofile</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">fps</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-    <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
+    <span class="k">return</span> <span class="n">axs</span></div>
 </pre></div>
 
            </div>

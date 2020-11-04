@@ -158,94 +158,131 @@
             
   <h1>Source code for pypianoroll.core</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot;Utilities for manipulating multitrack pianorolls.&quot;&quot;&quot;</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Union</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">TypeVar</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">overload</span>
 
 <span class="kn">from</span> <span class="nn">.multitrack</span> <span class="kn">import</span> <span class="n">Multitrack</span>
-<span class="kn">from</span> <span class="nn">.track</span> <span class="kn">import</span> <span class="n">Track</span>
+<span class="kn">from</span> <span class="nn">.track</span> <span class="kn">import</span> <span class="n">BinaryTrack</span><span class="p">,</span> <span class="n">StandardTrack</span><span class="p">,</span> <span class="n">Track</span>
 
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span>
-    <span class="s2">&quot;assign_constant&quot;</span><span class="p">,</span>
     <span class="s2">&quot;binarize&quot;</span><span class="p">,</span>
     <span class="s2">&quot;clip&quot;</span><span class="p">,</span>
     <span class="s2">&quot;pad&quot;</span><span class="p">,</span>
     <span class="s2">&quot;pad_to_multiple&quot;</span><span class="p">,</span>
     <span class="s2">&quot;pad_to_same&quot;</span><span class="p">,</span>
     <span class="s2">&quot;plot&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;save&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;set_nonzeros&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;set_resolution&quot;</span><span class="p">,</span>
     <span class="s2">&quot;transpose&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;trim_trailing_silence&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;write&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;trim&quot;</span><span class="p">,</span>
 <span class="p">]</span>
 
+<span class="n">_Multitrack</span> <span class="o">=</span> <span class="n">TypeVar</span><span class="p">(</span><span class="s2">&quot;_Multitrack&quot;</span><span class="p">,</span> <span class="n">bound</span><span class="o">=</span><span class="n">Multitrack</span><span class="p">)</span>
+<span class="n">_MultitrackOrTrack</span> <span class="o">=</span> <span class="n">TypeVar</span><span class="p">(</span><span class="s2">&quot;_MultitrackOrTrack&quot;</span><span class="p">,</span> <span class="n">Multitrack</span><span class="p">,</span> <span class="n">Track</span><span class="p">)</span>
+<span class="n">_StandardTrack</span> <span class="o">=</span> <span class="n">TypeVar</span><span class="p">(</span><span class="s2">&quot;_StandardTrack&quot;</span><span class="p">,</span> <span class="n">Multitrack</span><span class="p">,</span> <span class="n">StandardTrack</span><span class="p">)</span>
 
-<div class="viewcode-block" id="assign_constant"><a class="viewcode-back" href="../../doc.html#pypianoroll.assign_constant">[docs]</a><span class="k">def</span> <span class="nf">assign_constant</span><span class="p">(</span><span class="n">obj</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Multitrack</span><span class="p">,</span> <span class="n">Track</span><span class="p">],</span> <span class="n">value</span><span class="p">:</span> <span class="nb">float</span><span class="p">):</span>
+
+<span class="nd">@overload</span>
+<span class="k">def</span> <span class="nf">set_nonzeros</span><span class="p">(</span><span class="n">obj</span><span class="p">:</span> <span class="n">Multitrack</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Multitrack</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Assign a constant value to all nonzeros entries.&quot;&quot;&quot;</span>
+
+
+<span class="nd">@overload</span>
+<span class="k">def</span> <span class="nf">set_nonzeros</span><span class="p">(</span>
+    <span class="n">obj</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">StandardTrack</span><span class="p">,</span> <span class="n">BinaryTrack</span><span class="p">],</span> <span class="n">value</span><span class="p">:</span> <span class="nb">int</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">StandardTrack</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Assign a constant value to all nonzeros entries.&quot;&quot;&quot;</span>
+
+
+<div class="viewcode-block" id="set_nonzeros"><a class="viewcode-back" href="../../doc.html#pypianoroll.set_nonzeros">[docs]</a><span class="k">def</span> <span class="nf">set_nonzeros</span><span class="p">(</span>
+    <span class="n">obj</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Multitrack</span><span class="p">,</span> <span class="n">StandardTrack</span><span class="p">,</span> <span class="n">BinaryTrack</span><span class="p">],</span> <span class="n">value</span><span class="p">:</span> <span class="nb">int</span>
+<span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Assign a constant value to all nonzeros entries.</span>
-
-<span class="sd">    If a piano roll is not binarized, its data type will be preserved.</span>
-<span class="sd">    If a piano roll is binarized, cast it to the dtype of `value`.</span>
 
 <span class="sd">    Arguments</span>
 <span class="sd">    ---------</span>
-<span class="sd">    obj : :class:`pypianoroll.Multitrack` or :class:`pypianoroll.Track`</span>
-<span class="sd">      object</span>
+<span class="sd">    obj : :class:`pypianoroll.Multitrack`, \</span>
+<span class="sd">            :class:`pypianoroll.StandardTrack` or \</span>
+<span class="sd">            :class:`pypianoroll.BinaryTrack`</span>
 <span class="sd">        Object to modify.</span>
-<span class="sd">    value : int or float</span>
-<span class="sd">        Value to assign to all the nonzero entries in the piano roll(s).</span>
+<span class="sd">    value : int</span>
+<span class="sd">        Value to assign.</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="n">obj</span><span class="o">.</span><span class="n">assign_constant</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="n">value</span><span class="p">)</span></div>
+    <span class="k">return</span> <span class="n">obj</span><span class="o">.</span><span class="n">set_nonzeros</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="n">value</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="binarize"><a class="viewcode-back" href="../../doc.html#pypianoroll.binarize">[docs]</a><span class="k">def</span> <span class="nf">binarize</span><span class="p">(</span><span class="n">obj</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Multitrack</span><span class="p">,</span> <span class="n">Track</span><span class="p">],</span> <span class="n">threshold</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">0</span><span class="p">):</span>
+<span class="nd">@overload</span>
+<span class="k">def</span> <span class="nf">binarize</span><span class="p">(</span><span class="n">obj</span><span class="p">:</span> <span class="n">Multitrack</span><span class="p">,</span> <span class="n">threshold</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Multitrack</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Binarize the piano roll(s).&quot;&quot;&quot;</span>
+
+
+<span class="nd">@overload</span>
+<span class="k">def</span> <span class="nf">binarize</span><span class="p">(</span><span class="n">obj</span><span class="p">:</span> <span class="n">StandardTrack</span><span class="p">,</span> <span class="n">threshold</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">BinaryTrack</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Binarize the piano roll(s).&quot;&quot;&quot;</span>
+
+
+<div class="viewcode-block" id="binarize"><a class="viewcode-back" href="../../doc.html#pypianoroll.binarize">[docs]</a><span class="k">def</span> <span class="nf">binarize</span><span class="p">(</span><span class="n">obj</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Multitrack</span><span class="p">,</span> <span class="n">StandardTrack</span><span class="p">],</span> <span class="n">threshold</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Binarize the piano roll(s).</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    obj : :class:`pypianoroll.Multitrack` or :class:`pypianoroll.Track`</span>
-<span class="sd">      object</span>
+<span class="sd">    obj : :class:`pypianoroll.Multitrack` or \</span>
+<span class="sd">            :class:`pypianoroll.StandardTrack`</span>
 <span class="sd">        Object to binarize.</span>
-<span class="sd">    threshold : int or float</span>
-<span class="sd">        Threshold to binarize the piano roll(s). Defaults to zero.</span>
+<span class="sd">    threshold : int</span>
+<span class="sd">        Threshold. Defaults to 0.</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">obj</span><span class="o">.</span><span class="n">binarize</span><span class="p">(</span><span class="n">threshold</span><span class="o">=</span><span class="n">threshold</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="clip"><a class="viewcode-back" href="../../doc.html#pypianoroll.clip">[docs]</a><span class="k">def</span> <span class="nf">clip</span><span class="p">(</span><span class="n">obj</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Multitrack</span><span class="p">,</span> <span class="n">Track</span><span class="p">],</span> <span class="n">lower</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">upper</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">127</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Clip the piano roll(s) by a lower bound and an upper bound.</span>
+<div class="viewcode-block" id="clip"><a class="viewcode-back" href="../../doc.html#pypianoroll.clip">[docs]</a><span class="k">def</span> <span class="nf">clip</span><span class="p">(</span>
+    <span class="n">obj</span><span class="p">:</span> <span class="n">_StandardTrack</span><span class="p">,</span> <span class="n">lower</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">upper</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">127</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">_StandardTrack</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Clip (limit) the the piano roll(s) into [`lower`, `upper`].</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    obj : :class:`pypianoroll.Multitrack` or :class:`pypianoroll.Track`</span>
-<span class="sd">      object</span>
+<span class="sd">    obj : :class:`pypianoroll.Multitrack` or \</span>
+<span class="sd">            :class:`pypianoroll.StandardTrack`</span>
 <span class="sd">        Object to clip.</span>
-<span class="sd">    lower : int or float</span>
-<span class="sd">        Lower bound to clip the piano roll(s). Defaults to 0.</span>
-<span class="sd">    upper : int or float</span>
-<span class="sd">        Upper bound to clip the piano roll(s). Defaults to 127.</span>
+<span class="sd">    lower : int</span>
+<span class="sd">        Lower bound. Defaults to 0.</span>
+<span class="sd">    upper : int</span>
+<span class="sd">        Upper bound. Defaults to 127.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    Object itself.</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">obj</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="n">lower</span><span class="o">=</span><span class="n">lower</span><span class="p">,</span> <span class="n">upper</span><span class="o">=</span><span class="n">upper</span><span class="p">)</span></div>
 
 
-<span class="k">def</span> <span class="nf">downsample</span><span class="p">(</span><span class="n">obj</span><span class="p">:</span> <span class="n">Multitrack</span><span class="p">,</span> <span class="n">factor</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Downsample the piano rolls by the given factor.</span>
-
-<span class="sd">    Attribute `resolution` will be updated accordingly as well.</span>
+<div class="viewcode-block" id="set_resolution"><a class="viewcode-back" href="../../doc.html#pypianoroll.set_resolution">[docs]</a><span class="k">def</span> <span class="nf">set_resolution</span><span class="p">(</span>
+    <span class="n">obj</span><span class="p">:</span> <span class="n">_Multitrack</span><span class="p">,</span> <span class="n">resolution</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">rounding</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;round&quot;</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">_Multitrack</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Downsample the piano rolls by a factor.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    obj : :class:`pypianoroll.Multitrack` object</span>
+<span class="sd">    obj : :class:`pypianoroll.Multitrack`</span>
 <span class="sd">        Object to downsample.</span>
-<span class="sd">    factor : int</span>
-<span class="sd">        Ratio of the original resolution to the desired resolution.</span>
+<span class="sd">    resolution : int</span>
+<span class="sd">        Target resolution.</span>
+<span class="sd">    rounding : {&#39;round&#39;, &#39;ceil&#39;, &#39;floor&#39;}</span>
+<span class="sd">        Rounding mode. Defaults to &#39;round&#39;.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    Object itself.</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="n">obj</span><span class="o">.</span><span class="n">downsample</span><span class="p">(</span><span class="n">factor</span><span class="o">=</span><span class="n">factor</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">obj</span><span class="o">.</span><span class="n">set_resolution</span><span class="p">(</span><span class="n">resolution</span><span class="o">=</span><span class="n">resolution</span><span class="p">,</span> <span class="n">rounding</span><span class="o">=</span><span class="n">rounding</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="pad"><a class="viewcode-back" href="../../doc.html#pypianoroll.pad">[docs]</a><span class="k">def</span> <span class="nf">pad</span><span class="p">(</span><span class="n">obj</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Multitrack</span><span class="p">,</span> <span class="n">Track</span><span class="p">],</span> <span class="n">pad_length</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Pad the piano roll(s) with zeros at the end along the time axis.</span>
+<div class="viewcode-block" id="pad"><a class="viewcode-back" href="../../doc.html#pypianoroll.pad">[docs]</a><span class="k">def</span> <span class="nf">pad</span><span class="p">(</span><span class="n">obj</span><span class="p">:</span> <span class="n">_MultitrackOrTrack</span><span class="p">,</span> <span class="n">pad_length</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">_MultitrackOrTrack</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Pad the piano roll(s).</span>
 
 <span class="sd">    Notes</span>
 <span class="sd">    -----</span>
@@ -255,56 +292,86 @@
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    obj : :class:`pypianoroll.Multitrack` or :class:`pypianoroll.Track`</span>
-<span class="sd">      object</span>
 <span class="sd">        Object to pad.</span>
 <span class="sd">    pad_length : int</span>
-<span class="sd">        Length to pad along the time axis with zeros.</span>
+<span class="sd">            Length to pad along the time axis.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    Object itself.</span>
+
+<span class="sd">    See Also</span>
+<span class="sd">    --------</span>
+<span class="sd">    :func:`pypianoroll.pad_to_same` : Pad the piano rolls so that they</span>
+<span class="sd">      have the same length.</span>
+<span class="sd">    :func:`pypianoroll.pad_to_multiple` : Pad the piano rolls so that</span>
+<span class="sd">      their lengths are some multiples.</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">obj</span><span class="o">.</span><span class="n">pad</span><span class="p">(</span><span class="n">pad_length</span><span class="o">=</span><span class="n">pad_length</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="pad_to_multiple"><a class="viewcode-back" href="../../doc.html#pypianoroll.pad_to_multiple">[docs]</a><span class="k">def</span> <span class="nf">pad_to_multiple</span><span class="p">(</span><span class="n">obj</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Multitrack</span><span class="p">,</span> <span class="n">Track</span><span class="p">],</span> <span class="n">factor</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Pad the piano rolls along the time axis to a multiple.</span>
+<div class="viewcode-block" id="pad_to_multiple"><a class="viewcode-back" href="../../doc.html#pypianoroll.pad_to_multiple">[docs]</a><span class="k">def</span> <span class="nf">pad_to_multiple</span><span class="p">(</span>
+    <span class="n">obj</span><span class="p">:</span> <span class="n">_MultitrackOrTrack</span><span class="p">,</span> <span class="n">factor</span><span class="p">:</span> <span class="nb">int</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">_MultitrackOrTrack</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Pad the piano roll(s) so that their lengths are some multiples.</span>
 
-<span class="sd">    Pad the piano rolls with zeros at the end along the time axis of the</span>
+<span class="sd">    Pad the piano rolls at the end along the time axis of the</span>
 <span class="sd">    minimum length that makes the lengths of the resulting piano rolls</span>
 <span class="sd">    multiples of `factor`.</span>
-
-<span class="sd">    Notes</span>
-<span class="sd">    -----</span>
-<span class="sd">    The resulting pianoroll lengths are not guaranteed to be the same.</span>
-<span class="sd">    See :meth:`pypianoroll.Multitrack.pad_to_same`.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    obj : :class:`pypianoroll.Multitrack` or :class:`pypianoroll.Track`</span>
-<span class="sd">      object</span>
 <span class="sd">        Object to pad.</span>
 <span class="sd">    factor : int</span>
 <span class="sd">        The value which the length of the resulting pianoroll(s) will be</span>
 <span class="sd">        a multiple of.</span>
 
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    Object itself.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    Lengths of the resulting piano rolls are necessarily the same.</span>
+
+<span class="sd">    See Also</span>
+<span class="sd">    --------</span>
+<span class="sd">    :func:`pypianoroll.pad` : Pad the piano rolls.</span>
+<span class="sd">    :func:`pypianoroll.pad_to_same` : Pad the piano rolls so that they</span>
+<span class="sd">      have the same length.</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">obj</span><span class="o">.</span><span class="n">pad_to_multiple</span><span class="p">(</span><span class="n">factor</span><span class="o">=</span><span class="n">factor</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="pad_to_same"><a class="viewcode-back" href="../../doc.html#pypianoroll.pad_to_same">[docs]</a><span class="k">def</span> <span class="nf">pad_to_same</span><span class="p">(</span><span class="n">obj</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Multitrack</span><span class="p">]):</span>
-    <span class="sd">&quot;&quot;&quot;Pad piano rolls along the time axis to have the same length.</span>
+<div class="viewcode-block" id="pad_to_same"><a class="viewcode-back" href="../../doc.html#pypianoroll.pad_to_same">[docs]</a><span class="k">def</span> <span class="nf">pad_to_same</span><span class="p">(</span><span class="n">obj</span><span class="p">:</span> <span class="n">_Multitrack</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">_Multitrack</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Pad the piano rolls so that they have the same length.</span>
 
-<span class="sd">    Pad shorter piano rolls with zeros at the end along the time axis so</span>
-<span class="sd">    that the resulting piano rolls have the same length.</span>
+<span class="sd">    Pad shorter piano rolls at the end along the time axis so that the</span>
+<span class="sd">    resulting piano rolls have the same length.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    obj : :class:`pypianoroll.Multitrack` object</span>
+<span class="sd">    obj : :class:`pypianoroll.Multitrack`</span>
 <span class="sd">        Object to pad.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    Object itself.</span>
+
+<span class="sd">    See Also</span>
+<span class="sd">    --------</span>
+<span class="sd">    :func:`pypianoroll.pad` : Pad the piano rolls.</span>
+<span class="sd">    :func:`pypianoroll.pad_to_multiple` : Pad the piano</span>
+<span class="sd">      rolls so that their lengths are some multiples.</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">obj</span><span class="o">.</span><span class="n">pad_to_same</span><span class="p">()</span></div>
 
 
-<div class="viewcode-block" id="transpose"><a class="viewcode-back" href="../../doc.html#pypianoroll.transpose">[docs]</a><span class="k">def</span> <span class="nf">transpose</span><span class="p">(</span><span class="n">obj</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Multitrack</span><span class="p">,</span> <span class="n">Track</span><span class="p">],</span> <span class="n">semitone</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+<div class="viewcode-block" id="transpose"><a class="viewcode-back" href="../../doc.html#pypianoroll.transpose">[docs]</a><span class="k">def</span> <span class="nf">transpose</span><span class="p">(</span><span class="n">obj</span><span class="p">:</span> <span class="n">_MultitrackOrTrack</span><span class="p">,</span> <span class="n">semitone</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">_MultitrackOrTrack</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Transpose the piano roll(s) by a number of semitones.</span>
 
 <span class="sd">    Positive values are for a higher key, while negative values are for</span>
@@ -313,73 +380,48 @@
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    obj : :class:`pypianoroll.Multitrack` or :class:`pypianoroll.Track`</span>
-<span class="sd">      object</span>
 <span class="sd">        Object to transpose.</span>
 <span class="sd">    semitone : int</span>
-<span class="sd">        Number of semitones to transpose the piano roll(s).</span>
+<span class="sd">        Number of semitones to transpose. A positive value raises the</span>
+<span class="sd">        pitches, while a negative value lowers the pitches.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    Object itself.</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="n">obj</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="n">semitone</span><span class="p">)</span></div>
+    <span class="k">return</span> <span class="n">obj</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="n">semitone</span><span class="o">=</span><span class="n">semitone</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="trim_trailing_silence"><a class="viewcode-back" href="../../doc.html#pypianoroll.trim_trailing_silence">[docs]</a><span class="k">def</span> <span class="nf">trim_trailing_silence</span><span class="p">(</span><span class="n">obj</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Multitrack</span><span class="p">,</span> <span class="n">Track</span><span class="p">]):</span>
+<div class="viewcode-block" id="trim"><a class="viewcode-back" href="../../doc.html#pypianoroll.trim">[docs]</a><span class="k">def</span> <span class="nf">trim</span><span class="p">(</span>
+    <span class="n">obj</span><span class="p">:</span> <span class="n">_MultitrackOrTrack</span><span class="p">,</span>
+    <span class="n">start</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">end</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">_MultitrackOrTrack</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Trim the trailing silences of the piano roll(s).</span>
-
-<span class="sd">    All the piano rolls will have the same length after the trimming.</span>
-
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="n">obj</span><span class="o">.</span><span class="n">trim_trailing_silence</span><span class="p">()</span></div>
-
-
-<div class="viewcode-block" id="save"><a class="viewcode-back" href="../../save_load.html#pypianoroll.save">[docs]</a><span class="k">def</span> <span class="nf">save</span><span class="p">(</span><span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">obj</span><span class="p">:</span> <span class="n">Multitrack</span><span class="p">,</span> <span class="n">compressed</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Save the object to a (compressed) NPZ file.</span>
-
-<span class="sd">    This could be later loaded by :func:`pypianoroll.load`.</span>
-
-<span class="sd">    Parameters</span>
-<span class="sd">    ----------</span>
-<span class="sd">    path : str</span>
-<span class="sd">        Path to the NPZ file to save.</span>
-<span class="sd">    obj : :class:`pypianoroll.Multitrack` object</span>
-<span class="sd">        Object to save.</span>
-<span class="sd">    compressed : bool</span>
-<span class="sd">        Whether to save to a compressed NPZ file. Defaults to True.</span>
-
-<span class="sd">    Notes</span>
-<span class="sd">    -----</span>
-<span class="sd">    To reduce the file size, the piano rolls are first converted to</span>
-<span class="sd">    instances of :class:`scipy.sparse.csc_matrix`. The component arrays</span>
-<span class="sd">    are then collected and saved to a npz file.</span>
-
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">obj</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">compressed</span><span class="o">=</span><span class="n">compressed</span><span class="p">)</span></div>
-
-
-<div class="viewcode-block" id="write"><a class="viewcode-back" href="../../read_write.html#pypianoroll.write">[docs]</a><span class="k">def</span> <span class="nf">write</span><span class="p">(</span><span class="n">obj</span><span class="p">:</span> <span class="n">Multitrack</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Write the object to a MIDI file.</span>
-
-<span class="sd">    Parameters</span>
-<span class="sd">    ----------</span>
-<span class="sd">    obj : :class:`pypianoroll.Multitrack` object</span>
-<span class="sd">        Object to write.</span>
-<span class="sd">    path : str</span>
-<span class="sd">        Path to the MIDI file to write.</span>
-
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">obj</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">path</span><span class="p">)</span></div>
-
-
-<div class="viewcode-block" id="plot"><a class="viewcode-back" href="../../visualization.html#pypianoroll.plot">[docs]</a><span class="k">def</span> <span class="nf">plot</span><span class="p">(</span><span class="n">obj</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Multitrack</span><span class="p">,</span> <span class="n">Track</span><span class="p">],</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Plot the object.</span>
-
-<span class="sd">    See :func:`pypianoroll.plot_multitrack` and</span>
-<span class="sd">    :func:`pypianoroll.plot_track` for full documentation.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    obj : :class:`pypianoroll.Multitrack` or :class:`pypianoroll.Track`</span>
-<span class="sd">      object</span>
-<span class="sd">        Object to plot.</span>
+<span class="sd">        Object to trim.</span>
+<span class="sd">    start : int, optional</span>
+<span class="sd">        Start time. Defaults to 0.</span>
+<span class="sd">    end : int, optional</span>
+<span class="sd">        End time. Defaults to active length.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    Object itself.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">obj</span><span class="o">.</span><span class="n">trim</span><span class="p">(</span><span class="n">start</span><span class="o">=</span><span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="n">end</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="plot"><a class="viewcode-back" href="../../visualization.html#pypianoroll.plot">[docs]</a><span class="k">def</span> <span class="nf">plot</span><span class="p">(</span><span class="n">obj</span><span class="p">:</span> <span class="n">_MultitrackOrTrack</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">_MultitrackOrTrack</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Plot the object.</span>
+
+<span class="sd">    See :func:`pypianoroll.plot_multitrack` and</span>
+<span class="sd">    :func:`pypianoroll.plot_track` for full documentation.</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">obj</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>

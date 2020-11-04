@@ -34,6 +34,3 @@ Functions
 
 .. autofunction :: pypianoroll.plot_pianoroll
     :noindex:
-
-.. autofunction :: pypianoroll.save_animation
-    :noindex:

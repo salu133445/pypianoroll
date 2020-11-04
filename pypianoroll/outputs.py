@@ -16,6 +16,8 @@ from .utils import decompose_sparse
 if TYPE_CHECKING:
     from .multitrack import Multitrack
 
+__all__ = ["save", "to_pretty_midi", "write", "DEFAULT_TEMPO"]
+
 DEFAULT_TEMPO = 120
 
 

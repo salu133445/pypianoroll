@@ -301,7 +301,7 @@ def plot_multitrack(
     grid_axis: str = "both",
     grid_linestyle: str = ":",
     grid_linewidth: float = 0.5,
-) -> ndarray:
+) -> List[Axes]:
     """
     Plot the multitrack.
 
@@ -338,8 +338,8 @@ def plot_multitrack(
 
     Returns
     -------
-    ndarray of :class:`matplotlib.axes.Axes`
-        (Created) array of Axes objects.
+    list of :class:`matplotlib.axes.Axes`
+        (Created) list of Axes objects.
 
     """
     if not multitrack.tracks:
@@ -365,12 +365,14 @@ def plot_multitrack(
     if mode == "separate":
         if axs is None:
             if n_tracks > 1:
-                fig, axs = plt.subplots(n_tracks, sharex=True)
+                fig, axs_ = plt.subplots(n_tracks, sharex=True)
                 fig.subplots_adjust(hspace=0)
-                axs = axs.tolist()
+                axs = axs_.tolist()
             else:
                 fig, ax = plt.subplots()
                 axs = [ax]
+        elif not isinstance(axs, list):
+            axs = list(axs)
 
         for idx, track in enumerate(multitrack.tracks):
             now_xticklabel = xticklabel if idx < n_tracks else False
@@ -396,9 +398,7 @@ def plot_multitrack(
             if track_label != "none":
                 _add_tracklabel(axs[idx], track_label, track)
 
-        return axs
-
-    if mode == "blended":
+    elif mode == "blended":
         is_all_drum = True
         for track in multitrack.tracks:
             if not track.is_drum:
@@ -407,6 +407,8 @@ def plot_multitrack(
         if axs is None:
             fig, ax = plt.subplots()
             axs = [ax]
+        elif not isinstance(axs, list):
+            axs = list(axs)
         stacked = multitrack.stack()
 
         colormap = matplotlib.cm.get_cmap(cmaps[0])
@@ -445,9 +447,7 @@ def plot_multitrack(
             ]
             plt.legend(handles=patches)
 
-        return axs
-
-    if mode == "hybrid":
+    elif mode == "hybrid":
         drums = multitrack.copy()
         drums.tracks = [track for track in multitrack.tracks if track.is_drum]
         merged_drums = drums.blend()
@@ -459,8 +459,10 @@ def plot_multitrack(
         merged_others = others.blend()
 
         if axs is None:
-            fig, axs = plt.subplots(2, sharex=True, sharey=True)
-            axs = axs.tolist()
+            fig, axs_ = plt.subplots(2, sharex=True, sharey=True)
+            axs = axs_.tolist()
+        elif not isinstance(axs, list):
+            axs = list(axs)
 
         plot_pianoroll(
             axs[0],
@@ -505,8 +507,10 @@ def plot_multitrack(
             _add_tracklabel(axs[0], "Drums")
             _add_tracklabel(axs[1], "Others")
 
-        return axs
+    else:
+        raise ValueError(
+            "`mode` must be one of 'separate', 'blended' or 'hybrid', not"
+            f"{mode}."
+        )
 
-    raise ValueError(
-        f"`mode` must be one of 'separate', 'blended' or 'hybrid', not {mode}."
-    )
+    return axs

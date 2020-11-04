@@ -167,7 +167,7 @@
 <h2>Functions<a class="headerlink" href="#functions" title="Permalink to this headline">¶</a></h2>
 <dl class="py function">
 <dt>
-<code class="sig-prename descclassname">pypianoroll.</code><code class="sig-name descname">empty_beat_rate</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">pianoroll</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.19)">numpy.ndarray</a></span></em>, <em class="sig-param"><span class="n">resolution</span><span class="p">:</span> <span class="n">int</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pypianoroll/metrics.html#empty_beat_rate"><span class="viewcode-link">[source]</span></a></dt>
+<code class="sig-prename descclassname">pypianoroll.</code><code class="sig-name descname">empty_beat_rate</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">pianoroll</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.19)">numpy.ndarray</a></span></em>, <em class="sig-param"><span class="n">resolution</span><span class="p">:</span> <span class="n">int</span></em><span class="sig-paren">)</span> &#x2192; float<a class="reference internal" href="_modules/pypianoroll/metrics.html#empty_beat_rate"><span class="viewcode-link">[source]</span></a></dt>
 <dd><p>Return the ratio of empty beats.</p>
 <p>The empty-beat rate is defined as the ratio of the number of empty
 beats (where no note is played) to the total number of beats. Return
@@ -189,7 +189,7 @@ NaN if song length is zero.</p>
 
 <dl class="py function">
 <dt>
-<code class="sig-prename descclassname">pypianoroll.</code><code class="sig-name descname">n_pitches_used</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">pianoroll</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.19)">numpy.ndarray</a></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pypianoroll/metrics.html#n_pitches_used"><span class="viewcode-link">[source]</span></a></dt>
+<code class="sig-prename descclassname">pypianoroll.</code><code class="sig-name descname">n_pitches_used</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">pianoroll</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.19)">numpy.ndarray</a></span></em><span class="sig-paren">)</span> &#x2192; int<a class="reference internal" href="_modules/pypianoroll/metrics.html#n_pitches_used"><span class="viewcode-link">[source]</span></a></dt>
 <dd><p>Return the number of unique pitches used.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -213,7 +213,7 @@ NaN if song length is zero.</p>
 
 <dl class="py function">
 <dt>
-<code class="sig-prename descclassname">pypianoroll.</code><code class="sig-name descname">n_pitch_classes_used</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">pianoroll</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.19)">numpy.ndarray</a></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pypianoroll/metrics.html#n_pitch_classes_used"><span class="viewcode-link">[source]</span></a></dt>
+<code class="sig-prename descclassname">pypianoroll.</code><code class="sig-name descname">n_pitch_classes_used</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">pianoroll</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.19)">numpy.ndarray</a></span></em><span class="sig-paren">)</span> &#x2192; int<a class="reference internal" href="_modules/pypianoroll/metrics.html#n_pitch_classes_used"><span class="viewcode-link">[source]</span></a></dt>
 <dd><p>Return the number of unique pitch classes used.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -237,7 +237,51 @@ NaN if song length is zero.</p>
 
 <dl class="py function">
 <dt>
-<code class="sig-prename descclassname">pypianoroll.</code><code class="sig-name descname">qualified_note_rate</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">pianoroll</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.19)">numpy.ndarray</a></span></em>, <em class="sig-param"><span class="n">threshold</span><span class="p">:</span> <span class="n">float</span> <span class="o">=</span> <span class="default_value">2</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pypianoroll/metrics.html#qualified_note_rate"><span class="viewcode-link">[source]</span></a></dt>
+<code class="sig-prename descclassname">pypianoroll.</code><code class="sig-name descname">pitch_range_tuple</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">pianoroll</span></em><span class="sig-paren">)</span> &#x2192; Tuple<span class="p">[</span>float<span class="p">, </span>float<span class="p">]</span><a class="reference internal" href="_modules/pypianoroll/metrics.html#pitch_range_tuple"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Return the pitch range as a tuple <cite>(lowest, highest)</cite>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><ul class="simple">
+<li><p><em>int or nan</em> – Highest active pitch.</p></li>
+<li><p><em>int or nan</em> – Lowest active pitch.</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<dl class="simple">
+<dt><a class="reference internal" href="doc.html#pypianoroll.pitch_range" title="pypianoroll.pitch_range"><code class="xref py py-func docutils literal notranslate"><span class="pre">pypianoroll.pitch_range()</span></code></a></dt><dd><p>Compute the pitch range.</p>
+</dd>
+</dl>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt>
+<code class="sig-prename descclassname">pypianoroll.</code><code class="sig-name descname">pitch_range</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">pianoroll</span></em><span class="sig-paren">)</span> &#x2192; float<a class="reference internal" href="_modules/pypianoroll/metrics.html#pitch_range"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Return the pitch range.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Pitch range (in semitones), i.e., difference between the
+highest and the lowest active pitches.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>int or nan</p>
+</dd>
+</dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<dl class="simple">
+<dt><a class="reference internal" href="doc.html#pypianoroll.pitch_range_tuple" title="pypianoroll.pitch_range_tuple"><code class="xref py py-func docutils literal notranslate"><span class="pre">pypianoroll.pitch_range_tuple()</span></code></a></dt><dd><p>Return the pitch range as a tuple.</p>
+</dd>
+</dl>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt>
+<code class="sig-prename descclassname">pypianoroll.</code><code class="sig-name descname">qualified_note_rate</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">pianoroll</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.19)">numpy.ndarray</a></span></em>, <em class="sig-param"><span class="n">threshold</span><span class="p">:</span> <span class="n">float</span> <span class="o">=</span> <span class="default_value">2</span></em><span class="sig-paren">)</span> &#x2192; float<a class="reference internal" href="_modules/pypianoroll/metrics.html#qualified_note_rate"><span class="viewcode-link">[source]</span></a></dt>
 <dd><p>Return the ratio of the number of the qualified notes.</p>
 <p>The qualified note rate is defined as the ratio of the number of
 qualified notes (notes longer than <cite>threshold</cite>, in time steps) to
@@ -263,18 +307,18 @@ the total number of notes. Return NaN if no note is found.</p>
 </dd>
 </dl>
 <p class="rubric">References</p>
-<dl class="simple">
-<dt>[1] Hao-Wen Dong, Wen-Yi Hsiao, Li-Chia Yang, and Yi-Hsuan Yang,</dt><dd><p>“MuseGAN: Multi-track sequential generative adversarial networks
+<ol class="arabic simple">
+<li><p>Hao-Wen Dong, Wen-Yi Hsiao, Li-Chia Yang, and Yi-Hsuan Yang,
+“MuseGAN: Multi-track sequential generative adversarial networks
 for symbolic music generation and accompaniment,” in Proceedings
 of the 32nd AAAI Conference on Artificial Intelligence (AAAI),
-2018.</p>
-</dd>
-</dl>
+2018.</p></li>
+</ol>
 </dd></dl>
 
 <dl class="py function">
 <dt>
-<code class="sig-prename descclassname">pypianoroll.</code><code class="sig-name descname">polyphonic_rate</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">pianoroll</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.19)">numpy.ndarray</a></span></em>, <em class="sig-param"><span class="n">threshold</span><span class="p">:</span> <span class="n">float</span> <span class="o">=</span> <span class="default_value">2</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pypianoroll/metrics.html#polyphonic_rate"><span class="viewcode-link">[source]</span></a></dt>
+<code class="sig-prename descclassname">pypianoroll.</code><code class="sig-name descname">polyphonic_rate</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">pianoroll</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.19)">numpy.ndarray</a></span></em>, <em class="sig-param"><span class="n">threshold</span><span class="p">:</span> <span class="n">float</span> <span class="o">=</span> <span class="default_value">2</span></em><span class="sig-paren">)</span> &#x2192; float<a class="reference internal" href="_modules/pypianoroll/metrics.html#polyphonic_rate"><span class="viewcode-link">[source]</span></a></dt>
 <dd><p>Return the ratio of time steps where multiple pitches are on.</p>
 <p>The polyphony rate is defined as the ratio of the number of time
 steps where multiple pitches are on to the total number of time
@@ -301,18 +345,18 @@ This metric is used in [1], where it is called <em>polyphonicity</em>.</p>
 </dd>
 </dl>
 <p class="rubric">References</p>
-<dl class="simple">
-<dt>[1] Hao-Wen Dong, Wen-Yi Hsiao, Li-Chia Yang, and Yi-Hsuan Yang,</dt><dd><p>“MuseGAN: Multi-track sequential generative adversarial networks
+<ol class="arabic simple">
+<li><p>Hao-Wen Dong, Wen-Yi Hsiao, Li-Chia Yang, and Yi-Hsuan Yang,
+“MuseGAN: Multi-track sequential generative adversarial networks
 for symbolic music generation and accompaniment,” in Proceedings
 of the 32nd AAAI Conference on Artificial Intelligence (AAAI),
-2018.</p>
-</dd>
-</dl>
+2018.</p></li>
+</ol>
 </dd></dl>
 
 <dl class="py function">
 <dt>
-<code class="sig-prename descclassname">pypianoroll.</code><code class="sig-name descname">drum_in_pattern_rate</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">pianoroll</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.19)">numpy.ndarray</a></span></em>, <em class="sig-param"><span class="n">resolution</span><span class="p">:</span> <span class="n">int</span></em>, <em class="sig-param"><span class="n">tolerance</span><span class="p">:</span> <span class="n">float</span> <span class="o">=</span> <span class="default_value">0.1</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pypianoroll/metrics.html#drum_in_pattern_rate"><span class="viewcode-link">[source]</span></a></dt>
+<code class="sig-prename descclassname">pypianoroll.</code><code class="sig-name descname">drum_in_pattern_rate</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">pianoroll</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.19)">numpy.ndarray</a></span></em>, <em class="sig-param"><span class="n">resolution</span><span class="p">:</span> <span class="n">int</span></em>, <em class="sig-param"><span class="n">tolerance</span><span class="p">:</span> <span class="n">float</span> <span class="o">=</span> <span class="default_value">0.1</span></em><span class="sig-paren">)</span> &#x2192; float<a class="reference internal" href="_modules/pypianoroll/metrics.html#drum_in_pattern_rate"><span class="viewcode-link">[source]</span></a></dt>
 <dd><p>Return the ratio of drum notes in a certain drum pattern.</p>
 <p>The drum-in-pattern rate is defined as the ratio of the number of
 notes in a certain scale to the total number of notes. Only drum
@@ -337,18 +381,18 @@ metric is used in [1].</p>
 </dd>
 </dl>
 <p class="rubric">References</p>
-<dl class="simple">
-<dt>[1] Hao-Wen Dong, Wen-Yi Hsiao, Li-Chia Yang, and Yi-Hsuan Yang,</dt><dd><p>“MuseGAN: Multi-track sequential generative adversarial networks
+<ol class="arabic simple">
+<li><p>Hao-Wen Dong, Wen-Yi Hsiao, Li-Chia Yang, and Yi-Hsuan Yang,
+“MuseGAN: Multi-track sequential generative adversarial networks
 for symbolic music generation and accompaniment,” in Proceedings
 of the 32nd AAAI Conference on Artificial Intelligence (AAAI),
-2018.</p>
-</dd>
-</dl>
+2018.</p></li>
+</ol>
 </dd></dl>
 
 <dl class="py function">
 <dt>
-<code class="sig-prename descclassname">pypianoroll.</code><code class="sig-name descname">in_scale_rate</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">pianoroll</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.19)">numpy.ndarray</a></span></em>, <em class="sig-param"><span class="n">root</span><span class="p">:</span> <span class="n">int</span> <span class="o">=</span> <span class="default_value">3</span></em>, <em class="sig-param"><span class="n">mode</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="default_value">'major'</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pypianoroll/metrics.html#in_scale_rate"><span class="viewcode-link">[source]</span></a></dt>
+<code class="sig-prename descclassname">pypianoroll.</code><code class="sig-name descname">in_scale_rate</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">pianoroll</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.19)">numpy.ndarray</a></span></em>, <em class="sig-param"><span class="n">root</span><span class="p">:</span> <span class="n">int</span> <span class="o">=</span> <span class="default_value">3</span></em>, <em class="sig-param"><span class="n">mode</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="default_value">'major'</span></em><span class="sig-paren">)</span> &#x2192; float<a class="reference internal" href="_modules/pypianoroll/metrics.html#in_scale_rate"><span class="viewcode-link">[source]</span></a></dt>
 <dd><p>Return the ratio of pitches in a certain musical scale.</p>
 <p>The pitch-in-scale rate is defined as the ratio of the number of
 notes in a certain scale to the total number of notes. Drum tracks
@@ -359,7 +403,7 @@ are ignored. Return NaN if no note is found. This metric is used in
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>music</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">muspy.Music</span></code> object) – Music object to evaluate.</p></li>
+<li><p><strong>pianoroll</strong> (<em>ndarray</em>) – Piano roll to evaluate.</p></li>
 <li><p><strong>root</strong> (<em>int</em>) – Root of the scale.</p></li>
 <li><p><strong>mode</strong> (<em>str</em><em>, </em><em>{'major'</em><em>, </em><em>'minor'}</em>) – Mode of the scale.</p></li>
 </ul>
@@ -374,23 +418,23 @@ are ignored. Return NaN if no note is found. This metric is used in
 <div class="admonition seealso">
 <p class="admonition-title">See also</p>
 <dl class="simple">
-<dt><code class="xref py py-func docutils literal notranslate"><span class="pre">muspy.scale_consistency()</span></code></dt><dd><p>Compute the largest pitch-in-class rate.</p>
+<dt><a class="reference external" href="https://salu133445.github.io/muspy/doc/muspy.html#muspy.scale_consistency" title="(in MusPy)"><code class="xref py py-func docutils literal notranslate"><span class="pre">muspy.scale_consistency()</span></code></a></dt><dd><p>Compute the largest pitch-in-class rate.</p>
 </dd>
 </dl>
 </div>
 <p class="rubric">References</p>
-<dl class="simple">
-<dt>[1] Hao-Wen Dong, Wen-Yi Hsiao, Li-Chia Yang, and Yi-Hsuan Yang,</dt><dd><p>“MuseGAN: Multi-track sequential generative adversarial networks
+<ol class="arabic simple">
+<li><p>Hao-Wen Dong, Wen-Yi Hsiao, Li-Chia Yang, and Yi-Hsuan Yang,
+“MuseGAN: Multi-track sequential generative adversarial networks
 for symbolic music generation and accompaniment,” in Proceedings
 of the 32nd AAAI Conference on Artificial Intelligence (AAAI),
-2018.</p>
-</dd>
-</dl>
+2018.</p></li>
+</ol>
 </dd></dl>
 
 <dl class="py function">
 <dt>
-<code class="sig-prename descclassname">pypianoroll.</code><code class="sig-name descname">tonal_distance</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">pianoroll_1</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.19)">numpy.ndarray</a></span></em>, <em class="sig-param"><span class="n">pianoroll_2</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.19)">numpy.ndarray</a></span></em>, <em class="sig-param"><span class="n">resolution</span><span class="p">:</span> <span class="n">int</span></em>, <em class="sig-param"><span class="n">radii</span><span class="p">:</span> <span class="n">Sequence<span class="p">[</span>float<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">1.0, 1.0, 0.5</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pypianoroll/metrics.html#tonal_distance"><span class="viewcode-link">[source]</span></a></dt>
+<code class="sig-prename descclassname">pypianoroll.</code><code class="sig-name descname">tonal_distance</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">pianoroll_1</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.19)">numpy.ndarray</a></span></em>, <em class="sig-param"><span class="n">pianoroll_2</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.19)">numpy.ndarray</a></span></em>, <em class="sig-param"><span class="n">resolution</span><span class="p">:</span> <span class="n">int</span></em>, <em class="sig-param"><span class="n">radii</span><span class="p">:</span> <span class="n">Sequence<span class="p">[</span>float<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">1.0, 1.0, 0.5</span></em><span class="sig-paren">)</span> &#x2192; float<a class="reference internal" href="_modules/pypianoroll/metrics.html#tonal_distance"><span class="viewcode-link">[source]</span></a></dt>
 <dd><p>Return the tonal distance [1] between the two input piano rolls.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -403,11 +447,11 @@ of the 32nd AAAI Conference on Artificial Intelligence (AAAI),
 </dd>
 </dl>
 <p class="rubric">References</p>
-<dl class="simple">
-<dt>[1] Christopher Harte, Mark Sandler, and Martin Gasser, “Detecting</dt><dd><p>harmonic change in musical audio,” in Proceedings of the 1st ACM
-workshop on Audio and music computing multimedia, 2006.</p>
-</dd>
-</dl>
+<ol class="arabic simple">
+<li><p>Christopher Harte, Mark Sandler, and Martin Gasser, “Detecting
+harmonic change in musical audio,” in Proceedings of the 1st ACM
+workshop on Audio and music computing multimedia, 2006.</p></li>
+</ol>
 </dd></dl>
 
 </div>

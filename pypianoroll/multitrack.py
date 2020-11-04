@@ -28,11 +28,9 @@ from .visualization import plot_multitrack
 __all__ = [
     "Multitrack",
     "DEFAULT_RESOLUTION",
-    "DEFAULT_TEMPO",
 ]
 
 DEFAULT_RESOLUTION = 24
-DEFAULT_TEMPO = 120
 
 _Multitrack = TypeVar("_Multitrack", bound="Multitrack")
 

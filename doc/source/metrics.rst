@@ -17,6 +17,12 @@ Functions
 .. autofunction:: pypianoroll.n_pitch_classes_used
     :noindex:
 
+.. autofunction:: pypianoroll.pitch_range_tuple
+    :noindex:
+
+.. autofunction:: pypianoroll.pitch_range
+    :noindex:
+
 .. autofunction:: pypianoroll.qualified_note_rate
     :noindex:
 

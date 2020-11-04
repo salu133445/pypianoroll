@@ -157,33 +157,41 @@
            <div itemprop="articleBody">
             
   <h1>Source code for pypianoroll.inputs</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;MIDI I/O interface.&quot;&quot;&quot;</span>
+<span></span><span class="sd">&quot;&quot;&quot;Input interfaces.&quot;&quot;&quot;</span>
 <span class="kn">import</span> <span class="nn">json</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span>
+<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Union</span>
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">from</span> <span class="nn">pretty_midi</span> <span class="kn">import</span> <span class="n">PrettyMIDI</span>
 
-<span class="kn">from</span> <span class="nn">.multitrack</span> <span class="kn">import</span> <span class="n">DEFAULT_RESOLUTION</span><span class="p">,</span> <span class="n">Multitrack</span><span class="p">,</span> <span class="n">reconstruct_sparse</span>
+<span class="kn">from</span> <span class="nn">.multitrack</span> <span class="kn">import</span> <span class="n">DEFAULT_RESOLUTION</span><span class="p">,</span> <span class="n">Multitrack</span>
 <span class="kn">from</span> <span class="nn">.track</span> <span class="kn">import</span> <span class="n">Track</span>
+<span class="kn">from</span> <span class="nn">.utils</span> <span class="kn">import</span> <span class="n">reconstruct_sparse</span>
 
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;load&quot;</span><span class="p">,</span> <span class="s2">&quot;from_pretty_midi&quot;</span><span class="p">,</span> <span class="s2">&quot;read&quot;</span><span class="p">]</span>
 
 
-<div class="viewcode-block" id="load"><a class="viewcode-back" href="../../save_load.html#pypianoroll.load">[docs]</a><span class="k">def</span> <span class="nf">load</span><span class="p">(</span><span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<div class="viewcode-block" id="load"><a class="viewcode-back" href="../../save_load.html#pypianoroll.load">[docs]</a><span class="k">def</span> <span class="nf">load</span><span class="p">(</span><span class="n">path</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Path</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Multitrack</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Load a NPZ file into a Multitrack object.</span>
 
 <span class="sd">    Supports only files previously saved by :func:`pypianoroll.save`.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    path : str</span>
-<span class="sd">        Path to the NPZ file to load.</span>
+<span class="sd">    path : str or Path</span>
+<span class="sd">        Path to the file to load.</span>
+
+<span class="sd">    See Also</span>
+<span class="sd">    --------</span>
+<span class="sd">    :func:`pypianoroll.save` : Save a Multitrack object to a NPZ file.</span>
+<span class="sd">    :func:`pypianoroll.read` : Read a MIDI file into a Multitrack</span>
+<span class="sd">      object.</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">with</span> <span class="n">np</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">path</span><span class="p">)</span> <span class="k">as</span> <span class="n">loaded</span><span class="p">:</span>
         <span class="k">if</span> <span class="s2">&quot;info.json&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">loaded</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Cannot find &#39;info.json&#39; in the npz file.&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Cannot find &#39;info.json&#39; in the NPZ file.&quot;</span><span class="p">)</span>
 
         <span class="c1"># Load the info dictionary</span>
         <span class="n">info_dict</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">loaded</span><span class="p">[</span><span class="s2">&quot;info.json&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">))</span>
@@ -219,17 +227,16 @@
     <span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="from_pretty_midi"><a class="viewcode-back" href="../../doc.html#pypianoroll.from_pretty_midi">[docs]</a><span class="k">def</span> <span class="nf">from_pretty_midi</span><span class="p">(</span>
-    <span class="n">pm</span><span class="p">:</span> <span class="n">PrettyMIDI</span><span class="p">,</span>
+<div class="viewcode-block" id="from_pretty_midi"><a class="viewcode-back" href="../../read_write.html#pypianoroll.from_pretty_midi">[docs]</a><span class="k">def</span> <span class="nf">from_pretty_midi</span><span class="p">(</span>
+    <span class="n">midi</span><span class="p">:</span> <span class="n">PrettyMIDI</span><span class="p">,</span>
     <span class="n">resolution</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">DEFAULT_RESOLUTION</span><span class="p">,</span>
     <span class="n">mode</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;max&quot;</span><span class="p">,</span>
     <span class="n">algorithm</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;normal&quot;</span><span class="p">,</span>
     <span class="n">binarized</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
-    <span class="n">skip_empty_tracks</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
     <span class="n">collect_onsets_only</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="n">threshold</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
     <span class="n">first_beat_time</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-<span class="p">):</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Multitrack</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Return a Multitrack object converted from a PrettyMIDI object.</span>
 
 <span class="sd">    Parse a :class:`pretty_midi.PrettyMIDI` object. The data type of the</span>
@@ -239,100 +246,92 @@
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    pm : `pretty_midi.PrettyMIDI` object</span>
-<span class="sd">        A :class:`pretty_midi.PrettyMIDI` object to be parsed.</span>
+<span class="sd">    midi : :class:`pretty_midi.PrettyMIDI`</span>
+<span class="sd">        PrettyMIDI object to parse.</span>
 <span class="sd">    mode : {&#39;max&#39;, &#39;sum&#39;}</span>
-<span class="sd">        A string that indicates the merging strategy to apply to</span>
-<span class="sd">        duplicate notes. Defaults to &#39;max&#39;.</span>
+<span class="sd">        Merging strategy for duplicate notes. Defaults to &#39;max&#39;.</span>
 <span class="sd">    algorithm : {&#39;normal&#39;, &#39;strict&#39;, &#39;custom&#39;}</span>
-<span class="sd">        A string that indicates the method used to get the location of</span>
-<span class="sd">        the first beat. Notes before it will be dropped unless an</span>
-<span class="sd">        incomplete beat before it is found (see Notes for more</span>
-<span class="sd">        information). Defaults to &#39;normal&#39;.</span>
-
-<span class="sd">        - The &#39;normal&#39; algorithm estimates the location of the first</span>
-<span class="sd">          beat by :meth:`pretty_midi.PrettyMIDI.estimate_beat_start`.</span>
-<span class="sd">        - The &#39;strict&#39; algorithm sets the first beat at the event time</span>
-<span class="sd">          of the first time signature change. Raise a ValueError if no</span>
-<span class="sd">          time signature change event is found.</span>
-<span class="sd">        - The &#39;custom&#39; algorithm takes argument `first_beat_time` as the</span>
-<span class="sd">          location of the first beat.</span>
-
+<span class="sd">        Algorithm for finding the location of the first beat (see</span>
+<span class="sd">        Notes). Defaults to &#39;normal&#39;.</span>
 <span class="sd">    binarized : bool</span>
 <span class="sd">        True to binarize the parsed piano rolls before merging duplicate</span>
 <span class="sd">        notes. False to use the original parsed piano rolls. Defaults to</span>
 <span class="sd">        False.</span>
-<span class="sd">    skip_empty_tracks : bool</span>
-<span class="sd">        True to remove tracks with empty piano rolls and compress the</span>
-<span class="sd">        pitch range of the parsed piano rolls. False to retain the empty</span>
-<span class="sd">        tracks and use the original parsed piano rolls. Deafaults to</span>
-<span class="sd">        True.</span>
 <span class="sd">    collect_onsets_only : bool</span>
 <span class="sd">        True to collect only the onset of the notes (i.e. note on</span>
 <span class="sd">        events) in all tracks, where the note off and duration</span>
-<span class="sd">        information are dropped. False to parse regular piano rolls.</span>
+<span class="sd">        information are discarded. False to parse regular piano rolls.</span>
 <span class="sd">        Defaults to False.</span>
 <span class="sd">    threshold : int or float</span>
-<span class="sd">        A threshold used to binarize the parsed piano rolls. Only</span>
+<span class="sd">        Threshold for binarizing the parsed piano rolls. Only</span>
 <span class="sd">        effective when `binarized` is True. Defaults to zero.</span>
-<span class="sd">    first_beat_time : float</span>
+<span class="sd">    first_beat_time : float, optional</span>
 <span class="sd">        Location of the first beat, in sec. Required and only</span>
-<span class="sd">        effective  when using &#39;custom&#39; algorithm.</span>
+<span class="sd">        effective when using &#39;custom&#39; algorithm.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    :class:`pypianoroll.Multitrack`</span>
+<span class="sd">        Converted Multitrack object.</span>
 
 <span class="sd">    Notes</span>
 <span class="sd">    -----</span>
+<span class="sd">    There are three algorithms for finding the location of the first</span>
+<span class="sd">    beat:</span>
+
+<span class="sd">    - &#39;normal&#39; : Estimate the location of the first beat using</span>
+<span class="sd">      :meth:`pretty_midi.PrettyMIDI.estimate_beat_start`.</span>
+<span class="sd">    - &#39;strict&#39; : Set the location of the first beat to the time of the</span>
+<span class="sd">      first time signature change. Raise a RuntimeError if no time</span>
+<span class="sd">      signature change is found.</span>
+<span class="sd">    - &#39;custom&#39; : Set the location of the first beat to the value of</span>
+<span class="sd">      argument `first_beat_time`. Raise a ValueError if</span>
+<span class="sd">      `first_beat_time` is not given.</span>
+
 <span class="sd">    If an incomplete beat before the first beat is found, an additional</span>
 <span class="sd">    beat will be added before the (estimated) beat starting time.</span>
 <span class="sd">    However, notes before the (estimated) beat starting time for more</span>
 <span class="sd">    than one beat are dropped.</span>
 
-<span class="sd">    Returns</span>
-<span class="sd">    -------</span>
-<span class="sd">    :class:`pypianoroll.Multitrack`</span>
-<span class="sd">        Converted multitrack.</span>
-
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">mode</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;max&quot;</span><span class="p">,</span> <span class="s2">&quot;sum&quot;</span><span class="p">):</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;`mode` must be one of {&#39;max&#39;, &#39;sum&#39;}.&quot;</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">algorithm</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;strict&quot;</span><span class="p">,</span> <span class="s2">&quot;normal&quot;</span><span class="p">,</span> <span class="s2">&quot;custom&quot;</span><span class="p">):</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-            <span class="s2">&quot;`algorithm` must be one of {&#39;normal&#39;, &#39;strict&#39;, &#39;custom&#39;}.&quot;</span>
-        <span class="p">)</span>
-    <span class="k">if</span> <span class="n">algorithm</span> <span class="o">==</span> <span class="s2">&quot;custom&quot;</span><span class="p">:</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">first_beat_time</span><span class="p">,</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">)):</span>
-            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
-                <span class="s2">&quot;`first_beat_time` must be int or float when &quot;</span>
-                <span class="s2">&quot;using &#39;custom&#39; algorithm.&quot;</span>
-            <span class="p">)</span>
-        <span class="k">if</span> <span class="n">first_beat_time</span> <span class="o">&lt;</span> <span class="mf">0.0</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                <span class="s2">&quot;`first_beat_time` must be a positive number &quot;</span>
-                <span class="s2">&quot;when using &#39;custom&#39; algorithm.&quot;</span>
-            <span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;`mode` must be either &#39;max&#39; or &#39;sum&#39;.&quot;</span><span class="p">)</span>
 
     <span class="c1"># Set first_beat_time for &#39;normal&#39; and &#39;strict&#39; modes</span>
     <span class="k">if</span> <span class="n">algorithm</span> <span class="o">==</span> <span class="s2">&quot;normal&quot;</span><span class="p">:</span>
-        <span class="k">if</span> <span class="n">pm</span><span class="o">.</span><span class="n">time_signature_changes</span><span class="p">:</span>
-            <span class="n">pm</span><span class="o">.</span><span class="n">time_signature_changes</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">time</span><span class="p">)</span>
-            <span class="n">first_beat_time</span> <span class="o">=</span> <span class="n">pm</span><span class="o">.</span><span class="n">time_signature_changes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">time</span>
+        <span class="k">if</span> <span class="n">midi</span><span class="o">.</span><span class="n">time_signature_changes</span><span class="p">:</span>
+            <span class="n">midi</span><span class="o">.</span><span class="n">time_signature_changes</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">time</span><span class="p">)</span>
+            <span class="n">first_beat_time</span> <span class="o">=</span> <span class="n">midi</span><span class="o">.</span><span class="n">time_signature_changes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">time</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">first_beat_time</span> <span class="o">=</span> <span class="n">pm</span><span class="o">.</span><span class="n">estimate_beat_start</span><span class="p">()</span>
+            <span class="n">first_beat_time</span> <span class="o">=</span> <span class="n">midi</span><span class="o">.</span><span class="n">estimate_beat_start</span><span class="p">()</span>
     <span class="k">elif</span> <span class="n">algorithm</span> <span class="o">==</span> <span class="s2">&quot;strict&quot;</span><span class="p">:</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">pm</span><span class="o">.</span><span class="n">time_signature_changes</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">midi</span><span class="o">.</span><span class="n">time_signature_changes</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span>
                 <span class="s2">&quot;No time signature change event found. Unable to set beat &quot;</span>
                 <span class="s2">&quot;start time using &#39;strict&#39; algorithm.&quot;</span>
             <span class="p">)</span>
-        <span class="n">pm</span><span class="o">.</span><span class="n">time_signature_changes</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">time</span><span class="p">)</span>
-        <span class="n">first_beat_time</span> <span class="o">=</span> <span class="n">pm</span><span class="o">.</span><span class="n">time_signature_changes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">time</span>
+        <span class="n">midi</span><span class="o">.</span><span class="n">time_signature_changes</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">time</span><span class="p">)</span>
+        <span class="n">first_beat_time</span> <span class="o">=</span> <span class="n">midi</span><span class="o">.</span><span class="n">time_signature_changes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">time</span>
+    <span class="k">elif</span> <span class="n">algorithm</span> <span class="o">==</span> <span class="s2">&quot;custom&quot;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">first_beat_time</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
+                <span class="s2">&quot;`first_beat_time` must be given when using &#39;custom&#39; &quot;</span>
+                <span class="s2">&quot;algorithm.&quot;</span>
+            <span class="p">)</span>
+        <span class="k">if</span> <span class="n">first_beat_time</span> <span class="o">&lt;</span> <span class="mf">0.0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;`first_beat_time` must be a positive number.&quot;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="s2">&quot;`algorithm` must be one of &#39;normal&#39;, &#39;strict&#39; or &#39;custom&#39;.&quot;</span>
+        <span class="p">)</span>
 
     <span class="c1"># get tempo change event times and contents</span>
-    <span class="n">tc_times</span><span class="p">,</span> <span class="n">tempi</span> <span class="o">=</span> <span class="n">pm</span><span class="o">.</span><span class="n">get_tempo_changes</span><span class="p">()</span>
+    <span class="n">tc_times</span><span class="p">,</span> <span class="n">tempi</span> <span class="o">=</span> <span class="n">midi</span><span class="o">.</span><span class="n">get_tempo_changes</span><span class="p">()</span>
     <span class="n">arg_sorted</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">tc_times</span><span class="p">)</span>
     <span class="n">tc_times</span> <span class="o">=</span> <span class="n">tc_times</span><span class="p">[</span><span class="n">arg_sorted</span><span class="p">]</span>
     <span class="n">tempi</span> <span class="o">=</span> <span class="n">tempi</span><span class="p">[</span><span class="n">arg_sorted</span><span class="p">]</span>
 
-    <span class="n">beat_times</span> <span class="o">=</span> <span class="n">pm</span><span class="o">.</span><span class="n">get_beats</span><span class="p">(</span><span class="n">first_beat_time</span><span class="p">)</span>
+    <span class="n">beat_times</span> <span class="o">=</span> <span class="n">midi</span><span class="o">.</span><span class="n">get_beats</span><span class="p">(</span><span class="n">first_beat_time</span><span class="p">)</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">beat_times</span><span class="o">.</span><span class="n">size</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Cannot get beat timings to quantize the piano roll.&quot;</span><span class="p">)</span>
     <span class="n">beat_times</span><span class="o">.</span><span class="n">sort</span><span class="p">()</span>
@@ -341,16 +340,16 @@
     <span class="n">n_time_steps</span> <span class="o">=</span> <span class="n">resolution</span> <span class="o">*</span> <span class="n">n_beats</span>
 
     <span class="c1"># Parse downbeat array</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">pm</span><span class="o">.</span><span class="n">time_signature_changes</span><span class="p">:</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">midi</span><span class="o">.</span><span class="n">time_signature_changes</span><span class="p">:</span>
         <span class="n">downbeat</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">downbeat</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">n_time_steps</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="nb">bool</span><span class="p">)</span>
         <span class="n">downbeat</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
         <span class="n">start</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="n">end</span> <span class="o">=</span> <span class="n">start</span>
-        <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">tsc</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">pm</span><span class="o">.</span><span class="n">time_signature_changes</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]):</span>
+        <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">tsc</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">midi</span><span class="o">.</span><span class="n">time_signature_changes</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]):</span>
             <span class="n">end</span> <span class="o">+=</span> <span class="n">np</span><span class="o">.</span><span class="n">searchsorted</span><span class="p">(</span>
-                <span class="n">beat_times</span><span class="p">[</span><span class="n">end</span><span class="p">:],</span> <span class="n">pm</span><span class="o">.</span><span class="n">time_signature_changes</span><span class="p">[</span><span class="n">idx</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">time</span>
+                <span class="n">beat_times</span><span class="p">[</span><span class="n">end</span><span class="p">:],</span> <span class="n">midi</span><span class="o">.</span><span class="n">time_signature_changes</span><span class="p">[</span><span class="n">idx</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">time</span>
             <span class="p">)</span>
             <span class="n">start_idx</span> <span class="o">=</span> <span class="n">start</span> <span class="o">*</span> <span class="n">resolution</span>
             <span class="n">end_idx</span> <span class="o">=</span> <span class="n">end</span> <span class="o">*</span> <span class="n">resolution</span>
@@ -366,7 +365,7 @@
 
     <span class="c1"># Parse the tracks</span>
     <span class="n">tracks</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="k">for</span> <span class="n">instrument</span> <span class="ow">in</span> <span class="n">pm</span><span class="o">.</span><span class="n">instruments</span><span class="p">:</span>
+    <span class="k">for</span> <span class="n">instrument</span> <span class="ow">in</span> <span class="n">midi</span><span class="o">.</span><span class="n">instruments</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">binarized</span><span class="p">:</span>
             <span class="n">pianoroll</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">n_time_steps</span><span class="p">,</span> <span class="mi">128</span><span class="p">),</span> <span class="nb">bool</span><span class="p">)</span>
         <span class="k">elif</span> <span class="n">mode</span> <span class="o">==</span> <span class="s2">&quot;max&quot;</span><span class="p">:</span>
@@ -453,13 +452,10 @@
                     <span class="p">)</span>
                     <span class="n">pianoroll</span><span class="p">[</span><span class="n">start</span><span class="p">:</span><span class="n">end</span><span class="p">,</span> <span class="n">pitches</span><span class="p">[</span><span class="n">idx</span><span class="p">]]</span> <span class="o">=</span> <span class="n">maximum</span>
 
-        <span class="k">if</span> <span class="n">skip_empty_tracks</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">pianoroll</span><span class="p">):</span>
-            <span class="k">continue</span>
-
         <span class="n">track</span> <span class="o">=</span> <span class="n">Track</span><span class="p">(</span>
+            <span class="n">name</span><span class="o">=</span><span class="n">instrument</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
             <span class="n">program</span><span class="o">=</span><span class="n">instrument</span><span class="o">.</span><span class="n">program</span><span class="p">,</span>
             <span class="n">is_drum</span><span class="o">=</span><span class="n">instrument</span><span class="o">.</span><span class="n">is_drum</span><span class="p">,</span>
-            <span class="n">name</span><span class="o">=</span><span class="n">instrument</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
             <span class="n">pianoroll</span><span class="o">=</span><span class="n">pianoroll</span><span class="p">,</span>
         <span class="p">)</span>
         <span class="n">tracks</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">track</span><span class="p">)</span>
@@ -469,19 +465,25 @@
     <span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="read"><a class="viewcode-back" href="../../read_write.html#pypianoroll.read">[docs]</a><span class="k">def</span> <span class="nf">read</span><span class="p">(</span><span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="read"><a class="viewcode-back" href="../../read_write.html#pypianoroll.read">[docs]</a><span class="k">def</span> <span class="nf">read</span><span class="p">(</span><span class="n">path</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Path</span><span class="p">],</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Multitrack</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Read a MIDI file into a Multitrack object.</span>
-
-<span class="sd">    See :meth:`pypianoroll.from_pretty_midi` for full documentation.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    path : str</span>
-<span class="sd">        Path to the MIDI file to read.</span>
+<span class="sd">    path : str or Path</span>
+<span class="sd">        Path to the file to read.</span>
+<span class="sd">    **kwargs</span>
+<span class="sd">        Keyword arguments to pass to</span>
+<span class="sd">        :func:`pypianoroll.from_pretty_midi`.</span>
+
+<span class="sd">    See Also</span>
+<span class="sd">    --------</span>
+<span class="sd">    :func:`pypianoroll.write` : Write a Multitrack object to a MIDI</span>
+<span class="sd">      file.</span>
+<span class="sd">    :func:`pypianoroll.load` : Load a NPZ file into a Multitrack object.</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">pm</span> <span class="o">=</span> <span class="n">PrettyMIDI</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">from_pretty_midi</span><span class="p">(</span><span class="n">pm</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+    <span class="k">return</span> <span class="n">from_pretty_midi</span><span class="p">(</span><span class="n">PrettyMIDI</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">path</span><span class="p">)),</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 </pre></div>
 
            </div>

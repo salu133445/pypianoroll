@@ -15,11 +15,12 @@ Features
 - Write multitrack piano rolls into MIDI files
 
 """
-from . import core, inputs, metrics, multitrack, track, visualization
+from . import core, inputs, metrics, multitrack, outputs, track, visualization
 from .core import *
 from .inputs import *
 from .metrics import *
 from .multitrack import *
+from .outputs import *
 from .track import *
 from .version import __version__
 from .visualization import *
@@ -29,5 +30,6 @@ __all__.extend(core.__all__)
 __all__.extend(inputs.__all__)
 __all__.extend(metrics.__all__)
 __all__.extend(multitrack.__all__)
+__all__.extend(outputs.__all__)
 __all__.extend(track.__all__)
 __all__.extend(visualization.__all__)
