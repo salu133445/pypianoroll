@@ -187,8 +187,8 @@ additional track information (program number, drum indicator and its name).</p>
 <span class="n">pianoroll</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">95</span><span class="p">,</span> <span class="n">C_maj</span><span class="p">]</span> <span class="o">=</span> <span class="mi">100</span>
 
 <span class="c1"># Create a `pypianoroll.Track` instance</span>
-<span class="n">track</span> <span class="o">=</span> <span class="n">Track</span><span class="p">(</span><span class="n">pianoroll</span><span class="o">=</span><span class="n">pianoroll</span><span class="p">,</span> <span class="n">program</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">is_drum</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-              <span class="n">name</span><span class="o">=</span><span class="s1">&#39;my awesome piano&#39;</span><span class="p">)</span>
+<span class="n">track</span> <span class="o">=</span> <span class="n">Track</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;my awesome piano&quot;</span><span class="p">,</span> <span class="n">program</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">is_drum</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+              <span class="n">pianoroll</span><span class="o">=</span><span class="n">pianoroll</span><span class="p">)</span>
 
 <span class="c1"># Plot the piano roll</span>
 <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">track</span><span class="o">.</span><span class="n">plot</span><span class="p">()</span>
@@ -200,16 +200,17 @@ additional track information (program number, drum indicator and its name).</p>
 <p>And here is another example.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Extend the pianoroll to demonstrate the usage of down beat array</span>
 <span class="n">track</span><span class="o">.</span><span class="n">pianoroll</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">tile</span><span class="p">(</span><span class="n">track</span><span class="o">.</span><span class="n">pianoroll</span><span class="p">,</span> <span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
-<span class="n">downbeats</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">96</span><span class="p">,</span> <span class="mi">192</span><span class="p">,</span> <span class="mi">288</span><span class="p">]</span>
+<span class="n">downbeats</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">384</span><span class="p">,</span> <span class="nb">bool</span><span class="p">)</span>
+<span class="n">downbeats</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">96</span><span class="p">,</span> <span class="mi">192</span><span class="p">,</span> <span class="mi">288</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
 
 <span class="c1"># Copy the track to demonstrate the usage of `pypianoroll.Multitrack`</span>
 <span class="n">another_track</span> <span class="o">=</span> <span class="n">track</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
 <span class="n">another_track</span><span class="o">.</span><span class="n">program</span> <span class="o">=</span> <span class="mi">24</span>
-<span class="n">another_track</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;my awesome guitar&#39;</span>
+<span class="n">another_track</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;my awesome guitar&quot;</span>
 
 <span class="c1"># Create a `pypianoroll.Multitrack` instance</span>
-<span class="n">multitrack</span> <span class="o">=</span> <span class="n">Multitrack</span><span class="p">(</span><span class="n">tracks</span><span class="o">=</span><span class="p">[</span><span class="n">track</span><span class="p">,</span> <span class="n">another_track</span><span class="p">],</span> <span class="n">tempo</span><span class="o">=</span><span class="mf">120.0</span><span class="p">,</span>
-                        <span class="n">downbeat</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">96</span><span class="p">,</span> <span class="mi">192</span><span class="p">,</span> <span class="mi">288</span><span class="p">],</span> <span class="n">beat_resolution</span><span class="o">=</span><span class="mi">24</span><span class="p">)</span>
+<span class="n">multitrack</span> <span class="o">=</span> <span class="n">Multitrack</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;multitrack&quot;</span><span class="p">,</span> <span class="n">resolution</span><span class="o">=</span><span class="mi">24</span><span class="p">,</span> <span class="n">tempo</span><span class="o">=</span><span class="mf">120.0</span><span class="p">,</span>
+                        <span class="n">downbeat</span><span class="o">=</span><span class="n">downbeats</span><span class="p">,</span> <span class="n">tracks</span><span class="o">=</span><span class="p">[</span><span class="n">track</span><span class="p">,</span> <span class="n">another_track</span><span class="p">])</span>
 
 <span class="c1"># Plot the multitrack piano roll</span>
 <span class="n">fig</span><span class="p">,</span> <span class="n">axs</span> <span class="o">=</span> <span class="n">multitrack</span><span class="o">.</span><span class="n">plot</span><span class="p">()</span>
@@ -220,19 +221,19 @@ additional track information (program number, drum indicator and its name).</p>
 <img alt="_images/example_multitrack_plot.png" class="align-center" src="_images/example_multitrack_plot.png" />
 <p>Here is how saving and loading works. (For more details, see <cite>here &lt;../save_load&gt;</cite>)</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Save the `pypianoroll.Multitrack` instance to a .npz file</span>
-<span class="n">multitrack</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s1">&#39;./test.npz&#39;</span><span class="p">)</span>
+<span class="n">multitrack</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s1">&#39;test.npz&#39;</span><span class="p">)</span>
 
 <span class="c1"># Load the .npz file to a `pypianoroll.Multitrack` instance</span>
-<span class="n">loaded</span> <span class="o">=</span> <span class="n">Multitrack</span><span class="p">(</span><span class="s1">&#39;./test.npz&#39;</span><span class="p">)</span>
+<span class="n">loaded</span> <span class="o">=</span> <span class="n">multitrack</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s1">&#39;test.npz&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>And here is how to parse and write MIDI files. Pypianoroll currently supports
 only MIDI files. (For more details, see <cite>here &lt;../parse_write&gt;</cite>)</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Parse a MIDI file to a `pypianoroll.Multitrack` instance</span>
-<span class="n">another_multitrack</span> <span class="o">=</span> <span class="n">Multitrack</span><span class="p">(</span><span class="s1">&#39;./test.mid&#39;</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Read a MIDI file to a `pypianoroll.Multitrack` instance</span>
+<span class="n">multitrack</span> <span class="o">=</span> <span class="n">multitrack</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s1">&#39;test.mid&#39;</span><span class="p">)</span>
 
 <span class="c1"># Write the `pypianoroll.Multitrack` instance to a MIDI file</span>
-<span class="n">another_multitrack</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;./test.mid&#39;</span><span class="p">)</span>
+<span class="n">multitrack</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;test.mid&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>

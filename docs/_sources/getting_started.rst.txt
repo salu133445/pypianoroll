@@ -36,8 +36,8 @@ Here is an example.
     pianoroll[0:95, C_maj] = 100
 
     # Create a `pypianoroll.Track` instance
-    track = Track(pianoroll=pianoroll, program=0, is_drum=False,
-                  name='my awesome piano')
+    track = Track(name="my awesome piano", program=0, is_drum=False,
+                  pianoroll=pianoroll)
 
     # Plot the piano roll
     fig, ax = track.plot()
@@ -54,16 +54,17 @@ And here is another example.
 
     # Extend the pianoroll to demonstrate the usage of down beat array
     track.pianoroll = np.tile(track.pianoroll, (4, 1))
-    downbeats = [0, 96, 192, 288]
+    downbeats = np.zeros(384, bool)
+    downbeats[0, 96, 192, 288] = 1
 
     # Copy the track to demonstrate the usage of `pypianoroll.Multitrack`
     another_track = track.copy()
     another_track.program = 24
-    another_track.name = 'my awesome guitar'
+    another_track.name = "my awesome guitar"
 
     # Create a `pypianoroll.Multitrack` instance
-    multitrack = Multitrack(tracks=[track, another_track], tempo=120.0,
-                            downbeat=[0, 96, 192, 288], beat_resolution=24)
+    multitrack = Multitrack(name="multitrack", resolution=24, tempo=120.0,
+                            downbeat=downbeats, tracks=[track, another_track])
 
     # Plot the multitrack piano roll
     fig, axs = multitrack.plot()
@@ -79,18 +80,18 @@ Here is how saving and loading works. (For more details, see `here <../save_load
 .. code-block:: python
 
     # Save the `pypianoroll.Multitrack` instance to a .npz file
-    multitrack.save('./test.npz')
+    multitrack.save('test.npz')
 
     # Load the .npz file to a `pypianoroll.Multitrack` instance
-    loaded = Multitrack('./test.npz')
+    loaded = multitrack.load('test.npz')
 
 And here is how to parse and write MIDI files. Pypianoroll currently supports
 only MIDI files. (For more details, see `here <../parse_write>`)
 
 .. code-block:: python
 
-    # Parse a MIDI file to a `pypianoroll.Multitrack` instance
-    another_multitrack = Multitrack('./test.mid')
+    # Read a MIDI file to a `pypianoroll.Multitrack` instance
+    multitrack = multitrack.read('test.mid')
 
     # Write the `pypianoroll.Multitrack` instance to a MIDI file
-    another_multitrack.write('./test.mid')
+    multitrack.write('test.mid')

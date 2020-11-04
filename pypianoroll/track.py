@@ -515,7 +515,7 @@ class BinaryTrack(Track):
     pianoroll : ndarray, dtype=bool, shape=(?, 128), optional
         Piano-roll matrix. The first dimension represents time, and the
         second dimension represents pitch. Cast to bool if not of data
-        type uint8.
+        type bool.
 
     References
     ----------
