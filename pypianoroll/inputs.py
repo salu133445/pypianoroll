@@ -104,17 +104,14 @@ def from_pretty_midi(
     resolution: int = DEFAULT_RESOLUTION,
     mode: str = "max",
     algorithm: str = "normal",
-    binarized: bool = False,
     collect_onsets_only: bool = False,
-    threshold: float = 0,
     first_beat_time: Optional[float] = None,
 ) -> Multitrack:
     """Return a Multitrack object converted from a PrettyMIDI object.
 
     Parse a :class:`pretty_midi.PrettyMIDI` object. The data type of the
     resulting piano rolls is automatically determined (int if 'mode' is
-    'sum', np.uint8 if `mode` is 'max' and `binarized` is False, bool if
-    `mode` is 'max' and `binarized` is True).
+    'sum' and np.uint8 if `mode` is 'max').
 
     Parameters
     ----------
@@ -125,18 +122,11 @@ def from_pretty_midi(
     algorithm : {'normal', 'strict', 'custom'}
         Algorithm for finding the location of the first beat (see
         Notes). Defaults to 'normal'.
-    binarized : bool
-        True to binarize the parsed piano rolls before merging duplicate
-        notes. False to use the original parsed piano rolls. Defaults to
-        False.
     collect_onsets_only : bool
         True to collect only the onset of the notes (i.e. note on
         events) in all tracks, where the note off and duration
         information are discarded. False to parse regular piano rolls.
         Defaults to False.
-    threshold : int or float
-        Threshold for binarizing the parsed piano rolls. Only
-        effective when `binarized` is True. Defaults to zero.
     first_beat_time : float, optional
         Location of the first beat, in sec. Required and only
         effective when using 'custom' algorithm.
@@ -238,9 +228,7 @@ def from_pretty_midi(
     # Parse the tracks
     tracks = []
     for instrument in midi.instruments:
-        if binarized:
-            pianoroll = np.zeros((n_time_steps, 128), bool)
-        elif mode == "max":
+        if mode == "max":
             pianoroll = np.zeros((n_time_steps, 128), np.uint8)
         else:
             pianoroll = np.zeros((n_time_steps, 128), int)
@@ -270,15 +258,12 @@ def from_pretty_midi(
         if collect_onsets_only:
             pianoroll[note_ons, pitches] = True
         elif instrument.is_drum:
-            if binarized:
-                pianoroll[note_ons, pitches] = True
-            else:
-                velocities = [
-                    note.velocity
-                    for note in instrument.notes
-                    if note.end > first_beat_time
-                ]
-                pianoroll[note_ons, pitches] = velocities
+            velocities = [
+                note.velocity
+                for note in instrument.notes
+                if note.end > first_beat_time
+            ]
+            pianoroll[note_ons, pitches] = velocities
         else:
             note_off_times = np.array(
                 [
@@ -301,8 +286,6 @@ def from_pretty_midi(
 
                 if velocity < 1:
                     continue
-                if binarized and velocity <= threshold:
-                    continue
 
                 if 0 < start < n_time_steps:
                     if pianoroll[start - 1, pitches[idx]]:
@@ -311,25 +294,28 @@ def from_pretty_midi(
                     if pianoroll[end, pitches[idx]]:
                         end -= 1
 
-                if binarized:
-                    if mode == "sum":
-                        pianoroll[start:end, pitches[idx]] += 1
-                    elif mode == "max":
-                        pianoroll[start:end, pitches[idx]] = True
-                elif mode == "sum":
+                if mode == "max":
                     pianoroll[start:end, pitches[idx]] += velocity
-                elif mode == "max":
+                else:
                     maximum = np.maximum(
                         pianoroll[start:end, pitches[idx]], velocity
                     )
                     pianoroll[start:end, pitches[idx]] = maximum
 
-        track = Track(
-            name=instrument.name,
-            program=instrument.program,
-            is_drum=instrument.is_drum,
-            pianoroll=pianoroll,
-        )
+        if mode == "max":
+            track: Track = StandardTrack(
+                name=instrument.name,
+                program=instrument.program,
+                is_drum=instrument.is_drum,
+                pianoroll=pianoroll,
+            )
+        else:
+            track = Track(
+                name=instrument.name,
+                program=instrument.program,
+                is_drum=instrument.is_drum,
+                pianoroll=pianoroll,
+            )
         tracks.append(track)
 
     return Multitrack(
