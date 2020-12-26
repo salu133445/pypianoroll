@@ -41,14 +41,25 @@ def load(path: Union[str, Path]) -> Multitrack:
     """
     with np.load(path) as loaded:
         if "info.json" not in loaded:
-            raise RuntimeError("Cannot find 'info.json' in the NPZ file.")
+            raise RuntimeError("Cannot find `info.json` in the NPZ file.")
 
         # Load the info dictionary
         info_dict = json.loads(loaded["info.json"].decode("utf-8"))
 
-        # Get the name and resolution
+        # Get the name
         name = info_dict["name"]
-        resolution = info_dict["resolution"]
+
+        # Get the resolution
+        resolution = info_dict.get("resolution")
+
+        # Look for `beat_resolution` for backward compatibility
+        if resolution is None:
+            resolution = info_dict.get("beat_resolution")
+            if resolution is None:
+                raise RuntimeError(
+                    "Cannot find `resolution` or `beat_resolution` in "
+                    "`info.json`."
+                )
 
         # Load the tempo and downbeat array
         tempo = loaded["tempo"] if "tempo" in loaded.files else None
