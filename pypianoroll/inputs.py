@@ -16,7 +16,7 @@ import numpy as np
 from pretty_midi import PrettyMIDI
 
 from .multitrack import DEFAULT_RESOLUTION, Multitrack
-from .track import Track
+from .track import BinaryTrack, StandardTrack, Track
 from .utils import reconstruct_sparse
 
 __all__ = ["load", "from_pretty_midi", "read"]
@@ -46,9 +46,6 @@ def load(path: Union[str, Path]) -> Multitrack:
         # Load the info dictionary
         info_dict = json.loads(loaded["info.json"].decode("utf-8"))
 
-        # Get the name
-        name = info_dict["name"]
-
         # Get the resolution
         resolution = info_dict.get("resolution")
 
@@ -61,31 +58,45 @@ def load(path: Union[str, Path]) -> Multitrack:
                     "`info.json`."
                 )
 
-        # Load the tempo and downbeat array
-        tempo = loaded["tempo"] if "tempo" in loaded.files else None
-        downbeat = loaded["downbeat"] if "downbeat" in loaded.files else None
-
         # Load the tracks
         idx = 0
         tracks = []
         while str(idx) in info_dict:
+            name = info_dict[str(idx)].get("name")
+            program = info_dict[str(idx)].get("program")
+            is_drum = info_dict[str(idx)].get("is_drum")
             pianoroll = reconstruct_sparse(loaded, "pianoroll_" + str(idx))
-            track = Track(
-                program=info_dict[str(idx)]["program"],
-                is_drum=info_dict[str(idx)]["is_drum"],
-                name=info_dict[str(idx)]["name"],
-                pianoroll=pianoroll,
-            )
+            if pianoroll.dtype == np.bool_:
+                track: Track = BinaryTrack(
+                    name=name,
+                    program=program,
+                    is_drum=is_drum,
+                    pianoroll=pianoroll,
+                )
+            elif pianoroll.dtype == np.uint8:
+                track = StandardTrack(
+                    name=name,
+                    program=program,
+                    is_drum=is_drum,
+                    pianoroll=pianoroll,
+                )
+            else:
+                track = Track(
+                    name=name,
+                    program=program,
+                    is_drum=is_drum,
+                    pianoroll=pianoroll,
+                )
             tracks.append(track)
             idx += 1
 
-    return Multitrack(
-        resolution=resolution,
-        tempo=tempo,
-        downbeat=downbeat,
-        name=name,
-        tracks=tracks,
-    )
+        return Multitrack(
+            name=info_dict["name"],
+            resolution=resolution,
+            tempo=loaded.get("tempo"),
+            downbeat=loaded.get("downbeat"),
+            tracks=tracks,
+        )
 
 
 def from_pretty_midi(
