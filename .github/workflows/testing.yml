@@ -1,0 +1,36 @@
+name: Testing
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+        python-version: ['3.6', '3.7', '3.8']
+    runs-on: ${{ matrix.os }}
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v2
+      with:
+        python-version: ${{ matrix.python-version }}
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        python -m pip install flake8 pytest mypy
+        pip install -e .[test]
+    - name: Lint with flake8
+      run: |
+        flake8 pypianoroll --count --select=E9,F63,F7,F82 --show-source --statistics
+        flake8 pypianoroll --count --exit-zero --statistics
+    - name: Lint with mypy
+      run: mypy pypianoroll
+    - name: Test with pytest
+      run: pytest --cov="pypianoroll/" tests/
+    - name: Upload coverage to Codecov
+      uses: codecov/codecov-action@v1

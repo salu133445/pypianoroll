@@ -360,6 +360,9 @@ def plot_multitrack(
             f"{track_label}."
         )
 
+    if axs is not None and not isinstance(axs, list):
+        axs = list(axs)
+
     # Set default color maps
     if cmaps is None:
         if mode == "separate":
@@ -381,8 +384,6 @@ def plot_multitrack(
             else:
                 fig, ax = plt.subplots()
                 axs = [ax]
-        elif not isinstance(axs, list):
-            axs = list(axs)
 
         for idx, track in enumerate(multitrack.tracks):
             now_xticklabel = xticklabel if idx < n_tracks else False
@@ -418,8 +419,7 @@ def plot_multitrack(
         if axs is None:
             fig, ax = plt.subplots()
             axs = [ax]
-        elif not isinstance(axs, list):
-            axs = list(axs)
+
         stacked = multitrack.stack()
 
         colormap = matplotlib.cm.get_cmap(cmaps[0])
@@ -473,8 +473,6 @@ def plot_multitrack(
         if axs is None:
             fig, axs_ = plt.subplots(2, sharex=True, sharey=True)
             axs = axs_.tolist()
-        elif not isinstance(axs, list):
-            axs = list(axs)
 
         plot_pianoroll(
             axs[0],
@@ -527,4 +525,4 @@ def plot_multitrack(
             f"{mode}."
         )
 
-    return axs
+    return axs  # type: ignore
