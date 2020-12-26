@@ -343,6 +343,8 @@ class Multitrack:
         """
         for track in self.tracks:
             time, pitch = track.pianoroll.nonzero()
+            if len(time) < 1:
+                continue
             if track.pianoroll.dtype == np.bool_:
                 value = 1
             else:
