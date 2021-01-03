@@ -1,0 +1,28 @@
+name: Linting
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.x'
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        python -m pip install flake8 mypy
+        pip install -e .[test]
+    - name: Lint with flake8
+      run: |
+        flake8 pypianoroll --count --select=E9,F63,F7,F82 --show-source --statistics
+        flake8 pypianoroll --count --exit-zero --statistics
+    - name: Lint with mypy
+      run: mypy pypianoroll
