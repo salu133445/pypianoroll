@@ -218,12 +218,11 @@
 
 <dl class="py function">
 <dt>
-<code class="sig-prename descclassname">pypianoroll.</code><code class="sig-name descname">from_pretty_midi</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">midi</span><span class="p">:</span> <span class="n">pretty_midi.pretty_midi.PrettyMIDI</span></em>, <em class="sig-param"><span class="n">resolution</span><span class="p">:</span> <span class="n">int</span> <span class="o">=</span> <span class="default_value">24</span></em>, <em class="sig-param"><span class="n">mode</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="default_value">'max'</span></em>, <em class="sig-param"><span class="n">algorithm</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="default_value">'normal'</span></em>, <em class="sig-param"><span class="n">binarized</span><span class="p">:</span> <span class="n">bool</span> <span class="o">=</span> <span class="default_value">False</span></em>, <em class="sig-param"><span class="n">collect_onsets_only</span><span class="p">:</span> <span class="n">bool</span> <span class="o">=</span> <span class="default_value">False</span></em>, <em class="sig-param"><span class="n">threshold</span><span class="p">:</span> <span class="n">float</span> <span class="o">=</span> <span class="default_value">0</span></em>, <em class="sig-param"><span class="n">first_beat_time</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>float<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span> &#x2192; pypianoroll.multitrack.Multitrack<a class="reference internal" href="_modules/pypianoroll/inputs.html#from_pretty_midi"><span class="viewcode-link">[source]</span></a></dt>
+<code class="sig-prename descclassname">pypianoroll.</code><code class="sig-name descname">from_pretty_midi</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">midi</span><span class="p">:</span> <span class="n">pretty_midi.pretty_midi.PrettyMIDI</span></em>, <em class="sig-param"><span class="n">resolution</span><span class="p">:</span> <span class="n">int</span> <span class="o">=</span> <span class="default_value">24</span></em>, <em class="sig-param"><span class="n">mode</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="default_value">'max'</span></em>, <em class="sig-param"><span class="n">algorithm</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="default_value">'normal'</span></em>, <em class="sig-param"><span class="n">collect_onsets_only</span><span class="p">:</span> <span class="n">bool</span> <span class="o">=</span> <span class="default_value">False</span></em>, <em class="sig-param"><span class="n">first_beat_time</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>float<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span> &#x2192; pypianoroll.multitrack.Multitrack<a class="reference internal" href="_modules/pypianoroll/inputs.html#from_pretty_midi"><span class="viewcode-link">[source]</span></a></dt>
 <dd><p>Return a Multitrack object converted from a PrettyMIDI object.</p>
 <p>Parse a <a class="reference external" href="https://craffel.github.io/pretty-midi/index.html#pretty_midi.PrettyMIDI" title="(in pretty_midi v0.2.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">pretty_midi.PrettyMIDI</span></code></a> object. The data type of the
 resulting piano rolls is automatically determined (int if ‘mode’ is
-‘sum’, np.uint8 if <cite>mode</cite> is ‘max’ and <cite>binarized</cite> is False, bool if
-<cite>mode</cite> is ‘max’ and <cite>binarized</cite> is True).</p>
+‘sum’ and np.uint8 if <cite>mode</cite> is ‘max’).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -231,15 +230,10 @@ resulting piano rolls is automatically determined (int if ‘mode’ is
 <li><p><strong>mode</strong> (<em>{'max'</em><em>, </em><em>'sum'}</em>) – Merging strategy for duplicate notes. Defaults to ‘max’.</p></li>
 <li><p><strong>algorithm</strong> (<em>{'normal'</em><em>, </em><em>'strict'</em><em>, </em><em>'custom'}</em>) – Algorithm for finding the location of the first beat (see
 Notes). Defaults to ‘normal’.</p></li>
-<li><p><strong>binarized</strong> (<em>bool</em>) – True to binarize the parsed piano rolls before merging duplicate
-notes. False to use the original parsed piano rolls. Defaults to
-False.</p></li>
 <li><p><strong>collect_onsets_only</strong> (<em>bool</em>) – True to collect only the onset of the notes (i.e. note on
 events) in all tracks, where the note off and duration
 information are discarded. False to parse regular piano rolls.
 Defaults to False.</p></li>
-<li><p><strong>threshold</strong> (<em>int</em><em> or </em><em>float</em>) – Threshold for binarizing the parsed piano rolls. Only
-effective when <cite>binarized</cite> is True. Defaults to zero.</p></li>
 <li><p><strong>first_beat_time</strong> (<em>float</em><em>, </em><em>optional</em>) – Location of the first beat, in sec. Required and only
 effective when using ‘custom’ algorithm.</p></li>
 </ul>
@@ -274,14 +268,6 @@ than one beat are dropped.</p>
 <dt>
 <code class="sig-prename descclassname">pypianoroll.</code><code class="sig-name descname">to_pretty_midi</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">multitrack</span><span class="p">:</span> <span class="n">Multitrack</span></em>, <em class="sig-param"><span class="n">default_tempo</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>float<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">default_velocity</span><span class="p">:</span> <span class="n">int</span> <span class="o">=</span> <span class="default_value">64</span></em><span class="sig-paren">)</span> &#x2192; pretty_midi.pretty_midi.PrettyMIDI<a class="reference internal" href="_modules/pypianoroll/outputs.html#to_pretty_midi"><span class="viewcode-link">[source]</span></a></dt>
 <dd><p>Return a Multitrack object as a PrettyMIDI object.</p>
-<p class="rubric">Notes</p>
-<ul class="simple">
-<li><p>Tempo changes are not supported.</p></li>
-<li><p>The velocities of the converted piano rolls will be clipped to
-[0, 127].</p></li>
-<li><p>Adjacent nonzero values of the same pitch will be considered
-a single note with their mean as its velocity.</p></li>
-</ul>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -298,6 +284,15 @@ attribute <cite>tempo</cite>.</p></li>
 <dd class="field-odd"><p><a class="reference external" href="https://craffel.github.io/pretty-midi/index.html#pretty_midi.PrettyMIDI" title="(in pretty_midi v0.2.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">pretty_midi.PrettyMIDI</span></code></a></p>
 </dd>
 </dl>
+<p class="rubric">Notes</p>
+<ul class="simple">
+<li><p>Tempo changes are not supported.</p></li>
+<li><p>Time signature changes are not supported.</p></li>
+<li><p>The velocities of the converted piano rolls will be clipped to
+[0, 127].</p></li>
+<li><p>Adjacent nonzero values of the same pitch will be considered
+a single note with their mean as its velocity.</p></li>
+</ul>
 </dd></dl>
 
 <div class="admonition note">

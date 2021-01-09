@@ -1,5 +1,5 @@
 """Test cases for metrics."""
-from math import isnan, nan
+from math import isnan
 
 import numpy as np
 from pytest import fixture

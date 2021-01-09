@@ -2,7 +2,6 @@
 import numpy as np
 from pytest import fixture
 
-import pypianoroll
 from pypianoroll import BinaryTrack, Multitrack, StandardTrack
 
 from .utils import multitrack

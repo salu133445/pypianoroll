@@ -259,14 +259,6 @@
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">PrettyMIDI</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Return a Multitrack object as a PrettyMIDI object.</span>
 
-<span class="sd">    Notes</span>
-<span class="sd">    -----</span>
-<span class="sd">    - Tempo changes are not supported.</span>
-<span class="sd">    - The velocities of the converted piano rolls will be clipped to</span>
-<span class="sd">      [0, 127].</span>
-<span class="sd">    - Adjacent nonzero values of the same pitch will be considered</span>
-<span class="sd">      a single note with their mean as its velocity.</span>
-
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    default_tempo : int</span>
@@ -281,13 +273,20 @@
 <span class="sd">    :class:`pretty_midi.PrettyMIDI`</span>
 <span class="sd">        Converted PrettyMIDI object.</span>
 
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    - Tempo changes are not supported.</span>
+<span class="sd">    - Time signature changes are not supported.</span>
+<span class="sd">    - The velocities of the converted piano rolls will be clipped to</span>
+<span class="sd">      [0, 127].</span>
+<span class="sd">    - Adjacent nonzero values of the same pitch will be considered</span>
+<span class="sd">      a single note with their mean as its velocity.</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="c1"># TODO: Add downbeat support -&gt; time signature change events</span>
-    <span class="c1"># TODO: Add tempo support -&gt; tempo change events</span>
     <span class="k">if</span> <span class="n">default_tempo</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">tempo</span> <span class="o">=</span> <span class="n">default_tempo</span>
-    <span class="k">elif</span> <span class="n">multitrack</span><span class="o">.</span><span class="n">tempo</span><span class="p">:</span>
-        <span class="n">tempo</span> <span class="o">=</span> <span class="n">multitrack</span><span class="o">.</span><span class="n">tempo</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">elif</span> <span class="n">multitrack</span><span class="o">.</span><span class="n">tempo</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">tempo</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">multitrack</span><span class="o">.</span><span class="n">tempo</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">tempo</span> <span class="o">=</span> <span class="n">DEFAULT_TEMPO</span>
 

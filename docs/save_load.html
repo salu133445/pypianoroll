@@ -162,7 +162,7 @@
             
   <div class="section" id="save-load">
 <h1>Save &amp; Load<a class="headerlink" href="#save-load" title="Permalink to this headline">¶</a></h1>
-<p>Pypianoroll supports efficient I/O for <a class="reference internal" href="doc.html#pypianoroll.Multitrack" title="pypianoroll.Multitrack"><code class="xref py py-class docutils literal notranslate"><span class="pre">pypianoroll.Multitrack</span></code></a> objects. The piano rolls will be first converted to sparse matrices (specifically, instances of <a class="reference external" href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.sparse.csc_matrix.html#scipy.sparse.csc_matrix" title="(in SciPy v1.5.3)"><code class="xref py py-class docutils literal notranslate"><span class="pre">scipy.sparse.csc_matrix</span></code></a>) and then stored in a NPZ file.</p>
+<p>Pypianoroll supports efficient I/O for <a class="reference internal" href="doc.html#pypianoroll.Multitrack" title="pypianoroll.Multitrack"><code class="xref py py-class docutils literal notranslate"><span class="pre">pypianoroll.Multitrack</span></code></a> objects. The piano rolls will be first converted to sparse matrices (specifically, instances of <a class="reference external" href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.sparse.csc_matrix.html#scipy.sparse.csc_matrix" title="(in SciPy v1.6.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">scipy.sparse.csc_matrix</span></code></a>) and then stored in a NPZ file.</p>
 <div class="section" id="functions">
 <h2>Functions<a class="headerlink" href="#functions" title="Permalink to this headline">¶</a></h2>
 <dl class="py function">
@@ -180,7 +180,7 @@
 </dl>
 <p class="rubric">Notes</p>
 <p>To reduce the file size, the piano rolls are first converted to
-instances of <a class="reference external" href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.sparse.csc_matrix.html#scipy.sparse.csc_matrix" title="(in SciPy v1.5.3)"><code class="xref py py-class docutils literal notranslate"><span class="pre">scipy.sparse.csc_matrix</span></code></a>. The component
+instances of <a class="reference external" href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.sparse.csc_matrix.html#scipy.sparse.csc_matrix" title="(in SciPy v1.6.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">scipy.sparse.csc_matrix</span></code></a>. The component
 arrays are then collected and saved to a npz file.</p>
 <div class="admonition seealso">
 <p class="admonition-title">See also</p>
