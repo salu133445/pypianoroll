@@ -1,17 +1,16 @@
 """Test cases for Multitrack class."""
+from pathlib import Path
+
 import numpy as np
-from pytest import fixture
 
 import pypianoroll
-from pypianoroll import BinaryTrack, Multitrack, StandardTrack
 
 from .utils import multitrack
 
 
 def test_save_load(multitrack, tmp_path):
-    path = tmp_path / "test.npz"
-    multitrack.save(path)
-    loaded = pypianoroll.load(path)
+    multitrack.save(tmp_path / "test.npz")
+    loaded = pypianoroll.load(tmp_path / "test.npz")
     assert np.allclose(loaded.downbeat, multitrack.downbeat)
     assert loaded.resolution == multitrack.resolution
     assert loaded.name == multitrack.name
@@ -30,9 +29,8 @@ def test_save_load(multitrack, tmp_path):
 
 
 def test_write_read(multitrack, tmp_path):
-    path = tmp_path / "test.mid"
-    multitrack.write(path)
-    loaded = pypianoroll.read(path)
+    multitrack.write(tmp_path / "test.mid")
+    loaded = pypianoroll.read(tmp_path / "test.mid")
     assert np.allclose(
         loaded.tracks[0].pianoroll, multitrack.tracks[0].pianoroll
     )
@@ -45,3 +43,8 @@ def test_write_read(multitrack, tmp_path):
     assert loaded.tracks[1].program == 0
     assert loaded.tracks[1].is_drum
     assert loaded.tracks[1].name == "track_2"
+
+
+def test_read_realworld(tmp_path):
+    loaded = pypianoroll.read(Path(__file__).parent / "fur-elise.mid")
+    loaded.write(tmp_path / "test.mid")

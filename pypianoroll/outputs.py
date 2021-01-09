@@ -100,14 +100,6 @@ def to_pretty_midi(
 ) -> PrettyMIDI:
     """Return a Multitrack object as a PrettyMIDI object.
 
-    Notes
-    -----
-    - Tempo changes are not supported.
-    - The velocities of the converted piano rolls will be clipped to
-      [0, 127].
-    - Adjacent nonzero values of the same pitch will be considered
-      a single note with their mean as its velocity.
-
     Parameters
     ----------
     default_tempo : int
@@ -122,13 +114,20 @@ def to_pretty_midi(
     :class:`pretty_midi.PrettyMIDI`
         Converted PrettyMIDI object.
 
+    Notes
+    -----
+    - Tempo changes are not supported.
+    - Time signature changes are not supported.
+    - The velocities of the converted piano rolls will be clipped to
+      [0, 127].
+    - Adjacent nonzero values of the same pitch will be considered
+      a single note with their mean as its velocity.
+
     """
-    # TODO: Add downbeat support -> time signature change events
-    # TODO: Add tempo support -> tempo change events
     if default_tempo is not None:
         tempo = default_tempo
-    elif multitrack.tempo:
-        tempo = multitrack.tempo[0]
+    elif multitrack.tempo is not None:
+        tempo = float(multitrack.tempo[0])
     else:
         tempo = DEFAULT_TEMPO
 
