@@ -25,7 +25,7 @@ import pretty_midi
 from pretty_midi import Instrument, PrettyMIDI
 
 from .track import BinaryTrack, StandardTrack
-from .utils import decompose_sparse
+from .utils import decompose_sparse, hmean
 
 if TYPE_CHECKING:
     from .multitrack import Multitrack
@@ -127,7 +127,7 @@ def to_pretty_midi(
     if default_tempo is not None:
         tempo = default_tempo
     elif multitrack.tempo is not None:
-        tempo = float(multitrack.tempo[0])
+        tempo = float(hmean(multitrack.tempo))
     else:
         tempo = DEFAULT_TEMPO
 
