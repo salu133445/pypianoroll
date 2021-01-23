@@ -21,11 +21,12 @@ from pathlib import Path
 from typing import TYPE_CHECKING, Dict, Optional, Union
 
 import numpy as np
+import scipy.stats
 import pretty_midi
 from pretty_midi import Instrument, PrettyMIDI
 
 from .track import BinaryTrack, StandardTrack
-from .utils import decompose_sparse, hmean
+from .utils import decompose_sparse
 
 if TYPE_CHECKING:
     from .multitrack import Multitrack
@@ -127,7 +128,7 @@ def to_pretty_midi(
     if default_tempo is not None:
         tempo = default_tempo
     elif multitrack.tempo is not None:
-        tempo = float(hmean(multitrack.tempo))
+        tempo = float(scipy.stats.hmean(multitrack.tempo))
     else:
         tempo = DEFAULT_TEMPO
 
