@@ -5,9 +5,9 @@ Pypianoroll Classes
 We provide several classes for working with multitrack piano rolls.
 
 - :class:`pypianoroll.Multitrack`: A multitrack that stores track(s) along with global information.
-- :class:`pypianoroll.Track`: A track that stores the piano roll along with track information.
-- :class:`pypianoroll.StandardTrack`: A standard track that holds piano roll with velocity information.
-- :class:`pypianoroll.BinaryTrack`: A binary track that holds piano roll without velocity information.
+- :class:`pypianoroll.Track`: A track that stores the a piano roll along with track information.
+- :class:`pypianoroll.StandardTrack`: A standard track that holds a piano roll with velocity information.
+- :class:`pypianoroll.BinaryTrack`: A binary track that holds a piano roll without velocity information.
 
 Multitrack Class
 ================
