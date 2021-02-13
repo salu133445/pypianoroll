@@ -73,10 +73,9 @@ Contents
     :titlesonly:
 
     getting_started
+    classes
     save_load
     read_write
     visualization
     metrics
-    track
-    multitrack
     doc

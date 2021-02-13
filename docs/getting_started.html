@@ -37,7 +37,7 @@
     
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Save &amp; Load" href="save_load.html" />
+    <link rel="next" title="Pypianoroll Classes" href="classes.html" />
     <link rel="prev" title="Pypianoroll" href="index.html" /> 
 </head>
 
@@ -88,12 +88,11 @@
             
               <ul class="current">
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="classes.html">Pypianoroll Classes</a></li>
 <li class="toctree-l1"><a class="reference internal" href="save_load.html">Save &amp; Load</a></li>
 <li class="toctree-l1"><a class="reference internal" href="read_write.html">Read &amp; Write</a></li>
 <li class="toctree-l1"><a class="reference internal" href="visualization.html">Visualization</a></li>
 <li class="toctree-l1"><a class="reference internal" href="metrics.html">Metrics</a></li>
-<li class="toctree-l1"><a class="reference internal" href="track.html">Track Class</a></li>
-<li class="toctree-l1"><a class="reference internal" href="multitrack.html">Multitrack Class</a></li>
 <li class="toctree-l1"><a class="reference internal" href="doc.html">Technical Documentation</a></li>
 </ul>
 
@@ -162,75 +161,37 @@
             
   <div class="section" id="getting-started">
 <h1>Getting Started<a class="headerlink" href="#getting-started" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="objects">
-<h2>Objects<a class="headerlink" href="#objects" title="Permalink to this headline">¶</a></h2>
-<p>The main objects in Pypianoroll are <a class="reference internal" href="doc.html#pypianoroll.Multitrack" title="pypianoroll.Multitrack"><code class="xref py py-class docutils literal notranslate"><span class="pre">pypianoroll.Multitrack</span></code></a> and <a class="reference internal" href="doc.html#pypianoroll.Track" title="pypianoroll.Track"><code class="xref py py-class docutils literal notranslate"><span class="pre">pypianoroll.Track</span></code></a> objects.</p>
-<p>A <a class="reference internal" href="doc.html#pypianoroll.Track" title="pypianoroll.Track"><code class="xref py py-class docutils literal notranslate"><span class="pre">pypianoroll.Track</span></code></a> object is composed of a piano roll matrix and metadata, including program number, drum indicator and name.</p>
-<p>A <a class="reference internal" href="doc.html#pypianoroll.Multitrack" title="pypianoroll.Multitrack"><code class="xref py py-class docutils literal notranslate"><span class="pre">pypianoroll.Multitrack</span></code></a> object consists of a list of <a class="reference internal" href="doc.html#pypianoroll.Track" title="pypianoroll.Track"><code class="xref py py-class docutils literal notranslate"><span class="pre">pypianoroll.Track</span></code></a> objects, tempo array, downbeat array and metadata.</p>
+<p>Welcome to Pypianoroll! We will go through some basic concepts in this tutorial.</p>
+<div class="admonition hint">
+<p class="admonition-title">Hint</p>
+<p>Be sure you have Pypianoroll installed. To install Pypianoroll, please run <code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">pypianoroll</span></code>.</p>
 </div>
-<div class="section" id="examples">
-<h2>Examples<a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h2>
-<p>Here is an example.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">from</span> <span class="nn">pypianoroll</span> <span class="kn">import</span> <span class="n">Multitrack</span><span class="p">,</span> <span class="n">Track</span>
-<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">pyplot</span> <span class="k">as</span> <span class="n">plt</span>
-
-<span class="c1"># Create a piano roll matrix, where the first and second axes represent time</span>
-<span class="c1"># and pitch, respectively, and assign a C major chord to the piano roll</span>
-<span class="n">pianoroll</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">96</span><span class="p">,</span> <span class="mi">128</span><span class="p">))</span>
-<span class="n">C_maj</span> <span class="o">=</span> <span class="p">[</span><span class="mi">60</span><span class="p">,</span> <span class="mi">64</span><span class="p">,</span> <span class="mi">67</span><span class="p">,</span> <span class="mi">72</span><span class="p">,</span> <span class="mi">76</span><span class="p">,</span> <span class="mi">79</span><span class="p">,</span> <span class="mi">84</span><span class="p">]</span>
-<span class="n">pianoroll</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">95</span><span class="p">,</span> <span class="n">C_maj</span><span class="p">]</span> <span class="o">=</span> <span class="mi">100</span>
-
-<span class="c1"># Create a `pypianoroll.Track` instance</span>
-<span class="n">track</span> <span class="o">=</span> <span class="n">Track</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;my awesome piano&quot;</span><span class="p">,</span> <span class="n">program</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">is_drum</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-              <span class="n">pianoroll</span><span class="o">=</span><span class="n">pianoroll</span><span class="p">)</span>
-
-<span class="c1"># Plot the piano roll</span>
-<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">track</span><span class="o">.</span><span class="n">plot</span><span class="p">()</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+<p>In the following example, we will use <a class="reference external" href="https://github.com/salu133445/pypianoroll/blob/main/tests/fur-elise.mid">this MIDI file</a> as an example.</p>
+<p>First of all, let’s import the Pypianoroll library.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pypianoroll</span>
 </pre></div>
 </div>
-<p>Here’s what the output should look like.</p>
-<img alt="_images/example_track_plot.png" class="align-center" src="_images/example_track_plot.png" />
-<p>And here is another example.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Extend the pianoroll to demonstrate the usage of down beat array</span>
-<span class="n">track</span><span class="o">.</span><span class="n">pianoroll</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">tile</span><span class="p">(</span><span class="n">track</span><span class="o">.</span><span class="n">pianoroll</span><span class="p">,</span> <span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
-<span class="n">downbeats</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">384</span><span class="p">,</span> <span class="nb">bool</span><span class="p">)</span>
-<span class="n">downbeats</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">96</span><span class="p">,</span> <span class="mi">192</span><span class="p">,</span> <span class="mi">288</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
-
-<span class="c1"># Copy the track to demonstrate the usage of `pypianoroll.Multitrack`</span>
-<span class="n">another_track</span> <span class="o">=</span> <span class="n">track</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
-<span class="n">another_track</span><span class="o">.</span><span class="n">program</span> <span class="o">=</span> <span class="mi">24</span>
-<span class="n">another_track</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;my awesome guitar&quot;</span>
-
-<span class="c1"># Create a `pypianoroll.Multitrack` instance</span>
-<span class="n">multitrack</span> <span class="o">=</span> <span class="n">Multitrack</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;multitrack&quot;</span><span class="p">,</span> <span class="n">resolution</span><span class="o">=</span><span class="mi">24</span><span class="p">,</span> <span class="n">tempo</span><span class="o">=</span><span class="mf">120.0</span><span class="p">,</span>
-                        <span class="n">downbeat</span><span class="o">=</span><span class="n">downbeats</span><span class="p">,</span> <span class="n">tracks</span><span class="o">=</span><span class="p">[</span><span class="n">track</span><span class="p">,</span> <span class="n">another_track</span><span class="p">])</span>
-
-<span class="c1"># Plot the multitrack piano roll</span>
-<span class="n">fig</span><span class="p">,</span> <span class="n">axs</span> <span class="o">=</span> <span class="n">multitrack</span><span class="o">.</span><span class="n">plot</span><span class="p">()</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+<p>Now, let’s read the example MIDI file into a Multitrack object.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">multitrack</span> <span class="o">=</span> <span class="n">pypianoroll</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s2">&quot;fur-elise.mid&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">multitrack</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>Here’s what the output should look like.</p>
-<img alt="_images/example_multitrack_plot.png" class="align-center" src="_images/example_multitrack_plot.png" />
-<p>Here is how saving and loading works (see <a class="reference external" href="save_load.html">here</a> for details).</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Save the `pypianoroll.Multitrack` instance to a .npz file</span>
-<span class="n">multitrack</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s1">&#39;test.npz&#39;</span><span class="p">)</span>
-
-<span class="c1"># Load the .npz file to a `pypianoroll.Multitrack` instance</span>
-<span class="n">loaded</span> <span class="o">=</span> <span class="n">multitrack</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s1">&#39;test.npz&#39;</span><span class="p">)</span>
+<p>Here’s what we got.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Multitrack</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">resolution</span><span class="o">=</span><span class="mi">24</span><span class="p">,</span> <span class="n">tempo</span><span class="o">=</span><span class="n">array</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">8976</span><span class="p">,</span> <span class="mi">1</span><span class="p">)),</span> <span class="n">downbeat</span><span class="o">=</span><span class="n">array</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">8976</span><span class="p">,</span> <span class="mi">1</span><span class="p">)),</span> <span class="n">tracks</span><span class="o">=</span><span class="p">[</span><span class="n">StandardTrack</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">program</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">is_drum</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">pianoroll</span><span class="o">=</span><span class="n">array</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">8976</span><span class="p">,</span> <span class="mi">128</span><span class="p">))),</span> <span class="n">StandardTrack</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">program</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">is_drum</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">pianoroll</span><span class="o">=</span><span class="n">array</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">8976</span><span class="p">,</span> <span class="mi">128</span><span class="p">)))])</span>
 </pre></div>
 </div>
-<p>And here is how to parse and write MIDI files. Pypianoroll currently supports only MIDI files (see <cite>here &lt;read_write.html&gt;_</cite> for details).</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Read a MIDI file to a `pypianoroll.Multitrack` instance</span>
-<span class="n">multitrack</span> <span class="o">=</span> <span class="n">multitrack</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s1">&#39;test.mid&#39;</span><span class="p">)</span>
-
-<span class="c1"># Write the `pypianoroll.Multitrack` instance to a MIDI file</span>
-<span class="n">multitrack</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;test.mid&#39;</span><span class="p">)</span>
+<p>You can use dot notation to assess the data. For example, <code class="docutils literal notranslate"><span class="pre">multitrack.resolution</span></code> returns the temporal resolution (in time steps per quarter note) and <code class="docutils literal notranslate"><span class="pre">multitrack.tracks[0].pianoroll</span></code> returns the piano roll for the first track.</p>
+<p>Pypianoroll provides some functions for manipulating the multitrack piano roll. For example, we can trim and binarize the multitrack as follows.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">multitrack</span><span class="o">.</span><span class="n">trim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">12</span> <span class="o">*</span> <span class="n">multitrack</span><span class="o">.</span><span class="n">resolution</span><span class="p">)</span>
+<span class="n">multitrack</span><span class="o">.</span><span class="n">binarize</span><span class="p">()</span>
 </pre></div>
 </div>
+<p>Pypianoroll also provides visualization supports.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">multitrack</span><span class="o">.</span><span class="n">plot</span><span class="p">()</span>
+</pre></div>
 </div>
+<p>This will give us the following plot.</p>
+<img alt="Piano-roll visualization" src="_images/fur-elise.png" />
 </div>
 
 
@@ -241,7 +202,7 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="save_load.html" class="btn btn-neutral float-right" title="Save &amp; Load" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="classes.html" class="btn btn-neutral float-right" title="Pypianoroll Classes" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="index.html" class="btn btn-neutral float-left" title="Pypianoroll" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
@@ -254,7 +215,7 @@
   <div role="contentinfo">
     <p>
         
-        &copy; Copyright 2020, Hao-Wen Dong
+        &copy; Copyright 2018, Hao-Wen Dong
 
     </p>
   </div>

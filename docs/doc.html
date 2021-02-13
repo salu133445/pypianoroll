@@ -37,7 +37,7 @@
     
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="prev" title="Multitrack Class" href="multitrack.html" /> 
+    <link rel="prev" title="Metrics" href="metrics.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -87,12 +87,11 @@
             
               <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="getting_started.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="classes.html">Pypianoroll Classes</a></li>
 <li class="toctree-l1"><a class="reference internal" href="save_load.html">Save &amp; Load</a></li>
 <li class="toctree-l1"><a class="reference internal" href="read_write.html">Read &amp; Write</a></li>
 <li class="toctree-l1"><a class="reference internal" href="visualization.html">Visualization</a></li>
 <li class="toctree-l1"><a class="reference internal" href="metrics.html">Metrics</a></li>
-<li class="toctree-l1"><a class="reference internal" href="track.html">Track Class</a></li>
-<li class="toctree-l1"><a class="reference internal" href="multitrack.html">Multitrack Class</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Technical Documentation</a></li>
 </ul>
 
@@ -177,7 +176,7 @@ evaluation tools.</p>
 </ul>
 <dl class="py class">
 <dt id="pypianoroll.BinaryTrack">
-<em class="property">class </em><code class="sig-prename descclassname">pypianoroll.</code><code class="sig-name descname">BinaryTrack</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">name</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>str<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">program</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>int<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">is_drum</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>bool<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">pianoroll</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.19)">numpy.ndarray</a><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pypianoroll/track.html#BinaryTrack"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypianoroll.BinaryTrack" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">pypianoroll.</code><code class="sig-name descname">BinaryTrack</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">name</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>str<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">program</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>int<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">is_drum</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>bool<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">pianoroll</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.20)">numpy.ndarray</a><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pypianoroll/track.html#BinaryTrack"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypianoroll.BinaryTrack" title="Permalink to this definition">¶</a></dt>
 <dd><p>A container for single-track, binary piano rolls.</p>
 <dl class="py attribute">
 <dt id="pypianoroll.BinaryTrack.name">
@@ -251,7 +250,7 @@ type bool.</p>
 
 <dl class="py class">
 <dt id="pypianoroll.Multitrack">
-<em class="property">class </em><code class="sig-prename descclassname">pypianoroll.</code><code class="sig-name descname">Multitrack</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">name</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>str<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">resolution</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>int<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">tempo</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.19)">numpy.ndarray</a><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">downbeat</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.19)">numpy.ndarray</a><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">tracks</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>Sequence<span class="p">[</span>pypianoroll.track.Track<span class="p">]</span><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pypianoroll/multitrack.html#Multitrack"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypianoroll.Multitrack" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">pypianoroll.</code><code class="sig-name descname">Multitrack</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">name</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>str<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">resolution</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>int<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">tempo</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.20)">numpy.ndarray</a><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">downbeat</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.20)">numpy.ndarray</a><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">tracks</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>Sequence<span class="p">[</span>pypianoroll.track.Track<span class="p">]</span><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pypianoroll/multitrack.html#Multitrack"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypianoroll.Multitrack" title="Permalink to this definition">¶</a></dt>
 <dd><p>A container for multitrack piano rolls.</p>
 <p>This is the core class of Pypianoroll.</p>
 <dl class="py attribute">
@@ -348,7 +347,7 @@ total number of time steps.</p>
 
 <dl class="py method">
 <dt id="pypianoroll.Multitrack.blend">
-<code class="sig-name descname">blend</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">mode</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>str<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span> &#x2192; <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.19)">numpy.ndarray</a><a class="reference internal" href="_modules/pypianoroll/multitrack.html#Multitrack.blend"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypianoroll.Multitrack.blend" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">blend</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">mode</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>str<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span> &#x2192; <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.20)">numpy.ndarray</a><a class="reference internal" href="_modules/pypianoroll/multitrack.html#Multitrack.blend"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypianoroll.Multitrack.blend" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the blended pianoroll.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -402,7 +401,7 @@ Defaults to ‘sum’.</p>
 </dd>
 </dl>
 <p class="rubric">Notes</p>
-<p>Arrays are copied using <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.copy.html#numpy.copy" title="(in NumPy v1.19)"><code class="xref py py-func docutils literal notranslate"><span class="pre">numpy.copy()</span></code></a>.</p>
+<p>Arrays are copied using <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.copy.html#numpy.copy" title="(in NumPy v1.20)"><code class="xref py py-func docutils literal notranslate"><span class="pre">numpy.copy()</span></code></a>.</p>
 </dd></dl>
 
 <dl class="py method">
@@ -426,7 +425,7 @@ Defaults to ‘sum’.</p>
 
 <dl class="py method">
 <dt id="pypianoroll.Multitrack.get_downbeat_steps">
-<code class="sig-name descname">get_downbeat_steps</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.19)">numpy.ndarray</a><a class="reference internal" href="_modules/pypianoroll/multitrack.html#Multitrack.get_downbeat_steps"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypianoroll.Multitrack.get_downbeat_steps" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">get_downbeat_steps</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.20)">numpy.ndarray</a><a class="reference internal" href="_modules/pypianoroll/multitrack.html#Multitrack.get_downbeat_steps"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypianoroll.Multitrack.get_downbeat_steps" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the indices of time steps that contain downbeats.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
@@ -590,7 +589,7 @@ the resulting piano rolls have the same length.</p>
 
 <dl class="py method">
 <dt id="pypianoroll.Multitrack.plot">
-<code class="sig-name descname">plot</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">axs</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>Sequence<span class="p">[</span>matplotlib.axes._axes.Axes<span class="p">]</span><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span> &#x2192; <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.19)">numpy.ndarray</a><a class="reference internal" href="_modules/pypianoroll/multitrack.html#Multitrack.plot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypianoroll.Multitrack.plot" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">plot</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">axs</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>Sequence<span class="p">[</span>matplotlib.axes._axes.Axes<span class="p">]</span><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span> &#x2192; <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.20)">numpy.ndarray</a><a class="reference internal" href="_modules/pypianoroll/multitrack.html#Multitrack.plot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypianoroll.Multitrack.plot" title="Permalink to this definition">¶</a></dt>
 <dd><p>Plot the multitrack piano roll.</p>
 <p>Refer to <a class="reference internal" href="#pypianoroll.plot_multitrack" title="pypianoroll.plot_multitrack"><code class="xref py py-func docutils literal notranslate"><span class="pre">pypianoroll.plot_multitrack()</span></code></a> for full
 documentation.</p>
@@ -648,7 +647,7 @@ documentation.</p>
 
 <dl class="py method">
 <dt id="pypianoroll.Multitrack.stack">
-<code class="sig-name descname">stack</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.19)">numpy.ndarray</a><a class="reference internal" href="_modules/pypianoroll/multitrack.html#Multitrack.stack"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypianoroll.Multitrack.stack" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">stack</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.20)">numpy.ndarray</a><a class="reference internal" href="_modules/pypianoroll/multitrack.html#Multitrack.stack"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypianoroll.Multitrack.stack" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the piano rolls stacked as a 3D tensor.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
@@ -753,7 +752,7 @@ the pitches, while a negative value lowers the pitches.</p>
 
 <dl class="py class">
 <dt id="pypianoroll.StandardTrack">
-<em class="property">class </em><code class="sig-prename descclassname">pypianoroll.</code><code class="sig-name descname">StandardTrack</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">name</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>str<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">program</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>int<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">is_drum</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>bool<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">pianoroll</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.19)">numpy.ndarray</a><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pypianoroll/track.html#StandardTrack"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypianoroll.StandardTrack" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">pypianoroll.</code><code class="sig-name descname">StandardTrack</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">name</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>str<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">program</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>int<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">is_drum</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>bool<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">pianoroll</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.20)">numpy.ndarray</a><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pypianoroll/track.html#StandardTrack"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypianoroll.StandardTrack" title="Permalink to this definition">¶</a></dt>
 <dd><p>A container for single-track piano rolls with velocities.</p>
 <dl class="py attribute">
 <dt id="pypianoroll.StandardTrack.name">
@@ -807,23 +806,6 @@ type uint8.</p>
 <li><p><a class="reference external" href="https://www.midi.org/specifications/item/gm-level-1-sound-set">https://www.midi.org/specifications/item/gm-level-1-sound-set</a></p></li>
 </ol>
 <dl class="py method">
-<dt id="pypianoroll.StandardTrack.binarize">
-<code class="sig-name descname">binarize</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">threshold</span><span class="p">:</span> <span class="n">float</span> <span class="o">=</span> <span class="default_value">0</span></em><span class="sig-paren">)</span> &#x2192; pypianoroll.track.BinaryTrack<a class="reference internal" href="_modules/pypianoroll/track.html#StandardTrack.binarize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypianoroll.StandardTrack.binarize" title="Permalink to this definition">¶</a></dt>
-<dd><p>Binarize the piano roll.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>threshold</strong> (<em>int</em><em> or </em><em>float</em>) – Threshold. Defaults to 0.</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p></p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>Converted Binary object.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
 <dt id="pypianoroll.StandardTrack.clip">
 <code class="sig-name descname">clip</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">lower</span><span class="p">:</span> <span class="n">int</span> <span class="o">=</span> <span class="default_value">0</span></em>, <em class="sig-param"><span class="n">upper</span><span class="p">:</span> <span class="n">int</span> <span class="o">=</span> <span class="default_value">127</span></em><span class="sig-paren">)</span> &#x2192; _StandardTrack<a class="reference internal" href="_modules/pypianoroll/track.html#StandardTrack.clip"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypianoroll.StandardTrack.clip" title="Permalink to this definition">¶</a></dt>
 <dd><p>Clip (limit) the the piano roll into [<cite>lower</cite>, <cite>upper</cite>].</p>
@@ -864,7 +846,7 @@ type uint8.</p>
 
 <dl class="py class">
 <dt id="pypianoroll.Track">
-<em class="property">class </em><code class="sig-prename descclassname">pypianoroll.</code><code class="sig-name descname">Track</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">name</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>str<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">program</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>int<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">is_drum</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>bool<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">pianoroll</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.19)">numpy.ndarray</a><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pypianoroll/track.html#Track"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypianoroll.Track" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">pypianoroll.</code><code class="sig-name descname">Track</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">name</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>str<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">program</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>int<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">is_drum</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>bool<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">pianoroll</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.20)">numpy.ndarray</a><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pypianoroll/track.html#Track"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypianoroll.Track" title="Permalink to this definition">¶</a></dt>
 <dd><p>A generic container for single-track piano rolls.</p>
 <dl class="py attribute">
 <dt id="pypianoroll.Track.name">
@@ -917,6 +899,24 @@ second dimension represents pitch.</p>
 <li><p><a class="reference external" href="https://www.midi.org/specifications/item/gm-level-1-sound-set">https://www.midi.org/specifications/item/gm-level-1-sound-set</a></p></li>
 </ol>
 <dl class="py method">
+<dt id="pypianoroll.Track.binarize">
+<code class="sig-name descname">binarize</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">threshold</span><span class="p">:</span> <span class="n">float</span> <span class="o">=</span> <span class="default_value">0</span></em><span class="sig-paren">)</span> &#x2192; pypianoroll.track.BinaryTrack<a class="reference internal" href="_modules/pypianoroll/track.html#Track.binarize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypianoroll.Track.binarize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Binarize the track.</p>
+<p>This will binarize the piano roll by the given threshold.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>threshold</strong> (<em>int</em><em> or </em><em>float</em>) – Threshold. Defaults to 0.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Converted BinaryTrack object.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt id="pypianoroll.Track.copy">
 <code class="sig-name descname">copy</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pypianoroll/track.html#Track.copy"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypianoroll.Track.copy" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a copy of the track.</p>
@@ -929,7 +929,7 @@ second dimension represents pitch.</p>
 </dd>
 </dl>
 <p class="rubric">Notes</p>
-<p>The piano-roll array is copied using <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.copy.html#numpy.copy" title="(in NumPy v1.19)"><code class="xref py py-func docutils literal notranslate"><span class="pre">numpy.copy()</span></code></a>.</p>
+<p>The piano-roll array is copied using <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.copy.html#numpy.copy" title="(in NumPy v1.20)"><code class="xref py py-func docutils literal notranslate"><span class="pre">numpy.copy()</span></code></a>.</p>
 </dd></dl>
 
 <dl class="py method">
@@ -1044,6 +1044,7 @@ be a multiple of.</p>
 <dt id="pypianoroll.Track.standardize">
 <code class="sig-name descname">standardize</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; pypianoroll.track.StandardTrack<a class="reference internal" href="_modules/pypianoroll/track.html#Track.standardize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypianoroll.Track.standardize" title="Permalink to this definition">¶</a></dt>
 <dd><p>Standardize the track.</p>
+<p>This will clip the piano roll to [0, 127] and cast to np.uint8.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p></p>
@@ -1165,7 +1166,7 @@ the pitches, while a negative value lowers the pitches.</p>
 
 <dl class="py function">
 <dt id="pypianoroll.drum_in_pattern_rate">
-<code class="sig-prename descclassname">pypianoroll.</code><code class="sig-name descname">drum_in_pattern_rate</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">pianoroll</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.19)">numpy.ndarray</a></span></em>, <em class="sig-param"><span class="n">resolution</span><span class="p">:</span> <span class="n">int</span></em>, <em class="sig-param"><span class="n">tolerance</span><span class="p">:</span> <span class="n">float</span> <span class="o">=</span> <span class="default_value">0.1</span></em><span class="sig-paren">)</span> &#x2192; float<a class="reference internal" href="_modules/pypianoroll/metrics.html#drum_in_pattern_rate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypianoroll.drum_in_pattern_rate" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">pypianoroll.</code><code class="sig-name descname">drum_in_pattern_rate</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">pianoroll</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.20)">numpy.ndarray</a></span></em>, <em class="sig-param"><span class="n">resolution</span><span class="p">:</span> <span class="n">int</span></em>, <em class="sig-param"><span class="n">tolerance</span><span class="p">:</span> <span class="n">float</span> <span class="o">=</span> <span class="default_value">0.1</span></em><span class="sig-paren">)</span> &#x2192; float<a class="reference internal" href="_modules/pypianoroll/metrics.html#drum_in_pattern_rate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypianoroll.drum_in_pattern_rate" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the ratio of drum notes in a certain drum pattern.</p>
 <p>The drum-in-pattern rate is defined as the ratio of the number of
 notes in a certain scale to the total number of notes. Only drum
@@ -1201,7 +1202,7 @@ of the 32nd AAAI Conference on Artificial Intelligence (AAAI),
 
 <dl class="py function">
 <dt id="pypianoroll.empty_beat_rate">
-<code class="sig-prename descclassname">pypianoroll.</code><code class="sig-name descname">empty_beat_rate</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">pianoroll</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.19)">numpy.ndarray</a></span></em>, <em class="sig-param"><span class="n">resolution</span><span class="p">:</span> <span class="n">int</span></em><span class="sig-paren">)</span> &#x2192; float<a class="reference internal" href="_modules/pypianoroll/metrics.html#empty_beat_rate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypianoroll.empty_beat_rate" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">pypianoroll.</code><code class="sig-name descname">empty_beat_rate</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">pianoroll</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.20)">numpy.ndarray</a></span></em>, <em class="sig-param"><span class="n">resolution</span><span class="p">:</span> <span class="n">int</span></em><span class="sig-paren">)</span> &#x2192; float<a class="reference internal" href="_modules/pypianoroll/metrics.html#empty_beat_rate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypianoroll.empty_beat_rate" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the ratio of empty beats.</p>
 <p>The empty-beat rate is defined as the ratio of the number of empty
 beats (where no note is played) to the total number of beats. Return
@@ -1271,7 +1272,7 @@ than one beat are dropped.</p>
 
 <dl class="py function">
 <dt id="pypianoroll.in_scale_rate">
-<code class="sig-prename descclassname">pypianoroll.</code><code class="sig-name descname">in_scale_rate</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">pianoroll</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.19)">numpy.ndarray</a></span></em>, <em class="sig-param"><span class="n">root</span><span class="p">:</span> <span class="n">int</span> <span class="o">=</span> <span class="default_value">3</span></em>, <em class="sig-param"><span class="n">mode</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="default_value">'major'</span></em><span class="sig-paren">)</span> &#x2192; float<a class="reference internal" href="_modules/pypianoroll/metrics.html#in_scale_rate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypianoroll.in_scale_rate" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">pypianoroll.</code><code class="sig-name descname">in_scale_rate</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">pianoroll</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.20)">numpy.ndarray</a></span></em>, <em class="sig-param"><span class="n">root</span><span class="p">:</span> <span class="n">int</span> <span class="o">=</span> <span class="default_value">3</span></em>, <em class="sig-param"><span class="n">mode</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="default_value">'major'</span></em><span class="sig-paren">)</span> &#x2192; float<a class="reference internal" href="_modules/pypianoroll/metrics.html#in_scale_rate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypianoroll.in_scale_rate" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the ratio of pitches in a certain musical scale.</p>
 <p>The pitch-in-scale rate is defined as the ratio of the number of
 notes in a certain scale to the total number of notes. Drum tracks
@@ -1334,7 +1335,7 @@ of the 32nd AAAI Conference on Artificial Intelligence (AAAI),
 
 <dl class="py function">
 <dt id="pypianoroll.n_pitch_classes_used">
-<code class="sig-prename descclassname">pypianoroll.</code><code class="sig-name descname">n_pitch_classes_used</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">pianoroll</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.19)">numpy.ndarray</a></span></em><span class="sig-paren">)</span> &#x2192; int<a class="reference internal" href="_modules/pypianoroll/metrics.html#n_pitch_classes_used"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypianoroll.n_pitch_classes_used" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">pypianoroll.</code><code class="sig-name descname">n_pitch_classes_used</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">pianoroll</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.20)">numpy.ndarray</a></span></em><span class="sig-paren">)</span> &#x2192; int<a class="reference internal" href="_modules/pypianoroll/metrics.html#n_pitch_classes_used"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypianoroll.n_pitch_classes_used" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the number of unique pitch classes used.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -1358,7 +1359,7 @@ of the 32nd AAAI Conference on Artificial Intelligence (AAAI),
 
 <dl class="py function">
 <dt id="pypianoroll.n_pitches_used">
-<code class="sig-prename descclassname">pypianoroll.</code><code class="sig-name descname">n_pitches_used</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">pianoroll</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.19)">numpy.ndarray</a></span></em><span class="sig-paren">)</span> &#x2192; int<a class="reference internal" href="_modules/pypianoroll/metrics.html#n_pitches_used"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypianoroll.n_pitches_used" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">pypianoroll.</code><code class="sig-name descname">n_pitches_used</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">pianoroll</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.20)">numpy.ndarray</a></span></em><span class="sig-paren">)</span> &#x2192; int<a class="reference internal" href="_modules/pypianoroll/metrics.html#n_pitches_used"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypianoroll.n_pitches_used" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the number of unique pitches used.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -1535,7 +1536,7 @@ highest and the lowest active pitches.</p>
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>multitrack</strong> (<a class="reference internal" href="#pypianoroll.Multitrack" title="pypianoroll.Multitrack"><code class="xref py py-class docutils literal notranslate"><span class="pre">pypianoroll.Multitrack</span></code></a>) – Multitrack to plot.</p></li>
-<li><p><strong>axs</strong> (sequence of <a class="reference external" href="https://matplotlib.org/api/axes_api.html#matplotlib.axes.Axes" title="(in Matplotlib v3.3.3)"><code class="xref py py-class docutils literal notranslate"><span class="pre">matplotlib.axes.Axes</span></code></a>) – Axes to plot the tracks on.</p></li>
+<li><p><strong>axs</strong> (sequence of <a class="reference external" href="https://matplotlib.org/api/axes_api.html#matplotlib.axes.Axes" title="(in Matplotlib v3.3.4)"><code class="xref py py-class docutils literal notranslate"><span class="pre">matplotlib.axes.Axes</span></code></a>) – Axes to plot the tracks on.</p></li>
 <li><p><strong>mode</strong> (<em>{'separate'</em><em>, </em><em>'blended'</em><em>, </em><em>'hybrid'}</em>) – Plotting strategy for visualizing multiple tracks. For
 ‘separate’ mode, plot each track separately. For ‘blended’,
 blend and plot the pianoroll as a colored image. For ‘hybrid’
@@ -1548,7 +1549,7 @@ than ‘off’ will label the two track with ‘Drums’ and ‘Others’.</p></
 are on. For ‘frame’ preset, ticks and grid are both off. For
 ‘plain’ preset, the x- and y-axis are both off. Defaults to
 ‘full’.</p></li>
-<li><p><strong>cmaps</strong> (<em>tuple</em><em> or </em><em>list</em>) – Colormaps. Will be passed to <a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.pyplot.imshow.html#matplotlib.pyplot.imshow" title="(in Matplotlib v3.3.3)"><code class="xref py py-func docutils literal notranslate"><span class="pre">matplotlib.pyplot.imshow()</span></code></a>.
+<li><p><strong>cmaps</strong> (<em>tuple</em><em> or </em><em>list</em>) – Colormaps. Will be passed to <a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.pyplot.imshow.html#matplotlib.pyplot.imshow" title="(in Matplotlib v3.3.4)"><code class="xref py py-func docutils literal notranslate"><span class="pre">matplotlib.pyplot.imshow()</span></code></a>.
 Only effective when <cite>pianoroll</cite> is 2D. Defaults to ‘Blues’.
 If <cite>mode</cite> is ‘separate’, defaults to <cite>(‘Blues’, ‘Oranges’,
 ‘Greens’, ‘Reds’, ‘Purples’, ‘Greys’)</cite>. If <cite>mode</cite> is ‘blended’,
@@ -1561,19 +1562,19 @@ defaults to <cite>(‘hsv’)</cite>. If <cite>mode</cite> is ‘hybrid’, defa
 <dd class="field-even"><p>(Created) list of Axes objects.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>list of <a class="reference external" href="https://matplotlib.org/api/axes_api.html#matplotlib.axes.Axes" title="(in Matplotlib v3.3.3)"><code class="xref py py-class docutils literal notranslate"><span class="pre">matplotlib.axes.Axes</span></code></a></p>
+<dd class="field-odd"><p>list of <a class="reference external" href="https://matplotlib.org/api/axes_api.html#matplotlib.axes.Axes" title="(in Matplotlib v3.3.4)"><code class="xref py py-class docutils literal notranslate"><span class="pre">matplotlib.axes.Axes</span></code></a></p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py function">
 <dt id="pypianoroll.plot_pianoroll">
-<code class="sig-prename descclassname">pypianoroll.</code><code class="sig-name descname">plot_pianoroll</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">ax</span><span class="p">:</span> <span class="n">matplotlib.axes._axes.Axes</span></em>, <em class="sig-param"><span class="n">pianoroll</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.19)">numpy.ndarray</a></span></em>, <em class="sig-param"><span class="n">is_drum</span><span class="p">:</span> <span class="n">bool</span> <span class="o">=</span> <span class="default_value">False</span></em>, <em class="sig-param"><span class="n">resolution</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>int<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">downbeats</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>Sequence<span class="p">[</span>int<span class="p">]</span><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">preset</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="default_value">'full'</span></em>, <em class="sig-param"><span class="n">cmap</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="default_value">'Blues'</span></em>, <em class="sig-param"><span class="n">xtick</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="default_value">'auto'</span></em>, <em class="sig-param"><span class="n">ytick</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="default_value">'octave'</span></em>, <em class="sig-param"><span class="n">xticklabel</span><span class="p">:</span> <span class="n">bool</span> <span class="o">=</span> <span class="default_value">True</span></em>, <em class="sig-param"><span class="n">yticklabel</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="default_value">'auto'</span></em>, <em class="sig-param"><span class="n">tick_loc</span><span class="p">:</span> <span class="n">Sequence<span class="p">[</span>str<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">'bottom', 'left'</span></em>, <em class="sig-param"><span class="n">tick_direction</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="default_value">'in'</span></em>, <em class="sig-param"><span class="n">label</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="default_value">'both'</span></em>, <em class="sig-param"><span class="n">grid_axis</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="default_value">'both'</span></em>, <em class="sig-param"><span class="n">grid_linestyle</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="default_value">':'</span></em>, <em class="sig-param"><span class="n">grid_linewidth</span><span class="p">:</span> <span class="n">float</span> <span class="o">=</span> <span class="default_value">0.5</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pypianoroll/visualization.html#plot_pianoroll"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypianoroll.plot_pianoroll" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">pypianoroll.</code><code class="sig-name descname">plot_pianoroll</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">ax</span><span class="p">:</span> <span class="n">matplotlib.axes._axes.Axes</span></em>, <em class="sig-param"><span class="n">pianoroll</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.20)">numpy.ndarray</a></span></em>, <em class="sig-param"><span class="n">is_drum</span><span class="p">:</span> <span class="n">bool</span> <span class="o">=</span> <span class="default_value">False</span></em>, <em class="sig-param"><span class="n">resolution</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>int<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">downbeats</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>Sequence<span class="p">[</span>int<span class="p">]</span><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">preset</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="default_value">'full'</span></em>, <em class="sig-param"><span class="n">cmap</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="default_value">'Blues'</span></em>, <em class="sig-param"><span class="n">xtick</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="default_value">'auto'</span></em>, <em class="sig-param"><span class="n">ytick</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="default_value">'octave'</span></em>, <em class="sig-param"><span class="n">xticklabel</span><span class="p">:</span> <span class="n">bool</span> <span class="o">=</span> <span class="default_value">True</span></em>, <em class="sig-param"><span class="n">yticklabel</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="default_value">'auto'</span></em>, <em class="sig-param"><span class="n">tick_loc</span><span class="p">:</span> <span class="n">Sequence<span class="p">[</span>str<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">'bottom', 'left'</span></em>, <em class="sig-param"><span class="n">tick_direction</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="default_value">'in'</span></em>, <em class="sig-param"><span class="n">label</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="default_value">'both'</span></em>, <em class="sig-param"><span class="n">grid_axis</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="default_value">'both'</span></em>, <em class="sig-param"><span class="n">grid_linestyle</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="default_value">':'</span></em>, <em class="sig-param"><span class="n">grid_linewidth</span><span class="p">:</span> <span class="n">float</span> <span class="o">=</span> <span class="default_value">0.5</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pypianoroll/visualization.html#plot_pianoroll"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypianoroll.plot_pianoroll" title="Permalink to this definition">¶</a></dt>
 <dd><p>Plot a piano roll.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>ax</strong> (<a class="reference external" href="https://matplotlib.org/api/axes_api.html#matplotlib.axes.Axes" title="(in Matplotlib v3.3.3)"><code class="xref py py-class docutils literal notranslate"><span class="pre">matplotlib.axes.Axes</span></code></a>) – Axes to plot the piano roll on.</p></li>
+<li><p><strong>ax</strong> (<a class="reference external" href="https://matplotlib.org/api/axes_api.html#matplotlib.axes.Axes" title="(in Matplotlib v3.3.4)"><code class="xref py py-class docutils literal notranslate"><span class="pre">matplotlib.axes.Axes</span></code></a>) – Axes to plot the piano roll on.</p></li>
 <li><p><strong>pianoroll</strong> (<em>ndarray</em><em>, </em><em>shape=</em><em>(</em><em>?</em><em>, </em><em>128</em><em>)</em><em>, </em><em>(</em><em>?</em><em>, </em><em>128</em><em>, </em><em>3</em><em>) or </em><em>(</em><em>?</em><em>, </em><em>128</em><em>, </em><em>4</em><em>)</em>) – Piano roll to plot. For a 3D piano-roll array, the last axis can
 be either RGB or RGBA.</p></li>
 <li><p><strong>is_drum</strong> (<em>bool</em>) – Whether it is a percussion track. Defaults to False.</p></li>
@@ -1583,7 +1584,7 @@ downbeat (i.e., the first time step of a bar).</p></li>
 <li><p><strong>preset</strong> (<em>{'full'</em><em>, </em><em>'frame'</em><em>, </em><em>'plain'}</em>) – Preset theme. For ‘full’ preset, ticks, grid and labels are on.
 For ‘frame’ preset, ticks and grid are both off. For ‘plain’
 preset, the x- and y-axis are both off. Defaults to ‘full’.</p></li>
-<li><p><strong>cmap</strong> (str or <a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.colors.Colormap.html#matplotlib.colors.Colormap" title="(in Matplotlib v3.3.3)"><code class="xref py py-class docutils literal notranslate"><span class="pre">matplotlib.colors.Colormap</span></code></a>) – Colormap. Will be passed to <a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.pyplot.imshow.html#matplotlib.pyplot.imshow" title="(in Matplotlib v3.3.3)"><code class="xref py py-func docutils literal notranslate"><span class="pre">matplotlib.pyplot.imshow()</span></code></a>.
+<li><p><strong>cmap</strong> (str or <a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.colors.Colormap.html#matplotlib.colors.Colormap" title="(in Matplotlib v3.3.4)"><code class="xref py py-class docutils literal notranslate"><span class="pre">matplotlib.colors.Colormap</span></code></a>) – Colormap. Will be passed to <a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.pyplot.imshow.html#matplotlib.pyplot.imshow" title="(in Matplotlib v3.3.4)"><code class="xref py py-func docutils literal notranslate"><span class="pre">matplotlib.pyplot.imshow()</span></code></a>.
 Only effective when <cite>pianoroll</cite> is 2D. Defaults to ‘Blues’.</p></li>
 <li><p><strong>xtick</strong> (<em>{'auto'</em><em>, </em><em>'beat'</em><em>, </em><em>'step'</em><em>, </em><em>'off'}</em>) – Tick format for the x-axis. For ‘auto’ mode, set to ‘beat’ if
 <cite>resolution</cite> is given, otherwise set to ‘step’. Defaults to
@@ -1599,11 +1600,11 @@ if <cite>ytick</cite> is ‘pitch’. Defaults to ‘auto’.</p></li>
 <li><p><strong>label</strong> (<em>{'x'</em><em>, </em><em>'y'</em><em>, </em><em>'both'</em><em>, </em><em>'off'}</em>) – Whether to add labels to x- and y-axes. Defaults to ‘both’.</p></li>
 <li><p><strong>grid_axis</strong> (<em>{'x'</em><em>, </em><em>'y'</em><em>, </em><em>'both'</em><em>, </em><em>'off'}</em>) – Whether to add grids to the x- and y-axes. Defaults to ‘both’.</p></li>
 <li><p><strong>grid_linestyle</strong> (<em>str</em>) – Grid line style. Will be passed to
-<a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.axes.Axes.grid.html#matplotlib.axes.Axes.grid" title="(in Matplotlib v3.3.3)"><code class="xref py py-meth docutils literal notranslate"><span class="pre">matplotlib.axes.Axes.grid()</span></code></a>.</p></li>
+<a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.axes.Axes.grid.html#matplotlib.axes.Axes.grid" title="(in Matplotlib v3.3.4)"><code class="xref py py-meth docutils literal notranslate"><span class="pre">matplotlib.axes.Axes.grid()</span></code></a>.</p></li>
 <li><p><strong>grid_linewidth</strong> (<em>float</em>) – Grid line width. Will be passed to
-<a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.axes.Axes.grid.html#matplotlib.axes.Axes.grid" title="(in Matplotlib v3.3.3)"><code class="xref py py-meth docutils literal notranslate"><span class="pre">matplotlib.axes.Axes.grid()</span></code></a>.</p></li>
+<a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.axes.Axes.grid.html#matplotlib.axes.Axes.grid" title="(in Matplotlib v3.3.4)"><code class="xref py py-meth docutils literal notranslate"><span class="pre">matplotlib.axes.Axes.grid()</span></code></a>.</p></li>
 <li><p><strong>**kwargs</strong> – Keyword arguments to be passed to
-<a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.axes.Axes.imshow.html#matplotlib.axes.Axes.imshow" title="(in Matplotlib v3.3.3)"><code class="xref py py-meth docutils literal notranslate"><span class="pre">matplotlib.axes.Axes.imshow()</span></code></a>.</p></li>
+<a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.axes.Axes.imshow.html#matplotlib.axes.Axes.imshow" title="(in Matplotlib v3.3.4)"><code class="xref py py-meth docutils literal notranslate"><span class="pre">matplotlib.axes.Axes.imshow()</span></code></a>.</p></li>
 </ul>
 </dd>
 </dl>
@@ -1617,7 +1618,7 @@ if <cite>ytick</cite> is ‘pitch’. Defaults to ‘auto’.</p></li>
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>track</strong> (<a class="reference internal" href="#pypianoroll.Track" title="pypianoroll.Track"><code class="xref py py-class docutils literal notranslate"><span class="pre">pypianoroll.Track</span></code></a>) – Track to plot.</p></li>
-<li><p><strong>ax</strong> (<a class="reference external" href="https://matplotlib.org/api/axes_api.html#matplotlib.axes.Axes" title="(in Matplotlib v3.3.3)"><code class="xref py py-class docutils literal notranslate"><span class="pre">matplotlib.axes.Axes</span></code></a>) – Axes to plot the piano roll on. Defaults to call <cite>plt.gca()</cite>.</p></li>
+<li><p><strong>ax</strong> (<a class="reference external" href="https://matplotlib.org/api/axes_api.html#matplotlib.axes.Axes" title="(in Matplotlib v3.3.4)"><code class="xref py py-class docutils literal notranslate"><span class="pre">matplotlib.axes.Axes</span></code></a>) – Axes to plot the piano roll on. Defaults to call <cite>plt.gca()</cite>.</p></li>
 <li><p><strong>**kwargs</strong> – Keyword arguments to pass to <a class="reference internal" href="#pypianoroll.plot_pianoroll" title="pypianoroll.plot_pianoroll"><code class="xref py py-func docutils literal notranslate"><span class="pre">pypianoroll.plot_pianoroll()</span></code></a>.</p></li>
 </ul>
 </dd>
@@ -1625,14 +1626,14 @@ if <cite>ytick</cite> is ‘pitch’. Defaults to ‘auto’.</p></li>
 <dd class="field-even"><p>(Created) Axes object.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference external" href="https://matplotlib.org/api/axes_api.html#matplotlib.axes.Axes" title="(in Matplotlib v3.3.3)"><code class="xref py py-class docutils literal notranslate"><span class="pre">matplotlib.axes.Axes</span></code></a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://matplotlib.org/api/axes_api.html#matplotlib.axes.Axes" title="(in Matplotlib v3.3.4)"><code class="xref py py-class docutils literal notranslate"><span class="pre">matplotlib.axes.Axes</span></code></a></p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py function">
 <dt id="pypianoroll.polyphonic_rate">
-<code class="sig-prename descclassname">pypianoroll.</code><code class="sig-name descname">polyphonic_rate</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">pianoroll</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.19)">numpy.ndarray</a></span></em>, <em class="sig-param"><span class="n">threshold</span><span class="p">:</span> <span class="n">float</span> <span class="o">=</span> <span class="default_value">2</span></em><span class="sig-paren">)</span> &#x2192; float<a class="reference internal" href="_modules/pypianoroll/metrics.html#polyphonic_rate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypianoroll.polyphonic_rate" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">pypianoroll.</code><code class="sig-name descname">polyphonic_rate</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">pianoroll</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.20)">numpy.ndarray</a></span></em>, <em class="sig-param"><span class="n">threshold</span><span class="p">:</span> <span class="n">float</span> <span class="o">=</span> <span class="default_value">2</span></em><span class="sig-paren">)</span> &#x2192; float<a class="reference internal" href="_modules/pypianoroll/metrics.html#polyphonic_rate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypianoroll.polyphonic_rate" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the ratio of time steps where multiple pitches are on.</p>
 <p>The polyphony rate is defined as the ratio of the number of time
 steps where multiple pitches are on to the total number of time
@@ -1670,7 +1671,7 @@ of the 32nd AAAI Conference on Artificial Intelligence (AAAI),
 
 <dl class="py function">
 <dt id="pypianoroll.qualified_note_rate">
-<code class="sig-prename descclassname">pypianoroll.</code><code class="sig-name descname">qualified_note_rate</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">pianoroll</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.19)">numpy.ndarray</a></span></em>, <em class="sig-param"><span class="n">threshold</span><span class="p">:</span> <span class="n">float</span> <span class="o">=</span> <span class="default_value">2</span></em><span class="sig-paren">)</span> &#x2192; float<a class="reference internal" href="_modules/pypianoroll/metrics.html#qualified_note_rate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypianoroll.qualified_note_rate" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">pypianoroll.</code><code class="sig-name descname">qualified_note_rate</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">pianoroll</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.20)">numpy.ndarray</a></span></em>, <em class="sig-param"><span class="n">threshold</span><span class="p">:</span> <span class="n">float</span> <span class="o">=</span> <span class="default_value">2</span></em><span class="sig-paren">)</span> &#x2192; float<a class="reference internal" href="_modules/pypianoroll/metrics.html#qualified_note_rate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypianoroll.qualified_note_rate" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the ratio of the number of the qualified notes.</p>
 <p>The qualified note rate is defined as the ratio of the number of
 qualified notes (notes longer than <cite>threshold</cite>, in time steps) to
@@ -1825,7 +1826,7 @@ a single note with their mean as its velocity.</p></li>
 
 <dl class="py function">
 <dt id="pypianoroll.tonal_distance">
-<code class="sig-prename descclassname">pypianoroll.</code><code class="sig-name descname">tonal_distance</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">pianoroll_1</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.19)">numpy.ndarray</a></span></em>, <em class="sig-param"><span class="n">pianoroll_2</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.19)">numpy.ndarray</a></span></em>, <em class="sig-param"><span class="n">resolution</span><span class="p">:</span> <span class="n">int</span></em>, <em class="sig-param"><span class="n">radii</span><span class="p">:</span> <span class="n">Sequence<span class="p">[</span>float<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">1.0, 1.0, 0.5</span></em><span class="sig-paren">)</span> &#x2192; float<a class="reference internal" href="_modules/pypianoroll/metrics.html#tonal_distance"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypianoroll.tonal_distance" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">pypianoroll.</code><code class="sig-name descname">tonal_distance</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">pianoroll_1</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.20)">numpy.ndarray</a></span></em>, <em class="sig-param"><span class="n">pianoroll_2</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.20)">numpy.ndarray</a></span></em>, <em class="sig-param"><span class="n">resolution</span><span class="p">:</span> <span class="n">int</span></em>, <em class="sig-param"><span class="n">radii</span><span class="p">:</span> <span class="n">Sequence<span class="p">[</span>float<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">1.0, 1.0, 0.5</span></em><span class="sig-paren">)</span> &#x2192; float<a class="reference internal" href="_modules/pypianoroll/metrics.html#tonal_distance"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypianoroll.tonal_distance" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the tonal distance [1] between the two input piano rolls.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -1924,7 +1925,7 @@ pitches, while a negative value lowers the pitches.</p></li>
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
       
-        <a href="multitrack.html" class="btn btn-neutral float-left" title="Multitrack Class" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="metrics.html" class="btn btn-neutral float-left" title="Metrics" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
@@ -1934,7 +1935,7 @@ pitches, while a negative value lowers the pitches.</p></li>
   <div role="contentinfo">
     <p>
         
-        &copy; Copyright 2020, Hao-Wen Dong
+        &copy; Copyright 2018, Hao-Wen Dong
 
     </p>
   </div>

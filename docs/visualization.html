@@ -88,12 +88,11 @@
             
               <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="getting_started.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="classes.html">Pypianoroll Classes</a></li>
 <li class="toctree-l1"><a class="reference internal" href="save_load.html">Save &amp; Load</a></li>
 <li class="toctree-l1"><a class="reference internal" href="read_write.html">Read &amp; Write</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Visualization</a></li>
 <li class="toctree-l1"><a class="reference internal" href="metrics.html">Metrics</a></li>
-<li class="toctree-l1"><a class="reference internal" href="track.html">Track Class</a></li>
-<li class="toctree-l1"><a class="reference internal" href="multitrack.html">Multitrack Class</a></li>
 <li class="toctree-l1"><a class="reference internal" href="doc.html">Technical Documentation</a></li>
 </ul>
 
@@ -184,7 +183,7 @@
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>multitrack</strong> (<a class="reference internal" href="doc.html#pypianoroll.Multitrack" title="pypianoroll.Multitrack"><code class="xref py py-class docutils literal notranslate"><span class="pre">pypianoroll.Multitrack</span></code></a>) – Multitrack to plot.</p></li>
-<li><p><strong>axs</strong> (sequence of <a class="reference external" href="https://matplotlib.org/api/axes_api.html#matplotlib.axes.Axes" title="(in Matplotlib v3.3.3)"><code class="xref py py-class docutils literal notranslate"><span class="pre">matplotlib.axes.Axes</span></code></a>) – Axes to plot the tracks on.</p></li>
+<li><p><strong>axs</strong> (sequence of <a class="reference external" href="https://matplotlib.org/api/axes_api.html#matplotlib.axes.Axes" title="(in Matplotlib v3.3.4)"><code class="xref py py-class docutils literal notranslate"><span class="pre">matplotlib.axes.Axes</span></code></a>) – Axes to plot the tracks on.</p></li>
 <li><p><strong>mode</strong> (<em>{'separate'</em><em>, </em><em>'blended'</em><em>, </em><em>'hybrid'}</em>) – Plotting strategy for visualizing multiple tracks. For
 ‘separate’ mode, plot each track separately. For ‘blended’,
 blend and plot the pianoroll as a colored image. For ‘hybrid’
@@ -197,7 +196,7 @@ than ‘off’ will label the two track with ‘Drums’ and ‘Others’.</p></
 are on. For ‘frame’ preset, ticks and grid are both off. For
 ‘plain’ preset, the x- and y-axis are both off. Defaults to
 ‘full’.</p></li>
-<li><p><strong>cmaps</strong> (<em>tuple</em><em> or </em><em>list</em>) – Colormaps. Will be passed to <a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.pyplot.imshow.html#matplotlib.pyplot.imshow" title="(in Matplotlib v3.3.3)"><code class="xref py py-func docutils literal notranslate"><span class="pre">matplotlib.pyplot.imshow()</span></code></a>.
+<li><p><strong>cmaps</strong> (<em>tuple</em><em> or </em><em>list</em>) – Colormaps. Will be passed to <a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.pyplot.imshow.html#matplotlib.pyplot.imshow" title="(in Matplotlib v3.3.4)"><code class="xref py py-func docutils literal notranslate"><span class="pre">matplotlib.pyplot.imshow()</span></code></a>.
 Only effective when <cite>pianoroll</cite> is 2D. Defaults to ‘Blues’.
 If <cite>mode</cite> is ‘separate’, defaults to <cite>(‘Blues’, ‘Oranges’,
 ‘Greens’, ‘Reds’, ‘Purples’, ‘Greys’)</cite>. If <cite>mode</cite> is ‘blended’,
@@ -210,7 +209,7 @@ defaults to <cite>(‘hsv’)</cite>. If <cite>mode</cite> is ‘hybrid’, defa
 <dd class="field-even"><p>(Created) list of Axes objects.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>list of <a class="reference external" href="https://matplotlib.org/api/axes_api.html#matplotlib.axes.Axes" title="(in Matplotlib v3.3.3)"><code class="xref py py-class docutils literal notranslate"><span class="pre">matplotlib.axes.Axes</span></code></a></p>
+<dd class="field-odd"><p>list of <a class="reference external" href="https://matplotlib.org/api/axes_api.html#matplotlib.axes.Axes" title="(in Matplotlib v3.3.4)"><code class="xref py py-class docutils literal notranslate"><span class="pre">matplotlib.axes.Axes</span></code></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -223,7 +222,7 @@ defaults to <cite>(‘hsv’)</cite>. If <cite>mode</cite> is ‘hybrid’, defa
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>track</strong> (<a class="reference internal" href="doc.html#pypianoroll.Track" title="pypianoroll.Track"><code class="xref py py-class docutils literal notranslate"><span class="pre">pypianoroll.Track</span></code></a>) – Track to plot.</p></li>
-<li><p><strong>ax</strong> (<a class="reference external" href="https://matplotlib.org/api/axes_api.html#matplotlib.axes.Axes" title="(in Matplotlib v3.3.3)"><code class="xref py py-class docutils literal notranslate"><span class="pre">matplotlib.axes.Axes</span></code></a>) – Axes to plot the piano roll on. Defaults to call <cite>plt.gca()</cite>.</p></li>
+<li><p><strong>ax</strong> (<a class="reference external" href="https://matplotlib.org/api/axes_api.html#matplotlib.axes.Axes" title="(in Matplotlib v3.3.4)"><code class="xref py py-class docutils literal notranslate"><span class="pre">matplotlib.axes.Axes</span></code></a>) – Axes to plot the piano roll on. Defaults to call <cite>plt.gca()</cite>.</p></li>
 <li><p><strong>**kwargs</strong> – Keyword arguments to pass to <a class="reference internal" href="doc.html#pypianoroll.plot_pianoroll" title="pypianoroll.plot_pianoroll"><code class="xref py py-func docutils literal notranslate"><span class="pre">pypianoroll.plot_pianoroll()</span></code></a>.</p></li>
 </ul>
 </dd>
@@ -231,19 +230,19 @@ defaults to <cite>(‘hsv’)</cite>. If <cite>mode</cite> is ‘hybrid’, defa
 <dd class="field-even"><p>(Created) Axes object.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference external" href="https://matplotlib.org/api/axes_api.html#matplotlib.axes.Axes" title="(in Matplotlib v3.3.3)"><code class="xref py py-class docutils literal notranslate"><span class="pre">matplotlib.axes.Axes</span></code></a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://matplotlib.org/api/axes_api.html#matplotlib.axes.Axes" title="(in Matplotlib v3.3.4)"><code class="xref py py-class docutils literal notranslate"><span class="pre">matplotlib.axes.Axes</span></code></a></p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py function">
 <dt>
-<code class="sig-prename descclassname">pypianoroll.</code><code class="sig-name descname">plot_pianoroll</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">ax</span><span class="p">:</span> <span class="n">matplotlib.axes._axes.Axes</span></em>, <em class="sig-param"><span class="n">pianoroll</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.19)">numpy.ndarray</a></span></em>, <em class="sig-param"><span class="n">is_drum</span><span class="p">:</span> <span class="n">bool</span> <span class="o">=</span> <span class="default_value">False</span></em>, <em class="sig-param"><span class="n">resolution</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>int<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">downbeats</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>Sequence<span class="p">[</span>int<span class="p">]</span><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">preset</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="default_value">'full'</span></em>, <em class="sig-param"><span class="n">cmap</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="default_value">'Blues'</span></em>, <em class="sig-param"><span class="n">xtick</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="default_value">'auto'</span></em>, <em class="sig-param"><span class="n">ytick</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="default_value">'octave'</span></em>, <em class="sig-param"><span class="n">xticklabel</span><span class="p">:</span> <span class="n">bool</span> <span class="o">=</span> <span class="default_value">True</span></em>, <em class="sig-param"><span class="n">yticklabel</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="default_value">'auto'</span></em>, <em class="sig-param"><span class="n">tick_loc</span><span class="p">:</span> <span class="n">Sequence<span class="p">[</span>str<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">'bottom', 'left'</span></em>, <em class="sig-param"><span class="n">tick_direction</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="default_value">'in'</span></em>, <em class="sig-param"><span class="n">label</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="default_value">'both'</span></em>, <em class="sig-param"><span class="n">grid_axis</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="default_value">'both'</span></em>, <em class="sig-param"><span class="n">grid_linestyle</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="default_value">':'</span></em>, <em class="sig-param"><span class="n">grid_linewidth</span><span class="p">:</span> <span class="n">float</span> <span class="o">=</span> <span class="default_value">0.5</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pypianoroll/visualization.html#plot_pianoroll"><span class="viewcode-link">[source]</span></a></dt>
+<code class="sig-prename descclassname">pypianoroll.</code><code class="sig-name descname">plot_pianoroll</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">ax</span><span class="p">:</span> <span class="n">matplotlib.axes._axes.Axes</span></em>, <em class="sig-param"><span class="n">pianoroll</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.20)">numpy.ndarray</a></span></em>, <em class="sig-param"><span class="n">is_drum</span><span class="p">:</span> <span class="n">bool</span> <span class="o">=</span> <span class="default_value">False</span></em>, <em class="sig-param"><span class="n">resolution</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>int<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">downbeats</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>Sequence<span class="p">[</span>int<span class="p">]</span><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">preset</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="default_value">'full'</span></em>, <em class="sig-param"><span class="n">cmap</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="default_value">'Blues'</span></em>, <em class="sig-param"><span class="n">xtick</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="default_value">'auto'</span></em>, <em class="sig-param"><span class="n">ytick</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="default_value">'octave'</span></em>, <em class="sig-param"><span class="n">xticklabel</span><span class="p">:</span> <span class="n">bool</span> <span class="o">=</span> <span class="default_value">True</span></em>, <em class="sig-param"><span class="n">yticklabel</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="default_value">'auto'</span></em>, <em class="sig-param"><span class="n">tick_loc</span><span class="p">:</span> <span class="n">Sequence<span class="p">[</span>str<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">'bottom', 'left'</span></em>, <em class="sig-param"><span class="n">tick_direction</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="default_value">'in'</span></em>, <em class="sig-param"><span class="n">label</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="default_value">'both'</span></em>, <em class="sig-param"><span class="n">grid_axis</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="default_value">'both'</span></em>, <em class="sig-param"><span class="n">grid_linestyle</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="default_value">':'</span></em>, <em class="sig-param"><span class="n">grid_linewidth</span><span class="p">:</span> <span class="n">float</span> <span class="o">=</span> <span class="default_value">0.5</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pypianoroll/visualization.html#plot_pianoroll"><span class="viewcode-link">[source]</span></a></dt>
 <dd><p>Plot a piano roll.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>ax</strong> (<a class="reference external" href="https://matplotlib.org/api/axes_api.html#matplotlib.axes.Axes" title="(in Matplotlib v3.3.3)"><code class="xref py py-class docutils literal notranslate"><span class="pre">matplotlib.axes.Axes</span></code></a>) – Axes to plot the piano roll on.</p></li>
+<li><p><strong>ax</strong> (<a class="reference external" href="https://matplotlib.org/api/axes_api.html#matplotlib.axes.Axes" title="(in Matplotlib v3.3.4)"><code class="xref py py-class docutils literal notranslate"><span class="pre">matplotlib.axes.Axes</span></code></a>) – Axes to plot the piano roll on.</p></li>
 <li><p><strong>pianoroll</strong> (<em>ndarray</em><em>, </em><em>shape=</em><em>(</em><em>?</em><em>, </em><em>128</em><em>)</em><em>, </em><em>(</em><em>?</em><em>, </em><em>128</em><em>, </em><em>3</em><em>) or </em><em>(</em><em>?</em><em>, </em><em>128</em><em>, </em><em>4</em><em>)</em>) – Piano roll to plot. For a 3D piano-roll array, the last axis can
 be either RGB or RGBA.</p></li>
 <li><p><strong>is_drum</strong> (<em>bool</em>) – Whether it is a percussion track. Defaults to False.</p></li>
@@ -253,7 +252,7 @@ downbeat (i.e., the first time step of a bar).</p></li>
 <li><p><strong>preset</strong> (<em>{'full'</em><em>, </em><em>'frame'</em><em>, </em><em>'plain'}</em>) – Preset theme. For ‘full’ preset, ticks, grid and labels are on.
 For ‘frame’ preset, ticks and grid are both off. For ‘plain’
 preset, the x- and y-axis are both off. Defaults to ‘full’.</p></li>
-<li><p><strong>cmap</strong> (str or <a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.colors.Colormap.html#matplotlib.colors.Colormap" title="(in Matplotlib v3.3.3)"><code class="xref py py-class docutils literal notranslate"><span class="pre">matplotlib.colors.Colormap</span></code></a>) – Colormap. Will be passed to <a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.pyplot.imshow.html#matplotlib.pyplot.imshow" title="(in Matplotlib v3.3.3)"><code class="xref py py-func docutils literal notranslate"><span class="pre">matplotlib.pyplot.imshow()</span></code></a>.
+<li><p><strong>cmap</strong> (str or <a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.colors.Colormap.html#matplotlib.colors.Colormap" title="(in Matplotlib v3.3.4)"><code class="xref py py-class docutils literal notranslate"><span class="pre">matplotlib.colors.Colormap</span></code></a>) – Colormap. Will be passed to <a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.pyplot.imshow.html#matplotlib.pyplot.imshow" title="(in Matplotlib v3.3.4)"><code class="xref py py-func docutils literal notranslate"><span class="pre">matplotlib.pyplot.imshow()</span></code></a>.
 Only effective when <cite>pianoroll</cite> is 2D. Defaults to ‘Blues’.</p></li>
 <li><p><strong>xtick</strong> (<em>{'auto'</em><em>, </em><em>'beat'</em><em>, </em><em>'step'</em><em>, </em><em>'off'}</em>) – Tick format for the x-axis. For ‘auto’ mode, set to ‘beat’ if
 <cite>resolution</cite> is given, otherwise set to ‘step’. Defaults to
@@ -269,11 +268,11 @@ if <cite>ytick</cite> is ‘pitch’. Defaults to ‘auto’.</p></li>
 <li><p><strong>label</strong> (<em>{'x'</em><em>, </em><em>'y'</em><em>, </em><em>'both'</em><em>, </em><em>'off'}</em>) – Whether to add labels to x- and y-axes. Defaults to ‘both’.</p></li>
 <li><p><strong>grid_axis</strong> (<em>{'x'</em><em>, </em><em>'y'</em><em>, </em><em>'both'</em><em>, </em><em>'off'}</em>) – Whether to add grids to the x- and y-axes. Defaults to ‘both’.</p></li>
 <li><p><strong>grid_linestyle</strong> (<em>str</em>) – Grid line style. Will be passed to
-<a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.axes.Axes.grid.html#matplotlib.axes.Axes.grid" title="(in Matplotlib v3.3.3)"><code class="xref py py-meth docutils literal notranslate"><span class="pre">matplotlib.axes.Axes.grid()</span></code></a>.</p></li>
+<a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.axes.Axes.grid.html#matplotlib.axes.Axes.grid" title="(in Matplotlib v3.3.4)"><code class="xref py py-meth docutils literal notranslate"><span class="pre">matplotlib.axes.Axes.grid()</span></code></a>.</p></li>
 <li><p><strong>grid_linewidth</strong> (<em>float</em>) – Grid line width. Will be passed to
-<a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.axes.Axes.grid.html#matplotlib.axes.Axes.grid" title="(in Matplotlib v3.3.3)"><code class="xref py py-meth docutils literal notranslate"><span class="pre">matplotlib.axes.Axes.grid()</span></code></a>.</p></li>
+<a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.axes.Axes.grid.html#matplotlib.axes.Axes.grid" title="(in Matplotlib v3.3.4)"><code class="xref py py-meth docutils literal notranslate"><span class="pre">matplotlib.axes.Axes.grid()</span></code></a>.</p></li>
 <li><p><strong>**kwargs</strong> – Keyword arguments to be passed to
-<a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.axes.Axes.imshow.html#matplotlib.axes.Axes.imshow" title="(in Matplotlib v3.3.3)"><code class="xref py py-meth docutils literal notranslate"><span class="pre">matplotlib.axes.Axes.imshow()</span></code></a>.</p></li>
+<a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.axes.Axes.imshow.html#matplotlib.axes.Axes.imshow" title="(in Matplotlib v3.3.4)"><code class="xref py py-meth docutils literal notranslate"><span class="pre">matplotlib.axes.Axes.imshow()</span></code></a>.</p></li>
 </ul>
 </dd>
 </dl>
@@ -303,7 +302,7 @@ if <cite>ytick</cite> is ‘pitch’. Defaults to ‘auto’.</p></li>
   <div role="contentinfo">
     <p>
         
-        &copy; Copyright 2020, Hao-Wen Dong
+        &copy; Copyright 2018, Hao-Wen Dong
 
     </p>
   </div>

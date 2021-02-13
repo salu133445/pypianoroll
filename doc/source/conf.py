@@ -1,8 +1,3 @@
-# -*- coding: utf-8 -*-
-#
-# pypianoroll documentation build configuration file, created by
-# sphinx-quickstart on Wed Jan 24 23:53:47 2018.
-#
 # Configuration file for the Sphinx documentation builder.
 #
 # This file only contains a selection of the most common options. For a full
@@ -19,12 +14,11 @@ import os.path
 import sys
 
 sys.path.insert(0, os.path.abspath(os.path.join("..", "..")))
-import pypianoroll
 
 # -- Project information -----------------------------------------------------
 
 project = "Pypianoroll"
-copyright = "2020, Hao-Wen Dong"
+copyright = "2018, Hao-Wen Dong"
 author = "Hao-Wen Dong"
 
 
