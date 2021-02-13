@@ -648,6 +648,10 @@ class Multitrack:
             start = 0
         if end is None:
             end = self.get_length()
+        if self.tempo is not None:
+            self.tempo = self.tempo[start:end]
+        if self.downbeat is not None:
+            self.downbeat = self.downbeat[start:end]
         for track in self.tracks:
             track.trim(start=start, end=end)
         return self
