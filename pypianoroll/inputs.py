@@ -304,16 +304,16 @@ def from_pretty_midi(
 
         if mode == "max":
             track: Track = StandardTrack(
-                name=instrument.name,
-                program=instrument.program,
-                is_drum=instrument.is_drum,
+                name=str(instrument.name),
+                program=int(instrument.program),
+                is_drum=bool(instrument.is_drum),
                 pianoroll=pianoroll,
             )
         else:
             track = Track(
-                name=instrument.name,
-                program=instrument.program,
-                is_drum=instrument.is_drum,
+                name=str(instrument.name),
+                program=int(instrument.program),
+                is_drum=bool(instrument.is_drum),
                 pianoroll=pianoroll,
             )
         tracks.append(track)
