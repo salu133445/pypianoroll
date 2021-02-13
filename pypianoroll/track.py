@@ -360,6 +360,8 @@ class Track:
     def standardize(self: "Track") -> "StandardTrack":
         """Standardize the track.
 
+        This will clip the piano roll to [0, 127] and cast to np.uint8.
+
         Returns
         -------
         Converted StandardTrack object.
@@ -369,7 +371,29 @@ class Track:
             name=self.name,
             program=self.program,
             is_drum=self.is_drum,
-            pianoroll=self.pianoroll,
+            pianoroll=np.clip(self.pianoroll, 0, 127),
+        )
+
+    def binarize(self, threshold: float = 0) -> "BinaryTrack":
+        """Binarize the track.
+
+        This will binarize the piano roll by the given threshold.
+
+        Parameters
+        ----------
+        threshold : int or float
+            Threshold. Defaults to 0.
+
+        Returns
+        -------
+        Converted BinaryTrack object.
+
+        """
+        return BinaryTrack(
+            program=self.program,
+            is_drum=self.is_drum,
+            name=self.name,
+            pianoroll=(self.pianoroll > threshold),
         )
 
     def plot(self, ax: Optional[Axes] = None, **kwargs) -> Axes:
@@ -478,26 +502,6 @@ class StandardTrack(Track):
             raise ValueError("`upper` must be of type int.")
         self.pianoroll = self.pianoroll.clip(lower, upper)
         return self
-
-    def binarize(self, threshold: float = 0) -> "BinaryTrack":
-        """Binarize the piano roll.
-
-        Parameters
-        ----------
-        threshold : int or float
-            Threshold. Defaults to 0.
-
-        Returns
-        -------
-        Converted Binary object.
-
-        """
-        return BinaryTrack(
-            program=self.program,
-            is_drum=self.is_drum,
-            name=self.name,
-            pianoroll=(self.pianoroll > threshold),
-        )
 
 
 class BinaryTrack(Track):
