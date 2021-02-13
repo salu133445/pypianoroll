@@ -10,11 +10,11 @@ from .utils import multitrack
 def test_repr(multitrack):
     assert repr(multitrack) == (
         "Multitrack(name='test', resolution=24, "
-        "downbeat=array(shape=(96,)), tracks=["
+        "downbeat=array(shape=(96,), dtype=bool), tracks=["
         "StandardTrack(name='track_1', program=0, is_drum=False, "
-        "pianoroll=array(shape=(96, 128))), "
+        "pianoroll=array(shape=(96, 128), dtype=uint8)), "
         "BinaryTrack(name='track_2', program=0, is_drum=True, "
-        "pianoroll=array(shape=(96, 128)))])"
+        "pianoroll=array(shape=(96, 128), dtype=bool))])"
     )
 
 

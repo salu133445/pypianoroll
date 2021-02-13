@@ -79,7 +79,8 @@ class Track:
             f"name={repr(self.name)}",
             f"program={repr(self.program)}",
             f"is_drum={repr(self.is_drum)}",
-            f"pianoroll=array(shape={self.pianoroll.shape})",
+            f"pianoroll=array(shape={self.pianoroll.shape}, "
+            f"dtype={self.pianoroll.dtype})",
         ]
         return f"Track({', '.join(to_join)})"
 
@@ -444,7 +445,8 @@ class StandardTrack(Track):
             f"name={repr(self.name)}",
             f"program={repr(self.program)}",
             f"is_drum={repr(self.is_drum)}",
-            f"pianoroll=array(shape={self.pianoroll.shape})",
+            f"pianoroll=array(shape={self.pianoroll.shape}, "
+            f"dtype={self.pianoroll.dtype})",
         ]
         return f"StandardTrack({', '.join(to_join)})"
 
@@ -543,7 +545,8 @@ class BinaryTrack(Track):
             f"name={repr(self.name)}",
             f"program={repr(self.program)}",
             f"is_drum={repr(self.is_drum)}",
-            f"pianoroll=array(shape={self.pianoroll.shape})",
+            f"pianoroll=array(shape={self.pianoroll.shape}, "
+            f"dtype={self.pianoroll.dtype})",
         ]
         return f"BinaryTrack({', '.join(to_join)})"
 

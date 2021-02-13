@@ -24,7 +24,7 @@ def test_constructor_binary():
 
 @fixture
 def track():
-    pianoroll = np.zeros((96, 128), float)
+    pianoroll = np.zeros((96, 128), np.float32)
     pianoroll[:95, [60, 64, 67, 72, 76, 79, 84]] = 100
     return Track("test", 0, False, pianoroll)
 
@@ -32,7 +32,7 @@ def track():
 def test_repr(track):
     assert repr(track) == (
         "Track(name='test', program=0, is_drum=False, "
-        "pianoroll=array(shape=(96, 128)))"
+        "pianoroll=array(shape=(96, 128), dtype=float32))"
     )
 
 

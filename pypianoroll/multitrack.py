@@ -102,9 +102,15 @@ class Multitrack:
             f"resolution={repr(self.resolution)}",
         ]
         if self.tempo is not None:
-            to_join.append(f"tempo=array(shape={self.tempo.shape}")
+            to_join.append(
+                f"tempo=array(shape={self.tempo.shape}, "
+                f"dtype={self.tempo.dtype})"
+            )
         if self.downbeat is not None:
-            to_join.append(f"downbeat=array(shape={self.downbeat.shape})")
+            to_join.append(
+                f"downbeat=array(shape={self.downbeat.shape}, "
+                f"dtype={self.downbeat.dtype})"
+            )
         to_join.append(f"tracks={repr(self.tracks)}")
         return f"Multitrack({', '.join(to_join)})"
 
