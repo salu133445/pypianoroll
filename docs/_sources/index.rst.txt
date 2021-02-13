@@ -2,14 +2,14 @@
 Pypianoroll
 ===========
 
-.. image:: https://img.shields.io/travis/com/salu133445/pypianoroll
-    :target: https://travis-ci.com/salu133445/pypianoroll
-    :alt: Travis
+.. image:: https://img.shields.io/github/workflow/status/salu133445/pypianoroll/Testing
+    :target: https://github.com/salu133445/pypianoroll/actions
+    :alt: GitHub workflow
 .. image:: https://img.shields.io/codecov/c/github/salu133445/pypianoroll
     :target: https://codecov.io/gh/salu133445/pypianoroll
     :alt: Codecov
 .. image:: https://img.shields.io/github/license/salu133445/pypianoroll
-    :target: https://github.com/salu133445/pypianoroll/blob/master/LICENSE
+    :target: https://github.com/salu133445/pypianoroll/blob/main/LICENSE
     :alt: GitHub license
 .. image:: https://img.shields.io/github/v/release/salu133445/pypianoroll
     :target: https://github.com/salu133445/pypianoroll/releases

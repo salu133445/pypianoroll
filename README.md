@@ -1,9 +1,9 @@
 Pypianoroll
 ===========
 
-[![Travis](https://img.shields.io/travis/com/salu133445/pypianoroll)](https://travis-ci.com/salu133445/pypianoroll)
+[![GitHub workflow](https://img.shields.io/github/workflow/status/salu133445/pypianoroll/Testing)](https://github.com/salu133445/pypianoroll/actions)
 [![Codecov](https://img.shields.io/codecov/c/github/salu133445/pypianoroll)](https://codecov.io/gh/salu133445/pypianoroll)
-[![GitHub license](https://img.shields.io/github/license/salu133445/pypianoroll)](https://github.com/salu133445/pypianoroll/blob/master/LICENSE)
+[![GitHub license](https://img.shields.io/github/license/salu133445/pypianoroll)](https://github.com/salu133445/pypianoroll/blob/main/LICENSE)
 [![GitHub release](https://img.shields.io/github/v/release/salu133445/pypianoroll)](https://github.com/salu133445/pypianoroll/releases)
 
 
