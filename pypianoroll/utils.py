@@ -5,6 +5,7 @@ Functions
 
 - decompose_sparse
 - reconstruct_sparse
+- hmean
 
 """
 from typing import Dict
@@ -12,6 +13,7 @@ from typing import Dict
 from numpy import ndarray
 from scipy.sparse import csc_matrix
 
+import numpy as np
 
 def decompose_sparse(matrix: ndarray, name: str) -> Dict[str, ndarray]:
     """Decompose a matrix to sparse components.
