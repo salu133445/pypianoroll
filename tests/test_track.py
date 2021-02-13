@@ -104,7 +104,7 @@ def standard_track():
 def test_repr_standard(standard_track):
     assert repr(standard_track) == (
         "StandardTrack(name='test', program=0, is_drum=False, "
-        "pianoroll=array(shape=(96, 128)))"
+        "pianoroll=array(shape=(96, 128), dtype=uint8))"
     )
 
 
@@ -139,7 +139,7 @@ def binary_track():
 def test_repr_binary(binary_track):
     assert repr(binary_track) == (
         "BinaryTrack(name='test', program=0, is_drum=True, "
-        "pianoroll=array(shape=(96, 128)))"
+        "pianoroll=array(shape=(96, 128), dtype=bool))"
     )
 
 
