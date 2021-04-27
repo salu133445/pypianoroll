@@ -205,7 +205,7 @@ def from_pretty_midi(
     if not midi.time_signature_changes:
         downbeat = None
     else:
-        downbeat = np.zeros((n_time_steps, 1), bool)
+        downbeat = np.zeros((n_time_steps, ), bool)
         downbeat[0] = True
         start = 0
         end = start
@@ -223,7 +223,7 @@ def from_pretty_midi(
     one_more_beat = 2 * beat_times[-1] - beat_times[-2]
     beat_times_one_more = np.append(beat_times, one_more_beat)
     bpm = 60.0 / np.diff(beat_times_one_more)
-    tempo = np.tile(bpm, (1, 24)).reshape(-1, 1)
+    tempo = np.tile(bpm, (1, 24)).reshape(-1, )
 
     # Parse the tracks
     tracks = []
