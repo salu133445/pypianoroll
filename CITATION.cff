@@ -1,0 +1,22 @@
+cff-version: 1.2.0
+message: If you use this software, please cite it using these metadata.
+authors:
+  - family-names: Dong
+    given-names: Hao-Wen
+title: Pypianoroll
+preferred-citation:
+  type: article
+  authors:
+    - family-names: Dong
+      given-names: Hao-Wen
+    - family-names: Hsiao
+      given-names: Wen-Yi
+    - family-names: Yang
+      given-names: Yi-Hsuan
+  title: "Pypianoroll: Open Source Python Package for Handling Multitrack Pianorolls"
+  journal: Late-Breaking Demos of the 19th International Society for Music Information Retrieval Conference (ISMIR)
+  year: 2018
+date-released: 2018-01-27
+license: MIT
+url: "https://salu133445.github.io/pypianoroll/"
+repository-code: "https://github.com/salu133445/pypianoroll"
