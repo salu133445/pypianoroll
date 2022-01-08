@@ -41,10 +41,9 @@ Documentation is available [here](https://salu133445.github.io/pypianoroll) and 
 Citing
 ------
 
-Please cite the following paper if you use Pypianoroll in a published work:
+Please cite the following paper if you use the code provided in this repository.
 
-Hao-Wen Dong, Wen-Yi Hsiao, and Yi-Hsuan Yang, "Pypianoroll: Open Source Python Package for Handling Multitrack Pianorolls," in _Late-Breaking Demos of the 19th International Society for Music Information Retrieval Conference (ISMIR)_, 2018.
-
+Hao-Wen Dong, Wen-Yi Hsiao, and Yi-Hsuan Yang, "Pypianoroll: Open Source Python Package for Handling Multitrack Pianorolls," in _Late-Breaking Demos of the 19th International Society for Music Information Retrieval Conference (ISMIR)_, 2018.<br>
 [[homepage](https://salu133445.github.io/pypianoroll/)]
 [[paper](https://salu133445.github.io/pypianoroll/pdf/pypianoroll-ismir2018-lbd-paper.pdf)]
 [[poster](https://salu133445.github.io/pypianoroll/pdf/pypianoroll-ismir2018-lbd-poster.pdf)]
