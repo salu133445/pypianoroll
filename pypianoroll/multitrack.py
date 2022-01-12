@@ -397,7 +397,7 @@ class Multitrack:
         `downbeat`.
 
         """
-        if not self.downbeat:
+        if self.downbeat is None:
             return 0
         return np.count_nonzero(self.downbeat)
 
