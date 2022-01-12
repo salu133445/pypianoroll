@@ -110,7 +110,7 @@ evaluation tools.</p>
 Defaults to 0 (Acoustic Grand Piano).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
-<dd class="field-odd"><p>int, 0-127, default: <cite>pypianoroll.DEFAULT_PROGRAM</cite></p>
+<dd class="field-odd"><p>int, 0-127, default: <cite>pypianoroll.DEFAULT_PROGRAM</cite> (0)</p>
 </dd>
 </dl>
 </dd></dl>
@@ -118,10 +118,10 @@ Defaults to 0 (Acoustic Grand Piano).</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="pypianoroll.BinaryTrack.is_drum">
 <span class="sig-name descname"><span class="pre">is_drum</span></span><a class="headerlink" href="#pypianoroll.BinaryTrack.is_drum" title="Permalink to this definition"></a></dt>
-<dd><p>Whether it is a percussion track. Defaults to False.</p>
+<dd><p>Whether it is a percussion track.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
-<dd class="field-odd"><p>bool, default: <cite>pypianoroll.DEFAULT_IS_DRUM</cite></p>
+<dd class="field-odd"><p>bool, default: <cite>pypianoroll.DEFAULT_IS_DRUM</cite> (False)</p>
 </dd>
 </dl>
 </dd></dl>
@@ -194,7 +194,7 @@ attributes</p></li>
 <dd><p>Time steps per quarter note.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
-<dd class="field-odd"><p>int, default: <cite>pypianoroll.DEFAULT_RESOLUTION</cite></p>
+<dd class="field-odd"><p>int, default: <cite>pypianoroll.DEFAULT_RESOLUTION</cite> (24)</p>
 </dd>
 </dl>
 </dd></dl>
@@ -258,7 +258,7 @@ total number of time steps. Cast to bool if not of bool type.</p>
 <dd><p>Binarize the piano rolls.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>threshold</strong> (<em>int</em><em> or </em><em>float</em>) – Threshold to binarize the piano rolls. Defaults to zero.</p>
+<dd class="field-odd"><p><strong>threshold</strong> (<em>int</em><em> or </em><em>float</em><em>, </em><em>default: 0</em>) – Threshold to binarize the piano rolls.</p>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p></p>
@@ -276,8 +276,7 @@ total number of time steps. Cast to bool if not of bool type.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>mode</strong> (<em>{'sum'</em><em>, </em><em>'max'</em><em>, </em><em>'any'}</em><em>, </em><em>default: 'sum'</em>) – Blending strategy to apply along the track axis. For ‘sum’
-mode, integer summation is performed for binary piano rolls.
-Defaults to ‘sum’.</p>
+mode, integer summation is performed for binary piano rolls.</p>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>Blended piano roll.</p>
@@ -295,8 +294,8 @@ Defaults to ‘sum’.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>lower</strong> (<em>int</em>) – Lower bound. Defaults to 0.</p></li>
-<li><p><strong>upper</strong> (<em>int</em>) – Upper bound. Defaults to 127.</p></li>
+<li><p><strong>lower</strong> (<em>int</em><em>, </em><em>default: 0</em>) – Lower bound.</p></li>
+<li><p><strong>upper</strong> (<em>int</em><em>, </em><em>default: 127</em>) – Upper bound.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -557,7 +556,7 @@ documentation.</p>
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>resolution</strong> (<em>int</em>) – Target resolution.</p></li>
-<li><p><strong>rounding</strong> (<em>{'round'</em><em>, </em><em>'ceil'</em><em>, </em><em>'floor'}</em>) – Rounding mode. Defaults to ‘round’.</p></li>
+<li><p><strong>rounding</strong> (<em>{'round'</em><em>, </em><em>'ceil'</em><em>, </em><em>'floor'}</em><em>, </em><em>default: 'round'</em>) – Rounding mode.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -618,7 +617,7 @@ the pitches, while a negative value lowers the pitches.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>start</strong> (<em>int</em><em>, </em><em>default: 0</em>) – Start time. Defaults to 0.</p></li>
+<li><p><strong>start</strong> (<em>int</em><em>, </em><em>default: 0</em>) – Start time.</p></li>
 <li><p><strong>end</strong> (<em>int</em><em>, </em><em>optional</em>) – End time. Defaults to active length.</p></li>
 </ul>
 </dd>
@@ -696,7 +695,7 @@ the pitches, while a negative value lowers the pitches.</p>
 Defaults to 0 (Acoustic Grand Piano).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
-<dd class="field-odd"><p>int, 0-127, default: <cite>pypianoroll.DEFAULT_PROGRAM</cite></p>
+<dd class="field-odd"><p>int, 0-127, default: <cite>pypianoroll.DEFAULT_PROGRAM</cite> (0)</p>
 </dd>
 </dl>
 </dd></dl>
@@ -704,10 +703,10 @@ Defaults to 0 (Acoustic Grand Piano).</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="pypianoroll.StandardTrack.is_drum">
 <span class="sig-name descname"><span class="pre">is_drum</span></span><a class="headerlink" href="#pypianoroll.StandardTrack.is_drum" title="Permalink to this definition"></a></dt>
-<dd><p>Whether it is a percussion track. Defaults to False.</p>
+<dd><p>Whether it is a percussion track.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
-<dd class="field-odd"><p>bool, default: <cite>pypianoroll.DEFAULT_IS_DRUM</cite></p>
+<dd class="field-odd"><p>bool, default: <cite>pypianoroll.DEFAULT_IS_DRUM</cite> (False)</p>
 </dd>
 </dl>
 </dd></dl>
@@ -790,7 +789,7 @@ type uint8.</p>
 Defaults to 0 (Acoustic Grand Piano).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
-<dd class="field-odd"><p>int, 0-127, default: <cite>pypianoroll.DEFAULT_PROGRAM</cite></p>
+<dd class="field-odd"><p>int, 0-127, default: <cite>pypianoroll.DEFAULT_PROGRAM</cite> (0)</p>
 </dd>
 </dl>
 </dd></dl>
@@ -798,10 +797,10 @@ Defaults to 0 (Acoustic Grand Piano).</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="pypianoroll.Track.is_drum">
 <span class="sig-name descname"><span class="pre">is_drum</span></span><a class="headerlink" href="#pypianoroll.Track.is_drum" title="Permalink to this definition"></a></dt>
-<dd><p>Whether it is a percussion track. Defaults to False.</p>
+<dd><p>Whether it is a percussion track.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
-<dd class="field-odd"><p>bool, <cite>pypianoroll.DEFAULT_IS_DRUM</cite></p>
+<dd class="field-odd"><p>bool, <cite>pypianoroll.DEFAULT_IS_DRUM</cite> (False)</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1721,9 +1720,9 @@ arrays are then collected and saved to a npz file.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>default_tempo</strong> (<em>int</em>) – Default tempo to use. Defaults to the first element of
-attribute <cite>tempo</cite>.</p></li>
-<li><p><strong>default_velocity</strong> (<em>int</em><em>, </em><em>default: 64</em>) – Default velocity to assign to binarized tracks.</p></li>
+<li><p><strong>default_tempo</strong> (int, default: <cite>pypianoroll.DEFAULT_TEMPO</cite> (120)) – Default tempo to use. If attribute <cite>tempo</cite> is available, use its
+first element.</p></li>
+<li><p><strong>default_velocity</strong> (int, default: <cite>pypianoroll.DEFAULT_VELOCITY</cite> (64)) – Default velocity to assign to binarized tracks.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>

@@ -83,6 +83,7 @@
 <span class="sd">--------</span>
 
 <span class="sd">- DEFAULT_TEMPO</span>
+<span class="sd">- DEFAULT_VELOCITY</span>
 
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="kn">import</span> <span class="nn">json</span>
@@ -103,9 +104,16 @@
 <span class="k">if</span> <span class="n">TYPE_CHECKING</span><span class="p">:</span>
     <span class="kn">from</span> <span class="nn">.multitrack</span> <span class="kn">import</span> <span class="n">Multitrack</span>
 
-<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;save&quot;</span><span class="p">,</span> <span class="s2">&quot;to_pretty_midi&quot;</span><span class="p">,</span> <span class="s2">&quot;write&quot;</span><span class="p">,</span> <span class="s2">&quot;DEFAULT_TEMPO&quot;</span><span class="p">]</span>
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s2">&quot;save&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;to_pretty_midi&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;write&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;DEFAULT_TEMPO&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;DEFAULT_VELOCITY&quot;</span><span class="p">,</span>
+<span class="p">]</span>
 
 <span class="n">DEFAULT_TEMPO</span> <span class="o">=</span> <span class="mi">120</span>
+<span class="n">DEFAULT_VELOCITY</span> <span class="o">=</span> <span class="mi">64</span>
 
 
 <div class="viewcode-block" id="save"><a class="viewcode-back" href="../../save_load.html#pypianoroll.save">[docs]</a><span class="k">def</span> <span class="nf">save</span><span class="p">(</span>
@@ -169,16 +177,16 @@
 <div class="viewcode-block" id="to_pretty_midi"><a class="viewcode-back" href="../../read_write.html#pypianoroll.to_pretty_midi">[docs]</a><span class="k">def</span> <span class="nf">to_pretty_midi</span><span class="p">(</span>
     <span class="n">multitrack</span><span class="p">:</span> <span class="s2">&quot;Multitrack&quot;</span><span class="p">,</span>
     <span class="n">default_tempo</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-    <span class="n">default_velocity</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">64</span><span class="p">,</span>
+    <span class="n">default_velocity</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">DEFAULT_VELOCITY</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">PrettyMIDI</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Return a Multitrack object as a PrettyMIDI object.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    default_tempo : int</span>
-<span class="sd">        Default tempo to use. Defaults to the first element of</span>
-<span class="sd">        attribute `tempo`.</span>
-<span class="sd">    default_velocity : int, default: 64</span>
+<span class="sd">    default_tempo : int, default: `pypianoroll.DEFAULT_TEMPO` (120)</span>
+<span class="sd">        Default tempo to use. If attribute `tempo` is available, use its</span>
+<span class="sd">        first element.</span>
+<span class="sd">    default_velocity : int, default: `pypianoroll.DEFAULT_VELOCITY` (64)</span>
 <span class="sd">        Default velocity to assign to binarized tracks.</span>
 
 <span class="sd">    Returns</span>

@@ -121,7 +121,7 @@
 <span class="sd">    ----------</span>
 <span class="sd">    name : str, optional</span>
 <span class="sd">        Multitrack name.</span>
-<span class="sd">    resolution : int, default: `pypianoroll.DEFAULT_RESOLUTION`</span>
+<span class="sd">    resolution : int, default: `pypianoroll.DEFAULT_RESOLUTION` (24)</span>
 <span class="sd">        Time steps per quarter note.</span>
 <span class="sd">    tempo : ndarray, dtype=float, shape=(?, 1), optional</span>
 <span class="sd">        Tempo (in qpm) at each time step. Length is the total number</span>
@@ -420,8 +420,8 @@
 <span class="sd">        ----------</span>
 <span class="sd">        resolution : int</span>
 <span class="sd">            Target resolution.</span>
-<span class="sd">        rounding : {&#39;round&#39;, &#39;ceil&#39;, &#39;floor&#39;}</span>
-<span class="sd">            Rounding mode. Defaults to &#39;round&#39;.</span>
+<span class="sd">        rounding : {&#39;round&#39;, &#39;ceil&#39;, &#39;floor&#39;}, default: &#39;round&#39;</span>
+<span class="sd">            Rounding mode.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
@@ -505,7 +505,6 @@
 <span class="sd">        mode : {&#39;sum&#39;, &#39;max&#39;, &#39;any&#39;}, default: &#39;sum&#39;</span>
 <span class="sd">            Blending strategy to apply along the track axis. For &#39;sum&#39;</span>
 <span class="sd">            mode, integer summation is performed for binary piano rolls.</span>
-<span class="sd">            Defaults to &#39;sum&#39;.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
@@ -563,8 +562,8 @@
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        threshold : int or float</span>
-<span class="sd">            Threshold to binarize the piano rolls. Defaults to zero.</span>
+<span class="sd">        threshold : int or float, default: 0</span>
+<span class="sd">            Threshold to binarize the piano rolls.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
@@ -583,10 +582,10 @@
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        lower : int</span>
-<span class="sd">            Lower bound. Defaults to 0.</span>
-<span class="sd">        upper : int</span>
-<span class="sd">            Upper bound. Defaults to 127.</span>
+<span class="sd">        lower : int, default: 0</span>
+<span class="sd">            Lower bound.</span>
+<span class="sd">        upper : int, default: 127</span>
+<span class="sd">            Upper bound.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
@@ -724,7 +723,7 @@
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        start : int, default: 0</span>
-<span class="sd">            Start time. Defaults to 0.</span>
+<span class="sd">            Start time.</span>
 <span class="sd">        end : int, optional</span>
 <span class="sd">            End time. Defaults to active length.</span>
 

@@ -116,11 +116,11 @@
 <span class="sd">    ----------</span>
 <span class="sd">    name : str, optional</span>
 <span class="sd">        Track name.</span>
-<span class="sd">    program : int, 0-127, default: `pypianoroll.DEFAULT_PROGRAM`</span>
+<span class="sd">    program : int, 0-127, default: `pypianoroll.DEFAULT_PROGRAM` (0)</span>
 <span class="sd">        Program number according to General MIDI specification [1].</span>
 <span class="sd">        Defaults to 0 (Acoustic Grand Piano).</span>
-<span class="sd">    is_drum : bool, `pypianoroll.DEFAULT_IS_DRUM`</span>
-<span class="sd">        Whether it is a percussion track. Defaults to False.</span>
+<span class="sd">    is_drum : bool, `pypianoroll.DEFAULT_IS_DRUM` (False)</span>
+<span class="sd">        Whether it is a percussion track.</span>
 <span class="sd">    pianoroll : ndarray, shape=(?, 128), optional</span>
 <span class="sd">        Piano-roll matrix. The first dimension represents time, and the</span>
 <span class="sd">        second dimension represents pitch.</span>
@@ -483,11 +483,11 @@
 <span class="sd">    ----------</span>
 <span class="sd">    name : str, optional</span>
 <span class="sd">        Track name.</span>
-<span class="sd">    program : int, 0-127, default: `pypianoroll.DEFAULT_PROGRAM`</span>
+<span class="sd">    program : int, 0-127, default: `pypianoroll.DEFAULT_PROGRAM` (0)</span>
 <span class="sd">        Program number according to General MIDI specification [1].</span>
 <span class="sd">        Defaults to 0 (Acoustic Grand Piano).</span>
-<span class="sd">    is_drum : bool, default: `pypianoroll.DEFAULT_IS_DRUM`</span>
-<span class="sd">        Whether it is a percussion track. Defaults to False.</span>
+<span class="sd">    is_drum : bool, default: `pypianoroll.DEFAULT_IS_DRUM` (False)</span>
+<span class="sd">        Whether it is a percussion track.</span>
 <span class="sd">    pianoroll : ndarray, dtype=uint8, shape=(?, 128), optional</span>
 <span class="sd">        Piano-roll matrix. The first dimension represents time, and the</span>
 <span class="sd">        second dimension represents pitch. Cast to uint8 if not of data</span>
@@ -583,11 +583,11 @@
 <span class="sd">    ----------</span>
 <span class="sd">    name : str, optional</span>
 <span class="sd">        Track name.</span>
-<span class="sd">    program : int, 0-127, default: `pypianoroll.DEFAULT_PROGRAM`</span>
+<span class="sd">    program : int, 0-127, default: `pypianoroll.DEFAULT_PROGRAM` (0)</span>
 <span class="sd">        Program number according to General MIDI specification [1].</span>
 <span class="sd">        Defaults to 0 (Acoustic Grand Piano).</span>
-<span class="sd">    is_drum : bool, default: `pypianoroll.DEFAULT_IS_DRUM`</span>
-<span class="sd">        Whether it is a percussion track. Defaults to False.</span>
+<span class="sd">    is_drum : bool, default: `pypianoroll.DEFAULT_IS_DRUM` (False)</span>
+<span class="sd">        Whether it is a percussion track.</span>
 <span class="sd">    pianoroll : ndarray, dtype=bool, shape=(?, 128), optional</span>
 <span class="sd">        Piano-roll matrix. The first dimension represents time, and the</span>
 <span class="sd">        second dimension represents pitch. Cast to bool if not of data</span>
