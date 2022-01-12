@@ -16,7 +16,9 @@ Functions
 
 
 """
-from typing import Optional, TypeVar, Union, overload
+from typing import List, TypeVar, Union, overload
+
+from matplotlib.axes import Axes
 
 from .multitrack import Multitrack
 from .track import BinaryTrack, StandardTrack, Track
@@ -87,8 +89,8 @@ def binarize(obj: Union[Multitrack, StandardTrack], threshold: int = 0):
     obj : :class:`pypianoroll.Multitrack` or \
             :class:`pypianoroll.StandardTrack`
         Object to binarize.
-    threshold : int
-        Threshold. Defaults to 0.
+    threshold : int, default: 0
+        Threshold.
 
     """
     return obj.binarize(threshold=threshold)
@@ -104,10 +106,10 @@ def clip(
     obj : :class:`pypianoroll.Multitrack` or \
             :class:`pypianoroll.StandardTrack`
         Object to clip.
-    lower : int
-        Lower bound. Defaults to 0.
-    upper : int
-        Upper bound. Defaults to 127.
+    lower : int, default: 0
+        Lower bound.
+    upper : int, default: 127
+        Upper bound.
 
     Returns
     -------
@@ -118,7 +120,7 @@ def clip(
 
 
 def set_resolution(
-    obj: _Multitrack, resolution: int, rounding: Optional[str] = "round"
+    obj: _Multitrack, resolution: int, rounding: str = "round"
 ) -> _Multitrack:
     """Downsample the piano rolls by a factor.
 
@@ -128,8 +130,8 @@ def set_resolution(
         Object to downsample.
     resolution : int
         Target resolution.
-    rounding : {'round', 'ceil', 'floor'}
-        Rounding mode. Defaults to 'round'.
+    rounding : {'round', 'ceil', 'floor'}, default: 'round'
+        Rounding mode.
 
     Returns
     -------
@@ -252,9 +254,7 @@ def transpose(obj: _MultitrackOrTrack, semitone: int) -> _MultitrackOrTrack:
 
 
 def trim(
-    obj: _MultitrackOrTrack,
-    start: Optional[int] = None,
-    end: Optional[int] = None,
+    obj: _MultitrackOrTrack, start: int = None, end: int = None
 ) -> _MultitrackOrTrack:
     """Trim the trailing silences of the piano roll(s).
 
@@ -262,8 +262,8 @@ def trim(
     ----------
     obj : :class:`pypianoroll.Multitrack` or :class:`pypianoroll.Track`
         Object to trim.
-    start : int, optional
-        Start time. Defaults to 0.
+    start : int, default: 0
+        Start time.
     end : int, optional
         End time. Defaults to active length.
 
@@ -275,7 +275,7 @@ def trim(
     return obj.trim(start=start, end=end)
 
 
-def plot(obj: _MultitrackOrTrack, **kwargs) -> _MultitrackOrTrack:
+def plot(obj: _MultitrackOrTrack, **kwargs) -> Union[List[Axes], Axes]:
     """Plot the object.
 
     See :func:`pypianoroll.plot_multitrack` and

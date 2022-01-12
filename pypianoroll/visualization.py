@@ -8,7 +8,7 @@ Functions
 - plot_track
 
 """
-from typing import TYPE_CHECKING, List, Optional, Sequence
+from typing import TYPE_CHECKING, List, Sequence
 
 import matplotlib
 import numpy as np
@@ -34,8 +34,8 @@ def plot_pianoroll(
     ax: Axes,
     pianoroll: ndarray,
     is_drum: bool = False,
-    resolution: Optional[int] = None,
-    downbeats: Optional[Sequence[int]] = None,
+    resolution: int = None,
+    downbeats: ndarray = None,
     preset: str = "full",
     cmap: str = "Blues",
     xtick: str = "auto",
@@ -60,41 +60,41 @@ def plot_pianoroll(
     pianoroll : ndarray, shape=(?, 128), (?, 128, 3) or (?, 128, 4)
         Piano roll to plot. For a 3D piano-roll array, the last axis can
         be either RGB or RGBA.
-    is_drum : bool
-        Whether it is a percussion track. Defaults to False.
+    is_drum : bool, default: False
+        Whether it is a percussion track.
     resolution : int
         Time steps per quarter note. Required if `xtick` is 'beat'.
     downbeats : list
         Boolean array that indicates whether the time step contains a
         downbeat (i.e., the first time step of a bar).
-    preset : {'full', 'frame', 'plain'}
+    preset : {'full', 'frame', 'plain'}, default: 'full'
         Preset theme. For 'full' preset, ticks, grid and labels are on.
         For 'frame' preset, ticks and grid are both off. For 'plain'
-        preset, the x- and y-axis are both off. Defaults to 'full'.
-    cmap : str or :class:`matplotlib.colors.Colormap`
+        preset, the x- and y-axis are both off.
+    cmap : str or :class:`matplotlib.colors.Colormap`, default: 'Blues'
         Colormap. Will be passed to :func:`matplotlib.pyplot.imshow`.
-        Only effective when `pianoroll` is 2D. Defaults to 'Blues'.
+        Only effective when `pianoroll` is 2D.
     xtick : {'auto', 'beat', 'step', 'off'}
         Tick format for the x-axis. For 'auto' mode, set to 'beat' if
         `resolution` is given, otherwise set to 'step'. Defaults to
         'auto'.
-    ytick : {'octave', 'pitch', 'off'}
-        Tick format for the y-axis. Defaults to 'octave'.
+    ytick : {'octave', 'pitch', 'off'}, default: 'octave'
+        Tick format for the y-axis.
     xticklabel : bool
         Whether to add tick labels along the x-axis.
-    yticklabel : {'auto', 'name', 'number', 'off'}
+    yticklabel : {'auto', 'name', 'number', 'off'}, default: 'auto'
         Tick label format for the y-axis. For 'name' mode, use pitch
         name as tick labels. For 'number' mode, use pitch number. For
         'auto' mode, set to 'name' if `ytick` is 'octave' and 'number'
-        if `ytick` is 'pitch'. Defaults to 'auto'.
+        if `ytick` is 'pitch'.
     tick_loc : sequence of {'bottom', 'top', 'left', 'right'}
         Tick locations. Defaults to `('bottom', 'left')`.
-    tick_direction : {'in', 'out', 'inout'}
-        Tick direction. Defaults to 'in'.
-    label : {'x', 'y', 'both', 'off'}
-        Whether to add labels to x- and y-axes. Defaults to 'both'.
-    grid_axis : {'x', 'y', 'both', 'off'}
-        Whether to add grids to the x- and y-axes. Defaults to 'both'.
+    tick_direction : {'in', 'out', 'inout'}, default: 'in'
+        Tick direction.
+    label : {'x', 'y', 'both', 'off'}, default: 'both'
+        Whether to add labels to x- and y-axes.
+    grid_axis : {'x', 'y', 'both', 'off'}, default: 'both'
+        Whether to add grids to the x- and y-axes.
     grid_linestyle : str
         Grid line style. Will be passed to
         :meth:`matplotlib.axes.Axes.grid`.
@@ -191,7 +191,7 @@ def plot_pianoroll(
     if ytick == "octave":
         ax.set_yticks(np.arange(0, 128, 12))
         if yticklabel == "name":
-            ax.set_yticklabels(["C{}".format(i - 2) for i in range(11)])
+            ax.set_yticklabels([f"C{i - 2}" for i in range(11)])
     elif ytick == "step":
         ax.set_yticks(np.arange(0, 128))
         if yticklabel == "name":
@@ -248,7 +248,7 @@ def plot_pianoroll(
     return img
 
 
-def plot_track(track: "Track", ax: Optional[Axes] = None, **kwargs) -> Axes:
+def plot_track(track: "Track", ax: Axes = None, **kwargs) -> Axes:
     """
     Plot a track.
 
@@ -256,7 +256,7 @@ def plot_track(track: "Track", ax: Optional[Axes] = None, **kwargs) -> Axes:
     ----------
     track : :class:`pypianoroll.Track`
         Track to plot.
-    ax : :class:`matplotlib.axes.Axes`
+    ax : :class:`matplotlib.axes.Axes`, optional
         Axes to plot the piano roll on. Defaults to call `plt.gca()`.
     **kwargs
         Keyword arguments to pass to :func:`pypianoroll.plot_pianoroll`.
@@ -295,11 +295,11 @@ def _add_tracklabel(ax, track_label, track=None):
 
 def plot_multitrack(
     multitrack: "Multitrack",
-    axs: Optional[Sequence[Axes]],
+    axs: Sequence[Axes] = None,
     mode: str = "separate",
     track_label: str = "name",
     preset: str = "full",
-    cmaps: Optional[Sequence[str]] = None,
+    cmaps: Sequence[str] = None,
     xtick: str = "auto",
     ytick: str = "octave",
     xticklabel: bool = True,
@@ -319,23 +319,21 @@ def plot_multitrack(
     ----------
     multitrack : :class:`pypianoroll.Multitrack`
         Multitrack to plot.
-    axs : sequence of :class:`matplotlib.axes.Axes`
+    axs : sequence of :class:`matplotlib.axes.Axes`, optional
         Axes to plot the tracks on.
-    mode : {'separate', 'blended', 'hybrid'}
+    mode : {'separate', 'blended', 'hybrid'}, default: 'separate'
         Plotting strategy for visualizing multiple tracks. For
         'separate' mode, plot each track separately. For 'blended',
         blend and plot the pianoroll as a colored image. For 'hybrid'
         mode, drum tracks are blended into a 'Drums' track and all
-        other tracks are blended into an 'Others' track. Defaults to
-        'separate'.
+        other tracks are blended into an 'Others' track.
     track_label : {'name', 'program', 'family', 'off'}
         Track label format. When `mode` is 'hybrid', all options other
         than 'off' will label the two track with 'Drums' and 'Others'.
-    preset : {'full', 'frame', 'plain'}
+    preset : {'full', 'frame', 'plain'}, default: 'full'
         Preset theme to use. For 'full' preset, ticks, grid and labels
         are on. For 'frame' preset, ticks and grid are both off. For
-        'plain' preset, the x- and y-axis are both off. Defaults to
-        'full'.
+        'plain' preset, the x- and y-axis are both off.
     cmaps :  tuple or list
         Colormaps. Will be passed to :func:`matplotlib.pyplot.imshow`.
         Only effective when `pianoroll` is 2D. Defaults to 'Blues'.
@@ -473,6 +471,8 @@ def plot_multitrack(
         if axs is None:
             fig, axs_ = plt.subplots(2, sharex=True, sharey=True)
             axs = axs_.tolist()
+        else:
+            fig = plt.gcf()
 
         plot_pianoroll(
             axs[0],

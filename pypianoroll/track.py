@@ -14,7 +14,7 @@ Variables
 - DEFAULT_IS_DRUM
 
 """
-from typing import Optional, TypeVar
+from typing import TypeVar
 
 import numpy as np
 from matplotlib.axes import Axes
@@ -44,10 +44,10 @@ class Track:
     ----------
     name : str, optional
         Track name.
-    program : int, 0-127, optional
+    program : int, 0-127, default: `pypianoroll.DEFAULT_PROGRAM`
         Program number according to General MIDI specification [1].
         Defaults to 0 (Acoustic Grand Piano).
-    is_drum : bool, optional
+    is_drum : bool, `pypianoroll.DEFAULT_IS_DRUM`
         Whether it is a percussion track. Defaults to False.
     pianoroll : ndarray, shape=(?, 128), optional
         Piano-roll matrix. The first dimension represents time, and the
@@ -61,10 +61,10 @@ class Track:
 
     def __init__(
         self,
-        name: Optional[str] = None,
-        program: Optional[int] = None,
-        is_drum: Optional[bool] = None,
-        pianoroll: Optional[ndarray] = None,
+        name: str = None,
+        program: int = None,
+        is_drum: bool = None,
+        pianoroll: ndarray = None,
     ):
         self.name = name
         self.program = program if program is not None else DEFAULT_PROGRAM
@@ -178,7 +178,7 @@ class Track:
             self._validate(attr)
         return self
 
-    def is_valid_type(self, attr: Optional[str] = None) -> bool:
+    def is_valid_type(self, attr: str = None) -> bool:
         """Return True if an attribute is of a valid type.
 
         Parameters
@@ -198,7 +198,7 @@ class Track:
             return False
         return True
 
-    def is_valid(self, attr: Optional[str] = None) -> bool:
+    def is_valid(self, attr: str = None) -> bool:
         """Return True if an attribute is valid.
 
         Parameters
@@ -229,7 +229,7 @@ class Track:
 
         """
         nonzero_steps = np.any(self.pianoroll, axis=1)
-        inv_last_nonzero_step = np.argmax(np.flip(nonzero_steps, axis=0))
+        inv_last_nonzero_step = int(np.argmax(np.flip(nonzero_steps, axis=0)))
         return self.pianoroll.shape[0] - inv_last_nonzero_step
 
     def copy(self):
@@ -328,15 +328,13 @@ class Track:
             self.pianoroll[:, (128 + semitone) :] = 0
         return self
 
-    def trim(
-        self: _Track, start: Optional[int] = None, end: Optional[int] = None
-    ) -> _Track:
+    def trim(self: _Track, start: int = None, end: int = None) -> _Track:
         """Trim the piano roll.
 
         Parameters
         ----------
-        start : int, optional
-            Start time. Defaults to 0.
+        start : int, default: 0
+            Start time.
         end : int, optional
             End time. Defaults to active length.
 
@@ -382,8 +380,8 @@ class Track:
 
         Parameters
         ----------
-        threshold : int or float
-            Threshold. Defaults to 0.
+        threshold : int or float, default: 0
+            Threshold.
 
         Returns
         -------
@@ -397,7 +395,7 @@ class Track:
             pianoroll=(self.pianoroll > threshold),
         )
 
-    def plot(self, ax: Optional[Axes] = None, **kwargs) -> Axes:
+    def plot(self, ax: Axes = None, **kwargs) -> Axes:
         """Plot the piano roll.
 
         Refer to :func:`pypianoroll.plot_track` for full documentation.
@@ -413,10 +411,10 @@ class StandardTrack(Track):
     ----------
     name : str, optional
         Track name.
-    program : int, 0-127, optional
+    program : int, 0-127, default: `pypianoroll.DEFAULT_PROGRAM`
         Program number according to General MIDI specification [1].
         Defaults to 0 (Acoustic Grand Piano).
-    is_drum : bool, optional
+    is_drum : bool, default: `pypianoroll.DEFAULT_IS_DRUM`
         Whether it is a percussion track. Defaults to False.
     pianoroll : ndarray, dtype=uint8, shape=(?, 128), optional
         Piano-roll matrix. The first dimension represents time, and the
@@ -431,10 +429,10 @@ class StandardTrack(Track):
 
     def __init__(
         self,
-        name: Optional[str] = None,
-        program: Optional[int] = None,
-        is_drum: Optional[bool] = None,
-        pianoroll: Optional[ndarray] = None,
+        name: str = None,
+        program: int = None,
+        is_drum: bool = None,
+        pianoroll: ndarray = None,
     ):
         super().__init__(name, program, is_drum, pianoroll)
         if self.pianoroll.dtype != np.uint8:
@@ -488,10 +486,10 @@ class StandardTrack(Track):
 
         Parameters
         ----------
-        lower : int
-            Lower bound. Defaults to 0.
-        upper : int
-            Upper bound. Defaults to 127.
+        lower : int, default: 0
+            Lower bound.
+        upper : int, default: 127
+            Upper bound.
 
         Returns
         -------
@@ -513,10 +511,10 @@ class BinaryTrack(Track):
     ----------
     name : str, optional
         Track name.
-    program : int, 0-127, optional
+    program : int, 0-127, default: `pypianoroll.DEFAULT_PROGRAM`
         Program number according to General MIDI specification [1].
         Defaults to 0 (Acoustic Grand Piano).
-    is_drum : bool, optional
+    is_drum : bool, default: `pypianoroll.DEFAULT_IS_DRUM`
         Whether it is a percussion track. Defaults to False.
     pianoroll : ndarray, dtype=bool, shape=(?, 128), optional
         Piano-roll matrix. The first dimension represents time, and the
@@ -531,10 +529,10 @@ class BinaryTrack(Track):
 
     def __init__(
         self,
-        name: Optional[str] = None,
-        program: Optional[int] = None,
-        is_drum: Optional[bool] = None,
-        pianoroll: Optional[ndarray] = None,
+        name: str = None,
+        program: int = None,
+        is_drum: bool = None,
+        pianoroll: ndarray = None,
     ):
         super().__init__(name, program, is_drum, pianoroll)
         if self.pianoroll.dtype != np.bool_:

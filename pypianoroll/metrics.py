@@ -262,8 +262,8 @@ def drum_in_pattern_rate(
         Piano roll to evaluate.
     resolution : int
         Time steps per beat.
-    tolerance : float
-        Tolerance. Defaults to 0.1.
+    tolerance : float, default: 0.1
+        Tolerance.
 
     Returns
     -------
@@ -365,7 +365,7 @@ def in_scale_rate(
     return n_in_scale / np.count_nonzero(pianoroll)
 
 
-def _get_tonal_matrix(r1, r2, r3) -> ndarray:
+def _get_tonal_matrix(r1, r2, r3) -> ndarray:  # pylint: disable=invalid-name
     """Return a tonal matrix for computing the tonal distance."""
     tonal_matrix = np.empty((6, 12))
     tonal_matrix[0] = r1 * np.sin(np.arange(12) * (7.0 / 6.0) * np.pi)
@@ -416,7 +416,7 @@ def tonal_distance(
         pianoroll_2
     ), "Input piano rolls must have the same length."
 
-    r1, r2, r3 = radii
+    r1, r2, r3 = radii  # pylint: disable=invalid-name
     tonal_matrix = _get_tonal_matrix(r1, r2, r3)
     mapped_1 = _to_tonal_space(pianoroll_1, resolution, tonal_matrix)
     mapped_2 = _to_tonal_space(pianoroll_2, resolution, tonal_matrix)

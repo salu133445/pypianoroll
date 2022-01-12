@@ -10,7 +10,7 @@ Functions
 """
 import json
 from pathlib import Path
-from typing import Optional, Union
+from typing import Union
 
 import numpy as np
 from pretty_midi import PrettyMIDI
@@ -105,7 +105,7 @@ def from_pretty_midi(
     mode: str = "max",
     algorithm: str = "normal",
     collect_onsets_only: bool = False,
-    first_beat_time: Optional[float] = None,
+    first_beat_time: float = None,
 ) -> Multitrack:
     """Return a Multitrack object converted from a PrettyMIDI object.
 
@@ -117,16 +117,15 @@ def from_pretty_midi(
     ----------
     midi : :class:`pretty_midi.PrettyMIDI`
         PrettyMIDI object to parse.
-    mode : {'max', 'sum'}
-        Merging strategy for duplicate notes. Defaults to 'max'.
-    algorithm : {'normal', 'strict', 'custom'}
+    mode : {'max', 'sum'}, default: 'max'
+        Merging strategy for duplicate notes.
+    algorithm : {'normal', 'strict', 'custom'}, default: 'normal'
         Algorithm for finding the location of the first beat (see
-        Notes). Defaults to 'normal'.
-    collect_onsets_only : bool
+        Notes).
+    collect_onsets_only : bool, default: False
         True to collect only the onset of the notes (i.e. note on
         events) in all tracks, where the note off and duration
         information are discarded. False to parse regular piano rolls.
-        Defaults to False.
     first_beat_time : float, optional
         Location of the first beat, in sec. Required and only
         effective when using 'custom' algorithm.

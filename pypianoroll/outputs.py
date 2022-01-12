@@ -18,11 +18,11 @@ import zipfile
 from copy import deepcopy
 from operator import attrgetter
 from pathlib import Path
-from typing import TYPE_CHECKING, Dict, Optional, Union
+from typing import TYPE_CHECKING, Dict, Union
 
 import numpy as np
-import scipy.stats
 import pretty_midi
+import scipy.stats
 from pretty_midi import Instrument, PrettyMIDI
 
 from .track import BinaryTrack, StandardTrack
@@ -47,8 +47,8 @@ def save(
         Path to the NPZ file to save.
     multitrack : :class:`pypianoroll.Multitrack`
         Multitrack to save.
-    compressed : bool
-        Whether to save to a compressed NPZ file. Defaults to True.
+    compressed : bool, default: True
+        Whether to save to a compressed NPZ file.
 
     Notes
     -----
@@ -96,7 +96,7 @@ def save(
 
 def to_pretty_midi(
     multitrack: "Multitrack",
-    default_tempo: Optional[float] = None,
+    default_tempo: float = None,
     default_velocity: int = 64,
 ) -> PrettyMIDI:
     """Return a Multitrack object as a PrettyMIDI object.
@@ -106,9 +106,8 @@ def to_pretty_midi(
     default_tempo : int
         Default tempo to use. Defaults to the first element of
         attribute `tempo`.
-    default_velocity : int
-        Default velocity to assign to binarized tracks. Defaults to
-        64.
+    default_velocity : int, default: 64
+        Default velocity to assign to binarized tracks.
 
     Returns
     -------

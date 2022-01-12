@@ -11,7 +11,7 @@ Variable
 - DEFAULT_RESOLUTION
 
 """
-from typing import Optional, Sequence, TypeVar
+from typing import List, Sequence, TypeVar
 
 import numpy as np
 from matplotlib.axes import Axes
@@ -28,39 +28,48 @@ __all__ = [
 
 DEFAULT_RESOLUTION = 24
 
-_Multitrack = TypeVar("_Multitrack", bound="Multitrack")
+MultitrackType = TypeVar("MultitrackType", bound="Multitrack")
 
 
 class Multitrack:
     """A container for multitrack piano rolls.
 
-    This is the core class of Pypianoroll.
+    This is the core class of Pypianoroll. A Multitrack object can be
+    constructed in the following ways.
+
+    - :meth:`pypianoroll.Multitrack`: Construct by setting values for
+      attributes
+    - :meth:`pypianoroll.read`: Read from a MIDI file
+    - :meth:`pypianoroll.from_pretty_midi`: Convert from a
+      :class:`pretty_midi.PrettyMIDI` object
+    - :func:`pypianoroll.load`: Load from a JSON or a YAML file saved by
+      :func:`pypianoroll.save`
 
     Attributes
     ----------
     name : str, optional
         Multitrack name.
-    resolution : int
+    resolution : int, default: `pypianoroll.DEFAULT_RESOLUTION`
         Time steps per quarter note.
     tempo : ndarray, dtype=float, shape=(?, 1), optional
         Tempo (in qpm) at each time step. Length is the total number
-        of time steps. Cast to float if not of data type float.
+        of time steps. Cast to float if not of float type.
     downbeat : ndarray, dtype=bool, shape=(?, 1), optional
         Boolean array that indicates whether the time step contains a
-        downbeat (i.e., the first time step of a bar). Length is the
-        total number of time steps.
-    tracks : sequence of :class:`pypianoroll.Track`, optional
+        downbeat, i.e., the first time step of a measure. Length is the
+        total number of time steps. Cast to bool if not of bool type.
+    tracks : sequence of :class:`pypianoroll.Track`, default: []
         Music tracks.
 
     """
 
     def __init__(
         self,
-        name: Optional[str] = None,
-        resolution: Optional[int] = None,
-        tempo: Optional[ndarray] = None,
-        downbeat: Optional[ndarray] = None,
-        tracks: Optional[Sequence[Track]] = None,
+        name: str = None,
+        resolution: int = None,
+        tempo: ndarray = None,
+        downbeat: ndarray = None,
+        tracks: Sequence[Track] = None,
     ):
         self.name = name
 
@@ -205,7 +214,7 @@ class Multitrack:
             for track in self.tracks:
                 track.validate()
 
-    def validate(self: _Multitrack, attr=None) -> _Multitrack:
+    def validate(self: MultitrackType, attr=None) -> MultitrackType:
         """Raise an error if an attribute has an invalid type or value.
 
         Parameters
@@ -226,7 +235,7 @@ class Multitrack:
             self._validate(attr)
         return self
 
-    def is_valid_type(self, attr: Optional[str] = None) -> bool:
+    def is_valid_type(self, attr: str = None) -> bool:
         """Return True if an attribute is of a valid type.
 
         Parameters
@@ -246,7 +255,7 @@ class Multitrack:
             return False
         return True
 
-    def is_valid(self, attr: Optional[str] = None) -> bool:
+    def is_valid(self, attr: str = None) -> bool:
         """Return True if an attribute is valid.
 
         Parameters
@@ -309,10 +318,10 @@ class Multitrack:
 
         """
         if self.downbeat is None:
-            return []
+            return np.array([])
         return np.nonzero(self.downbeat)[0]
 
-    def set_nonzeros(self: _Multitrack, value: int) -> _Multitrack:
+    def set_nonzeros(self: MultitrackType, value: int) -> MultitrackType:
         """Assign a constant value to all nonzero entries.
 
         Arguments
@@ -331,8 +340,8 @@ class Multitrack:
         return self
 
     def set_resolution(
-        self: _Multitrack, resolution: int, rounding: Optional[str] = "round",
-    ) -> _Multitrack:
+        self: MultitrackType, resolution: int, rounding: str = "round"
+    ) -> MultitrackType:
         """Set the resolution.
 
         Parameters
@@ -388,6 +397,8 @@ class Multitrack:
         `downbeat`.
 
         """
+        if not self.downbeat:
+            return 0
         return np.count_nonzero(self.downbeat)
 
     def stack(self) -> ndarray:
@@ -405,19 +416,21 @@ class Multitrack:
             if track.pianoroll.shape[0] < max_length:
                 pad_length = max_length - track.pianoroll.shape[0]
                 padded = np.pad(
-                    track.pianoroll, ((0, pad_length), (0, 0)), "constant",
+                    track.pianoroll,
+                    ((0, pad_length), (0, 0)),
+                    "constant",
                 )
                 pianorolls.append(padded)
             else:
                 pianorolls.append(track.pianoroll)
         return np.stack(pianorolls)
 
-    def blend(self, mode: Optional[str] = None) -> ndarray:
+    def blend(self, mode: str = None) -> ndarray:
         """Return the blended pianoroll.
 
         Parameters
         ----------
-        mode : {'sum', 'max', 'any'}, optional
+        mode : {'sum', 'max', 'any'}, default: 'sum'
             Blending strategy to apply along the track axis. For 'sum'
             mode, integer summation is performed for binary piano rolls.
             Defaults to 'sum'.
@@ -457,7 +470,7 @@ class Multitrack:
             tracks=[track.copy() for track in self.tracks],
         )
 
-    def append(self: _Multitrack, track: Track) -> _Multitrack:
+    def append(self: MultitrackType, track: Track) -> MultitrackType:
         """Append a Track object to the track list.
 
         Parameters
@@ -473,7 +486,7 @@ class Multitrack:
         self.tracks.append(track)
         return self
 
-    def binarize(self: _Multitrack, threshold: float = 0) -> _Multitrack:
+    def binarize(self: MultitrackType, threshold: float = 0) -> MultitrackType:
         """Binarize the piano rolls.
 
         Parameters
@@ -492,8 +505,8 @@ class Multitrack:
         return self
 
     def clip(
-        self: _Multitrack, lower: int = 0, upper: int = 127
-    ) -> _Multitrack:
+        self: MultitrackType, lower: int = 0, upper: int = 127
+    ) -> MultitrackType:
         """Clip (limit) the the piano roll into [`lower`, `upper`].
 
         Parameters
@@ -517,7 +530,7 @@ class Multitrack:
                 track.clip(lower, upper)
         return self
 
-    def pad(self: _Multitrack, pad_length) -> _Multitrack:
+    def pad(self: MultitrackType, pad_length) -> MultitrackType:
         """Pad the piano rolls.
 
         Notes
@@ -546,7 +559,7 @@ class Multitrack:
             track.pad(pad_length)
         return self
 
-    def pad_to_multiple(self: _Multitrack, factor: int) -> _Multitrack:
+    def pad_to_multiple(self: MultitrackType, factor: int) -> MultitrackType:
         """Pad the piano rolls so that their lengths are some multiples.
 
         Pad the piano rolls at the end along the time axis of the
@@ -578,7 +591,7 @@ class Multitrack:
             track.pad_to_multiple(factor)
         return self
 
-    def pad_to_same(self: _Multitrack) -> _Multitrack:
+    def pad_to_same(self: MultitrackType) -> MultitrackType:
         """Pad the piano rolls so that they have the same length.
 
         Pad shorter piano rolls at the end along the time axis so that
@@ -601,14 +614,14 @@ class Multitrack:
                 track.pad(max_length - track.pianoroll.shape[0])
         return self
 
-    def remove_empty(self: _Multitrack) -> _Multitrack:
+    def remove_empty(self: MultitrackType) -> MultitrackType:
         """Remove tracks with empty pianorolls."""
         self.tracks = [
             track for track in self.tracks if not np.any(track.pianoroll)
         ]
         return self
 
-    def transpose(self: _Multitrack, semitone: int) -> _Multitrack:
+    def transpose(self: MultitrackType, semitone: int) -> MultitrackType:
         """Transpose the piano rolls by a number of semitones.
 
         Parameters
@@ -632,15 +645,13 @@ class Multitrack:
         return self
 
     def trim(
-        self: _Multitrack,
-        start: Optional[int] = None,
-        end: Optional[int] = None,
-    ) -> _Multitrack:
+        self: MultitrackType, start: int = None, end: int = None
+    ) -> MultitrackType:
         """Trim the trailing silences of the piano rolls.
 
         Parameters
         ----------
-        start : int, optional
+        start : int, default: 0
             Start time. Defaults to 0.
         end : int, optional
             End time. Defaults to active length.
@@ -687,7 +698,7 @@ class Multitrack:
         """
         return to_pretty_midi(self, **kwargs)
 
-    def plot(self, axs: Optional[Sequence[Axes]] = None, **kwargs) -> ndarray:
+    def plot(self, axs: Sequence[Axes] = None, **kwargs) -> List[Axes]:
         """Plot the multitrack piano roll.
 
         Refer to :func:`pypianoroll.plot_multitrack` for full
