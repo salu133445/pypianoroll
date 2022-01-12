@@ -1,70 +1,32 @@
-
-
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8">
-  
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>pypianoroll.core &mdash; Pypianoroll  documentation</title>
-  
-
-  
-  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-
-  
-  
-  
-  
-
-  
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-    
-      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
         <script src="../../_static/jquery.js"></script>
         <script src="../../_static/underscore.js"></script>
         <script src="../../_static/doctools.js"></script>
-        <script src="../../_static/language_data.js"></script>
-        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
-    
-    <script type="text/javascript" src="../../_static/js/theme.js"></script>
-
-    
+    <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" /> 
 </head>
 
-<body class="wy-body-for-nav">
-
-   
+<body class="wy-body-for-nav"> 
   <div class="wy-grid-for-nav">
-    
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-          
-
-          
             <a href="../../index.html">
-          
-
-          
-            
             <img src="../../_static/logo.svg" class="logo" alt="Logo"/>
-          
           </a>
-
-          
-            
-            
-          
-
-          
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -72,18 +34,7 @@
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-
-          
-        </div>
-
-        
-        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-          
-            
-            
-              
-            
-            
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../getting_started.html">Getting Started</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../classes.html">Pypianoroll Classes</a></li>
@@ -94,67 +45,30 @@
 <li class="toctree-l1"><a class="reference internal" href="../../doc.html">Technical Documentation</a></li>
 </ul>
 
-            
-          
         </div>
-        
       </div>
     </nav>
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
-
-      
-      <nav class="wy-nav-top" aria-label="top navigation">
-        
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="../../index.html">Pypianoroll</a>
-        
       </nav>
 
-
       <div class="wy-nav-content">
-        
         <div class="rst-content">
-        
-          
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div role="navigation" aria-label="breadcrumbs navigation">
-
+          <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-    
       <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
-        
           <li><a href="../index.html">Module code</a> &raquo;</li>
-        
       <li>pypianoroll.core</li>
-    
-    
       <li class="wy-breadcrumbs-aside">
-        
       </li>
-    
   </ul>
-
-  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
-            
+             
   <h1>Source code for pypianoroll.core</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot;Functions for Pypianoroll objects.</span>
 
@@ -174,7 +88,9 @@
 
 
 <span class="sd">&quot;&quot;&quot;</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">TypeVar</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">overload</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">TypeVar</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">overload</span>
+
+<span class="kn">from</span> <span class="nn">matplotlib.axes</span> <span class="kn">import</span> <span class="n">Axes</span>
 
 <span class="kn">from</span> <span class="nn">.multitrack</span> <span class="kn">import</span> <span class="n">Multitrack</span>
 <span class="kn">from</span> <span class="nn">.track</span> <span class="kn">import</span> <span class="n">BinaryTrack</span><span class="p">,</span> <span class="n">StandardTrack</span><span class="p">,</span> <span class="n">Track</span>
@@ -245,8 +161,8 @@
 <span class="sd">    obj : :class:`pypianoroll.Multitrack` or \</span>
 <span class="sd">            :class:`pypianoroll.StandardTrack`</span>
 <span class="sd">        Object to binarize.</span>
-<span class="sd">    threshold : int</span>
-<span class="sd">        Threshold. Defaults to 0.</span>
+<span class="sd">    threshold : int, default: 0</span>
+<span class="sd">        Threshold.</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">obj</span><span class="o">.</span><span class="n">binarize</span><span class="p">(</span><span class="n">threshold</span><span class="o">=</span><span class="n">threshold</span><span class="p">)</span></div>
@@ -262,10 +178,10 @@
 <span class="sd">    obj : :class:`pypianoroll.Multitrack` or \</span>
 <span class="sd">            :class:`pypianoroll.StandardTrack`</span>
 <span class="sd">        Object to clip.</span>
-<span class="sd">    lower : int</span>
-<span class="sd">        Lower bound. Defaults to 0.</span>
-<span class="sd">    upper : int</span>
-<span class="sd">        Upper bound. Defaults to 127.</span>
+<span class="sd">    lower : int, default: 0</span>
+<span class="sd">        Lower bound.</span>
+<span class="sd">    upper : int, default: 127</span>
+<span class="sd">        Upper bound.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
@@ -276,7 +192,7 @@
 
 
 <div class="viewcode-block" id="set_resolution"><a class="viewcode-back" href="../../doc.html#pypianoroll.set_resolution">[docs]</a><span class="k">def</span> <span class="nf">set_resolution</span><span class="p">(</span>
-    <span class="n">obj</span><span class="p">:</span> <span class="n">_Multitrack</span><span class="p">,</span> <span class="n">resolution</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">rounding</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;round&quot;</span>
+    <span class="n">obj</span><span class="p">:</span> <span class="n">_Multitrack</span><span class="p">,</span> <span class="n">resolution</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">rounding</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;round&quot;</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">_Multitrack</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Downsample the piano rolls by a factor.</span>
 
@@ -286,8 +202,8 @@
 <span class="sd">        Object to downsample.</span>
 <span class="sd">    resolution : int</span>
 <span class="sd">        Target resolution.</span>
-<span class="sd">    rounding : {&#39;round&#39;, &#39;ceil&#39;, &#39;floor&#39;}</span>
-<span class="sd">        Rounding mode. Defaults to &#39;round&#39;.</span>
+<span class="sd">    rounding : {&#39;round&#39;, &#39;ceil&#39;, &#39;floor&#39;}, default: &#39;round&#39;</span>
+<span class="sd">        Rounding mode.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
@@ -410,9 +326,7 @@
 
 
 <div class="viewcode-block" id="trim"><a class="viewcode-back" href="../../doc.html#pypianoroll.trim">[docs]</a><span class="k">def</span> <span class="nf">trim</span><span class="p">(</span>
-    <span class="n">obj</span><span class="p">:</span> <span class="n">_MultitrackOrTrack</span><span class="p">,</span>
-    <span class="n">start</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-    <span class="n">end</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">obj</span><span class="p">:</span> <span class="n">_MultitrackOrTrack</span><span class="p">,</span> <span class="n">start</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">end</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">_MultitrackOrTrack</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Trim the trailing silences of the piano roll(s).</span>
 
@@ -420,8 +334,8 @@
 <span class="sd">    ----------</span>
 <span class="sd">    obj : :class:`pypianoroll.Multitrack` or :class:`pypianoroll.Track`</span>
 <span class="sd">        Object to trim.</span>
-<span class="sd">    start : int, optional</span>
-<span class="sd">        Start time. Defaults to 0.</span>
+<span class="sd">    start : int, default: 0</span>
+<span class="sd">        Start time.</span>
 <span class="sd">    end : int, optional</span>
 <span class="sd">        End time. Defaults to active length.</span>
 
@@ -433,7 +347,7 @@
     <span class="k">return</span> <span class="n">obj</span><span class="o">.</span><span class="n">trim</span><span class="p">(</span><span class="n">start</span><span class="o">=</span><span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="n">end</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="plot"><a class="viewcode-back" href="../../visualization.html#pypianoroll.plot">[docs]</a><span class="k">def</span> <span class="nf">plot</span><span class="p">(</span><span class="n">obj</span><span class="p">:</span> <span class="n">_MultitrackOrTrack</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">_MultitrackOrTrack</span><span class="p">:</span>
+<div class="viewcode-block" id="plot"><a class="viewcode-back" href="../../visualization.html#pypianoroll.plot">[docs]</a><span class="k">def</span> <span class="nf">plot</span><span class="p">(</span><span class="n">obj</span><span class="p">:</span> <span class="n">_MultitrackOrTrack</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">Axes</span><span class="p">],</span> <span class="n">Axes</span><span class="p">]:</span>
     <span class="sd">&quot;&quot;&quot;Plot the object.</span>
 
 <span class="sd">    See :func:`pypianoroll.plot_multitrack` and</span>
@@ -444,49 +358,30 @@
 </pre></div>
 
            </div>
-           
           </div>
           <footer>
-  
 
   <hr/>
 
   <div role="contentinfo">
-    <p>
-        
-        &copy; Copyright 2018, Hao-Wen Dong
-
-    </p>
+    <p>&#169; Copyright 2018, Hao-Wen Dong.</p>
   </div>
-    
-    
-    
-    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
-    
-    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
-    
-    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
 
 </footer>
-
         </div>
       </div>
-
     </section>
-
   </div>
-  
-
-  <script type="text/javascript">
+  <script>
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script>
-
-  
-  
-    
-   
+  </script> 
 
 </body>
 </html>
