@@ -33,8 +33,8 @@ __all__ = [
 DEFAULT_PROGRAM = 0
 DEFAULT_IS_DRUM = False
 
-_Track = TypeVar("_Track", bound="Track")
-_StandardTrack = TypeVar("_StandardTrack", bound="StandardTrack")
+TrackType = TypeVar("TrackType", bound="Track")
+StandardTrackType = TypeVar("StandardTrackType", bound="StandardTrack")
 
 
 class Track:
@@ -251,7 +251,7 @@ class Track:
             pianoroll=self.pianoroll.copy(),
         )
 
-    def pad(self: _Track, pad_length: int) -> _Track:
+    def pad(self: TrackType, pad_length: int) -> TrackType:
         """Pad the piano roll.
 
         Parameters
@@ -274,7 +274,7 @@ class Track:
         )
         return self
 
-    def pad_to_multiple(self: _Track, factor: int) -> _Track:
+    def pad_to_multiple(self: TrackType, factor: int) -> TrackType:
         """Pad the piano roll so that its length is some multiple.
 
         Pad the piano roll at the end along the time axis of the minimum
@@ -302,7 +302,7 @@ class Track:
             self.pianoroll = np.pad(self.pianoroll, pad_width, "constant")
         return self
 
-    def transpose(self: _Track, semitone: int) -> _Track:
+    def transpose(self: TrackType, semitone: int) -> TrackType:
         """Transpose the piano roll by a number of semitones.
 
         Parameters
@@ -328,7 +328,7 @@ class Track:
             self.pianoroll[:, (128 + semitone) :] = 0
         return self
 
-    def trim(self: _Track, start: int = None, end: int = None) -> _Track:
+    def trim(self: TrackType, start: int = None, end: int = None) -> TrackType:
         """Trim the piano roll.
 
         Parameters
@@ -463,7 +463,7 @@ class StandardTrack(Track):
                 "`pianoroll` must contain only integers between 0 to 127."
             )
 
-    def set_nonzeros(self: _StandardTrack, value: int) -> _StandardTrack:
+    def set_nonzeros(self: StandardTrackType, value: int) -> StandardTrackType:
         """Assign a constant value to all nonzeros entries.
 
         Arguments
@@ -480,8 +480,8 @@ class StandardTrack(Track):
         return self
 
     def clip(
-        self: _StandardTrack, lower: int = 0, upper: int = 127
-    ) -> _StandardTrack:
+        self: StandardTrackType, lower: int = 0, upper: int = 127
+    ) -> StandardTrackType:
         """Clip (limit) the the piano roll into [`lower`, `upper`].
 
         Parameters

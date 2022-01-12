@@ -36,21 +36,21 @@ __all__ = [
     "trim",
 ]
 
-_Multitrack = TypeVar("_Multitrack", bound=Multitrack)
-_MultitrackOrTrack = TypeVar("_MultitrackOrTrack", Multitrack, Track)
-_StandardTrack = TypeVar("_StandardTrack", Multitrack, StandardTrack)
+MultitrackType = TypeVar("MultitrackType", bound=Multitrack)
+MultitrackOrTrackType = TypeVar("MultitrackOrTrackType", Multitrack, Track)
+StandardTrackType = TypeVar("StandardTrackType", Multitrack, StandardTrack)
 
 
 @overload
 def set_nonzeros(obj: Multitrack, value: int) -> Multitrack:
-    """Assign a constant value to all nonzeros entries."""
+    pass
 
 
 @overload
 def set_nonzeros(
     obj: Union[StandardTrack, BinaryTrack], value: int
 ) -> StandardTrack:
-    """Assign a constant value to all nonzeros entries."""
+    pass
 
 
 def set_nonzeros(
@@ -97,8 +97,8 @@ def binarize(obj: Union[Multitrack, StandardTrack], threshold: int = 0):
 
 
 def clip(
-    obj: _StandardTrack, lower: int = 0, upper: int = 127
-) -> _StandardTrack:
+    obj: MultitrackType, lower: int = 0, upper: int = 127
+) -> MultitrackType:
     """Clip (limit) the the piano roll(s) into [`lower`, `upper`].
 
     Parameters
@@ -120,8 +120,8 @@ def clip(
 
 
 def set_resolution(
-    obj: _Multitrack, resolution: int, rounding: str = "round"
-) -> _Multitrack:
+    obj: MultitrackType, resolution: int, rounding: str = "round"
+) -> MultitrackType:
     """Downsample the piano rolls by a factor.
 
     Parameters
@@ -141,7 +141,7 @@ def set_resolution(
     return obj.set_resolution(resolution=resolution, rounding=rounding)
 
 
-def pad(obj: _MultitrackOrTrack, pad_length: int) -> _MultitrackOrTrack:
+def pad(obj: MultitrackOrTrackType, pad_length: int) -> MultitrackOrTrackType:
     """Pad the piano roll(s).
 
     Notes
@@ -172,8 +172,8 @@ def pad(obj: _MultitrackOrTrack, pad_length: int) -> _MultitrackOrTrack:
 
 
 def pad_to_multiple(
-    obj: _MultitrackOrTrack, factor: int
-) -> _MultitrackOrTrack:
+    obj: MultitrackOrTrackType, factor: int
+) -> MultitrackOrTrackType:
     """Pad the piano roll(s) so that their lengths are some multiples.
 
     Pad the piano rolls at the end along the time axis of the
@@ -206,7 +206,7 @@ def pad_to_multiple(
     return obj.pad_to_multiple(factor=factor)
 
 
-def pad_to_same(obj: _Multitrack) -> _Multitrack:
+def pad_to_same(obj: MultitrackType) -> MultitrackType:
     """Pad the piano rolls so that they have the same length.
 
     Pad shorter piano rolls at the end along the time axis so that the
@@ -231,7 +231,9 @@ def pad_to_same(obj: _Multitrack) -> _Multitrack:
     return obj.pad_to_same()
 
 
-def transpose(obj: _MultitrackOrTrack, semitone: int) -> _MultitrackOrTrack:
+def transpose(
+    obj: MultitrackOrTrackType, semitone: int
+) -> MultitrackOrTrackType:
     """Transpose the piano roll(s) by a number of semitones.
 
     Positive values are for a higher key, while negative values are for
@@ -254,8 +256,8 @@ def transpose(obj: _MultitrackOrTrack, semitone: int) -> _MultitrackOrTrack:
 
 
 def trim(
-    obj: _MultitrackOrTrack, start: int = None, end: int = None
-) -> _MultitrackOrTrack:
+    obj: MultitrackOrTrackType, start: int = None, end: int = None
+) -> MultitrackOrTrackType:
     """Trim the trailing silences of the piano roll(s).
 
     Parameters
@@ -275,7 +277,7 @@ def trim(
     return obj.trim(start=start, end=end)
 
 
-def plot(obj: _MultitrackOrTrack, **kwargs) -> Union[List[Axes], Axes]:
+def plot(obj: Union[Track, Multitrack], **kwargs) -> Union[List[Axes], Axes]:
     """Plot the object.
 
     See :func:`pypianoroll.plot_multitrack` and
