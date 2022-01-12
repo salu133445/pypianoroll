@@ -11,6 +11,7 @@ Variable
 --------
 
 - DEFAULT_TEMPO
+- DEFAULT_VELOCITY
 
 """
 import json
@@ -31,9 +32,16 @@ from .utils import decompose_sparse
 if TYPE_CHECKING:
     from .multitrack import Multitrack
 
-__all__ = ["save", "to_pretty_midi", "write", "DEFAULT_TEMPO"]
+__all__ = [
+    "save",
+    "to_pretty_midi",
+    "write",
+    "DEFAULT_TEMPO",
+    "DEFAULT_VELOCITY",
+]
 
 DEFAULT_TEMPO = 120
+DEFAULT_VELOCITY = 64
 
 
 def save(
@@ -97,7 +105,7 @@ def save(
 def to_pretty_midi(
     multitrack: "Multitrack",
     default_tempo: float = None,
-    default_velocity: int = 64,
+    default_velocity: int = DEFAULT_VELOCITY,
 ) -> PrettyMIDI:
     """Return a Multitrack object as a PrettyMIDI object.
 
