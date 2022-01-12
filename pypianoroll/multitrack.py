@@ -49,7 +49,7 @@ class Multitrack:
     ----------
     name : str, optional
         Multitrack name.
-    resolution : int, default: `pypianoroll.DEFAULT_RESOLUTION`
+    resolution : int, default: `pypianoroll.DEFAULT_RESOLUTION` (24)
         Time steps per quarter note.
     tempo : ndarray, dtype=float, shape=(?, 1), optional
         Tempo (in qpm) at each time step. Length is the total number
@@ -348,8 +348,8 @@ class Multitrack:
         ----------
         resolution : int
             Target resolution.
-        rounding : {'round', 'ceil', 'floor'}
-            Rounding mode. Defaults to 'round'.
+        rounding : {'round', 'ceil', 'floor'}, default: 'round'
+            Rounding mode.
 
         Returns
         -------
@@ -433,7 +433,6 @@ class Multitrack:
         mode : {'sum', 'max', 'any'}, default: 'sum'
             Blending strategy to apply along the track axis. For 'sum'
             mode, integer summation is performed for binary piano rolls.
-            Defaults to 'sum'.
 
         Returns
         -------
@@ -491,8 +490,8 @@ class Multitrack:
 
         Parameters
         ----------
-        threshold : int or float
-            Threshold to binarize the piano rolls. Defaults to zero.
+        threshold : int or float, default: 0
+            Threshold to binarize the piano rolls.
 
         Returns
         -------
@@ -511,10 +510,10 @@ class Multitrack:
 
         Parameters
         ----------
-        lower : int
-            Lower bound. Defaults to 0.
-        upper : int
-            Upper bound. Defaults to 127.
+        lower : int, default: 0
+            Lower bound.
+        upper : int, default: 127
+            Upper bound.
 
         Returns
         -------
@@ -652,7 +651,7 @@ class Multitrack:
         Parameters
         ----------
         start : int, default: 0
-            Start time. Defaults to 0.
+            Start time.
         end : int, optional
             End time. Defaults to active length.
 

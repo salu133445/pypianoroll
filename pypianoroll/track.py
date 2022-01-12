@@ -44,11 +44,11 @@ class Track:
     ----------
     name : str, optional
         Track name.
-    program : int, 0-127, default: `pypianoroll.DEFAULT_PROGRAM`
+    program : int, 0-127, default: `pypianoroll.DEFAULT_PROGRAM` (0)
         Program number according to General MIDI specification [1].
         Defaults to 0 (Acoustic Grand Piano).
-    is_drum : bool, `pypianoroll.DEFAULT_IS_DRUM`
-        Whether it is a percussion track. Defaults to False.
+    is_drum : bool, `pypianoroll.DEFAULT_IS_DRUM` (False)
+        Whether it is a percussion track.
     pianoroll : ndarray, shape=(?, 128), optional
         Piano-roll matrix. The first dimension represents time, and the
         second dimension represents pitch.
@@ -411,11 +411,11 @@ class StandardTrack(Track):
     ----------
     name : str, optional
         Track name.
-    program : int, 0-127, default: `pypianoroll.DEFAULT_PROGRAM`
+    program : int, 0-127, default: `pypianoroll.DEFAULT_PROGRAM` (0)
         Program number according to General MIDI specification [1].
         Defaults to 0 (Acoustic Grand Piano).
-    is_drum : bool, default: `pypianoroll.DEFAULT_IS_DRUM`
-        Whether it is a percussion track. Defaults to False.
+    is_drum : bool, default: `pypianoroll.DEFAULT_IS_DRUM` (False)
+        Whether it is a percussion track.
     pianoroll : ndarray, dtype=uint8, shape=(?, 128), optional
         Piano-roll matrix. The first dimension represents time, and the
         second dimension represents pitch. Cast to uint8 if not of data
@@ -511,11 +511,11 @@ class BinaryTrack(Track):
     ----------
     name : str, optional
         Track name.
-    program : int, 0-127, default: `pypianoroll.DEFAULT_PROGRAM`
+    program : int, 0-127, default: `pypianoroll.DEFAULT_PROGRAM` (0)
         Program number according to General MIDI specification [1].
         Defaults to 0 (Acoustic Grand Piano).
-    is_drum : bool, default: `pypianoroll.DEFAULT_IS_DRUM`
-        Whether it is a percussion track. Defaults to False.
+    is_drum : bool, default: `pypianoroll.DEFAULT_IS_DRUM` (False)
+        Whether it is a percussion track.
     pianoroll : ndarray, dtype=bool, shape=(?, 128), optional
         Piano-roll matrix. The first dimension represents time, and the
         second dimension represents pitch. Cast to bool if not of data
