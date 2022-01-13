@@ -73,12 +73,12 @@ def set_nonzeros(
 
 @overload
 def binarize(obj: Multitrack, threshold: int = 0) -> Multitrack:
-    """Binarize the piano roll(s)."""
+    pass
 
 
 @overload
 def binarize(obj: StandardTrack, threshold: int = 0) -> BinaryTrack:
-    """Binarize the piano roll(s)."""
+    pass
 
 
 def binarize(obj: Union[Multitrack, StandardTrack], threshold: int = 0):

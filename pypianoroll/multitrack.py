@@ -56,8 +56,8 @@ class Multitrack:
         of time steps. Cast to float if not of float type.
     beat : ndarray, dtype=bool, shape=(?, 1), optional
         A boolean array that indicates whether the time step contains a
-        beat. Length is the total number of time steps. Cast to bool if not
-        of bool type.
+        beat. Length is the total number of time steps. Cast to bool if
+        not of bool type.
     downbeat : ndarray, dtype=bool, shape=(?, 1), optional
         A boolean array that indicates whether the time step contains a
         downbeat, i.e., the first time step of a measure. Length is the
