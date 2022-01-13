@@ -98,6 +98,7 @@ class Track:
             if attr in ("program", "is_drum", "pianoroll"):
                 raise TypeError(f"`{attr}` must not be None.")
             return
+
         if attr == "program":
             if not isinstance(self.program, int):
                 raise TypeError(
@@ -147,7 +148,9 @@ class Track:
             if attr in ("program", "is_drum", "pianoroll"):
                 raise TypeError(f"`{attr}` must not be None.")
             return
+
         self._validate_type(attr)
+
         if attr == "program":
             if self.program < 0 or self.program > 127:
                 raise ValueError("`program` must be in between 0 to 127.")

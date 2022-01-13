@@ -157,7 +157,6 @@ class Multitrack:
                     "`name` must be of type str, but got type "
                     f"{type(self.name)}."
                 )
-
         elif attr == "resolution":
             if not isinstance(self.resolution, int):
                 raise TypeError(
@@ -188,7 +187,6 @@ class Multitrack:
                     "`downbeat` must be of data type bool, but got data type"
                     f"{self.downbeat.dtype}."
                 )
-
         elif attr == "tracks":
             for i, track in enumerate(self.tracks):
                 if not isinstance(track, Track):
@@ -236,7 +234,6 @@ class Multitrack:
         if attr == "resolution":
             if self.resolution < 1:
                 raise ValueError("`resolution` must be a positive integer.")
-
         elif attr == "tempo":
             if self.tempo.ndim != 1:
                 raise ValueError("`tempo` must be a 1D NumPy array.")
@@ -248,7 +245,6 @@ class Multitrack:
         elif attr == "downbeat":
             if self.downbeat.ndim != 1:
                 raise ValueError("`downbeat` must be a 1D NumPy array.")
-
         elif attr == "tracks":
             for track in self.tracks:
                 track.validate()

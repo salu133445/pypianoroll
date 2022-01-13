@@ -5,7 +5,6 @@ Functions
 
 - decompose_sparse
 - reconstruct_sparse
-- hmean
 
 """
 from typing import Dict
