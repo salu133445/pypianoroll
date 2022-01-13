@@ -118,6 +118,8 @@ def from_pretty_midi(
     ----------
     midi : :class:`pretty_midi.PrettyMIDI`
         PrettyMIDI object to parse.
+    resolution : int, default: `pypianoroll.DEFAULT_RESOLUTION` (24)
+        Time steps per quarter note.
     mode : {'max', 'sum'}, default: 'max'
         Merging strategy for duplicate notes.
     algorithm : {'normal', 'strict', 'custom'}, default: 'normal'
@@ -203,18 +205,27 @@ def from_pretty_midi(
 
     # Parse downbeat array
     if not midi.time_signature_changes:
+        # This probably won't happen as pretty_midi always add a 4/4 time
+        # signature at time 0
+        beat = None
         downbeat = None
     else:
+        beat = np.zeros((n_time_steps, 1), bool)
         downbeat = np.zeros((n_time_steps, 1), bool)
+        beat[0] = True
         downbeat[0] = True
         start = 0
         end = start
-        for idx, tsc in enumerate(midi.time_signature_changes[:-1]):
-            end += np.searchsorted(
-                beat_times[end:], midi.time_signature_changes[idx + 1].time
-            )
+        for idx, tsc in enumerate(midi.time_signature_changes):
             start_idx = start * resolution
-            end_idx = end * resolution
+            if idx + 1 < len(midi.time_signature_changes):
+                end += np.searchsorted(
+                    beat_times[end:], midi.time_signature_changes[idx + 1].time
+                )
+                end_idx = end * resolution
+            else:
+                end_idx = n_time_steps
+            beat[start_idx:end_idx:resolution] = True
             stride = tsc.numerator * resolution
             downbeat[start_idx:end_idx:stride] = True
             start = end
@@ -319,7 +330,11 @@ def from_pretty_midi(
         tracks.append(track)
 
     return Multitrack(
-        resolution=resolution, tempo=tempo, downbeat=downbeat, tracks=tracks
+        resolution=resolution,
+        tempo=tempo,
+        beat=beat,
+        downbeat=downbeat,
+        tracks=tracks,
     )
 
 
