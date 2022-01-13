@@ -79,6 +79,8 @@ def save(
     array_dict = {}
     if multitrack.tempo is not None:
         array_dict["tempo"] = multitrack.tempo
+    if multitrack.beat is not None:
+        array_dict["beat"] = multitrack.beat
     if multitrack.downbeat is not None:
         array_dict["downbeat"] = multitrack.downbeat
 

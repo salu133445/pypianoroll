@@ -94,6 +94,7 @@ def load(path: Union[str, Path]) -> Multitrack:
             name=info_dict["name"],
             resolution=resolution,
             tempo=loaded.get("tempo"),
+            beat=loaded.get("beat"),
             downbeat=loaded.get("downbeat"),
             tracks=tracks,
         )
