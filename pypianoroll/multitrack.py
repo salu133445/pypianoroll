@@ -54,8 +54,12 @@ class Multitrack:
     tempo : ndarray, dtype=float, shape=(?, 1), optional
         Tempo (in qpm) at each time step. Length is the total number
         of time steps. Cast to float if not of float type.
+    beat : ndarray, dtype=bool, shape=(?, 1), optional
+        A boolean array that indicates whether the time step contains a
+        beat. Length is the total number of time steps. Cast to bool if not
+        of bool type.
     downbeat : ndarray, dtype=bool, shape=(?, 1), optional
-        Boolean array that indicates whether the time step contains a
+        A boolean array that indicates whether the time step contains a
         downbeat, i.e., the first time step of a measure. Length is the
         total number of time steps. Cast to bool if not of bool type.
     tracks : sequence of :class:`pypianoroll.Track`, default: []
@@ -68,6 +72,7 @@ class Multitrack:
         name: str = None,
         resolution: int = None,
         tempo: ndarray = None,
+        beat: ndarray = None,
         downbeat: ndarray = None,
         tracks: Sequence[Track] = None,
     ):
@@ -84,6 +89,13 @@ class Multitrack:
             self.tempo = tempo
         else:
             self.tempo = np.asarray(tempo).astype(float)
+
+        if beat is None:
+            self.beat = None
+        elif beat.dtype == np.bool_:
+            self.beat = beat
+        else:
+            self.beat = np.asarray(beat).astype(bool)
 
         if downbeat is None:
             self.downbeat = None
@@ -121,6 +133,10 @@ class Multitrack:
                 f"tempo=array(shape={self.tempo.shape}, "
                 f"dtype={self.tempo.dtype})"
             )
+        if self.beat is not None:
+            to_join.append(
+                f"beat=array(shape={self.beat.shape}, dtype={self.beat.dtype})"
+            )
         if self.downbeat is not None:
             to_join.append(
                 f"downbeat=array(shape={self.downbeat.shape}, "
@@ -156,6 +172,14 @@ class Multitrack:
                     "`tempo` must be of data type numpy.number, but got data "
                     f"type {self.tempo.dtype}."
                 )
+        elif attr == "beat":
+            if not isinstance(self.beat, np.ndarray):
+                raise TypeError("`beat` must be a NumPy array.")
+            if not np.issubdtype(self.beat.dtype, np.bool_):
+                raise TypeError(
+                    "`beat` must be of data type bool, but got data type"
+                    f"{self.beat.dtype}."
+                )
         elif attr == "downbeat":
             if not isinstance(self.downbeat, np.ndarray):
                 raise TypeError("`downbeat` must be a NumPy array.")
@@ -187,7 +211,14 @@ class Multitrack:
 
         """
         if attr is None:
-            attributes = ("name", "resolution", "tempo", "downbeat", "tracks")
+            attributes = (
+                "name",
+                "resolution",
+                "tempo",
+                "beat",
+                "downbeat",
+                "tracks",
+            )
             for attribute in attributes:
                 self._validate_type(attribute)
         else:
@@ -211,7 +242,9 @@ class Multitrack:
                 raise ValueError("`tempo` must be a 1D NumPy array.")
             if np.any(self.tempo <= 0.0):
                 raise ValueError("`tempo` must contain only positive numbers.")
-
+        elif attr == "beat":
+            if self.beat.ndim != 1:
+                raise ValueError("`beat` must be a 1D NumPy array.")
         elif attr == "downbeat":
             if self.downbeat.ndim != 1:
                 raise ValueError("`downbeat` must be a 1D NumPy array.")
@@ -234,7 +267,14 @@ class Multitrack:
 
         """
         if attr is None:
-            attributes = ("name", "resolution", "tempo", "downbeat", "tracks")
+            attributes = (
+                "name",
+                "resolution",
+                "tempo",
+                "beat",
+                "downbeat",
+                "tracks",
+            )
             for attribute in attributes:
                 self._validate(attribute)
         else:
@@ -314,6 +354,19 @@ class Multitrack:
                 max_length = track.pianoroll.shape[0]
         return max_length
 
+    def get_beat_steps(self) -> ndarray:
+        """Return the indices of time steps that contain beats.
+
+        Returns
+        -------
+        ndarray, dtype=int
+            Indices of time steps that contain beats.
+
+        """
+        if self.beat is None:
+            return np.array([])
+        return np.nonzero(self.beat)[0]
+
     def get_downbeat_steps(self) -> ndarray:
         """Return the indices of time steps that contain downbeats.
 
@@ -388,6 +441,23 @@ class Multitrack:
             track.pianoroll[time, pitch] = value
         self.resolution = resolution
         return self
+
+    def count_beat(self) -> int:
+        """Return the number of beats.
+
+        Returns
+        -------
+        int
+            Number of beats.
+
+        Note
+        ----
+        Return value is calculated based only on the attribute `beat`.
+
+        """
+        if self.beat is None:
+            return 0
+        return np.count_nonzero(self.beat)
 
     def count_downbeat(self) -> int:
         """Return the number of downbeats.
@@ -471,6 +541,7 @@ class Multitrack:
             name=self.name,
             resolution=self.resolution,
             tempo=None if self.tempo is None else self.tempo.copy(),
+            beat=None if self.beat is None else self.beat.copy(),
             downbeat=None if self.downbeat is None else self.downbeat.copy(),
             tracks=[track.copy() for track in self.tracks],
         )
@@ -672,6 +743,8 @@ class Multitrack:
             end = self.get_length()
         if self.tempo is not None:
             self.tempo = self.tempo[start:end]
+        if self.beat is not None:
+            self.beat = self.beat[start:end]
         if self.downbeat is not None:
             self.downbeat = self.downbeat[start:end]
         for track in self.tracks:
