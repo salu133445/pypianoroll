@@ -14,7 +14,7 @@ Variables
 - DEFAULT_IS_DRUM
 
 """
-from typing import TypeVar
+from typing import Any, TypeVar
 
 import numpy as np
 from matplotlib.axes import Axes
@@ -89,6 +89,9 @@ class Track:
 
     def __getitem__(self, key) -> ndarray:
         return self.pianoroll[key]
+
+    def __setitem__(self, key: int, value: Any):
+        self.pianoroll[key] = value
 
     def _validate_type(self, attr):
         if getattr(self, attr) is None:
