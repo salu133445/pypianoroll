@@ -238,7 +238,7 @@ class Track:
         inv_last_nonzero_step = int(np.argmax(np.flip(nonzero_steps, axis=0)))
         return self.pianoroll.shape[0] - inv_last_nonzero_step
 
-    def copy(self):
+    def copy(self: "Track") -> "Track":
         """Return a copy of the track.
 
         Returns
@@ -509,6 +509,25 @@ class StandardTrack(Track):
         self.pianoroll = self.pianoroll.clip(lower, upper)
         return self
 
+    def copy(self: "StandardTrack") -> "StandardTrack":
+        """Return a copy of the track.
+
+        Returns
+        -------
+        A copy of the object itself.
+
+        Notes
+        -----
+        The piano-roll array is copied using :func:`numpy.copy`.
+
+        """
+        return StandardTrack(
+            name=self.name,
+            program=self.program,
+            is_drum=self.is_drum,
+            pianoroll=self.pianoroll.copy(),
+        )
+
 
 class BinaryTrack(Track):
     """A container for single-track, binary piano rolls.
@@ -582,4 +601,23 @@ class BinaryTrack(Track):
             program=self.program,
             is_drum=self.is_drum,
             pianoroll=pianoroll,
+        )
+
+    def copy(self: "BinaryTrack") -> "BinaryTrack":
+        """Return a copy of the track.
+
+        Returns
+        -------
+        A copy of the object itself.
+
+        Notes
+        -----
+        The piano-roll array is copied using :func:`numpy.copy`.
+
+        """
+        return BinaryTrack(
+            name=self.name,
+            program=self.program,
+            is_drum=self.is_drum,
+            pianoroll=self.pianoroll.copy(),
         )
