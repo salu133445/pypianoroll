@@ -102,8 +102,14 @@ class Multitrack:
     def __len__(self) -> int:
         return len(self.tracks)
 
-    def __getitem__(self, val):
-        return self.tracks[val]
+    def __getitem__(self, key: int) -> Track:
+        return self.tracks[key]
+
+    def __setitem__(self, key: int, value: Track):
+        self.tracks[key] = value
+
+    def __delitem__(self, key: int):
+        del self.tracks[key]
 
     def __repr__(self) -> str:
         to_join = [
