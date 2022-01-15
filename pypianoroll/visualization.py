@@ -81,8 +81,7 @@ def plot_pianoroll(
         Only effective when `pianoroll` is 2D.
     xtick : {'auto', 'beat', 'step', 'off'}
         Tick format for the x-axis. For 'auto' mode, set to 'beat' if
-        `resolution` is given, otherwise set to 'step'. Defaults to
-        'auto'.
+        `beats` is given, otherwise set to 'step'. Defaults to 'auto'.
     ytick : {'octave', 'pitch', 'off'}, default: 'octave'
         Tick format for the y-axis.
     xticklabel : bool
@@ -134,7 +133,7 @@ def plot_pianoroll(
 
     # Format ticks and labels
     if xtick == "auto":
-        xtick = "beat" if resolution is not None else "step"
+        xtick = "beat" if beats is not None else "step"
     elif xtick not in ("beat", "step", "off"):
         raise ValueError(
             "`xtick` must be one of 'auto', 'beat', 'step' or 'off', not "
