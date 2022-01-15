@@ -10,6 +10,7 @@ from .utils import multitrack
 def test_repr(multitrack):
     assert repr(multitrack) == (
         "Multitrack(name='test', resolution=24, "
+        "beat=array(shape=(96,), dtype=bool), "
         "downbeat=array(shape=(96,), dtype=bool), tracks=["
         "StandardTrack(name='track_1', program=0, is_drum=False, "
         "pianoroll=array(shape=(96, 128), dtype=uint8)), "
@@ -36,6 +37,10 @@ def test_get_length(multitrack):
     assert multitrack.get_length() == 95
 
 
+def test_get_beat_steps(multitrack):
+    assert np.all(multitrack.get_beat_steps() == [0, 24, 48, 72])
+
+
 def test_get_downbeat_steps(multitrack):
     assert np.all(multitrack.get_downbeat_steps() == [0])
 
@@ -48,6 +53,7 @@ def test_set_nonzeros(multitrack):
 
 def test_set_resolution(multitrack):
     multitrack.set_resolution(4)
+    assert np.all(multitrack.get_beat_steps() == [0, 4, 8, 12])
     assert multitrack.tracks[0].pianoroll[15, 60] == 100
     assert np.all(
         multitrack.tracks[1].pianoroll[[0, 3, 5, 8, 11, 13], 36] == 1
@@ -60,6 +66,10 @@ def test_copy(multitrack):
     assert id(copied.downbeat) != id(multitrack.downbeat)
     assert id(copied.tracks[0]) != id(multitrack.tracks[0])
     assert id(copied.tracks[0].pianoroll) != id(multitrack.tracks[0].pianoroll)
+
+
+def test_count_beat(multitrack):
+    assert multitrack.count_beat() == 4
 
 
 def test_count_downbeat(multitrack):

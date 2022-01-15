@@ -17,11 +17,14 @@ def multitrack():
     track_2 = BinaryTrack(
         name="track_2", program=0, is_drum=True, pianoroll=pianoroll_2
     )
+    beat = np.zeros((96,), bool)
+    beat[:96:24] = True
     downbeat = np.zeros((96,), bool)
     downbeat[0] = True
     return Multitrack(
         name="test",
         resolution=24,
+        beat=beat,
         downbeat=downbeat,
         tracks=[track_1, track_2],
     )

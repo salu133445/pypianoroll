@@ -31,6 +31,19 @@ DEFAULT_RESOLUTION = 24
 MultitrackType = TypeVar("MultitrackType", bound="Multitrack")
 
 
+def _round_time(time, factor, rounding):
+    if rounding == "round":
+        return np.round(time * factor).astype(int)
+    if rounding == "ceil":
+        return np.ceil(time * factor).astype(int)
+    if rounding == "floor":
+        return np.floor(time * factor).astype(int)
+    raise ValueError(
+        "`rounding` must be one of 'round', 'ceil' or 'floor', "
+        f"not {rounding}."
+    )
+
+
 class Multitrack:
     """A container for multitrack piano rolls.
 
@@ -317,6 +330,25 @@ class Multitrack:
             return False
         return True
 
+    def get_end_time(self) -> int:
+        """Return the end time of the multitrack.
+
+        Returns
+        -------
+        int
+            Maximum length (in time steps) of the tempo, beat, downbeat
+            arrays and all piano rolls.
+
+        """
+        end_time = self.get_max_length()
+        if self.tempo is not None and end_time < self.tempo.shape[0]:
+            end_time = self.tempo.shape[0]
+        if self.beat is not None and end_time < self.beat.shape[0]:
+            end_time = self.beat.shape[0]
+        if self.downbeat is not None and end_time < self.downbeat.shape[0]:
+            end_time = self.downbeat.shape[0]
+        return end_time
+
     def get_length(self) -> int:
         """Return the maximum active length of the piano rolls.
 
@@ -411,6 +443,21 @@ class Multitrack:
         Object itself.
 
         """
+        factor = resolution / self.resolution
+        # Get the end time
+        end_time = self.get_end_time()
+        rounded_end_time = _round_time(end_time, factor, rounding)
+        # Beat array
+        beats = self.get_beat_steps()
+        beats = _round_time(beats, factor, rounding)
+        self.beat = np.zeros((rounded_end_time + 1, 1), bool)
+        self.beat[beats] = True
+        # Downbeat array
+        downbeats = self.get_downbeat_steps()
+        downbeats = _round_time(downbeats, factor, rounding)
+        self.downbeat = np.zeros((rounded_end_time + 1, 1), bool)
+        self.downbeat[downbeats] = True
+        # Iterate over each track
         for track in self.tracks:
             time, pitch = track.pianoroll.nonzero()
             if len(time) < 1:
@@ -419,22 +466,12 @@ class Multitrack:
                 value = 1
             else:
                 value = track.pianoroll[time, pitch]
-            factor = resolution / self.resolution
-            if rounding == "round":
-                time = np.round(time * factor).astype(int)
-            elif rounding == "ceil":
-                time = np.ceil(time * factor).astype(int)
-            elif rounding == "floor":
-                time = np.floor(time * factor).astype(int)
-            else:
-                raise ValueError(
-                    "`rounding` must be one of 'round', 'ceil' or 'floor', "
-                    f"not {rounding}."
-                )
+            rounded_time = _round_time(time, factor, rounding)
             track.pianoroll = np.zeros(
-                (time[-1] + 1, 128), track.pianoroll.dtype
+                (rounded_end_time + 1, 128), track.pianoroll.dtype
             )
-            track.pianoroll[time, pitch] = value
+            track.pianoroll[rounded_time, pitch] = value
+        # Set the new resolution
         self.resolution = resolution
         return self
 
