@@ -35,6 +35,7 @@ def plot_pianoroll(
     pianoroll: ndarray,
     is_drum: bool = False,
     resolution: int = None,
+    beats: ndarray = None,
     downbeats: ndarray = None,
     preset: str = "full",
     cmap: str = "Blues",
@@ -46,6 +47,7 @@ def plot_pianoroll(
     tick_direction: str = "in",
     label: str = "both",
     grid_axis: str = "both",
+    grid_color: str = "gray",
     grid_linestyle: str = ":",
     grid_linewidth: float = 0.5,
     **kwargs,
@@ -64,8 +66,11 @@ def plot_pianoroll(
         Whether it is a percussion track.
     resolution : int
         Time steps per quarter note. Required if `xtick` is 'beat'.
-    downbeats : list
-        Boolean array that indicates whether the time step contains a
+    beats : ndarray, dtype=int, shape=(?, 1),
+        A boolean array that indicates the time steps that contain a
+        beat.
+    downbeats : ndarray, dtype=int, shape=(?, 1),
+        A boolean array that indicates the time steps that contain a
         downbeat (i.e., the first time step of a bar).
     preset : {'full', 'frame', 'plain'}, default: 'full'
         Preset theme. For 'full' preset, ticks, grid and labels are on.
@@ -95,10 +100,12 @@ def plot_pianoroll(
         Whether to add labels to x- and y-axes.
     grid_axis : {'x', 'y', 'both', 'off'}, default: 'both'
         Whether to add grids to the x- and y-axes.
-    grid_linestyle : str
+    grid_color : str, default: 'gray'
+        Grid color. Will be passed to :meth:`matplotlib.axes.Axes.grid`.
+    grid_linestyle : str, default: '-'
         Grid line style. Will be passed to
         :meth:`matplotlib.axes.Axes.grid`.
-    grid_linewidth : float
+    grid_linewidth : float, default: 0.5
         Grid line width. Will be passed to
         :meth:`matplotlib.axes.Axes.grid`.
     **kwargs
@@ -174,17 +181,21 @@ def plot_pianoroll(
 
     # Format x-axis
     if xtick == "beat" and preset != "frame":
-        if resolution is None:
-            raise ValueError(
-                "`resolution` must not be None when `xtick` is 'beat'."
+        if beats is None:
+            raise RuntimeError(
+                "Beats must be given when using `beat` for ticks on the "
+                "x-axis."
             )
-        n_beats = pianoroll.shape[0] // resolution
-        ax.set_xticks(resolution * np.arange(n_beats) - 0.5)
+        if len(beats) < 2:
+            raise RuntimeError(
+                "There muse be at least two beats given when using `beat` for "
+                "ticks on the x-axis."
+            )
+        beats_arr = np.append(beats, beats[-1] + (beats[-1] - beats[-2]))
+        ax.set_xticks(beats_arr[:-1] - 0.5)
         ax.set_xticklabels("")
-        ax.set_xticks(
-            resolution * (np.arange(n_beats) + 0.5) - 0.5, minor=True
-        )
-        ax.set_xticklabels(np.arange(1, n_beats + 1), minor=True)
+        ax.set_xticks((beats_arr[1:] + beats_arr[:-1]) / 2 - 0.5, minor=True)
+        ax.set_xticklabels(np.arange(1, len(beats) + 1), minor=True)
         ax.tick_params(axis="x", which="minor", width=0)
 
     # Format y-axis
@@ -235,7 +246,7 @@ def plot_pianoroll(
     if grid_axis != "off":
         ax.grid(
             axis=grid_axis,
-            color="k",
+            color=grid_color,
             linestyle=grid_linestyle,
             linewidth=grid_linewidth,
         )
@@ -308,7 +319,8 @@ def plot_multitrack(
     tick_direction: str = "in",
     label: str = "both",
     grid_axis: str = "both",
-    grid_linestyle: str = ":",
+    grid_color: str = "gray",
+    grid_linestyle: str = "-",
     grid_linewidth: float = 0.5,
     **kwargs,
 ) -> List[Axes]:
@@ -371,6 +383,7 @@ def plot_multitrack(
             cmaps = ("Blues", "Greens")
 
     n_tracks = len(multitrack.tracks)
+    beats = multitrack.get_beat_steps()
     downbeats = multitrack.get_downbeat_steps()
 
     if mode == "separate":
@@ -390,6 +403,7 @@ def plot_multitrack(
                 pianoroll=track.pianoroll,
                 is_drum=False,
                 resolution=multitrack.resolution,
+                beats=beats,
                 downbeats=downbeats,
                 preset=preset,
                 cmap=cmaps[idx % len(cmaps)],
@@ -401,6 +415,7 @@ def plot_multitrack(
                 tick_direction=tick_direction,
                 label=label,
                 grid_axis=grid_axis,
+                grid_color=grid_color,
                 grid_linestyle=grid_linestyle,
                 grid_linewidth=grid_linewidth,
                 **kwargs,
@@ -432,6 +447,7 @@ def plot_multitrack(
             pianoroll=blended,
             is_drum=is_all_drum,
             resolution=multitrack.resolution,
+            beats=beats,
             downbeats=downbeats,
             preset=preset,
             xtick=xtick,
@@ -442,6 +458,7 @@ def plot_multitrack(
             tick_direction=tick_direction,
             label=label,
             grid_axis=grid_axis,
+            grid_color=grid_color,
             grid_linestyle=grid_linestyle,
             grid_linewidth=grid_linewidth,
             **kwargs,
@@ -475,11 +492,12 @@ def plot_multitrack(
             fig = plt.gcf()
 
         plot_pianoroll(
-            axs[0],
-            merged_drums,
-            True,
-            multitrack.resolution,
-            downbeats,
+            ax=axs[0],
+            pianoroll=merged_drums,
+            is_drum=True,
+            resolution=multitrack.resolution,
+            beats=beats,
+            downbeats=downbeats,
             preset=preset,
             cmap=cmaps[0],
             xtick=xtick,
@@ -490,16 +508,18 @@ def plot_multitrack(
             tick_direction=tick_direction,
             label=label,
             grid_axis=grid_axis,
+            grid_color=grid_color,
             grid_linestyle=grid_linestyle,
             grid_linewidth=grid_linewidth,
             **kwargs,
         )
         plot_pianoroll(
-            axs[1],
-            merged_others,
-            False,
-            multitrack.resolution,
-            downbeats,
+            ax=axs[1],
+            pianoroll=merged_others,
+            is_drum=False,
+            resolution=multitrack.resolution,
+            beats=beats,
+            downbeats=downbeats,
             preset=preset,
             cmap=cmaps[1],
             ytick=ytick,
@@ -509,6 +529,7 @@ def plot_multitrack(
             tick_direction=tick_direction,
             label=label,
             grid_axis=grid_axis,
+            grid_color=grid_color,
             grid_linestyle=grid_linestyle,
             grid_linewidth=grid_linewidth,
             **kwargs,
