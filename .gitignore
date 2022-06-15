@@ -1,3 +1,8 @@
+# Working files
+*.mid
+*.midi
+# add any permanent files with git add -f
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
