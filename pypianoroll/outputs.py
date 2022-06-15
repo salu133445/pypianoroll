@@ -113,7 +113,8 @@ def to_pretty_midi(
     Parameters
     ----------
     default_tempo : int, default: `pypianoroll.DEFAULT_TEMPO` (120)
-        Default tempo to use. If attribute `tempo` is available, encorporate it into the midi file with any tempo changes that occur
+        Default tempo to use. If attribute `tempo` is available, encorporate
+        it into the midi file with any tempo changes that occur
     default_velocity : int, default: `pypianoroll.DEFAULT_VELOCITY` (64)
         Default velocity to assign to binarized tracks.
 
