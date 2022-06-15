@@ -187,7 +187,7 @@ class Multitrack:
         elif attr == "beat":
             if not isinstance(self.beat, np.ndarray):
                 raise TypeError("`beat` must be a NumPy array.")
-            if not np.issubdtype(self.beat.dtype, np.bool_):
+            if not np.issubdtype(self.beat.dtype, bool):
                 raise TypeError(
                     "`beat` must be of data type bool, but got data type"
                     f"{self.beat.dtype}."
@@ -195,7 +195,7 @@ class Multitrack:
         elif attr == "downbeat":
             if not isinstance(self.downbeat, np.ndarray):
                 raise TypeError("`downbeat` must be a NumPy array.")
-            if not np.issubdtype(self.downbeat.dtype, np.bool_):
+            if not np.issubdtype(self.downbeat.dtype, bool):
                 raise TypeError(
                     "`downbeat` must be of data type bool, but got data type"
                     f"{self.downbeat.dtype}."

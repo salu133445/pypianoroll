@@ -125,7 +125,7 @@ def test_blend_max(multitrack_to_blend):
 
 
 def test_append(multitrack):
-    pianoroll = np.zeros((96, 128), np.bool_)
+    pianoroll = np.zeros((96, 128), bool)
     pianoroll[:95:16, 41] = True
     track_to_append = BinaryTrack(name="track_3", pianoroll=pianoroll)
     multitrack.append(track_to_append)
@@ -150,7 +150,7 @@ def test_pad_to_same(multitrack):
     track_1 = StandardTrack(
         name="track_1", program=0, is_drum=False, pianoroll=pianoroll_1
     )
-    pianoroll_2 = np.zeros((96, 128), np.bool)
+    pianoroll_2 = np.zeros((96, 128), bool)
     pianoroll_2[0:95:16, 36] = True
     track_2 = BinaryTrack(
         name="track_2", program=0, is_drum=True, pianoroll=pianoroll_2
@@ -174,7 +174,7 @@ def test_remove_empty():
     track_1 = StandardTrack(
         name="track_1", program=0, is_drum=False, pianoroll=pianoroll_1
     )
-    pianoroll_2 = np.zeros((96, 128), np.bool)
+    pianoroll_2 = np.zeros((96, 128), bool)
     track_2 = StandardTrack(
         name="track_2", program=0, is_drum=True, pianoroll=pianoroll_2
     )
