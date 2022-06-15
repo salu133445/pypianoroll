@@ -137,12 +137,13 @@ def to_pretty_midi(
     if default_tempo is not None:
         tempo = default_tempo
     elif multitrack.tempo is not None:
-        tempo = float(scipy.stats.hmean(multitrack.tempo))
+        # tempo = float(scipy.stats.hmean(multitrack.tempo))
+        tempo = multitrack.tempo[:,0]
     else:
         tempo = DEFAULT_TEMPO
 
     # Create a PrettyMIDI instance
-    midi = PrettyMIDI(initial_tempo=tempo)
+    midi = PrettyMIDI(initial_tempo=tempo[0])
 
     # Compute length of a time step
     time_step_length = 60.0 / tempo / multitrack.resolution
@@ -165,12 +166,14 @@ def to_pretty_midi(
         padded = np.pad(binarized, ((1, 1), (0, 0)), "constant")
         diff = np.diff(padded.astype(np.int8), axis=0)
 
+        prefix = np.concatenate(((0,), np.add.accumulate(time_step_length)))
+
         positives = np.nonzero((diff > 0).T)
         pitches = positives[0]
         note_ons = positives[1]
-        note_on_times = time_step_length * note_ons
+        note_on_times = prefix[note_ons]
         note_offs = np.nonzero((diff < 0).T)[1]
-        note_off_times = time_step_length * note_offs
+        note_off_times = prefix[note_offs]
 
         for idx, pitch in enumerate(pitches):
             velocity = np.mean(clipped[note_ons[idx] : note_offs[idx], pitch])
