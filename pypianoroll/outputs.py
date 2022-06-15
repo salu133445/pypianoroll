@@ -147,6 +147,30 @@ def to_pretty_midi(
 
     # Compute length of a time step
     time_step_length = 60.0 / tempo / multitrack.resolution
+    # Use prefix sum for fast computation of elapsed time
+    prefix = np.concatenate(((0,), np.add.accumulate(time_step_length)))
+
+    # Find tempi changes
+    tempi_changes = np.diff(tempo).nonzero()[0] + 1
+
+    # Copied from pretty-midi source code (https://github.com/craffel/pretty-midi/blob/241279b91196125881724e53ea436e1b9181f74b/pretty_midi/pretty_midi.py)
+    # Changes tempo by updating ticks
+    last_tick, last_tick_scale = midi._tick_scales[0]
+    previous_time = 0.
+    for time, tempo in zip(prefix[tempi_changes], tempo[tempi_changes]):
+        # Compute new tick location as the last tick plus the time between
+        # the last and next tempo change, scaled by the tick scaling
+        tick = last_tick + (time - previous_time)/last_tick_scale
+        # Update the tick scale
+        tick_scale = 60.0/(tempo*midi.resolution)
+        # Don't add tick scales if they are repeats
+        if tick_scale != last_tick_scale:
+            # Add in the new tick scale
+            midi._tick_scales.append((int(round(tick)), tick_scale))
+            # Update the time and values of the previous tick scale
+            previous_time = time
+            last_tick, last_tick_scale = tick, tick_scale
+    midi._update_tick_to_time(midi._tick_scales[-1][0] + 1)
 
     for track in multitrack.tracks:
         instrument = Instrument(
@@ -165,8 +189,6 @@ def to_pretty_midi(
         binarized = clipped > 0
         padded = np.pad(binarized, ((1, 1), (0, 0)), "constant")
         diff = np.diff(padded.astype(np.int8), axis=0)
-
-        prefix = np.concatenate(((0,), np.add.accumulate(time_step_length)))
 
         positives = np.nonzero((diff > 0).T)
         pitches = positives[0]
