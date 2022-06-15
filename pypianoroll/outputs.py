@@ -23,7 +23,6 @@ from typing import TYPE_CHECKING, Dict, Union
 
 import numpy as np
 import pretty_midi
-import scipy.stats
 from pretty_midi import Instrument, PrettyMIDI
 
 from .track import BinaryTrack, StandardTrack
@@ -135,12 +134,11 @@ def to_pretty_midi(
 
     """
     if default_tempo is not None:
-        tempo = default_tempo
+        tempo = np.full(multitrack.get_max_length(), default_tempo)
     elif multitrack.tempo is not None:
-        # tempo = float(scipy.stats.hmean(multitrack.tempo))
         tempo = multitrack.tempo[:,0]
     else:
-        tempo = DEFAULT_TEMPO
+        tempo = np.full(multitrack.get_max_length(), DEFAULT_TEMPO)
 
     # Create a PrettyMIDI instance
     midi = PrettyMIDI(initial_tempo=tempo[0])
