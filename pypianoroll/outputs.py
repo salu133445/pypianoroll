@@ -192,7 +192,7 @@ def to_pretty_midi(
         pitches = positives[0]
         note_ons = positives[1]
         note_on_times = prefix[note_ons]
-        note_offs = np.nonzero((diff < 0).T)[1]
+        note_offs = np.nonzero((diff < 0).T)[1] + 1
         note_off_times = prefix[note_offs]
 
         for idx, pitch in enumerate(pitches):
