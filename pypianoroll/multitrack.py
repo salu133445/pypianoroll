@@ -249,15 +249,15 @@ class Multitrack:
                 raise ValueError("`resolution` must be a positive integer.")
         elif attr == "tempo":
             if self.tempo.ndim != 1:
-                raise ValueError("`tempo` must be a 1D NumPy array.")
+                raise ValueError("`tempo` must be a 2D NumPy array of shape (?,1)")
             if np.any(self.tempo <= 0.0):
                 raise ValueError("`tempo` must contain only positive numbers.")
         elif attr == "beat":
             if self.beat.ndim != 1:
                 raise ValueError("`beat` must be a 1D NumPy array.")
         elif attr == "downbeat":
-            if self.downbeat.ndim != 1:
-                raise ValueError("`downbeat` must be a 1D NumPy array.")
+            if self.downbeat.ndim != 2 or self.downbeat.shape[1] != 1:
+                raise ValueError("`downbeat` must be a 2D NumPy array of shape (?,1).")
         elif attr == "tracks":
             for track in self.tracks:
                 track.validate()

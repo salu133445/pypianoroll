@@ -11,7 +11,7 @@ def test_repr(multitrack):
     assert repr(multitrack) == (
         "Multitrack(name='test', resolution=24, "
         "beat=array(shape=(96,), dtype=bool), "
-        "downbeat=array(shape=(96,), dtype=bool), tracks=["
+        "downbeat=array(shape=(96, 1), dtype=bool), tracks=["
         "StandardTrack(name='track_1', program=0, is_drum=False, "
         "pianoroll=array(shape=(96, 128), dtype=uint8)), "
         "BinaryTrack(name='track_2', program=0, is_drum=True, "
@@ -93,8 +93,8 @@ def multitrack_to_blend():
     track_2 = StandardTrack(
         name="track_2", program=0, is_drum=True, pianoroll=pianoroll_2
     )
-    downbeat = np.zeros((96,), bool)
-    downbeat[0] = True
+    downbeat = np.zeros((96, 1), bool)
+    downbeat[0,0] = True
     return Multitrack(
         name="test",
         resolution=24,
@@ -155,8 +155,8 @@ def test_pad_to_same(multitrack):
     track_2 = BinaryTrack(
         name="track_2", program=0, is_drum=True, pianoroll=pianoroll_2
     )
-    downbeat = np.zeros((96,), bool)
-    downbeat[0] = True
+    downbeat = np.zeros((96, 1), bool)
+    downbeat[0,0] = True
     multitrack = Multitrack(
         name="test",
         resolution=24,
@@ -178,8 +178,8 @@ def test_remove_empty():
     track_2 = StandardTrack(
         name="track_2", program=0, is_drum=True, pianoroll=pianoroll_2
     )
-    downbeat = np.zeros((96,), bool)
-    downbeat[0] = True
+    downbeat = np.zeros((96, 1), bool)
+    downbeat[0,0] = True
     multitrack = Multitrack(
         name="test",
         resolution=24,

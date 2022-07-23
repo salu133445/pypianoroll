@@ -19,8 +19,8 @@ def multitrack():
     )
     beat = np.zeros((96,), bool)
     beat[:96:24] = True
-    downbeat = np.zeros((96,), bool)
-    downbeat[0] = True
+    downbeat = np.zeros((96,1), bool)
+    downbeat[0,0] = True
     return Multitrack(
         name="test",
         resolution=24,
