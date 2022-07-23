@@ -178,7 +178,7 @@ than one beat are dropped.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>default_tempo</strong> (int, default: <cite>pypianoroll.DEFAULT_TEMPO</cite> (120)) – Default tempo to use. If attribute <cite>tempo</cite> is available, encorporate it into the midi file with any tempo changes that occur.</p></li>
+<li><p><strong>default_tempo</strong> (int, default: <cite>pypianoroll.DEFAULT_TEMPO</cite> (120)) – Default tempo to use. If attribute <cite>tempo</cite> is available, encorporate it into the midi file with any tempo changes and time signature changes that occur.</p></li>
 <li><p><strong>default_velocity</strong> (int, default: <cite>pypianoroll.DEFAULT_VELOCITY</cite> (64)) – Default velocity to assign to binarized tracks.</p></li>
 </ul>
 </dd>
@@ -191,8 +191,7 @@ than one beat are dropped.</p>
 </dl>
 <p class="rubric">Notes</p>
 <ul class="simple">
-<li><p>Tempo changes are not supported.</p></li>
-<li><p>Time signature changes are not supported.</p></li>
+<li><p>Time signature changes default to */4.</p></li>
 <li><p>The velocities of the converted piano rolls will be clipped to
 [0, 127].</p></li>
 <li><p>Adjacent nonzero values of the same pitch will be considered
