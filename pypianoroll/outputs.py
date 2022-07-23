@@ -16,6 +16,7 @@ Variable
 """
 import json
 import zipfile
+from fractions import Fraction
 from copy import deepcopy
 from operator import attrgetter
 from pathlib import Path
@@ -114,7 +115,7 @@ def to_pretty_midi(
     ----------
     default_tempo : int, default: `pypianoroll.DEFAULT_TEMPO` (120)
         Default tempo to use. If attribute `tempo` is available, encorporate
-        it into the midi file with any tempo changes that occur
+        it into the midi file with any tempo changes and time signature changes that occur
     default_velocity : int, default: `pypianoroll.DEFAULT_VELOCITY` (64)
         Default velocity to assign to binarized tracks.
 
@@ -125,8 +126,7 @@ def to_pretty_midi(
 
     Notes
     -----
-    - Tempo changes are not supported.
-    - Time signature changes are not supported.
+    - Time signature changes default to */4.
     - The velocities of the converted piano rolls will be clipped to
       [0, 127].
     - Adjacent nonzero values of the same pitch will be considered
@@ -214,9 +214,14 @@ def to_pretty_midi(
 
     for i in range(len(indices) - 1):
         # Calculate number of beats
-        beats = int((indices[i+1] - indices[i]) / multitrack.resolution)
+        beats = Fraction((indices[i+1] - indices[i]) / multitrack.resolution / 4).limit_denominator(16)
         time = prefix[indices[i]] if i != 0 else 0 # include timesignature at time 0
-        midi.time_signature_changes.append(pretty_midi.TimeSignature(beats, 4, time))
+        # Find the first denominator that fits into the beat without 1/*
+        beat_denominators = [4, 8, 16]
+        for denominator in beat_denominators:
+            if denominator % beats.denominator == 0 and (denominator == beat_denominators[-1] or beats.numerator * denominator // beats.denominator != 1):
+                midi.time_signature_changes.append(pretty_midi.TimeSignature(beats.numerator * denominator // beats.denominator, denominator, time))
+                break
 
     return midi
 
