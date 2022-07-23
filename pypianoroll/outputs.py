@@ -208,6 +208,16 @@ def to_pretty_midi(
         instrument.notes.sort(key=attrgetter("start"))
         midi.instruments.append(instrument)
 
+    # Find downbeat positions in time
+    downbeats = np.concatenate((multitrack.downbeat[:,0], (True,)))
+    indices = np.where(downbeats)[0]
+
+    time_signature_changes = []
+    for i in range(len(indices) - 1):
+        beats = int((indices[i+1] - indices[i]) / multitrack.resolution)
+        time = prefix[indices[i]] if i != 0 else 0
+        midi.time_signature_changes.append(pretty_midi.TimeSignature(beats, 4, time))
+
     return midi
 
 
