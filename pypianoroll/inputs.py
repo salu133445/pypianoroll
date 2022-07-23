@@ -205,7 +205,7 @@ def from_pretty_midi(
 
     # Parse downbeat array
     if not midi.time_signature_changes:
-        # This probably won't happen as pretty_midi always add a 4/4 time
+        # This probably won't happen as pretty_midi always adds a 4/4 time
         # signature at time 0
         beat = None
         downbeat = None
