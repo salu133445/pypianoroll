@@ -208,20 +208,21 @@ def to_pretty_midi(
         instrument.notes.sort(key=attrgetter("start"))
         midi.instruments.append(instrument)
 
-    # Find downbeat positions
-    downbeats = np.concatenate((multitrack.downbeat[:,0], (True,)))
-    indices = np.where(downbeats)[0]
+    if multitrack.downbeat is not None:
+        # Find downbeat positions
+        downbeats = np.concatenate((multitrack.downbeat[:,0], (True,)))
+        indices = np.where(downbeats)[0]
 
-    for i in range(len(indices) - 1):
-        # Calculate number of beats
-        beats = Fraction((indices[i+1] - indices[i]) / multitrack.resolution / 4).limit_denominator(16)
-        time = prefix[indices[i]] if i != 0 else 0 # include timesignature at time 0
-        # Find the first denominator that fits into the beat without 1/*
-        beat_denominators = [4, 8, 16]
-        for denominator in beat_denominators:
-            if denominator % beats.denominator == 0 and (denominator == beat_denominators[-1] or beats.numerator * denominator // beats.denominator != 1):
-                midi.time_signature_changes.append(pretty_midi.TimeSignature(beats.numerator * denominator // beats.denominator, denominator, time))
-                break
+        for i in range(len(indices) - 1):
+            # Calculate number of beats
+            beats = Fraction((indices[i+1] - indices[i]) / multitrack.resolution / 4).limit_denominator(16)
+            time = prefix[indices[i]] if i != 0 else 0 # include timesignature at time 0
+            # Find the first denominator that fits into the beat without 1/*
+            beat_denominators = [4, 8, 16]
+            for denominator in beat_denominators:
+                if denominator % beats.denominator == 0 and (denominator == beat_denominators[-1] or beats.numerator * denominator // beats.denominator != 1):
+                    midi.time_signature_changes.append(pretty_midi.TimeSignature(beats.numerator * denominator // beats.denominator, denominator, time))
+                    break
 
     return midi
 
