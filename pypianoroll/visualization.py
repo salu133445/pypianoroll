@@ -202,7 +202,7 @@ def plot_pianoroll(
         ax.set_yticks(np.arange(0, 128, 12))
         if yticklabel == "name":
             ax.set_yticklabels([f"C{i - 2}" for i in range(11)])
-    elif ytick == "step":
+    elif ytick == "pitch":
         ax.set_yticks(np.arange(0, 128))
         if yticklabel == "name":
             if is_drum:
