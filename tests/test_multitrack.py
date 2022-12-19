@@ -8,8 +8,10 @@ from .utils import multitrack
 
 
 def test_repr(multitrack):
+    # print(repr(multitrack))
     assert repr(multitrack) == (
         "Multitrack(name='test', resolution=24, "
+        "tempo=array(shape=(96, 1), dtype=float64), "
         "beat=array(shape=(96,), dtype=bool), "
         "downbeat=array(shape=(96, 1), dtype=bool), tracks=["
         "StandardTrack(name='track_1', program=0, is_drum=False, "
@@ -44,6 +46,10 @@ def test_get_beat_steps(multitrack):
 def test_get_downbeat_steps(multitrack):
     assert np.all(multitrack.get_downbeat_steps() == [0])
 
+
+def test_tempo(multitrack):
+    assert multitrack.tempo.shape == (96, 1)
+    assert np.allclose(multitrack.tempo, 120)
 
 def test_set_nonzeros(multitrack):
     multitrack.set_nonzeros(50)

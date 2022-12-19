@@ -27,4 +27,5 @@ def multitrack():
         beat=beat,
         downbeat=downbeat,
         tracks=[track_1, track_2],
+        tempo=120
     )
