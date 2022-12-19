@@ -96,8 +96,17 @@ class Multitrack:
         else:
             self.resolution = DEFAULT_RESOLUTION
 
+        if tracks is None:
+            self.tracks = []
+        elif isinstance(tracks, list):
+            self.tracks = tracks
+        else:
+            self.tracks = list(tracks)
+
         if tempo is None:
             self.tempo = None
+        elif isinstance(tempo, int) or isinstance(tempo, float):
+            self.tempo = np.tile(tempo, (self.get_max_length(), 1)).astype(float)
         elif np.issubdtype(tempo.dtype, np.floating):
             self.tempo = tempo
         else:
@@ -116,13 +125,6 @@ class Multitrack:
             self.downbeat = downbeat
         else:
             self.downbeat = np.asarray(downbeat).astype(bool)
-
-        if tracks is None:
-            self.tracks = []
-        elif isinstance(tracks, list):
-            self.tracks = tracks
-        else:
-            self.tracks = list(tracks)
 
     def __len__(self) -> int:
         return len(self.tracks)
@@ -248,7 +250,7 @@ class Multitrack:
             if self.resolution < 1:
                 raise ValueError("`resolution` must be a positive integer.")
         elif attr == "tempo":
-            if self.tempo.ndim != 1:
+            if self.tempo.ndim != 2:
                 raise ValueError("`tempo` must be a 2D NumPy array of shape (?,1)")
             if np.any(self.tempo <= 0.0):
                 raise ValueError("`tempo` must contain only positive numbers.")
