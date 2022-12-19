@@ -11,7 +11,7 @@ Variable
 - DEFAULT_RESOLUTION
 
 """
-from typing import List, Sequence, TypeVar
+from typing import List, Sequence, TypeVar, Union
 
 import numpy as np
 from matplotlib.axes import Axes
@@ -66,7 +66,8 @@ class Multitrack:
         Time steps per quarter note.
     tempo : ndarray, dtype=float, shape=(?, 1), optional
         Tempo (in qpm) at each time step. Length is the total number
-        of time steps. Cast to float if not of float type.
+        of time steps. Cast to float if not of float type. Alternatively,
+        enter a single float or integer and the array will be generated.
     beat : ndarray, dtype=bool, shape=(?, 1), optional
         A boolean array that indicates whether the time step contains a
         beat. Length is the total number of time steps. Cast to bool if
@@ -84,7 +85,7 @@ class Multitrack:
         self,
         name: str = None,
         resolution: int = None,
-        tempo: ndarray = None,
+        tempo: Union[ndarray, int, float] = None,
         beat: ndarray = None,
         downbeat: ndarray = None,
         tracks: Sequence[Track] = None,
