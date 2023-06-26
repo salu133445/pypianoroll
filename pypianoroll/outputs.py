@@ -16,6 +16,7 @@ Variable
 """
 import json
 import zipfile
+from fractions import Fraction
 from copy import deepcopy
 from operator import attrgetter
 from pathlib import Path
@@ -23,7 +24,6 @@ from typing import TYPE_CHECKING, Dict, Union
 
 import numpy as np
 import pretty_midi
-import scipy.stats
 from pretty_midi import Instrument, PrettyMIDI
 
 from .track import BinaryTrack, StandardTrack
@@ -114,8 +114,8 @@ def to_pretty_midi(
     Parameters
     ----------
     default_tempo : int, default: `pypianoroll.DEFAULT_TEMPO` (120)
-        Default tempo to use. If attribute `tempo` is available, use its
-        first element.
+        Default tempo to use. If attribute `tempo` is available, encorporate
+        it into the midi file with any tempo changes and time signature changes that occur
     default_velocity : int, default: `pypianoroll.DEFAULT_VELOCITY` (64)
         Default velocity to assign to binarized tracks.
 
@@ -126,8 +126,7 @@ def to_pretty_midi(
 
     Notes
     -----
-    - Tempo changes are not supported.
-    - Time signature changes are not supported.
+    - Time signature changes default to */4.
     - The velocities of the converted piano rolls will be clipped to
       [0, 127].
     - Adjacent nonzero values of the same pitch will be considered
@@ -135,17 +134,41 @@ def to_pretty_midi(
 
     """
     if default_tempo is not None:
-        tempo = default_tempo
+        tempo = np.full(multitrack.get_max_length(), default_tempo)
     elif multitrack.tempo is not None:
-        tempo = float(scipy.stats.hmean(multitrack.tempo))
+        tempo = multitrack.tempo[:,0]
     else:
-        tempo = DEFAULT_TEMPO
+        tempo = np.full(multitrack.get_max_length(), DEFAULT_TEMPO)
 
     # Create a PrettyMIDI instance
-    midi = PrettyMIDI(initial_tempo=tempo)
+    midi = PrettyMIDI(initial_tempo=tempo[0])
 
     # Compute length of a time step
     time_step_length = 60.0 / tempo / multitrack.resolution
+    # Use prefix sum for fast computation of elapsed time
+    prefix = np.concatenate(((0,), np.add.accumulate(time_step_length)))
+
+    # Find tempi changes
+    tempi_changes = np.diff(tempo).nonzero()[0] + 1
+
+    # Copied from pretty-midi source code (https://github.com/craffel/pretty-midi/blob/241279b91196125881724e53ea436e1b9181f74b/pretty_midi/pretty_midi.py)
+    # Changes tempo by updating ticks
+    last_tick, last_tick_scale = midi._tick_scales[0]
+    previous_time = 0.
+    for time, tempo in zip(prefix[tempi_changes], tempo[tempi_changes]):
+        # Compute new tick location as the last tick plus the time between
+        # the last and next tempo change, scaled by the tick scaling
+        tick = last_tick + (time - previous_time)/last_tick_scale
+        # Update the tick scale
+        tick_scale = 60.0/(tempo*midi.resolution)
+        # Don't add tick scales if they are repeats
+        if tick_scale != last_tick_scale:
+            # Add in the new tick scale
+            midi._tick_scales.append((int(round(tick)), tick_scale))
+            # Update the time and values of the previous tick scale
+            previous_time = time
+            last_tick, last_tick_scale = tick, tick_scale
+    midi._update_tick_to_time(midi._tick_scales[-1][0] + 1)
 
     for track in multitrack.tracks:
         instrument = Instrument(
@@ -168,9 +191,9 @@ def to_pretty_midi(
         positives = np.nonzero((diff > 0).T)
         pitches = positives[0]
         note_ons = positives[1]
-        note_on_times = time_step_length * note_ons
+        note_on_times = prefix[note_ons]
         note_offs = np.nonzero((diff < 0).T)[1]
-        note_off_times = time_step_length * note_offs
+        note_off_times = prefix[note_offs]
 
         for idx, pitch in enumerate(pitches):
             velocity = np.mean(clipped[note_ons[idx] : note_offs[idx], pitch])
@@ -184,6 +207,22 @@ def to_pretty_midi(
 
         instrument.notes.sort(key=attrgetter("start"))
         midi.instruments.append(instrument)
+
+    if multitrack.downbeat is not None:
+        # Find downbeat positions
+        downbeats = np.concatenate((multitrack.downbeat[:,0], (True,)))
+        indices = np.where(downbeats)[0]
+
+        for i in range(len(indices) - 1):
+            # Calculate number of beats
+            beats = Fraction((indices[i+1] - indices[i]) / multitrack.resolution / 4).limit_denominator(16)
+            time = prefix[indices[i]] if i != 0 else 0 # include timesignature at time 0
+            # Find the first denominator that fits into the beat without 1/*
+            beat_denominators = [4, 8, 16]
+            for denominator in beat_denominators:
+                if denominator % beats.denominator == 0 and (denominator == beat_denominators[-1] or beats.numerator * denominator // beats.denominator != 1):
+                    midi.time_signature_changes.append(pretty_midi.TimeSignature(beats.numerator * denominator // beats.denominator, denominator, time))
+                    break
 
     return midi
 

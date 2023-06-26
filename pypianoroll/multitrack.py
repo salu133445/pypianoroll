@@ -11,7 +11,7 @@ Variable
 - DEFAULT_RESOLUTION
 
 """
-from typing import List, Sequence, TypeVar
+from typing import List, Sequence, TypeVar, Union
 
 import numpy as np
 from matplotlib.axes import Axes
@@ -66,7 +66,8 @@ class Multitrack:
         Time steps per quarter note.
     tempo : ndarray, dtype=float, shape=(?, 1), optional
         Tempo (in qpm) at each time step. Length is the total number
-        of time steps. Cast to float if not of float type.
+        of time steps. Cast to float if not of float type. Alternatively,
+        enter a single float or integer and the array will be generated.
     beat : ndarray, dtype=bool, shape=(?, 1), optional
         A boolean array that indicates whether the time step contains a
         beat. Length is the total number of time steps. Cast to bool if
@@ -84,7 +85,7 @@ class Multitrack:
         self,
         name: str = None,
         resolution: int = None,
-        tempo: ndarray = None,
+        tempo: Union[ndarray, int, float] = None,
         beat: ndarray = None,
         downbeat: ndarray = None,
         tracks: Sequence[Track] = None,
@@ -96,8 +97,17 @@ class Multitrack:
         else:
             self.resolution = DEFAULT_RESOLUTION
 
+        if tracks is None:
+            self.tracks = []
+        elif isinstance(tracks, list):
+            self.tracks = tracks
+        else:
+            self.tracks = list(tracks)
+
         if tempo is None:
             self.tempo = None
+        elif isinstance(tempo, int) or isinstance(tempo, float):
+            self.tempo = np.tile(tempo, (self.get_max_length(), 1)).astype(float)
         elif np.issubdtype(tempo.dtype, np.floating):
             self.tempo = tempo
         else:
@@ -116,13 +126,6 @@ class Multitrack:
             self.downbeat = downbeat
         else:
             self.downbeat = np.asarray(downbeat).astype(bool)
-
-        if tracks is None:
-            self.tracks = []
-        elif isinstance(tracks, list):
-            self.tracks = tracks
-        else:
-            self.tracks = list(tracks)
 
     def __len__(self) -> int:
         return len(self.tracks)
@@ -187,7 +190,7 @@ class Multitrack:
         elif attr == "beat":
             if not isinstance(self.beat, np.ndarray):
                 raise TypeError("`beat` must be a NumPy array.")
-            if not np.issubdtype(self.beat.dtype, np.bool_):
+            if not np.issubdtype(self.beat.dtype, bool):
                 raise TypeError(
                     "`beat` must be of data type bool, but got data type"
                     f"{self.beat.dtype}."
@@ -195,7 +198,7 @@ class Multitrack:
         elif attr == "downbeat":
             if not isinstance(self.downbeat, np.ndarray):
                 raise TypeError("`downbeat` must be a NumPy array.")
-            if not np.issubdtype(self.downbeat.dtype, np.bool_):
+            if not np.issubdtype(self.downbeat.dtype, bool):
                 raise TypeError(
                     "`downbeat` must be of data type bool, but got data type"
                     f"{self.downbeat.dtype}."
@@ -248,16 +251,16 @@ class Multitrack:
             if self.resolution < 1:
                 raise ValueError("`resolution` must be a positive integer.")
         elif attr == "tempo":
-            if self.tempo.ndim != 1:
-                raise ValueError("`tempo` must be a 1D NumPy array.")
+            if self.tempo.ndim != 2:
+                raise ValueError("`tempo` must be a 2D NumPy array of shape (?,1)")
             if np.any(self.tempo <= 0.0):
                 raise ValueError("`tempo` must contain only positive numbers.")
         elif attr == "beat":
             if self.beat.ndim != 1:
                 raise ValueError("`beat` must be a 1D NumPy array.")
         elif attr == "downbeat":
-            if self.downbeat.ndim != 1:
-                raise ValueError("`downbeat` must be a 1D NumPy array.")
+            if self.downbeat.ndim != 2 or self.downbeat.shape[1] != 1:
+                raise ValueError("`downbeat` must be a 2D NumPy array of shape (?,1).")
         elif attr == "tracks":
             for track in self.tracks:
                 track.validate()

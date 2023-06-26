@@ -10,7 +10,7 @@
   <!--[if lt IE 9]>
     <script src="_static/js/html5shiv.min.js"></script>
   <![endif]-->
-  
+
         <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
         <script src="_static/jquery.js"></script>
         <script src="_static/underscore.js"></script>
@@ -19,10 +19,10 @@
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Visualization" href="visualization.html" />
-    <link rel="prev" title="Save &amp; Load" href="save_load.html" /> 
+    <link rel="prev" title="Save &amp; Load" href="save_load.html" />
 </head>
 
-<body class="wy-body-for-nav"> 
+<body class="wy-body-for-nav">
   <div class="wy-grid-for-nav">
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
@@ -71,7 +71,7 @@
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
-             
+
   <section id="read-write">
 <h1>Read &amp; Write<a class="headerlink" href="#read-write" title="Permalink to this headline"></a></h1>
 <p>Pypianoroll currently supports reading from and writing to MIDI files.</p>
@@ -178,8 +178,7 @@ than one beat are dropped.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>default_tempo</strong> (int, default: <cite>pypianoroll.DEFAULT_TEMPO</cite> (120)) – Default tempo to use. If attribute <cite>tempo</cite> is available, use its
-first element.</p></li>
+<li><p><strong>default_tempo</strong> (int, default: <cite>pypianoroll.DEFAULT_TEMPO</cite> (120)) – Default tempo to use. If attribute <cite>tempo</cite> is available, encorporate it into the midi file with any tempo changes and time signature changes that occur.</p></li>
 <li><p><strong>default_velocity</strong> (int, default: <cite>pypianoroll.DEFAULT_VELOCITY</cite> (64)) – Default velocity to assign to binarized tracks.</p></li>
 </ul>
 </dd>
@@ -192,8 +191,7 @@ first element.</p></li>
 </dl>
 <p class="rubric">Notes</p>
 <ul class="simple">
-<li><p>Tempo changes are not supported.</p></li>
-<li><p>Time signature changes are not supported.</p></li>
+<li><p>Time signature changes default to */4.</p></li>
 <li><p>The velocities of the converted piano rolls will be clipped to
 [0, 127].</p></li>
 <li><p>Adjacent nonzero values of the same pitch will be considered
@@ -203,7 +201,7 @@ a single note with their mean as its velocity.</p></li>
 
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>Writing the tempo array and downbeat array to tempo change and time signature change events are not supported yet.</p>
+<p>Writing the downbeat array to time signature change events is not supported yet.</p>
 </div>
 </section>
 </section>
@@ -225,7 +223,7 @@ a single note with their mean as its velocity.</p></li>
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
     <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
     provided by <a href="https://readthedocs.org">Read the Docs</a>.
-   
+
 
 </footer>
         </div>
@@ -236,7 +234,7 @@ a single note with their mean as its velocity.</p></li>
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script> 
+  </script>
 
 </body>
 </html>

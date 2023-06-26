@@ -188,7 +188,7 @@ def qualified_note_rate(pianoroll: ndarray, threshold: float = 2) -> float:
        2018.
 
     """
-    if np.issubdtype(pianoroll.dtype, np.bool_):
+    if np.issubdtype(pianoroll.dtype, bool):
         pianoroll = pianoroll.astype(np.uint8)
     padded = np.pad(pianoroll, ((1, 1), (0, 0)), "constant")
     diff = np.diff(padded, axis=0).reshape(-1)

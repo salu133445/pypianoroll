@@ -8,10 +8,12 @@ from .utils import multitrack
 
 
 def test_repr(multitrack):
+    # print(repr(multitrack))
     assert repr(multitrack) == (
         "Multitrack(name='test', resolution=24, "
+        "tempo=array(shape=(96, 1), dtype=float64), "
         "beat=array(shape=(96,), dtype=bool), "
-        "downbeat=array(shape=(96,), dtype=bool), tracks=["
+        "downbeat=array(shape=(96, 1), dtype=bool), tracks=["
         "StandardTrack(name='track_1', program=0, is_drum=False, "
         "pianoroll=array(shape=(96, 128), dtype=uint8)), "
         "BinaryTrack(name='track_2', program=0, is_drum=True, "
@@ -44,6 +46,10 @@ def test_get_beat_steps(multitrack):
 def test_get_downbeat_steps(multitrack):
     assert np.all(multitrack.get_downbeat_steps() == [0])
 
+
+def test_tempo(multitrack):
+    assert multitrack.tempo.shape == (96, 1)
+    assert np.allclose(multitrack.tempo, 120)
 
 def test_set_nonzeros(multitrack):
     multitrack.set_nonzeros(50)
@@ -93,8 +99,8 @@ def multitrack_to_blend():
     track_2 = StandardTrack(
         name="track_2", program=0, is_drum=True, pianoroll=pianoroll_2
     )
-    downbeat = np.zeros((96,), bool)
-    downbeat[0] = True
+    downbeat = np.zeros((96, 1), bool)
+    downbeat[0,0] = True
     return Multitrack(
         name="test",
         resolution=24,
@@ -125,7 +131,7 @@ def test_blend_max(multitrack_to_blend):
 
 
 def test_append(multitrack):
-    pianoroll = np.zeros((96, 128), np.bool_)
+    pianoroll = np.zeros((96, 128), bool)
     pianoroll[:95:16, 41] = True
     track_to_append = BinaryTrack(name="track_3", pianoroll=pianoroll)
     multitrack.append(track_to_append)
@@ -150,13 +156,13 @@ def test_pad_to_same(multitrack):
     track_1 = StandardTrack(
         name="track_1", program=0, is_drum=False, pianoroll=pianoroll_1
     )
-    pianoroll_2 = np.zeros((96, 128), np.bool)
+    pianoroll_2 = np.zeros((96, 128), bool)
     pianoroll_2[0:95:16, 36] = True
     track_2 = BinaryTrack(
         name="track_2", program=0, is_drum=True, pianoroll=pianoroll_2
     )
-    downbeat = np.zeros((96,), bool)
-    downbeat[0] = True
+    downbeat = np.zeros((96, 1), bool)
+    downbeat[0,0] = True
     multitrack = Multitrack(
         name="test",
         resolution=24,
@@ -174,12 +180,12 @@ def test_remove_empty():
     track_1 = StandardTrack(
         name="track_1", program=0, is_drum=False, pianoroll=pianoroll_1
     )
-    pianoroll_2 = np.zeros((96, 128), np.bool)
+    pianoroll_2 = np.zeros((96, 128), bool)
     track_2 = StandardTrack(
         name="track_2", program=0, is_drum=True, pianoroll=pianoroll_2
     )
-    downbeat = np.zeros((96,), bool)
-    downbeat[0] = True
+    downbeat = np.zeros((96, 1), bool)
+    downbeat[0,0] = True
     multitrack = Multitrack(
         name="test",
         resolution=24,
