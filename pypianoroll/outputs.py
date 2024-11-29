@@ -205,4 +205,5 @@ def write(path: str, multitrack: "Multitrack"):
     :func:`pypianoroll.save` : Save a Multitrack object to a NPZ file.
 
     """
-    return to_pretty_midi(multitrack).write(str(path))
+    return to_pretty_midi(multitrack).write(path) # __max__ commented line below
+    # return to_pretty_midi(multitrack).write(str(path))
