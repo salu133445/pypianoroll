@@ -305,7 +305,7 @@ def from_pretty_midi(
                     if pianoroll[end, pitches[idx]]:
                         end -= 1
 
-                if mode == "max":
+                if mode == "sum":
                     pianoroll[start:end, pitches[idx]] += velocity
                 else:
                     maximum = np.maximum(
