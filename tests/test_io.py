@@ -2,6 +2,8 @@
 from pathlib import Path
 
 import numpy as np
+import pretty_midi
+import pytest
 
 import pypianoroll
 
@@ -48,3 +50,20 @@ def test_write_read(multitrack, tmp_path):
 def test_read_realworld(tmp_path):
     loaded = pypianoroll.read(Path(__file__).parent / "fur-elise.mid")
     loaded.write(tmp_path / "test.mid")
+
+
+@pytest.mark.parametrize(
+    "mode, expected", [("max", [100, 100, 90]), ("sum", [270, 190, 90])]
+)
+def test_from_pretty_midi_overlapping_velocities(mode, expected):
+    midi = pretty_midi.PrettyMIDI(initial_tempo=120)
+    piano = pretty_midi.Instrument(program=0)
+    piano.notes = [
+        pretty_midi.Note(velocity=80, pitch=60, start=0, end=0.5),
+        pretty_midi.Note(velocity=100, pitch=60, start=0, end=1.0),
+        pretty_midi.Note(velocity=90, pitch=60, start=0, end=1.5),
+    ]
+    midi.instruments.append(piano)
+
+    roll = pypianoroll.from_pretty_midi(midi, resolution=1, mode=mode)
+    np.testing.assert_array_equal(roll.tracks[0].pianoroll[:, 60], expected)
